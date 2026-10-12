@@ -52,6 +52,8 @@
   if (menu && menuBtn) {
     menuBtn.addEventListener('click', function () {
       if (menu.classList.contains('aperto')) { chiudiMenu(); return; }
+      // il pannello parte sotto la testata, ovunque sia (in cima c'è la barra nera sopra)
+      menu.style.top = Math.max(0, Math.round(document.querySelector('.testata').getBoundingClientRect().bottom)) + 'px';
       menu.classList.add('aperto'); menuBtn.setAttribute('aria-expanded', 'true'); menuBtn.textContent = 'Chiudi'; blocca(true);
     });
     $$('a', menu).forEach(function (a) { a.addEventListener('click', chiudiMenu); });

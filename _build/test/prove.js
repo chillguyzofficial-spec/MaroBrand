@@ -35,7 +35,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.closest('.piede-nome') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
@@ -56,10 +56,26 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   }
   console.log('Larghezze: ok');
 
+  // 1a. link interni
+  {
+    const c = await b.newContext(); const q = await c.newPage(); const rotti = [];
+    for (const pg of PAGINE) {
+      await q.goto(BASE + pg, { waitUntil: 'domcontentloaded' });
+      const hrefs = await q.evaluate(() => [...document.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(h => !/^(https?:|mailto:|tel:)/.test(h)));
+      for (const h of new Set(hrefs)) {
+        const [file, id] = h.split('#'); const dest = file || pg;
+        if (!fs.existsSync(path.join(ROOT, dest))) { rotti.push(pg + ' → ' + h); continue; }
+        if (id) { const html = fs.readFileSync(path.join(ROOT, dest), 'utf8'); if (!html.includes('id="' + id + '"')) rotti.push(pg + ' → ' + h); }
+      }
+    }
+    prova(!rotti.length, 'link interni rotti: ' + rotti.join(', '));
+    await c.close();
+  }
+
   // 1b. schede prodotto: tutte le foto della galleria con la stessa misura, su tutte le schede
   for (const w of [390, 768, 1440]) {
     const c = await b.newContext({ viewport: { width: w, height: 900 } }); const misure = new Set();
-    for (const pg of PAGINE.filter(x => x !== 'index.html')) {
+    for (const pg of PAGINE.filter(x => !['index.html', 'aiuto.html'].includes(x))) {
       const q = await c.newPage(); await q.goto(BASE + pg, { waitUntil: 'load' });
       (await q.evaluate(() => [...document.querySelectorAll('.vetrina')].map(f => { const r = f.getBoundingClientRect(); return Math.round(r.width) + 'x' + Math.round(r.height); }))).forEach(m => misure.add(m));
       await q.close();
@@ -75,14 +91,15 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   const vid = await p.evaluate(() => new Promise(r => setTimeout(() => { const v = document.querySelector('video'); r({ t: v.currentTime, err: v.error && v.error.code }); }, 1500)));
   prova(!vid.err && vid.t > 0, 'video d\'apertura parte (t=' + vid.t + ', err=' + vid.err + ')');
   // menu a metà e in fondo alla pagina
-  for (const f of [0.5, 1]) {
+  for (const f of [0, 0.5, 1]) {
     await p.evaluate(f => scrollTo(0, (document.body.scrollHeight - innerHeight) * f), f); await p.waitForTimeout(200);
     const t = await p.evaluate(() => document.querySelector('.testata').getBoundingClientRect().top);
-    prova(Math.abs(t) < 2, `testata visibile al ${f * 100}% (top=${t})`);
+    prova(f === 0 ? t >= 0 : Math.abs(t) < 2, `testata visibile al ${f * 100}% (top=${t})`);
     await p.tap('.menu-apri');
-    const m = await p.evaluate(() => { const r = document.querySelector('#menu').getBoundingClientRect(); return { vis: r.height > 200 && r.top >= 0 && r.top < 100, testata: document.querySelector('.testata').getBoundingClientRect().top }; });
-    prova(m.vis && Math.abs(m.testata) < 2, `menu aperto al ${f * 100}%: ${JSON.stringify(m)}`);
+    const m = await p.evaluate(() => { const r = document.querySelector('#menu').getBoundingClientRect(), h = document.querySelector('.testata').getBoundingClientRect(), bt = document.querySelector('.menu-apri').getBoundingClientRect(); const su = document.elementFromPoint(bt.left + bt.width / 2, bt.top + bt.height / 2); return { vis: r.height > 200 && Math.abs(r.top - h.bottom) < 2, chiudi: !!(su && su.closest('.menu-apri')) }; });
+    prova(m.vis && m.chiudi, `menu aperto al ${f * 100}% sotto la testata e Chiudi toccabile: ${JSON.stringify(m)}`);
     await p.tap('.menu-apri');
+    prova(await p.evaluate(() => !document.querySelector('#menu').classList.contains('aperto') && document.documentElement.style.overflow === ''), `menu si chiude al ${f * 100}%`);
   }
   // filtri
   await p.goto(BASE + 'index.html#felpe'); await p.waitForTimeout(200);

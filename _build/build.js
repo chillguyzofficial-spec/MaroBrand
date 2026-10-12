@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '7'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '9'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -69,15 +69,19 @@ ${corpo}
 </main>
 <footer class="piede">
   <div class="piede-alto">
+    <div class="piede-marchio">
+      <a class="piede-logo" href="index.html" aria-label="MARO, home">${SIMBOLO}<span>MARO</span></a>
+      <p>Streetwear disegnato a Milano.<br>Fly with your mind.</p>
+    </div>
     <nav aria-label="Drop 001"><h2>Drop 001</h2><a href="index.html#polo">Polo</a><a href="index.html#felpe">Felpe</a><a href="index.html#lookbook">Lookbook</a></nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="index.html#storia">La storia</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
-  <p class="piede-nome" aria-hidden="true">MARO</p>
   <div class="piede-basso">
-    <span>© 2026 MARO — Milano</span>
+    <span>© 2026 MARO · Milano</span>
     <span class="nota">Anteprima di presentazione: prezzi, materiali e testi sono di esempio.</span>
-    <span class="linguetta" aria-hidden="true"></span>
+    <span class="piede-paese">Italia · EUR €</span>
   </div>
 </footer>
 <div class="borsa" id="borsa" role="dialog" aria-modal="true" aria-labelledby="borsa-titolo" hidden>
@@ -88,14 +92,14 @@ ${corpo}
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.foto[0][0] })))};</script>
+<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0] })))};</script>
 </body>
 </html>
 `;
 }
 
 function scheda(p, dove) {
-  const [fid, alt] = p.foto[0];
+  const [fid, alt] = p.copertina;
   return `<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
   <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}</div>
   <div class="scheda-testo">
@@ -111,7 +115,6 @@ function scheda(p, dove) {
 function home() {
   const lb = [
     ['lookbook-metro-polo-1', 'In metro con le polo MARO'],
-    ['lookbook-duomo-felpa-blu', 'Felpa blu MARO di spalle davanti al Duomo di Milano'],
     ['lookbook-metro-polo-2', 'Quattro amici in metro con le polo MARO'],
   ];
   const corpo = `
@@ -133,6 +136,17 @@ function home() {
   </div>
 </section>
 
+<section class="categorie" aria-label="Categorie">
+  <a class="categoria" href="#polo">
+    ${img('categoria-polo', 'Polo nera MARO appesa, retro con le ali', { dove: 'home categorie', sizes: '(min-width: 960px) 50vw, 100vw' })}
+    <span class="categoria-testo"><span class="categoria-nome">Polo</span><span class="categoria-vai">Acquista le polo</span></span>
+  </a>
+  <a class="categoria" href="#felpe">
+    ${img('categoria-felpe', 'Ragazzo con felpa grigia MARO davanti a una parete verde', { dove: 'home categorie', sizes: '(min-width: 960px) 50vw, 100vw' })}
+    <span class="categoria-testo"><span class="categoria-nome">Felpe</span><span class="categoria-vai">Acquista le felpe</span></span>
+  </a>
+</section>
+
 <section class="drop" id="drop" aria-labelledby="drop-titolo">
   <span id="polo" class="ancora"></span><span id="felpe" class="ancora"></span>
   <div class="drop-testa">
@@ -146,6 +160,15 @@ function home() {
   <div class="griglia">
 ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   </div>
+</section>
+
+<section class="vantaggi" aria-label="Acquistare su MARO">
+  <ul>
+    <li><strong>Spedizione in 2–4 giorni</strong><span>in tutta Italia</span></li>
+    <li><strong>Reso entro 14 giorni</strong><span>se la taglia non va</span></li>
+    <li><strong>Pagamento sicuro</strong><span>carta, PayPal, Apple Pay</span></li>
+    <li><strong>Guida alle taglie</strong><a href="aiuto.html#taglie">trova la tua misura</a></li>
+  </ul>
 </section>
 
 <section class="campagna" aria-labelledby="campagna-titolo">
@@ -168,7 +191,7 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
   <h2 id="lookbook-titolo" class="titolo">Lookbook</h2>
   <div class="lookbook-griglia">
-${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 32vw, 100vw' })}</figure>`).join('\n')}
+${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 48vw, 100vw' })}</figure>`).join('\n')}
   </div>
 </section>
 
@@ -241,7 +264,7 @@ ${p.taglie.map(t => `        <label><input type="radio" name="taglia" value="${t
     </details>
     <details>
       <summary>Spedizione e resi</summary>
-      <p>Spedizione in Italia in 2–4 giorni lavorativi. Reso entro 14 giorni dalla consegna.</p>
+      <p>Spedizione in Italia in 2–4 giorni lavorativi. Reso entro 14 giorni dalla consegna. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
   </div>
 </div>
@@ -255,9 +278,50 @@ ${altri.map(x => scheda(x, 'scheda ' + x.id)).join('\n')}
   return pagina({ titolo: `${p.nome} — MARO`, descrizione: `${p.nome}, ${p.colore}. Drop 001 MARO.`, corpo, file: p.id + '.html' });
 }
 
+// ---------- AIUTO (testi di esempio finché il cliente non conferma) ----------
+function tabellaTaglie(taglie, k0) {
+  return `<table class="guida">
+        <thead><tr><th>Taglia</th><th>Torace (cm)</th><th>Lunghezza (cm)</th></tr></thead>
+        <tbody>${taglie.map((t, i) => `<tr><td>${t}</td><td>${52 + (i + k0) * 3}</td><td>${68 + (i + k0) * 2}</td></tr>`).join('')}</tbody>
+      </table>`;
+}
+function aiuto() {
+  const corpo = `
+<div class="aiuto">
+  <h1 class="titolo">Aiuto</h1>
+  <nav class="aiuto-indice" aria-label="In questa pagina">
+    <a href="#spedizioni">Spedizioni</a><a href="#resi">Resi</a><a href="#taglie">Guida alle taglie</a><a href="#contatti">Contatti</a>
+  </nav>
+  <section id="spedizioni" aria-labelledby="t-sped">
+    <h2 id="t-sped">Spedizioni</h2>
+    <p>Spediamo in tutta Italia in 2–4 giorni lavorativi. Gli ordini fatti entro le 13 partono il giorno stesso. Ricevi il numero di tracciamento via email.</p>
+  </section>
+  <section id="resi" aria-labelledby="t-resi">
+    <h2 id="t-resi">Resi</h2>
+    <p>Hai 14 giorni dalla consegna per restituire un capo, anche solo perché la taglia non va. Il capo deve essere integro, con il cartellino. Il rimborso arriva sullo stesso metodo di pagamento.</p>
+  </section>
+  <section id="taglie" aria-labelledby="t-taglie">
+    <h2 id="t-taglie">Guida alle taglie</h2>
+    <p>Misure del capo steso. Confrontale con un capo tuo che ti sta bene.</p>
+    <div class="aiuto-tabelle">
+      <div><h3>Polo</h3>
+      ${tabellaTaglie(['S', 'M', 'L', 'XL', 'XXL'], 1)}</div>
+      <div><h3>Felpe</h3>
+      ${tabellaTaglie(['XS', 'S', 'M', 'L', 'XL', 'XXL'], 0)}</div>
+    </div>
+  </section>
+  <section id="contatti" aria-labelledby="t-contatti">
+    <h2 id="t-contatti">Contatti</h2>
+    <p>Email, WhatsApp e social di MARO arriveranno con l’apertura del negozio.</p>
+  </section>
+</div>`;
+  return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
+}
+
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
+fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));
 
 // foto preparate ma non usate (avviso, non errore)
 const nonUsate = Object.keys(MISURE).filter(k => !usate.has(k) && k !== 'apertura-locandina');
-console.log(`Pagine: ${1 + CATALOGO.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));
+console.log(`Pagine: ${2 + CATALOGO.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));

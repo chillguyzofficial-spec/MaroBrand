@@ -84,7 +84,7 @@ h1, h2, h3 { margin: 0; }
 .scheda { display: block; }
 .scheda[hidden] { display: none; }
 .scheda-foto { background: var(--grigio); aspect-ratio: 4 / 5; overflow: hidden; }
-.scheda-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.scheda-foto img { width: 100%; height: 100%; object-fit: contain; transition: transform .5s ease; }
 .scheda:hover .scheda-foto img { transform: scale(1.03); }
 .scheda-testo { padding: 12px 0 8px; }
 .pallini { display: flex; gap: 6px; margin-bottom: 8px; }
@@ -107,7 +107,7 @@ h1, h2, h3 { margin: 0; }
 /* lookbook */
 .lookbook { padding: 0 var(--lato) clamp(48px, 7vw, 96px); }
 .lookbook .titolo { margin-bottom: 28px; }
-.lookbook-griglia { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+.lookbook-griglia { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-items: start; }
 .lookbook figure { margin: 0; }
 .lookbook img { width: 100%; }
 
@@ -122,15 +122,18 @@ h1, h2, h3 { margin: 0; }
 .esito.errore { color: var(--rosso); }
 
 /* footer */
-.piede { background: var(--nero); color: var(--bianco); padding: 48px var(--lato) 24px; overflow: hidden; }
-.piede-alto { display: grid; grid-template-columns: repeat(3, minmax(0, 220px)); gap: 28px; }
+.piede { background: var(--nero); color: var(--bianco); padding: 56px var(--lato) 24px; }
+.piede-alto { display: grid; grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(0, 1fr)); gap: 32px; padding-bottom: 40px; }
+.piede-logo { display: inline-flex; align-items: center; gap: 10px; color: var(--bianco) !important; margin-bottom: 14px !important; }
+.piede-logo .simbolo { width: 40px; height: 30px; }
+.piede-logo span { font: 400 28px/1 var(--titoli); }
+.piede-marchio p { line-height: 1.6; }
+.piede-paese { color: #bdbdbd; }
 .piede h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
 .piede nav a, .piede p { display: block; color: #bdbdbd; margin: 0 0 8px; }
 .piede nav a:hover { color: var(--bianco); }
-.piede-nome { font: 400 clamp(110px, 41vw, 820px)/.8 var(--titoli); margin: 40px 0 20px !important; color: var(--bianco) !important; letter-spacing: -.01em; }
-.piede-basso { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; font-size: 13px; color: #9a9a9a; border-top: 1px solid #333; padding-top: 16px; }
+.piede-basso { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; font-size: 13px; color: #a3a3a3; border-top: 1px solid #333; padding-top: 16px; }
 .piede-basso .nota { flex: 1; }
-.piede-basso .linguetta { margin: 0; }
 
 /* scheda prodotto */
 .prodotto { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 440px); grid-template-areas: 'galleria intro' 'galleria acquisto'; grid-template-rows: auto 1fr; gap: 0 clamp(28px, 4vw, 64px); padding: 32px var(--lato) 64px; align-items: start; }
@@ -139,7 +142,7 @@ h1, h2, h3 { margin: 0; }
 .vetrina { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--grigio); touch-action: pan-y; user-select: none; }
 .vetrina-binario { display: flex; height: 100%; transition: transform .45s cubic-bezier(.2,.7,.2,1); }
 .vetrina figure { flex: 0 0 100%; height: 100%; margin: 0; }
-.vetrina img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.vetrina img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; -webkit-user-drag: none; }
 .vetrina-freccia { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); color: var(--nero); font-size: 30px; line-height: 1; display: grid; place-items: center; padding-bottom: 4px; box-shadow: 0 2px 10px rgba(0,0,0,.15); }
 .vetrina-freccia:hover { background: var(--bianco); }
 .vetrina-freccia.prec { left: 12px; }
@@ -148,7 +151,7 @@ h1, h2, h3 { margin: 0; }
 .miniature { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .miniature button { padding: 0; border: 2px solid transparent; background: var(--grigio); aspect-ratio: 4 / 5; overflow: hidden; }
 .miniature button[aria-current="true"] { border-color: var(--nero); }
-.miniature img { width: 100%; height: 100%; object-fit: cover; }
+.miniature img { width: 100%; height: 100%; object-fit: contain; }
 .prodotto-acquisto { grid-area: acquisto; }
 .indietro { display: inline-block; font-size: 14px; font-weight: 600; color: var(--testo-2); margin-bottom: 14px; padding: 6px 0; }
 .indietro:hover { color: var(--nero); }
@@ -219,6 +222,7 @@ details > p { margin: 0 0 20px; }
   .storia-foto { order: 2; }
   .lookbook-griglia { grid-template-columns: 1fr; }
   .piede-alto { grid-template-columns: 1fr 1fr; }
+  .piede-marchio { grid-column: 1 / -1; }
   .prodotto { grid-template-columns: 1fr; grid-template-areas: 'intro' 'galleria' 'acquisto'; padding-top: 20px; }
   .prodotto-intro { margin-bottom: 20px; }
   .galleria { width: 100%; }
@@ -234,8 +238,49 @@ details > p { margin: 0 0 20px; }
   .apertura { height: calc(100svh - var(--testata) - 34px); min-height: 440px; }
   .apertura-video { left: 0; width: 100%; aspect-ratio: auto; object-position: 73% 50%; -webkit-mask-image: none; mask-image: none; }
   .pulsanti .btn { flex: 1 1 auto; }
-  .piede-alto { grid-template-columns: 1fr; gap: 20px; }
+  .piede-alto { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
+  .piede-basso { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+}
+
+/* categorie (home) */
+.categorie { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px var(--lato) 0; }
+.categoria { position: relative; display: block; background: var(--grigio); aspect-ratio: 4 / 5; overflow: hidden; }
+.categoria img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.categoria:hover img { transform: scale(1.03); }
+.categoria::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,.6) 100%); }
+.categoria-testo { position: absolute; z-index: 1; left: 24px; right: 24px; bottom: 24px; color: var(--bianco); display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.categoria-nome { font: 400 clamp(44px, 6vw, 88px)/.9 var(--titoli); text-transform: uppercase; }
+.categoria-vai { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border-radius: 999px; background: var(--bianco); color: var(--nero); font-weight: 600; }
+
+/* vantaggi */
+.vantaggi { padding: 0 var(--lato) clamp(48px, 7vw, 96px); }
+.vantaggi ul { list-style: none; margin: 0; padding: 24px 0 0; border-top: 1px solid var(--grigio-2); display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.vantaggi li { display: flex; flex-direction: column; gap: 4px; }
+.vantaggi strong { font-size: 17px; }
+.vantaggi span, .vantaggi a { color: var(--testo-2); }
+.vantaggi a, .link { text-decoration: underline; text-underline-offset: 3px; }
+.vantaggi a:hover, .link:hover { color: var(--nero); }
+
+/* pagina aiuto */
+.aiuto { padding: 40px var(--lato) clamp(48px, 7vw, 96px); max-width: 980px; }
+.aiuto-indice { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 8px; }
+.aiuto-indice a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border: 1.5px solid var(--grigio-2); border-radius: 999px; font-weight: 600; }
+.aiuto-indice a:hover { border-color: var(--nero); }
+.aiuto section { padding-top: 32px; }
+.aiuto h2 { font: 400 clamp(32px, 4vw, 48px)/1 var(--titoli); text-transform: uppercase; margin-bottom: 12px; }
+.aiuto h3 { font-size: 18px; margin-bottom: 8px; }
+.aiuto p { font-size: 17px; max-width: 40em; margin: 0 0 12px; }
+.aiuto-tabelle { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 16px; }
+
+@media (max-width: 959px) {
+  .vantaggi ul { grid-template-columns: 1fr 1fr; }
+  .aiuto-tabelle { grid-template-columns: 1fr; }
+}
+@media (max-width: 599px) {
+  .categorie { gap: 8px; }
+  .categoria-testo { left: 14px; right: 14px; bottom: 14px; }
+  .categoria-vai { min-height: 40px; padding: 0 14px; font-size: 14px; }
 }

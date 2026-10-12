@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=7">
-<script defer src="assets/js/maro.js?v=7"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=9">
+<script defer src="assets/js/maro.js?v=9"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -92,7 +92,7 @@
     </details>
     <details>
       <summary>Spedizione e resi</summary>
-      <p>Spedizione in Italia in 2–4 giorni lavorativi. Reso entro 14 giorni dalla consegna.</p>
+      <p>Spedizione in Italia in 2–4 giorni lavorativi. Reso entro 14 giorni dalla consegna. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
   </div>
 </div>
@@ -101,7 +101,7 @@
   <h2 id="completa-titolo" class="titolo">Completa il look</h2>
   <div class="griglia griglia-3">
 <a class="scheda" href="felpa-stretta.html" data-tipo="felpa">
-  <div class="scheda-foto"><img src="assets/foto/felpa-stretta-retro.webp" width="1120" height="1400" alt="Felpa grigia su manichino, retro con la stretta di mano e le bandiere di Marocco e Italia" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/copertina-felpa-stretta.webp" width="1119" height="1400" alt="Felpa grigia indossata, retro con la stretta di mano" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#b9b9b9"></i></span>
     <h3>Felpa Stretta di mano</h3>
@@ -110,7 +110,7 @@
   </div>
 </a>
 <a class="scheda" href="felpa-firma.html" data-tipo="felpa">
-  <div class="scheda-foto"><img src="assets/foto/felpa-firma-retro.webp" width="1120" height="1400" alt="Felpa blu notte su manichino, retro con la firma MARO e le onde tricolore" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/copertina-felpa-firma.webp" width="1120" height="1400" alt="Felpa blu notte indossata davanti al Duomo di Milano, firma MARO sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#1c2440"></i></span>
     <h3>Felpa Firma</h3>
@@ -119,7 +119,7 @@
   </div>
 </a>
 <a class="scheda" href="polo-tricolore.html" data-tipo="polo">
-  <div class="scheda-foto"><img src="assets/foto/polo-tricolore-fronte.webp" width="1120" height="1400" alt="Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/copertina-polo-tricolore.webp" width="620" height="775" alt="Polo Tricolore nera con le maniche verde bianco rosso" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#000"></i></span>
     <h3>Polo Tricolore</h3>
@@ -132,15 +132,19 @@
 </main>
 <footer class="piede">
   <div class="piede-alto">
+    <div class="piede-marchio">
+      <a class="piede-logo" href="index.html" aria-label="MARO, home"><svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg><span>MARO</span></a>
+      <p>Streetwear disegnato a Milano.<br>Fly with your mind.</p>
+    </div>
     <nav aria-label="Drop 001"><h2>Drop 001</h2><a href="index.html#polo">Polo</a><a href="index.html#felpe">Felpe</a><a href="index.html#lookbook">Lookbook</a></nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="index.html#storia">La storia</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
-  <p class="piede-nome" aria-hidden="true">MARO</p>
   <div class="piede-basso">
-    <span>© 2026 MARO — Milano</span>
+    <span>© 2026 MARO · Milano</span>
     <span class="nota">Anteprima di presentazione: prezzi, materiali e testi sono di esempio.</span>
-    <span class="linguetta" aria-hidden="true"></span>
+    <span class="piede-paese">Italia · EUR €</span>
   </div>
 </footer>
 <div class="borsa" id="borsa" role="dialog" aria-modal="true" aria-labelledby="borsa-titolo" hidden>
@@ -151,6 +155,6 @@
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"polo-linee-fronte"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"polo-tricolore-fronte"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"polo-jacquard-intera"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"felpa-stretta-retro"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"felpa-firma-retro"},{"id":"felpa-nera","nome":"Felpa Nera","colore":"Nero, firma MARO sul retro","prezzo":110,"foto":"felpa-nera-retro"}];</script>
+<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"copertina-polo-linee"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"copertina-polo-tricolore"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"copertina-polo-jacquard"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"copertina-felpa-stretta"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"copertina-felpa-firma"},{"id":"felpa-verticale","nome":"Felpa Verticale","colore":"Verde bottiglia, firma MARO verticale sul retro","prezzo":110,"foto":"copertina-felpa-verticale"}];</script>
 </body>
 </html>

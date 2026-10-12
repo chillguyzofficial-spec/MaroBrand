@@ -25,10 +25,23 @@ const LAVORI = [
   { out: 'felpa-firma-retro', src: 'foto-set-2-2026-10-12/844072147_1810124660318198_7017883015441705205_n.webp' },
   { out: 'felpa-firma-tre-quarti', src: 'foto-set-2-2026-10-12/844861471_4656824397880401_7427535886801104678_n.webp' },
   { out: 'felpa-firma-fronte', src: 'foto-set-2-2026-10-12/847420150_1406026624930256_5378025056577203795_n.webp' },
-  { out: 'lookbook-duomo-felpa-blu', src: 'foto-reali/felpa-blu-retro-duomo.jpg', bn: true },
-  { out: 'polo-jacquard-intera', src: 'video-prodotto/polo-campione-dettagli.mp4', t: 2, crop: [0, 200, 464, 580] },
-  { out: 'polo-jacquard-ricamo', src: 'video-prodotto/polo-campione-dettagli.mp4', t: 4, crop: [0, 126, 464, 580] },
-  { out: 'felpa-nera-retro', src: 'mockup-ai/felpa-nera-montagne.jpg', crop: [194, 0, 690, 863] },
+  // Felpa Verticale (verde bottiglia): render set 4 + vecchia foto in montagna
+  { out: 'felpa-verticale-manichino', src: 'foto-set-4-2026-10-12/844207315_2020682351927935_7519315701529958749_n.webp' },
+  { out: 'felpa-verticale-fronte', src: 'foto-set-4-2026-10-12/846432527_1605944577978313_7379708338739515515_n.webp' },
+  { out: 'copertina-felpa-verticale', src: 'foto-set-4-2026-10-12/844978870_959320450056637_1130270179930424842_n.webp' },
+  { out: 'felpa-verticale-montagna', src: 'mockup-ai/felpa-nera-montagne.jpg', crop: [194, 0, 690, 863] },
+  // Polo Jacquard: render set 3 (N1 manichino, N3 tre quarti; N2 senza manichino = copertina)
+  { out: 'polo-jacquard-manichino', src: 'foto-set-3-2026-10-12/842309532_1786625739245873_7983844797197221728_n.webp' },
+  { out: 'polo-jacquard-tre-quarti', src: 'foto-set-3-2026-10-12/848027522_1150423370653244_5846329442587009076_n.webp' },
+  { out: 'copertina-polo-jacquard', src: 'foto-set-3-2026-10-12/847691216_1043673875344393_7451889368981812851_n.webp' },
+  // copertine della home: SENZA manichino (richiesta di Francesco 12/10)
+  { out: 'copertina-polo-linee', src: 'mockup-ai/polo-nere-tre.jpg', crop: [80, 50, 620, 775] },
+  { out: 'copertina-polo-tricolore', src: 'mockup-ai/polo-nere-tricolore.jpg', crop: [710, 50, 620, 775] },
+  { out: 'copertina-felpa-stretta', src: 'foto-reali/felpa-grigia-retro-stretta-di-mano.jpg', crop: [200, 0, 1324, 1656] },
+  { out: 'copertina-felpa-firma', src: 'foto-reali/felpa-blu-retro-duomo.jpg', crop: [7, 0, 1192, 1490] },
+  // categorie in home (senza manichino)
+  { out: 'categoria-polo', src: 'mockup-ai/polo-nere-tre.jpg', crop: [1330, 50, 620, 775] },
+  { out: 'categoria-felpe', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)
   { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg', bn: true },
   { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg', bn: true },

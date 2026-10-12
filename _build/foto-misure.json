@@ -7,6 +7,38 @@
   1206,
   1382
  ],
+ "categoria-felpe": [
+  1076,
+  1345
+ ],
+ "categoria-polo": [
+  620,
+  775
+ ],
+ "copertina-felpa-firma": [
+  1120,
+  1400
+ ],
+ "copertina-felpa-stretta": [
+  1119,
+  1400
+ ],
+ "copertina-felpa-verticale": [
+  1120,
+  1400
+ ],
+ "copertina-polo-jacquard": [
+  1120,
+  1400
+ ],
+ "copertina-polo-linee": [
+  620,
+  775
+ ],
+ "copertina-polo-tricolore": [
+  620,
+  775
+ ],
  "felpa-firma-fronte": [
   1120,
   1400
@@ -18,10 +50,6 @@
  "felpa-firma-tre-quarti": [
   1120,
   1400
- ],
- "felpa-nera-retro": [
-  690,
-  863
  ],
  "felpa-stretta-fronte": [
   1120,
@@ -35,9 +63,17 @@
   1120,
   1400
  ],
- "lookbook-duomo-felpa-blu": [
-  1133,
+ "felpa-verticale-fronte": [
+  1120,
   1400
+ ],
+ "felpa-verticale-manichino": [
+  1120,
+  1400
+ ],
+ "felpa-verticale-montagna": [
+  690,
+  863
  ],
  "lookbook-metro-polo-1": [
   768,
@@ -47,13 +83,13 @@
   768,
   1376
  ],
- "polo-jacquard-intera": [
-  464,
-  580
+ "polo-jacquard-manichino": [
+  1120,
+  1400
  ],
- "polo-jacquard-ricamo": [
-  464,
-  580
+ "polo-jacquard-tre-quarti": [
+  1120,
+  1400
  ],
  "polo-linee-fronte": [
   1120,
