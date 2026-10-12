@@ -45,7 +45,6 @@ const LAVORI = [
   // pagina Storia (bianco e nero con grana, proporzioni originali; lo schizzo resta a colori)
   { out: 'storia-apertura-colonna', src: 'mockup-ai/metro-insegna-colonna.jpg', bn: true },
   // scene (set 5 del 12/10): campagna e pagina del brand, a colori, senza tagli
-  { out: 'scena-duomo-tramonto', src: 'foto-set-5-2026-10-12/845559360_1254218593580172_8700046240341588541_n.webp', max: 2048, q: 0.86 },
   { out: 'scena-ricamo-mani', src: 'foto-set-5-2026-10-12/845684221_1655451425975308_3820682003388145130_n.webp' },
   { out: 'scena-capi-maro', src: 'foto-set-5-2026-10-12/846966136_2610599519436733_3385366467222422541_n.webp' },
   { out: 'scena-orizzonte', src: 'foto-set-5-2026-10-12/846053658_1783488912923974_9001021024052174187_n.webp' },

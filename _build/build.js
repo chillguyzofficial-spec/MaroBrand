@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '13'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '14'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -169,10 +169,6 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
     <li><strong>Pagamento sicuro</strong><span>carta, PayPal, Apple Pay</span></li>
     <li><strong>Guida alle taglie</strong><a href="aiuto.html#taglie">trova la tua misura</a></li>
   </ul>
-</section>
-
-<section class="banda" aria-label="Drop 001 a Milano">
-  <figure>${img('scena-duomo-tramonto', 'Tre ragazzi di spalle con felpe e polo MARO guardano il Duomo di Milano al tramonto', { dove: 'home banda', sizes: '100vw' })}<figcaption>Drop 001 · Milano</figcaption></figure>
 </section>
 
 <section class="campagna" aria-labelledby="campagna-titolo">
