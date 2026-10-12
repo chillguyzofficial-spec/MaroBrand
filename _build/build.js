@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '24'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '25'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -452,8 +452,9 @@ function storia() {
 <section class="st-blocco st-chiaro" aria-labelledby="st-c1">
   <div class="st-testo">
     <div class="st-num" aria-hidden="true">01</div>
-    <h2 id="st-c1">Il segno</h2>
-    <p>Una M, due ali. È il simbolo che firma ogni capo MARO: sul petto delle polo, sui cartellini, sulle etichette.</p>
+    <h2 id="st-c1">Il nome<br>e il segno</h2>
+    <p><strong>MARO è l’anagramma di Omar</strong>, il fondatore: le stesse lettere, in un altro ordine. Un nome personale, rimesso in gioco per diventare di chi lo indossa.</p>
+    <p>Il segno è una M con due ali: firma ogni capo MARO, sul petto delle polo, sui cartellini, sulle etichette.</p>
     <p>Accanto vive la firma verticale, con le sue fiamme. La usiamo in grande, sulla schiena, dove deve farsi vedere.</p>
   </div>
   <div class="st-media st-confronto">
