@@ -51,13 +51,18 @@ const LAVORI = [
   { out: 'scena-citta', src: 'foto-set-5-2026-10-12/846613319_4604241063165391_3335941884249520016_n.webp' },
   { out: 'scena-ricamo-vicino', src: 'foto-set-5-2026-10-12/846671117_924186993887815_3303255480979063179_n.webp' },
   { out: 'scena-showroom', src: 'foto-set-5-2026-10-12/840312014_28569449039377509_7023473326715691606_n.webp' },
+  // lookbook (set 6, Milano, 4:5)
+  { out: 'lb-galleria', src: 'foto-set-6-lookbook-2026-10-12/843937776_1142786151551774_7865409833358537198_n.webp' },
+  { out: 'lb-citylife-tramonto', src: 'foto-set-6-lookbook-2026-10-12/846024298_1693017522427463_5236299039848534645_n.webp' },
+  { out: 'lb-duomo-coppia', src: 'foto-set-6-lookbook-2026-10-12/844008261_1143757978215727_2040360599069335891_n.webp' },
+  { out: 'lb-citylife-strada', src: 'foto-set-6-lookbook-2026-10-12/844630781_1687321869479481_5290674282119455048_n.webp' },
+  { out: 'lb-galleria-sera', src: 'foto-set-6-lookbook-2026-10-12/844498036_1792152842070288_2275089470874845541_n.webp' },
+  { out: 'lb-panchina', src: 'foto-set-6-lookbook-2026-10-12/848027518_1394028379580796_8595108630778463954_n.webp' },
+  { out: 'lb-muro-duomo', src: 'foto-set-6-lookbook-2026-10-12/848310828_2377284119345501_5890415487277954341_n.webp' },
+  { out: 'lb-pista', src: 'foto-set-6-lookbook-2026-10-12/847555109_2232195931054454_393029917893088234_n.webp' },
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)
   { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg' },
   { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg' },
-  { out: 'lookbook-metro-polo-1', src: 'mockup-ai/metro-gruppo-polo-1.jpg' },
-  { out: 'lookbook-metro-polo-2', src: 'mockup-ai/metro-gruppo-polo-2.jpg' },
-  { out: 'lookbook-marmo-capi', src: 'foto-set-5-2026-10-12/846773394_28773923845560699_8794904601816367419_n.webp' },
-  { out: 'lookbook-nastri', src: 'foto-set-5-2026-10-12/842494143_2278692379575462_6297581148393665340_n.webp', max: 2048, q: 0.86 },
   // locandina del video d'apertura (mostrata finché il video non parte)
   { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];

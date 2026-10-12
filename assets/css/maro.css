@@ -428,3 +428,11 @@ details > p { margin: 0 0 20px; }
   .lb-binario figure { width: 100%; height: auto; }
   .lb-binario img { width: 100%; height: auto; }
 }
+
+/* chiusura della pagina del brand: fascia compatta */
+.st-valori { padding-bottom: clamp(48px, 6vw, 80px); }
+.st-fine { padding: clamp(28px, 4vw, 44px) var(--lato); align-items: center; }
+.st-fine-testo { display: flex; align-items: center; gap: 18px; }
+.st-fine-simbolo { width: 54px; height: 41px; color: var(--bianco); flex: none; }
+.st-fine h2 { font: 400 clamp(30px, 3.4vw, 48px)/1 var(--titoli); text-transform: uppercase; }
+@media (max-width: 599px) { .st-fine { flex-direction: column; align-items: flex-start; } .st-fine-simbolo { width: 42px; height: 32px; } }

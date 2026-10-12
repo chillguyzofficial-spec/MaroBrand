@@ -75,21 +75,37 @@
   690,
   863
  ],
- "lookbook-marmo-capi": [
+ "lb-citylife-strada": [
   1120,
   1400
  ],
- "lookbook-metro-polo-1": [
-  768,
-  1376
+ "lb-citylife-tramonto": [
+  1120,
+  1400
  ],
- "lookbook-metro-polo-2": [
-  768,
-  1376
+ "lb-duomo-coppia": [
+  1120,
+  1400
  ],
- "lookbook-nastri": [
-  2048,
-  1152
+ "lb-galleria-sera": [
+  1120,
+  1400
+ ],
+ "lb-galleria": [
+  1120,
+  1400
+ ],
+ "lb-muro-duomo": [
+  1120,
+  1400
+ ],
+ "lb-panchina": [
+  1120,
+  1400
+ ],
+ "lb-pista": [
+  1120,
+  1400
  ],
  "polo-jacquard-manichino": [
   1120,

@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '20'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '22'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -117,10 +117,14 @@ function scheda(p, dove) {
 // ---------- HOME ----------
 function home() {
   const lb = [
-    ['lookbook-metro-polo-1', 'In metro con le polo MARO'],
-    ['lookbook-marmo-capi', 'Felpa verde, felpa blu e polo nera MARO sul marmo'],
-    ['lookbook-metro-polo-2', 'Quattro amici in metro con le polo MARO'],
-    ['lookbook-nastri', 'Felpa verde, felpa blu e polo nera MARO tra nastri verde, bianco e rosso su fondo scuro'],
+    ['lb-galleria', 'Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo'],
+    ['lb-citylife-tramonto', 'Felpa verde MARO di spalle davanti ai grattacieli di CityLife al tramonto'],
+    ['lb-duomo-coppia', 'Due ragazzi con felpe blu MARO di spalle verso il Duomo di Milano'],
+    ['lb-citylife-strada', 'Ragazzo con felpa verde MARO cammina in una strada di CityLife'],
+    ['lb-galleria-sera', 'Due ragazzi con felpe MARO verde e blu nella Galleria illuminata la sera'],
+    ['lb-panchina', 'Ragazza con felpa verde MARO seduta su una panchina davanti ai grattacieli'],
+    ['lb-muro-duomo', 'Felpa blu MARO di spalle contro un muro antico vicino al Duomo'],
+    ['lb-pista', 'Ragazza con felpa verde MARO cammina sulla pista ciclabile al tramonto'],
   ];
   const corpo = `
 <section class="apertura" aria-label="Apertura">
@@ -430,7 +434,7 @@ function storia() {
 </section>
 
 <section class="st-fine" aria-labelledby="st-fine">
-  <h2 id="st-fine" class="titolo">Indossa<br>il segno.</h2>
+  <div class="st-fine-testo"><svg class="st-fine-simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg><h2 id="st-fine">Indossa il segno.</h2></div>
   <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear nato a Milano: il segno, il rispetto e il modo in cui nasce ogni capo.', corpo, file: 'storia.html' });
