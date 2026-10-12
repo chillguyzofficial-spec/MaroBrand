@@ -61,8 +61,11 @@ h1, h2, h3 { margin: 0; }
 .apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
 .apertura-video { position: absolute; top: 0; right: 0; height: 100%; width: auto; max-width: none; aspect-ratio: 16 / 9; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%); mask-image: linear-gradient(90deg, transparent 0, #000 22%); }
 .apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.38) 38%, rgba(0,0,0,0) 62%), linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.6) 100%); }
+.apertura-video { z-index: 0; transition: opacity 1s linear; }
+.apertura-video[data-copia] { opacity: 0; }
+.apertura::after { z-index: 2; }
 .apertura-video::-webkit-media-controls { display: none !important; }
-.apertura-testo { position: absolute; z-index: 2; left: var(--lato); right: var(--lato); bottom: clamp(28px, 6vh, 64px); }
+.apertura-testo { position: absolute; z-index: 3; left: var(--lato); right: var(--lato); bottom: clamp(28px, 6vh, 64px); }
 .apertura h1 { font: 400 clamp(64px, 10vw, 156px)/.88 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
 .apertura .occhiello { font-size: clamp(14px, 1.2vw, 17px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; max-width: none; }
 .apertura p { font-size: clamp(19px, 1.9vw, 26px); font-weight: 600; line-height: 1.3; max-width: 30em; text-wrap: balance; margin: 18px 0 24px; text-shadow: 0 1px 14px rgba(0,0,0,.7); }

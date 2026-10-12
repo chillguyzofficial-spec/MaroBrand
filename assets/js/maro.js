@@ -13,14 +13,34 @@
     document.documentElement.style.overflow = blocchi ? 'hidden' : '';
   }
 
-  /* ---------- video d'apertura: sempre in loop, senza pausa ---------- */
-  var video = $('.apertura-video');
+  /* ---------- video d'apertura: loop senza stacco (due copie in dissolvenza incrociata) ---------- */
+  var video = $('.apertura-video:not([data-copia])'), copia = $('.apertura-video[data-copia]');
   if (video) {
-    var riparti = function () { if (video.paused && !document.hidden) video.play().catch(function () {}); };
-    // se il browser lo ferma (risparmio energetico, cambio scheda) riparte da solo
-    document.addEventListener('visibilitychange', riparti);
-    video.addEventListener('pause', function () { setTimeout(riparti, 300); });
-    riparti();
+    var SFUMA = 1; // secondi di dissolvenza a fine giro
+    var attivo = video, altro = copia, inCambio = false;
+    video.loop = false;
+    var parti = function (v) { if (v.paused) v.play().catch(function () {}); };
+    var cambia = function () {
+      inCambio = true;
+      altro.currentTime = 0; parti(altro);
+      altro.style.zIndex = 1; altro.style.opacity = 1;
+      setTimeout(function () {
+        // il vecchio sparisce sotto quello nuovo, senza dissolvenza
+        attivo.pause(); attivo.style.transition = 'none'; attivo.style.zIndex = 0; attivo.style.opacity = 0;
+        void attivo.offsetWidth; attivo.style.transition = '';
+        var t = attivo; attivo = altro; altro = t; inCambio = false;
+      }, SFUMA * 1000 + 60);
+    };
+    var controlla = function () {
+      if (!document.hidden) {
+        if (!copia) { parti(attivo); }
+        else if (!inCambio && attivo.duration && attivo.currentTime >= attivo.duration - SFUMA) cambia();
+        else if (!inCambio) parti(attivo); // se il browser lo ferma, riparte
+      }
+      requestAnimationFrame(controlla);
+    };
+    if (!copia) video.loop = true;
+    requestAnimationFrame(controlla);
   }
 
   /* ---------- menu su telefono ---------- */

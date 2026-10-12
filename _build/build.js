@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '3'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '4'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -116,6 +116,9 @@ function home() {
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="assets/foto/apertura-locandina.webp" aria-hidden="true" tabindex="-1">
+    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+  </video>
+  <video class="apertura-video" data-copia muted playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-1.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
