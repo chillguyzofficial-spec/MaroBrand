@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=17">
-<script defer src="assets/js/maro.js?v=17"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=19">
+<script defer src="assets/js/maro.js?v=19"></script>
 </head>
 <body class="home">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -147,33 +147,44 @@
 <section class="campagna" aria-labelledby="campagna-titolo">
   <div class="campagna-foto"><img src="assets/foto/campagna-due-ragazzi.webp?v=e6f1b4d4" width="1206" height="1382" alt="Due ragazzi con felpe MARO appoggiati a una ringhiera in un parco di Milano" loading="lazy" decoding="async" sizes="(min-width: 960px) 50vw, 100vw"></div>
   <div class="campagna-testo">
-    <h2 id="campagna-titolo" class="titolo titolo-xl">Niente<br>stagioni.<br>Solo<br>drop.</h2>
-    <p class="campagna-sotto">Pochi pezzi, quando sono pronti. Quando finiscono, finiscono.</p>
+    <h2 id="campagna-titolo" class="titolo titolo-xl">Fatto<br>per la<br>città.</h2>
+    <p class="campagna-sotto">Polo e felpe pensate per tutti i giorni: dal lavoro alla sera, senza cambiarsi.</p>
   </div>
 </section>
 
 <section class="storia" id="storia" aria-labelledby="storia-titolo">
   <div class="storia-testo">
     <span class="linguetta" aria-hidden="true"></span>
-    <h2 id="storia-titolo" class="titolo">Una M.<br>Due ali.</h2>
-    <p>È il segno che firma ogni capo MARO. Dice una cosa sola: i piedi sul cemento, <strong>la testa più in alto di tutti.</strong></p>
+    <h2 id="storia-titolo" class="titolo">Dietro<br>il segno</h2>
+    <p>Cosa significano le ali, perché una stretta di mano e come nasce ogni capo MARO.</p>
     <a class="btn btn-nero" href="storia.html">Scopri il brand</a>
   </div>
   <div class="storia-foto"><img src="assets/foto/scena-ricamo-mani.webp?v=83197f75" width="1120" height="1400" alt="Mani al lavoro su una ricamatrice che ricama la scritta MARO" loading="lazy" decoding="async" sizes="(min-width: 960px) 50vw, 100vw"></div>
 </section>
 
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
-  <div class="lookbook-testa"><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Drop 001 · Milano</p></div>
-  <div class="lookbook-griglia">
-    <figure><img src="assets/foto/lookbook-metro-polo-1.webp?v=acd3c2c7" width="768" height="1376" alt="In metro con le polo MARO" loading="lazy" decoding="async" sizes="(min-width: 960px) 48vw, 100vw"></figure>
-    <figure><img src="assets/foto/lookbook-metro-polo-2.webp?v=93d67e60" width="768" height="1376" alt="Quattro amici in metro con le polo MARO" loading="lazy" decoding="async" sizes="(min-width: 960px) 48vw, 100vw"></figure>
+  <div class="lookbook-testa">
+    <div><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Drop 001 · Milano</p></div>
+    <div class="lb-comandi">
+      <span class="lb-conta" aria-live="polite"></span>
+      <button class="lb-freccia" type="button" data-lb="-1" aria-label="Foto precedenti">‹</button>
+      <button class="lb-freccia" type="button" data-lb="1" aria-label="Foto successive">›</button>
+    </div>
+  </div>
+  <div class="lb-vetrina" aria-label="Foto del lookbook">
+    <div class="lb-binario">
+      <figure aria-label="Foto 1 di 4"><img src="assets/foto/lookbook-metro-polo-1.webp?v=acd3c2c7" width="768" height="1376" alt="In metro con le polo MARO" decoding="async" sizes="(min-width: 960px) 32vw, 100vw"></figure>
+      <figure aria-label="Foto 2 di 4"><img src="assets/foto/lookbook-marmo-capi.webp?v=cdd0ed90" width="1120" height="1400" alt="Felpa verde, felpa blu e polo nera MARO sul marmo" decoding="async" sizes="(min-width: 960px) 32vw, 100vw"></figure>
+      <figure aria-label="Foto 3 di 4"><img src="assets/foto/lookbook-metro-polo-2.webp?v=93d67e60" width="768" height="1376" alt="Quattro amici in metro con le polo MARO" decoding="async" sizes="(min-width: 960px) 32vw, 100vw"></figure>
+      <figure aria-label="Foto 4 di 4"><img src="assets/foto/lookbook-marmo-sartoria.webp?v=8cee72c1" width="1400" height="1400" alt="Felpe e polo MARO piegate sul marmo con fili, forbici e metro da sarta" decoding="async" sizes="(min-width: 960px) 32vw, 100vw"></figure>
+    </div>
   </div>
 </section>
 
 <section class="iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
   <div class="iscriviti-testo">
   <h2 id="iscriviti-titolo" class="titolo">Non perdere il prossimo drop</h2>
-  <p class="iscriviti-sotto">Data, pezzi e accesso anticipato. Prima degli altri, niente spam.</p>
+  <p class="iscriviti-sotto">Ti avvisiamo prima dell’uscita, con la data e i capi in anteprima. Niente spam.</p>
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
     <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>

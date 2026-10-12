@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '17'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '19'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -22,7 +22,7 @@ const euro = n => n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' �
 function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw' } = {}) {
   usa(id, dove);
   const [w, h] = MISURE[id];
-  return `<img src="${urlFoto(id)}" width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'} sizes="${sizes}">`;
+  return `<img src="${urlFoto(id)}" width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : (dove === 'home lookbook' ? ' decoding="async"' : ' fetchpriority="high"')} sizes="${sizes}">`;
 }
 
 const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
@@ -118,7 +118,9 @@ function scheda(p, dove) {
 function home() {
   const lb = [
     ['lookbook-metro-polo-1', 'In metro con le polo MARO'],
+    ['lookbook-marmo-capi', 'Felpa verde, felpa blu e polo nera MARO sul marmo'],
     ['lookbook-metro-polo-2', 'Quattro amici in metro con le polo MARO'],
+    ['lookbook-marmo-sartoria', 'Felpe e polo MARO piegate sul marmo con fili, forbici e metro da sarta'],
   ];
   const corpo = `
 <section class="apertura" aria-label="Apertura">
@@ -177,32 +179,41 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
 <section class="campagna" aria-labelledby="campagna-titolo">
   <div class="campagna-foto">${img('campagna-due-ragazzi', 'Due ragazzi con felpe MARO appoggiati a una ringhiera in un parco di Milano', { dove: 'home campagna', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
   <div class="campagna-testo">
-    <h2 id="campagna-titolo" class="titolo titolo-xl">Niente<br>stagioni.<br>Solo<br>drop.</h2>
-    <p class="campagna-sotto">Pochi pezzi, quando sono pronti. Quando finiscono, finiscono.</p>
+    <h2 id="campagna-titolo" class="titolo titolo-xl">Fatto<br>per la<br>città.</h2>
+    <p class="campagna-sotto">Polo e felpe pensate per tutti i giorni: dal lavoro alla sera, senza cambiarsi.</p>
   </div>
 </section>
 
 <section class="storia" id="storia" aria-labelledby="storia-titolo">
   <div class="storia-testo">
     <span class="linguetta" aria-hidden="true"></span>
-    <h2 id="storia-titolo" class="titolo">Una M.<br>Due ali.</h2>
-    <p>È il segno che firma ogni capo MARO. Dice una cosa sola: i piedi sul cemento, <strong>la testa più in alto di tutti.</strong></p>
+    <h2 id="storia-titolo" class="titolo">Dietro<br>il segno</h2>
+    <p>Cosa significano le ali, perché una stretta di mano e come nasce ogni capo MARO.</p>
     <a class="btn btn-nero" href="storia.html">Scopri il brand</a>
   </div>
   <div class="storia-foto">${img('scena-ricamo-mani', 'Mani al lavoro su una ricamatrice che ricama la scritta MARO', { dove: 'home brand', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
 </section>
 
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
-  <div class="lookbook-testa"><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Drop 001 · Milano</p></div>
-  <div class="lookbook-griglia">
-${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 48vw, 100vw' })}</figure>`).join('\n')}
+  <div class="lookbook-testa">
+    <div><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Drop 001 · Milano</p></div>
+    <div class="lb-comandi">
+      <span class="lb-conta" aria-live="polite"></span>
+      <button class="lb-freccia" type="button" data-lb="-1" aria-label="Foto precedenti">‹</button>
+      <button class="lb-freccia" type="button" data-lb="1" aria-label="Foto successive">›</button>
+    </div>
+  </div>
+  <div class="lb-vetrina" aria-label="Foto del lookbook">
+    <div class="lb-binario">
+${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.length}">${img(id, alt, { dove: 'home lookbook', lazy: false, sizes: '(min-width: 960px) 32vw, 100vw' })}</figure>`).join('\n')}
+    </div>
   </div>
 </section>
 
 <section class="iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
   <div class="iscriviti-testo">
   <h2 id="iscriviti-titolo" class="titolo">Non perdere il prossimo drop</h2>
-  <p class="iscriviti-sotto">Data, pezzi e accesso anticipato. Prima degli altri, niente spam.</p>
+  <p class="iscriviti-sotto">Ti avvisiamo prima dell’uscita, con la data e i capi in anteprima. Niente spam.</p>
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
     <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
@@ -370,8 +381,8 @@ function storia() {
   <figure class="st-hero-foto">${img('scena-dolomiti', 'Due ragazzi con felpe MARO di spalle davanti alle Dolomiti', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
   <div class="st-hero-testo">
     <p class="occhiello">Il brand</p>
-    <h1 id="st-titolo">Fly with<br>your mind.</h1>
-    <p class="st-lead">MARO è streetwear nato a Milano. Capi essenziali, linee pulite, un segno che si riconosce da lontano. Per chi vive la città ogni giorno <strong>e tiene la testa alta.</strong></p>
+    <h1 id="st-titolo">Nati<br>a Milano.</h1>
+    <p class="st-lead">MARO fa streetwear essenziale: linee pulite e un segno che si riconosce da lontano. Per chi vive la città ogni giorno <strong>e tiene la testa alta.</strong></p>
   </div>
 </section>
 
@@ -392,7 +403,7 @@ function storia() {
   <div class="st-testo">
     <div class="st-num" aria-hidden="true">02</div>
     <h2 id="st-c2">Testa alta.<br>Sempre.</h2>
-    <p>“Fly with your mind” non è una frase da stampare. È un modo di stare in città: lavoro, metro, notti lunghe, e la testa sempre un passo avanti. <strong>Le ali servono a questo.</strong></p>
+    <p>“Fly with your mind” non è solo una scritta sulla maglia. È un modo di vivere la città: tra lavoro, metro e notti lunghe, con la testa sempre un passo avanti. <strong>Le ali stanno lì per ricordarlo.</strong></p>
   </div>
   <figure class="st-media">${img('scena-orizzonte', 'Ragazzo con felpa MARO di spalle in cima a una montagna guarda l’orizzonte', { dove: 'brand testa alta', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
 </section>
@@ -412,9 +423,9 @@ function storia() {
   <div class="st-num" aria-hidden="true">04</div>
   <h2 id="st-c4">Come lavoriamo</h2>
   <ul>
-    <li><figure>${img('scena-citta', 'Ragazzo con felpa MARO di spalle in un parco di Milano', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">01</span><h3>Disegnato a Milano</h3><p>Ogni grafica nasce in studio e si prova su ogni capo, da vicino e da lontano, prima di andare in produzione.</p></li>
-    <li><figure>${img('scena-ricamo-vicino', 'Una macchina ricama la scritta MARO su una felpa', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">02</span><h3>Ricamato dove conta</h3><p>Simbolo e firma sono ricamati sulle polo: restano nel tempo, lavaggio dopo lavaggio.</p></li>
-    <li><figure>${img('scena-showroom', 'Felpe e polo MARO appese in uno showroom scuro', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">03</span><h3>Solo drop</h3><p>Niente collezioni di stagione. Pochi pezzi, quando sono pronti. Quando finiscono, finiscono.</p></li>
+    <li><figure>${img('scena-citta', 'Ragazzo con felpa MARO di spalle in un parco di Milano', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">01</span><h3>Disegnato a Milano</h3><p>Ogni grafica nasce in studio e viene provata sul capo, da vicino e da lontano, prima di andare in produzione.</p></li>
+    <li><figure>${img('scena-ricamo-vicino', 'Una macchina ricama la scritta MARO su una felpa', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">02</span><h3>Ricamato dove conta</h3><p>Sulle polo simbolo e firma sono ricamati, non stampati: durano nel tempo, lavaggio dopo lavaggio.</p></li>
+    <li><figure>${img('scena-showroom', 'Felpe e polo MARO appese in uno showroom scuro', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">03</span><h3>Solo drop</h3><p>Niente collezioni di stagione: escono pochi capi alla volta, solo quando sono pronti. Finito un drop, si passa al successivo.</p></li>
   </ul>
 </section>
 
@@ -422,7 +433,7 @@ function storia() {
   <h2 id="st-fine" class="titolo">Indossa<br>il segno.</h2>
   <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
 </section>`;
-  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear da Milano: il segno, il rispetto, solo drop. Fly with your mind.', corpo, file: 'storia.html' });
+  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear nato a Milano: il segno, il rispetto e il modo in cui nasce ogni capo.', corpo, file: 'storia.html' });
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());

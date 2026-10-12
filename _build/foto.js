@@ -56,6 +56,8 @@ const LAVORI = [
   { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg' },
   { out: 'lookbook-metro-polo-1', src: 'mockup-ai/metro-gruppo-polo-1.jpg' },
   { out: 'lookbook-metro-polo-2', src: 'mockup-ai/metro-gruppo-polo-2.jpg' },
+  { out: 'lookbook-marmo-capi', src: 'foto-set-5-2026-10-12/846773394_28773923845560699_8794904601816367419_n.webp' },
+  { out: 'lookbook-marmo-sartoria', src: 'foto-set-5-2026-10-12/847805131_1768248471058589_4644519022755093556_n.webp' },
   // locandina del video d'apertura (mostrata finché il video non parte)
   { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];

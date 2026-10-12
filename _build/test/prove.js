@@ -35,7 +35,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
@@ -111,6 +111,14 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.evaluate(() => document.querySelector('.esito').classList.contains('errore')), 'email sbagliata segnalata');
   await p.fill('#email', 'mario.rossi@esempio.it'); await p.tap('.iscriviti-form .btn');
   prova(await p.evaluate(() => /Sei dentro/.test(document.querySelector('.esito').textContent)), 'email valida accettata (anche con la s)');
+  // lookbook a scorrimento (telefono: una foto per volta)
+  await p.goto(BASE + 'index.html', { waitUntil: 'load' });
+  await p.evaluate(() => document.querySelector('#lookbook').scrollIntoView());
+  prova((await p.textContent('.lb-conta')).startsWith('1–1 / 4') && await p.isDisabled('[data-lb="-1"]'), 'lookbook: parte da 1, indietro disattivo');
+  await p.tap('[data-lb="1"]'); await p.waitForTimeout(600);
+  prova((await p.textContent('.lb-conta')).startsWith('2–2'), 'lookbook: avanti → 2');
+  prova(await p.evaluate(() => { const v = document.querySelector('.lb-vetrina').getBoundingClientRect(), f = document.querySelectorAll('.lb-binario figure')[1].getBoundingClientRect(); return Math.abs(v.left - f.left) < 2; }), 'lookbook: foto 2 al suo posto');
+
   // vetrina a scorrimento
   await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
   const conta = () => p.textContent('.vetrina-conta');

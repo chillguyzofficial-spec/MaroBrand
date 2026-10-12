@@ -174,6 +174,27 @@
     });
   }
 
+  /* ---------- lookbook a scorrimento (frecce + dito) ---------- */
+  var lbV = $('.lb-vetrina');
+  if (lbV) {
+    var lbB = $('.lb-binario', lbV), lbF = $$('figure', lbB), lbI = 0, lbConta = $('.lb-conta'), lbFrecce = $$('[data-lb]');
+    var perVista = function () { return Math.max(1, Math.round(lbV.clientWidth / lbF[0].getBoundingClientRect().width)); };
+    var lbVai = function (k) {
+      var max = Math.max(0, lbF.length - perVista());
+      lbI = Math.min(max, Math.max(0, k));
+      lbB.style.transform = 'translateX(' + (lbF[0].offsetLeft - lbF[lbI].offsetLeft) + 'px)';
+      if (lbConta) lbConta.textContent = (lbI + 1) + '–' + (lbI + perVista()) + ' / ' + lbF.length;
+      lbFrecce[0].disabled = lbI === 0; lbFrecce[1].disabled = lbI === max;
+    };
+    lbFrecce.forEach(function (b) { b.addEventListener('click', function () { lbVai(lbI + Number(b.getAttribute('data-lb'))); }); });
+    var lx = null, ly = 0;
+    lbV.addEventListener('pointerdown', function (e) { lx = e.clientX; ly = e.clientY; });
+    lbV.addEventListener('pointerup', function (e) { if (lx === null) return; var dx = e.clientX - lx, dy = e.clientY - ly; lx = null; if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) lbVai(lbI + (dx < 0 ? 1 : -1)); });
+    lbV.addEventListener('pointercancel', function () { lx = null; });
+    window.addEventListener('resize', function () { lbVai(lbI); });
+    lbVai(0);
+  }
+
   /* ---------- pagina aiuto: tabella taglie polo / felpe ---------- */
   var schede = $$('[data-tabella]');
   schede.forEach(function (b) {
