@@ -372,3 +372,30 @@ details > p { margin: 0 0 20px; }
 @media (max-width: 959px) {
   .iscriviti, .st-manifesto { grid-template-columns: 1fr; }
 }
+
+/* pagina del brand v3: apertura a tutta larghezza + blocchi alternati */
+.st-hero { position: relative; background: var(--nero); color: var(--bianco); }
+.st-hero-foto { margin: 0; position: relative; }
+.st-hero-foto img { width: 100%; }
+.st-hero-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.25) 45%, rgba(0,0,0,0) 70%), linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
+.st-hero-testo { position: absolute; z-index: 1; left: var(--lato); bottom: clamp(28px, 5vw, 72px); max-width: min(620px, 50%); }
+.st-hero .occhiello { font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; }
+.st-hero h1 { font: 400 clamp(56px, 8vw, 132px)/.88 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 30px rgba(0,0,0,.4); }
+.st-hero .st-lead { margin-top: 20px; text-shadow: 0 1px 14px rgba(0,0,0,.6); }
+.st-blocco { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: 'testo media'; gap: clamp(28px, 5vw, 80px); align-items: center; padding: clamp(56px, 8vw, 120px) var(--lato); }
+.st-blocco.st-inverso { grid-template-areas: 'media testo'; }
+.st-blocco .st-testo { grid-area: testo; }
+.st-blocco .st-media { grid-area: media; margin: 0; }
+.st-blocco .st-media img { width: 100%; }
+.st-chiaro { background: var(--bianco); }
+.st-scuro { background: var(--nero); color: var(--bianco); }
+.st-scuro .st-num { color: #9a9a9a; }
+.st-scuro .st-testo p { color: #e6e6e6; }
+.st-scuro strong { color: var(--bianco); }
+.st-grigio { background: var(--grigio); }
+.st-valori > h2 { margin-bottom: 28px; }
+@media (max-width: 959px) {
+  .st-hero-testo { position: static; max-width: none; padding: 28px var(--lato) 40px; }
+  .st-hero-foto::after { display: none; }
+  .st-blocco, .st-blocco.st-inverso { grid-template-columns: 1fr; grid-template-areas: 'testo' 'media'; }
+}

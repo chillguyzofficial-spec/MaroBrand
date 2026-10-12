@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '14'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '15'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -363,58 +363,55 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
 // ---------- STORIA (testi provvisori: da completare con le parole del fondatore) ----------
 function storia() {
   const corpo = `
-<section class="st-apertura" aria-labelledby="st-titolo">
-  <div class="st-apertura-testo">
+<section class="st-hero" aria-labelledby="st-titolo">
+  <figure class="st-hero-foto">${img('scena-dolomiti', 'Due ragazzi con felpe MARO di spalle davanti alle Dolomiti', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
+  <div class="st-hero-testo">
     <p class="occhiello">Il brand</p>
     <h1 id="st-titolo">Fly with<br>your mind.</h1>
     <p class="st-lead">MARO è streetwear nato a Milano. Capi essenziali, linee pulite, un segno che si riconosce da lontano. Per chi vive la città ogni giorno <strong>e tiene la testa alta.</strong></p>
   </div>
-  <div class="st-apertura-foto">${img('storia-apertura-colonna', 'La firma MARO su una colonna della metro di Milano', { dove: 'storia apertura', lazy: false, sizes: '(min-width: 960px) 40vw, 100vw' })}</div>
 </section>
 
-<section class="st-capitolo" aria-labelledby="st-c1">
-  <div class="st-num" aria-hidden="true">01</div>
+<section class="st-blocco st-chiaro" aria-labelledby="st-c1">
   <div class="st-testo">
+    <div class="st-num" aria-hidden="true">01</div>
     <h2 id="st-c1">Il segno</h2>
     <p>Una M, due ali. È il simbolo che firma ogni capo MARO: sul petto delle polo, sui cartellini, sulle etichette.</p>
     <p>Accanto vive la firma verticale, con le sue fiamme. La usiamo in grande, sulla schiena, dove deve farsi vedere.</p>
   </div>
-  <div class="st-confronto">
+  <div class="st-media st-confronto">
     <figure class="st-simbolo"><svg viewBox="0 0 200 150" role="img" aria-label="Il simbolo MARO: una M con due ali"><use href="#maro-simbolo"/></svg><figcaption>Il simbolo</figcaption></figure>
     <figure class="st-firma"><svg viewBox="0 0 200 560" role="img" aria-label="La firma verticale MARO con le fiamme"><use href="#maro-firma"/></svg><figcaption>La firma</figcaption></figure>
   </div>
 </section>
 
-<section class="st-manifesto" aria-labelledby="st-c2">
-  <div class="st-manifesto-testo">
-  <div class="st-num" aria-hidden="true">02</div>
-  <h2 id="st-c2">Testa alta.<br>Sempre.</h2>
-  <p>“Fly with your mind” non è una frase da stampare. È un modo di stare in città: lavoro, metro, notti lunghe, e la testa sempre un passo avanti. <strong>Le ali servono a questo.</strong></p>
-  </div>
-  <figure class="st-manifesto-foto">${img('scena-orizzonte', 'Ragazzo con felpa MARO di spalle in cima a una montagna guarda il tramonto', { dove: 'brand manifesto', sizes: '(min-width: 960px) 40vw, 100vw' })}</figure>
-</section>
-
-<section class="banda banda-brand" aria-label="Fly with your mind">
-  <figure>${img('scena-dolomiti', 'Due ragazzi con felpe MARO di spalle davanti alle Dolomiti al tramonto', { dove: 'brand banda', sizes: '100vw' })}<figcaption>Fly with your mind</figcaption></figure>
-</section>
-
-<section class="st-capitolo st-inverso" aria-labelledby="st-c3">
-  <div class="st-num" aria-hidden="true">03</div>
+<section class="st-blocco st-scuro st-inverso" aria-labelledby="st-c2">
   <div class="st-testo">
+    <div class="st-num" aria-hidden="true">02</div>
+    <h2 id="st-c2">Testa alta.<br>Sempre.</h2>
+    <p>“Fly with your mind” non è una frase da stampare. È un modo di stare in città: lavoro, metro, notti lunghe, e la testa sempre un passo avanti. <strong>Le ali servono a questo.</strong></p>
+  </div>
+  <figure class="st-media">${img('scena-orizzonte', 'Ragazzo con felpa MARO di spalle in cima a una montagna guarda l’orizzonte', { dove: 'brand testa alta', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
+</section>
+
+<section class="st-blocco st-grigio" aria-labelledby="st-c3">
+  <div class="st-testo">
+    <div class="st-num" aria-hidden="true">03</div>
     <h2 id="st-c3">Rispetto</h2>
     <p>La stretta di mano è il secondo segno di MARO. Due persone, un patto: rispetto per chi hai accanto.</p>
     <p>In strada vale più di qualsiasi logo. Per questo l’abbiamo stampata in grande, sulla schiena della felpa grigia.</p>
     <a class="link" href="felpa-stretta.html">Felpa Stretta di mano</a>
   </div>
-  <figure class="st-grafica">${img('storia-stretta-di-mano', 'Due ragazzi si stringono la mano in un parco di Milano, uno indossa una felpa MARO', { dove: 'storia rispetto', sizes: '(min-width: 960px) 40vw, 100vw' })}</figure>
+  <figure class="st-media">${img('storia-stretta-di-mano', 'Due ragazzi si stringono la mano in un parco di Milano, uno indossa una felpa MARO', { dove: 'brand rispetto', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
 </section>
 
 <section class="st-valori" aria-labelledby="st-c4">
-  <div class="st-processo-testa"><div class="st-num" aria-hidden="true">04</div><h2 id="st-c4">Come lavoriamo</h2></div>
+  <div class="st-num" aria-hidden="true">04</div>
+  <h2 id="st-c4">Come lavoriamo</h2>
   <ul>
-    <li><figure>${img('scena-citta', 'Ragazzo con felpa verde MARO di spalle in un parco di Milano', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">01</span><h3>Disegnato a Milano</h3><p>Ogni grafica nasce in studio e si prova su ogni capo, da vicino e da lontano, prima di andare in produzione.</p></li>
-    <li><figure>${img('scena-ricamo-vicino', 'Una macchina ricama la scritta MARO su una felpa verde', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">02</span><h3>Ricamato dove conta</h3><p>Simbolo e firma sono ricamati sulle polo: restano nel tempo, lavaggio dopo lavaggio.</p></li>
-    <li><figure>${img('scena-showroom', 'Felpa verde, felpa blu e polo nera MARO appese in uno showroom scuro', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">03</span><h3>Solo drop</h3><p>Niente collezioni di stagione. Pochi pezzi, quando sono pronti. Quando finiscono, finiscono.</p></li>
+    <li><figure>${img('scena-citta', 'Ragazzo con felpa MARO di spalle in un parco di Milano', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">01</span><h3>Disegnato a Milano</h3><p>Ogni grafica nasce in studio e si prova su ogni capo, da vicino e da lontano, prima di andare in produzione.</p></li>
+    <li><figure>${img('scena-ricamo-vicino', 'Una macchina ricama la scritta MARO su una felpa', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">02</span><h3>Ricamato dove conta</h3><p>Simbolo e firma sono ricamati sulle polo: restano nel tempo, lavaggio dopo lavaggio.</p></li>
+    <li><figure>${img('scena-showroom', 'Felpe e polo MARO appese in uno showroom scuro', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">03</span><h3>Solo drop</h3><p>Niente collezioni di stagione. Pochi pezzi, quando sono pronti. Quando finiscono, finiscono.</p></li>
   </ul>
 </section>
 
