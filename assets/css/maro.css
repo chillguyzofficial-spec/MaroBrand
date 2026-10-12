@@ -58,8 +58,8 @@ h1, h2, h3 { margin: 0; }
 .menu-apri { display: none; min-height: 44px; padding: 0 14px; border: 1.5px solid var(--nero); border-radius: 999px; background: none; font-weight: 600; }
 
 /* apertura con video */
-.apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #111; color: var(--bianco); overflow: hidden; }
-.apertura-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 66% 50%; }
+.apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
+.apertura-video { position: absolute; top: 0; right: 0; height: 100%; width: auto; max-width: none; aspect-ratio: 16 / 9; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%); mask-image: linear-gradient(90deg, transparent 0, #000 22%); }
 .apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.38) 38%, rgba(0,0,0,0) 62%), linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.6) 100%); }
 .apertura-video::-webkit-media-controls { display: none !important; }
 .apertura-testo { position: absolute; z-index: 2; left: var(--lato); right: var(--lato); bottom: clamp(28px, 6vh, 64px); }
@@ -218,8 +218,8 @@ details > p { margin: 0 0 20px; }
   .logo span { font-size: 26px; }
   .scheda h3 { font-size: 15px; }
   .scheda p { font-size: 14px; }
-  .apertura { height: calc(100svh - var(--testata) - 34px); }
-  .apertura-video { object-position: 68% 50%; }
+  .apertura { height: calc(100svh - var(--testata) - 34px); min-height: 440px; }
+  .apertura-video { left: 0; width: 100%; aspect-ratio: auto; object-position: 73% 50%; -webkit-mask-image: none; mask-image: none; }
   .pulsanti .btn { flex: 1 1 auto; }
   .piede-alto { grid-template-columns: 1fr; gap: 20px; }
 }
