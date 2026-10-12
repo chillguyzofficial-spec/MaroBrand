@@ -235,8 +235,14 @@ details > p { margin: 0 0 20px; }
   .logo span { font-size: 26px; }
   .scheda h3 { font-size: 15px; }
   .scheda p { font-size: 14px; }
-  .apertura { height: calc(100svh - var(--testata) - 34px); min-height: 440px; }
-  .apertura-video { left: 0; width: 100%; aspect-ratio: auto; object-position: 73% 50%; -webkit-mask-image: none; mask-image: none; }
+  /* telefono: video in alto (insegna intera), testo sotto su nero, niente sovrapposizioni */
+  .apertura { height: auto; min-height: 0; max-height: none; padding-top: 40svh; }
+  .apertura-video { left: 0; width: 100%; height: 40svh; aspect-ratio: auto; object-position: 66% 50%; -webkit-mask-image: none; mask-image: none; }
+  .apertura::after { inset: 0 0 auto 0; height: 40svh; background: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 100%) !important; }
+  .apertura-testo { position: relative; left: auto; right: auto; bottom: auto; padding: 4px var(--lato) 28px; }
+  .apertura h1 { font-size: clamp(48px, 15vw, 64px); }
+  .apertura p { margin: 12px 0 18px; }
+  .apertura .occhiello { margin-bottom: 10px; }
   .pulsanti .btn { flex: 1 1 auto; }
   .piede-alto { grid-template-columns: 1fr 1fr; gap: 24px 16px; }
   .piede-basso { flex-direction: column; align-items: flex-start; }
@@ -398,4 +404,8 @@ details > p { margin: 0 0 20px; }
   .st-hero-testo { position: static; max-width: none; padding: 28px var(--lato) 40px; }
   .st-hero-foto::after { display: none; }
   .st-blocco, .st-blocco.st-inverso { grid-template-columns: 1fr; grid-template-areas: 'testo' 'media'; }
+}
+@media (max-width: 599px) and (max-height: 620px) {
+  .apertura { padding-top: 34svh; }
+  .apertura-video, .apertura::after { height: 34svh; }
 }
