@@ -44,9 +44,8 @@ const LAVORI = [
   { out: 'categoria-felpe', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
   // pagina Storia (bianco e nero con grana, proporzioni originali; lo schizzo resta a colori)
   { out: 'storia-apertura-colonna', src: 'mockup-ai/metro-insegna-colonna.jpg', bn: true },
-  { out: 'storia-schizzo', src: 'loghi/schizzo-m-ali-a-penna.jpg', crop: [0, 256, 1536, 1536] },
   { out: 'storia-stretta-grafica', src: 'loghi/stretta-di-mano-italia-marocco.jpg', crop: [130, 0, 1788, 1788] },
-  { out: 'storia-dal-foglio-al-file', src: 'loghi/m-ali-azzurra.jpg', crop: [0, 256, 1241, 1241], bn: true },
+  { out: 'storia-disegno', src: 'loghi/m-ali-azzurra.jpg', crop: [0, 256, 1241, 1241], bn: true },
   { out: 'storia-ricamo', src: 'video-prodotto/ricamatrice.mp4', t: 4, bn: true },
   { out: 'storia-dettaglio', src: 'video-prodotto/polo-campione-dettagli.mp4', t: 4, crop: [0, 184, 464, 464], bn: true },
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)

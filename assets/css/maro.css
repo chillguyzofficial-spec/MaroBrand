@@ -342,3 +342,4 @@ details > p { margin: 0 0 20px; }
   .categoria-testo { left: 14px; right: 14px; bottom: 14px; }
   .categoria-vai { min-height: 40px; padding: 0 14px; font-size: 14px; }
 }
+.st-firma svg { width: 100%; aspect-ratio: 1; display: block; background: var(--bianco); border: 1.5px solid var(--grigio-2); padding: 8% 0; color: var(--nero); }

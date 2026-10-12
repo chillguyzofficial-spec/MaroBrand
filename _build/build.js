@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '10'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '11'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -182,7 +182,7 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   <div class="storia-testo">
     <span class="linguetta" aria-hidden="true"></span>
     <h2 id="storia-titolo" class="titolo">Più di<br>un logo</h2>
-    <p>MARO nasce da uno schizzo a penna e da una stretta di mano. Dietro ogni capo c’è un’idea semplice: <strong>i piedi restano per strada, la testa vola dove vuole.</strong></p>
+    <p>Le ali sul petto non sono una decorazione. Sono un promemoria: qualunque cosa ti tenga con i piedi per terra, <strong>la testa resta libera.</strong> Ogni capo MARO nasce per ricordartelo.</p>
     <a class="btn btn-nero" href="storia.html">Leggi la storia</a>
   </div>
   <div class="storia-foto">${img('storia-stretta-di-mano', 'Due ragazzi si stringono la mano in un parco, uno indossa una felpa MARO', { dove: 'home storia', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
@@ -358,7 +358,7 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
 // ---------- STORIA (testi provvisori: da completare con le parole del fondatore) ----------
 function storia() {
   const passi = [
-    ['storia-dal-foglio-al-file', 'La prima versione digitale della M con le ali', 'Dal foglio al file', 'Lo schizzo viene ridisegnato: linee pulite, proporzioni giuste, pronto per il ricamo o la stampa.'],
+    ['storia-disegno', 'Una delle prime versioni grafiche della M con le ali', 'Il disegno', 'Ogni grafica nasce nello studio di Milano e viene messa a punto finché non funziona da vicino e da lontano: sul petto, sulla schiena, su un cartellino.'],
     ['storia-ricamo', 'Una ricamatrice al lavoro sulle ali MARO', 'Il ricamo', 'Simbolo e firma vengono ricamati punto per punto. Il ricamo dura nel tempo e si sente sotto le dita.'],
     ['storia-dettaglio', 'La firma MARO ricamata tono su tono sulla polo jacquard', 'Il dettaglio', 'Sulla polo jacquard la firma è tono su tono: si vede solo da vicino, come le cose fatte con cura.'],
   ];
@@ -367,7 +367,7 @@ function storia() {
   <div class="st-apertura-testo">
     <p class="occhiello">La storia di MARO</p>
     <h1 id="st-titolo">Fly with<br>your mind.</h1>
-    <p class="st-lead">MARO nasce a Milano, tra una fermata della metro e un foglio di carta. È un marchio di abbigliamento, ma prima ancora è un’idea: <strong>i piedi restano per strada, la testa può andare dove vuole.</strong></p>
+    <p class="st-lead">MARO è un marchio di abbigliamento nato a Milano. Disegna capi essenziali, con un segno riconoscibile, per chi vive la città a passo veloce e non smette di guardare oltre: <strong>i piedi restano per strada, la testa va dove vuole.</strong></p>
   </div>
   <div class="st-apertura-foto">${img('storia-apertura-colonna', 'La firma MARO su una colonna della metro di Milano', { dove: 'storia apertura', lazy: false, sizes: '(min-width: 960px) 40vw, 100vw' })}</div>
 </section>
@@ -375,13 +375,13 @@ function storia() {
 <section class="st-capitolo" aria-labelledby="st-c1">
   <div class="st-num" aria-hidden="true">01</div>
   <div class="st-testo">
-    <h2 id="st-c1">Tutto parte da un foglio</h2>
-    <p>Il primo disegno di MARO è uno schizzo a penna su un foglio a righe: una M con due ali e un ricciolo sotto. Niente computer, niente agenzia.</p>
-    <p>Da quel foglio è nato il simbolo che oggi è ricamato sul petto delle polo: le stesse ali, ridisegnate per essere riconoscibili anche a tre centimetri.</p>
+    <h2 id="st-c1">Il segno</h2>
+    <p>Al centro di MARO c’è un simbolo: una M con due ali. È nato prima del marchio stesso, come un’idea da portare addosso, ed è stato ridisegnato fino a diventare essenziale: leggibile su un’icona di pochi millimetri come sulla schiena di una felpa.</p>
+    <p>Accanto al simbolo vive la firma verticale, con le sue fiamme. È il tratto più libero del marchio: la usiamo in grande, dove deve farsi notare.</p>
   </div>
   <div class="st-confronto">
-    <figure>${img('storia-schizzo', 'Lo schizzo originale a penna: una M con due ali e un ricciolo', { dove: 'storia schizzo', sizes: '(min-width: 960px) 24vw, 50vw' })}<figcaption>Lo schizzo</figcaption></figure>
-    <figure class="st-simbolo"><svg viewBox="0 0 200 150" role="img" aria-label="Il simbolo MARO di oggi"><use href="#maro-simbolo"/></svg><figcaption>Il simbolo di oggi</figcaption></figure>
+    <figure class="st-simbolo"><svg viewBox="0 0 200 150" role="img" aria-label="Il simbolo MARO: una M con due ali"><use href="#maro-simbolo"/></svg><figcaption>Il simbolo</figcaption></figure>
+    <figure class="st-firma"><svg viewBox="0 0 200 560" role="img" aria-label="La firma verticale MARO con le fiamme"><use href="#maro-firma"/></svg><figcaption>La firma</figcaption></figure>
   </div>
 </section>
 
@@ -395,8 +395,8 @@ function storia() {
   <div class="st-num" aria-hidden="true">03</div>
   <div class="st-testo">
     <h2 id="st-c3">La stretta di mano</h2>
-    <p>Il secondo disegno è una stretta di mano dentro una nuvola: due mani che si tengono, due mondi che si incontrano.</p>
-    <p>È il segno più personale del marchio. Viene da chi è cresciuto tra culture diverse e ha imparato che <strong>si va più lontano tenendosi</strong>. Oggi è stampato sulla schiena della felpa grigia.</p>
+    <p>Il secondo segno di MARO è una stretta di mano: due mani che si tengono, due mondi che si incontrano.</p>
+    <p>Racconta il valore su cui il marchio è costruito: il rispetto, e l’idea che <strong>si arriva più lontano insieme</strong>. Oggi è stampata sulla schiena della felpa grigia.</p>
     <a class="link" href="felpa-stretta.html">Vedi la Felpa Stretta di mano</a>
   </div>
   <figure class="st-grafica">${img('storia-stretta-grafica', 'La grafica della stretta di mano dentro una nuvola', { dove: 'storia stretta', sizes: '(min-width: 960px) 40vw, 100vw' })}</figure>
@@ -422,7 +422,7 @@ ${passi.map(([id, alt, t, d], i) => `    <li><figure>${img(id, alt, { dove: 'sto
   <h2 id="st-fine" class="titolo">Indossa<br>la storia.</h2>
   <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
 </section>`;
-  return pagina({ titolo: 'La storia — MARO', descrizione: 'Come nasce MARO: uno schizzo a penna, una stretta di mano e un’idea. Fly with your mind.', corpo, file: 'storia.html' });
+  return pagina({ titolo: 'La storia — MARO', descrizione: 'La storia di MARO, streetwear nato a Milano: il simbolo con le ali, la stretta di mano e come nasce un capo. Fly with your mind.', corpo, file: 'storia.html' });
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
