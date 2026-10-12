@@ -354,3 +354,21 @@ details > p { margin: 0 0 20px; }
 .iscriviti-sotto { font-size: 18px; color: var(--testo-2); margin: 16px 0 0; }
 .st-valori .st-passo { display: block; font-size: 15px; margin-bottom: 4px; }
 .st-grafica img { width: 100%; }
+
+/* scene (set 5) */
+.banda { padding: 0; }
+.banda figure { margin: 0; position: relative; }
+.banda img { width: 100%; }
+.banda figcaption { position: absolute; left: var(--lato); bottom: clamp(16px, 3vw, 40px); color: var(--bianco); font: 400 clamp(28px, 4vw, 64px)/1 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
+.iscriviti { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .9fr); gap: clamp(28px, 5vw, 80px); align-items: center; }
+.iscriviti-foto { margin: 0; }
+.iscriviti-foto img { width: 100%; }
+.st-manifesto { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: center; }
+.st-manifesto-foto { margin: 0; }
+.st-manifesto-foto img { width: 100%; }
+.st-valori li figure { margin: 0 0 18px; }
+.st-valori li figure img { width: 100%; }
+.st-valori li { border-top: 0; padding-top: 0; }
+@media (max-width: 959px) {
+  .iscriviti, .st-manifesto { grid-template-columns: 1fr; }
+}
