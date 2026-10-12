@@ -178,12 +178,19 @@
   var lbV = $('.lb-vetrina');
   if (lbV) {
     var lbB = $('.lb-binario', lbV), lbF = $$('figure', lbB), lbI = 0, lbConta = $('.lb-conta'), lbFrecce = $$('[data-lb]');
-    var perVista = function () { return Math.max(1, Math.round(lbV.clientWidth / lbF[0].getBoundingClientRect().width)); };
+    // ultima posizione utile: quando le foto rimaste entrano tutte nella vetrina
+    var ultima = function () {
+      var W = lbV.clientWidth, x0 = lbF[0].offsetLeft, fine = lbF[lbF.length - 1].offsetLeft + lbF[lbF.length - 1].offsetWidth;
+      for (var i = 0; i < lbF.length; i++) if (fine - lbF[i].offsetLeft <= W + 1) return i;
+      return lbF.length - 1;
+    };
     var lbVai = function (k) {
-      var max = Math.max(0, lbF.length - perVista());
+      var max = ultima();
       lbI = Math.min(max, Math.max(0, k));
       lbB.style.transform = 'translateX(' + (lbF[0].offsetLeft - lbF[lbI].offsetLeft) + 'px)';
-      if (lbConta) lbConta.textContent = (lbI + 1) + '–' + (lbI + perVista()) + ' / ' + lbF.length;
+      // telefono (una foto per volta): la vetrina prende l'altezza della foto mostrata
+      lbV.style.height = lbF[0].offsetWidth >= lbV.clientWidth - 1 ? lbF[lbI].offsetHeight + 'px' : '';
+      if (lbConta) lbConta.textContent = (lbI + 1) + ' / ' + lbF.length;
       lbFrecce[0].disabled = lbI === 0; lbFrecce[1].disabled = lbI === max;
     };
     lbFrecce.forEach(function (b) { b.addEventListener('click', function () { lbVai(lbI + Number(b.getAttribute('data-lb'))); }); });

@@ -114,9 +114,9 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // lookbook a scorrimento (telefono: una foto per volta)
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.evaluate(() => document.querySelector('#lookbook').scrollIntoView());
-  prova((await p.textContent('.lb-conta')).startsWith('1–1 / 4') && await p.isDisabled('[data-lb="-1"]'), 'lookbook: parte da 1, indietro disattivo');
+  prova((await p.textContent('.lb-conta')).startsWith('1 / 4') && await p.isDisabled('[data-lb="-1"]'), 'lookbook: parte da 1, indietro disattivo');
   await p.tap('[data-lb="1"]'); await p.waitForTimeout(600);
-  prova((await p.textContent('.lb-conta')).startsWith('2–2'), 'lookbook: avanti → 2');
+  prova((await p.textContent('.lb-conta')).startsWith('2 / 4'), 'lookbook: avanti → 2');
   prova(await p.evaluate(() => { const v = document.querySelector('.lb-vetrina').getBoundingClientRect(), f = document.querySelectorAll('.lb-binario figure')[1].getBoundingClientRect(); return Math.abs(v.left - f.left) < 2; }), 'lookbook: foto 2 al suo posto');
 
   // vetrina a scorrimento
