@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '16'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '17'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -13,13 +13,16 @@ const usa = (id, dove) => {
   usate.set(id, dove);
 };
 
+// impronta del file nel link: quando una foto cambia, il browser la riscarica (niente copie vecchie in cache)
+const impronta = file => require('crypto').createHash('md5').update(fs.readFileSync(path.join(ROOT, file))).digest('hex').slice(0, 8);
+const urlFoto = id => 'assets/foto/' + id + '.webp?v=' + impronta('assets/foto/' + id + '.webp');
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const euro = n => n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' €';
 
 function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw' } = {}) {
   usa(id, dove);
   const [w, h] = MISURE[id];
-  return `<img src="assets/foto/${id}.webp" width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'} sizes="${sizes}">`;
+  return `<img src="${urlFoto(id)}" width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : ' fetchpriority="high"'} sizes="${sizes}">`;
 }
 
 const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
@@ -92,7 +95,7 @@ ${corpo}
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0] })))};</script>
+<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0], src: urlFoto(p.copertina[0]) })))};</script>
 </body>
 </html>
 `;
@@ -119,7 +122,7 @@ function home() {
   ];
   const corpo = `
 <section class="apertura" aria-label="Apertura">
-  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="assets/foto/apertura-locandina.webp" aria-hidden="true" tabindex="-1">
+  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-1.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
@@ -227,7 +230,7 @@ function prodotto(p) {
       <span class="vetrina-conta" aria-live="polite">1 / ${n}</span>`;
   const miniature = n < 2 ? '' : `
     <div class="miniature" role="group" aria-label="Scegli la foto">
-${p.foto.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="assets/foto/${id}.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
+${p.foto.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="${urlFoto(id)}" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
     </div>`;
   const galleria = `    <div class="vetrina" aria-label="Foto di ${esc(p.nome)}">
       <div class="vetrina-binario">

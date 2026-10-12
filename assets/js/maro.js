@@ -96,7 +96,7 @@
     box.innerHTML = righe.map(function (r, k) {
       var p = CAT.filter(function (x) { return x.id === r.id; })[0];
       tot += p.prezzo * r.q;
-      return '<div class="riga"><a href="' + p.id + '.html"><img src="assets/foto/' + p.foto + '.webp" alt="" width="88" height="110"></a>' +
+      return '<div class="riga"><a href="' + p.id + '.html"><img src="' + p.src + '" alt="" width="88" height="110"></a>' +
         '<div><h3>' + p.nome + '</h3><p>' + p.colore + '</p><p>Taglia ' + r.t + ' · ' + euro(p.prezzo) + '</p>' +
         '<div class="riga-azioni"><button type="button" data-meno="' + k + '" aria-label="Togli uno">−</button><span aria-live="polite">' + r.q + '</span>' +
         '<button type="button" data-piu="' + k + '" aria-label="Aggiungi uno">+</button><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';

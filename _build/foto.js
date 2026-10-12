@@ -44,18 +44,18 @@ const LAVORI = [
   { out: 'categoria-felpe', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
   // pagina Storia (bianco e nero con grana, proporzioni originali; lo schizzo resta a colori)
   // scene (set 5 del 12/10): campagna e pagina del brand, a colori, senza tagli
-  { out: 'scena-ricamo-mani', src: 'foto-set-5-2026-10-12/845684221_1655451425975308_3820682003388145130_n.webp', bn: true },
-  { out: 'scena-capi-maro', src: 'foto-set-5-2026-10-12/846966136_2610599519436733_3385366467222422541_n.webp', bn: true },
+  { out: 'scena-ricamo-mani', src: 'foto-set-5-2026-10-12/845684221_1655451425975308_3820682003388145130_n.webp' },
+  { out: 'scena-capi-maro', src: 'foto-set-5-2026-10-12/846966136_2610599519436733_3385366467222422541_n.webp' },
   { out: 'scena-orizzonte', src: 'foto-set-5-2026-10-12/846053658_1783488912923974_9001021024052174187_n.webp' },
   { out: 'scena-dolomiti', src: 'foto-set-5-2026-10-12/845962368_1854137572601714_822437747464123275_n.webp', max: 2048, q: 0.86 },
-  { out: 'scena-citta', src: 'foto-set-5-2026-10-12/846613319_4604241063165391_3335941884249520016_n.webp', bn: true },
-  { out: 'scena-ricamo-vicino', src: 'foto-set-5-2026-10-12/846671117_924186993887815_3303255480979063179_n.webp', bn: true },
-  { out: 'scena-showroom', src: 'foto-set-5-2026-10-12/840312014_28569449039377509_7023473326715691606_n.webp', bn: true },
+  { out: 'scena-citta', src: 'foto-set-5-2026-10-12/846613319_4604241063165391_3335941884249520016_n.webp' },
+  { out: 'scena-ricamo-vicino', src: 'foto-set-5-2026-10-12/846671117_924186993887815_3303255480979063179_n.webp' },
+  { out: 'scena-showroom', src: 'foto-set-5-2026-10-12/840312014_28569449039377509_7023473326715691606_n.webp' },
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)
-  { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg', bn: true },
-  { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg', bn: true },
-  { out: 'lookbook-metro-polo-1', src: 'mockup-ai/metro-gruppo-polo-1.jpg', bn: true },
-  { out: 'lookbook-metro-polo-2', src: 'mockup-ai/metro-gruppo-polo-2.jpg', bn: true },
+  { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg' },
+  { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg' },
+  { out: 'lookbook-metro-polo-1', src: 'mockup-ai/metro-gruppo-polo-1.jpg' },
+  { out: 'lookbook-metro-polo-2', src: 'mockup-ai/metro-gruppo-polo-2.jpg' },
   // locandina del video d'apertura (mostrata finché il video non parte)
   { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];
