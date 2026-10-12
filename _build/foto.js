@@ -10,16 +10,25 @@ fs.mkdirSync(OUT, { recursive: true });
 
 // crop: [x, y, w, h] in pixel della sorgente · bn: bianco e nero con grana · t: secondo del video
 const LAVORI = [
-  // prodotti (a colori, 4:5)
-  { out: 'polo-linee-fronte', src: 'mockup-ai/polo-nere-tre.jpg', crop: [80, 50, 620, 775] },
-  { out: 'polo-linee-retro', src: 'mockup-ai/polo-nere-tre.jpg', crop: [1330, 50, 620, 775] },
-  { out: 'polo-tricolore-fronte', src: 'mockup-ai/polo-nere-tricolore.jpg', crop: [710, 50, 620, 775] },
-  { out: 'polo-tricolore-retro', src: 'mockup-ai/polo-nere-tricolore.jpg', crop: [1330, 50, 620, 775] },
+  // prodotti (a colori, 4:5) — render set 2 del 12/10 + vecchi ritagli dove non ci sono render
+  { out: 'polo-linee-fronte', src: 'foto-set-2-2026-10-12/844979170_1484340676849877_4314181911587208056_n.webp' },
+  { out: 'polo-linee-retro', src: 'foto-set-2-2026-10-12/844630786_2274440500013051_2574921512573776104_n.webp' },
+  { out: 'polo-linee-lato', src: 'foto-set-2-2026-10-12/846729154_1328455792575119_3681129651427690667_n.webp' },
+  { out: 'polo-linee-tre-quarti', src: 'foto-set-2-2026-10-12/848455857_2614018082373794_6614527628984696990_n.webp' },
+  { out: 'polo-tricolore-fronte', src: 'foto-set-2-2026-10-12/844279053_1155327820406880_764553782245653081_n.webp' },
+  { out: 'polo-tricolore-retro', src: 'foto-set-2-2026-10-12/843980820_2203736513860866_3177360006066256744_n.webp' },
+  { out: 'polo-tricolore-lato', src: 'foto-set-2-2026-10-12/845363612_27058171763881222_4437336543937843483_n.webp' },
+  { out: 'polo-tricolore-tre-quarti', src: 'foto-set-2-2026-10-12/845714668_1636902447817452_8280798942987660205_n.webp' },
+  { out: 'polo-tricolore-dettaglio', src: 'foto-set-2-2026-10-12/844861463_2368147683717115_233577849421255923_n.webp' },
+  { out: 'felpa-stretta-retro', src: 'foto-set-2-2026-10-12/843980819_1746234016485749_8440262151992339185_n.webp' },
+  { out: 'felpa-stretta-tre-quarti', src: 'foto-set-2-2026-10-12/846569898_1634036261559273_1035113113446627478_n.webp' },
+  { out: 'felpa-stretta-fronte', src: 'foto-set-2-2026-10-12/848027522_1451170926908925_6783953235368109804_n.webp' },
+  { out: 'felpa-firma-retro', src: 'foto-set-2-2026-10-12/844072147_1810124660318198_7017883015441705205_n.webp' },
+  { out: 'felpa-firma-tre-quarti', src: 'foto-set-2-2026-10-12/844861471_4656824397880401_7427535886801104678_n.webp' },
+  { out: 'felpa-firma-fronte', src: 'foto-set-2-2026-10-12/847420150_1406026624930256_5378025056577203795_n.webp' },
+  { out: 'lookbook-duomo-felpa-blu', src: 'foto-reali/felpa-blu-retro-duomo.jpg', bn: true },
   { out: 'polo-jacquard-intera', src: 'video-prodotto/polo-campione-dettagli.mp4', t: 2, crop: [0, 200, 464, 580] },
   { out: 'polo-jacquard-ricamo', src: 'video-prodotto/polo-campione-dettagli.mp4', t: 4, crop: [0, 126, 464, 580] },
-  { out: 'felpa-stretta-retro', src: 'foto-reali/felpa-grigia-retro-stretta-di-mano.jpg', crop: [200, 0, 1324, 1656] },
-  { out: 'felpa-stretta-indossata', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
-  { out: 'felpa-firma-retro', src: 'foto-reali/felpa-blu-retro-duomo.jpg', crop: [7, 0, 1192, 1490] },
   { out: 'felpa-nera-retro', src: 'mockup-ai/felpa-nera-montagne.jpg', crop: [194, 0, 690, 863] },
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)
   { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg', bn: true },
@@ -34,7 +43,7 @@ const srv = http.createServer((q, r) => {
   const f = path.join(SRC, decodeURIComponent(q.url.split('?')[0]));
   if (q.url === '/__vuota') { r.writeHead(200, { 'content-type': 'text/html' }); return r.end('<!doctype html><title>foto</title>'); }
   if (!fs.existsSync(f)) { r.writeHead(404); return r.end(); }
-  const size = fs.statSync(f).size, type = /mp4$/.test(f) ? 'video/mp4' : 'image/jpeg';
+  const size = fs.statSync(f).size, type = /mp4$/.test(f) ? 'video/mp4' : /webp$/.test(f) ? 'image/webp' : 'image/jpeg';
   const m = /bytes=(\d+)-(\d*)/.exec(q.headers.range || '');
   if (m) {
     const a = +m[1], b = m[2] ? +m[2] : size - 1;

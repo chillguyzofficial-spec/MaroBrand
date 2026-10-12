@@ -7,7 +7,15 @@
   1206,
   1382
  ],
+ "felpa-firma-fronte": [
+  1120,
+  1400
+ ],
  "felpa-firma-retro": [
+  1120,
+  1400
+ ],
+ "felpa-firma-tre-quarti": [
   1120,
   1400
  ],
@@ -15,12 +23,20 @@
   690,
   863
  ],
- "felpa-stretta-indossata": [
-  1076,
-  1345
+ "felpa-stretta-fronte": [
+  1120,
+  1400
  ],
  "felpa-stretta-retro": [
-  1119,
+  1120,
+  1400
+ ],
+ "felpa-stretta-tre-quarti": [
+  1120,
+  1400
+ ],
+ "lookbook-duomo-felpa-blu": [
+  1133,
   1400
  ],
  "lookbook-metro-polo-1": [
@@ -40,20 +56,40 @@
   580
  ],
  "polo-linee-fronte": [
-  620,
-  775
+  1120,
+  1400
+ ],
+ "polo-linee-lato": [
+  1120,
+  1400
  ],
  "polo-linee-retro": [
-  620,
-  775
+  1120,
+  1400
+ ],
+ "polo-linee-tre-quarti": [
+  1120,
+  1400
+ ],
+ "polo-tricolore-dettaglio": [
+  1400,
+  1400
  ],
  "polo-tricolore-fronte": [
-  620,
-  775
+  1120,
+  1400
+ ],
+ "polo-tricolore-lato": [
+  1120,
+  1400
  ],
  "polo-tricolore-retro": [
-  620,
-  775
+  1120,
+  1400
+ ],
+ "polo-tricolore-tre-quarti": [
+  1120,
+  1400
  ],
  "storia-stretta-di-mano": [
   1206,

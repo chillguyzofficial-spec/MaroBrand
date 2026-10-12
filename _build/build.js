@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '4'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '5'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -111,6 +111,7 @@ function scheda(p, dove) {
 function home() {
   const lb = [
     ['lookbook-metro-polo-1', 'In metro con le polo MARO'],
+    ['lookbook-duomo-felpa-blu', 'Felpa blu MARO di spalle davanti al Duomo di Milano'],
     ['lookbook-metro-polo-2', 'Quattro amici in metro con le polo MARO'],
   ];
   const corpo = `
@@ -167,7 +168,7 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
   <h2 id="lookbook-titolo" class="titolo">Lookbook</h2>
   <div class="lookbook-griglia">
-${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 48vw, 100vw' })}</figure>`).join('\n')}
+${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 32vw, 100vw' })}</figure>`).join('\n')}
   </div>
 </section>
 
@@ -196,7 +197,7 @@ function prodotto(p) {
     <p class="colore">${esc(p.colore)}</p>
     <p class="prezzo">${euro(p.prezzo)}</p>
   </div>
-  <div class="galleria galleria-${p.foto.length}">
+  <div class="galleria" data-n="${p.foto.length}">
 ${galleria}
   </div>
   <div class="prodotto-acquisto">
