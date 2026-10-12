@@ -132,6 +132,31 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { chiudi(); chiudiMenu && menu && chiudiMenu(); } });
   }
 
+  /* ---------- scheda prodotto: vetrina a scorrimento (frecce, miniature, dito) ---------- */
+  $$('.vetrina').forEach(function (v) {
+    var binario = $('.vetrina-binario', v), figure = $$('figure', v), n = figure.length, i = 0;
+    var conta = $('.vetrina-conta', v), mini = $$('.miniature button', v.parentNode);
+    if (n < 2) return;
+    function vai(k) {
+      i = (k + n) % n;
+      binario.style.transform = 'translateX(' + (-100 * i) + '%)';
+      figure.forEach(function (f, x) { if (x === i) f.removeAttribute('aria-hidden'); else f.setAttribute('aria-hidden', 'true'); });
+      mini.forEach(function (b, x) { if (x === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+      if (conta) conta.textContent = (i + 1) + ' / ' + n;
+    }
+    $$('[data-vai]', v).forEach(function (b) { b.addEventListener('click', function () { vai(i + Number(b.getAttribute('data-vai'))); }); });
+    mini.forEach(function (b) { b.addEventListener('click', function () { vai(Number(b.getAttribute('data-foto'))); }); });
+    var x0 = null, y0 = 0;
+    v.addEventListener('pointerdown', function (e) { if (e.target.closest('button')) return; x0 = e.clientX; y0 = e.clientY; });
+    v.addEventListener('pointerup', function (e) {
+      if (x0 === null) return;
+      var dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) vai(i + (dx < 0 ? 1 : -1));
+    });
+    v.addEventListener('pointercancel', function () { x0 = null; });
+    v.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') vai(i + 1); if (e.key === 'ArrowLeft') vai(i - 1); });
+  });
+
   /* ---------- scheda prodotto: aggiungi alla borsa ---------- */
   var prod = $('.prodotto');
   if (prod) {

@@ -35,7 +35,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.closest('.piede-nome') || el.classList.contains('apertura-video')) return; // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.closest('.piede-nome') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
@@ -55,6 +55,18 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     await ctx.close();
   }
   console.log('Larghezze: ok');
+
+  // 1b. schede prodotto: tutte le foto della galleria con la stessa misura, su tutte le schede
+  for (const w of [390, 768, 1440]) {
+    const c = await b.newContext({ viewport: { width: w, height: 900 } }); const misure = new Set();
+    for (const pg of PAGINE.filter(x => x !== 'index.html')) {
+      const q = await c.newPage(); await q.goto(BASE + pg, { waitUntil: 'load' });
+      (await q.evaluate(() => [...document.querySelectorAll('.vetrina')].map(f => { const r = f.getBoundingClientRect(); return Math.round(r.width) + 'x' + Math.round(r.height); }))).forEach(m => misure.add(m));
+      await q.close();
+    }
+    prova(misure.size === 1, 'foto delle schede tutte uguali @' + w + ': ' + [...misure].join(', '));
+    await c.close();
+  }
 
   // 2. percorso su telefono
   const ctx = await b.newContext({ ...devices['iPhone 13'], browserName: undefined });
@@ -82,7 +94,21 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.evaluate(() => document.querySelector('.esito').classList.contains('errore')), 'email sbagliata segnalata');
   await p.fill('#email', 'mario.rossi@esempio.it'); await p.tap('.iscriviti-form .btn');
   prova(await p.evaluate(() => /Sei dentro/.test(document.querySelector('.esito').textContent)), 'email valida accettata (anche con la s)');
+  // vetrina a scorrimento
+  await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
+  const conta = () => p.textContent('.vetrina-conta');
+  await p.tap('.vetrina-freccia.succ'); prova((await conta()) === '2 / 4', 'freccia avanti: 2 / 4');
+  const box = await p.locator('.vetrina').boundingBox();
+  await p.mouse.move(box.x + box.width * .8, box.y + box.height / 2); await p.mouse.down();
+  await p.mouse.move(box.x + box.width * .2, box.y + box.height / 2, { steps: 5 }); await p.mouse.up();
+  prova((await conta()) === '3 / 4', 'scorrimento col dito: 3 / 4 (' + (await conta()) + ')');
+  await p.tap('.miniature button[data-foto="0"]'); prova((await conta()) === '1 / 4', 'miniatura: 1 / 4');
+  await p.tap('.vetrina-freccia.prec'); prova((await conta()) === '4 / 4', 'indietro dalla prima: 4 / 4');
+  await p.waitForTimeout(700);
+  prova(await p.evaluate(() => { const v = document.querySelector('.vetrina').getBoundingClientRect(), i = document.querySelectorAll('.vetrina figure')[3].getBoundingClientRect(); return Math.abs(v.left - i.left) < 2; }), 'foto 4 al suo posto');
+
   // scheda prodotto + borsa
+  await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.tap('.drop .scheda[href="felpa-stretta.html"]'); await p.waitForLoadState('load');
   await p.tap('[data-aggiungi]');
   prova(await p.isVisible('.taglie-errore'), 'senza taglia: errore');

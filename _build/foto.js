@@ -18,7 +18,6 @@ const LAVORI = [
   { out: 'polo-tricolore-fronte', src: 'foto-set-2-2026-10-12/844279053_1155327820406880_764553782245653081_n.webp' },
   { out: 'polo-tricolore-retro', src: 'foto-set-2-2026-10-12/843980820_2203736513860866_3177360006066256744_n.webp' },
   { out: 'polo-tricolore-lato', src: 'foto-set-2-2026-10-12/845363612_27058171763881222_4437336543937843483_n.webp' },
-  { out: 'polo-tricolore-tre-quarti', src: 'foto-set-2-2026-10-12/845714668_1636902447817452_8280798942987660205_n.webp' },
   { out: 'polo-tricolore-dettaglio', src: 'foto-set-2-2026-10-12/844861463_2368147683717115_233577849421255923_n.webp' },
   { out: 'felpa-stretta-retro', src: 'foto-set-2-2026-10-12/843980819_1746234016485749_8440262151992339185_n.webp' },
   { out: 'felpa-stretta-tre-quarti', src: 'foto-set-2-2026-10-12/846569898_1634036261559273_1035113113446627478_n.webp' },

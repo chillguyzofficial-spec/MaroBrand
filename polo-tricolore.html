@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=5">
-<script defer src="assets/js/maro.js?v=5"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=7">
+<script defer src="assets/js/maro.js?v=7"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -45,12 +45,24 @@
     <p class="colore">Nero, maniche verde bianco rosso</p>
     <p class="prezzo">80,00 €</p>
   </div>
-  <div class="galleria" data-n="5">
-<figure><img src="assets/foto/polo-tricolore-fronte.webp" width="1120" height="1400" alt="Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso" fetchpriority="high" sizes="(min-width: 960px) 30vw, 100vw"></figure>
-<figure><img src="assets/foto/polo-tricolore-retro.webp" width="1120" height="1400" alt="Polo Tricolore nera, retro con le ali rosse e verdi" loading="lazy" decoding="async" sizes="(min-width: 960px) 30vw, 100vw"></figure>
-<figure><img src="assets/foto/polo-tricolore-lato.webp" width="1120" height="1400" alt="Polo Tricolore nera, fronte con la firma MARO" loading="lazy" decoding="async" sizes="(min-width: 960px) 30vw, 100vw"></figure>
-<figure><img src="assets/foto/polo-tricolore-tre-quarti.webp" width="1120" height="1400" alt="Polo Tricolore nera vista di tre quarti" loading="lazy" decoding="async" sizes="(min-width: 960px) 30vw, 100vw"></figure>
-<figure><img src="assets/foto/polo-tricolore-dettaglio.webp" width="1400" height="1400" alt="Dettaglio del nastro tricolore sulla manica e della scritta MARO" loading="lazy" decoding="async" sizes="(min-width: 960px) 30vw, 100vw"></figure>
+  <div class="galleria" data-n="4">
+    <div class="vetrina" aria-label="Foto di Polo Tricolore">
+      <div class="vetrina-binario">
+        <figure aria-label="Foto 1 di 4"><img src="assets/foto/polo-tricolore-fronte.webp" width="1120" height="1400" alt="Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 2 di 4" aria-hidden="true"><img src="assets/foto/polo-tricolore-retro.webp" width="1120" height="1400" alt="Polo Tricolore nera, retro con le ali rosse e verdi" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 3 di 4" aria-hidden="true"><img src="assets/foto/polo-tricolore-lato.webp" width="1120" height="1400" alt="Polo Tricolore nera, fronte con la firma MARO" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 4 di 4" aria-hidden="true"><img src="assets/foto/polo-tricolore-dettaglio.webp" width="1400" height="1400" alt="Dettaglio del nastro tricolore sulla manica e della scritta MARO" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+      </div>
+      <button class="vetrina-freccia prec" type="button" aria-label="Foto precedente" data-vai="-1">‹</button>
+      <button class="vetrina-freccia succ" type="button" aria-label="Foto successiva" data-vai="1">›</button>
+      <span class="vetrina-conta" aria-live="polite">1 / 4</span>
+    </div>
+    <div class="miniature" role="group" aria-label="Scegli la foto">
+      <button type="button" data-foto="0" aria-label="Foto 1: Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso" aria-current="true"><img src="assets/foto/polo-tricolore-fronte.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
+      <button type="button" data-foto="1" aria-label="Foto 2: Polo Tricolore nera, retro con le ali rosse e verdi"><img src="assets/foto/polo-tricolore-retro.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
+      <button type="button" data-foto="2" aria-label="Foto 3: Polo Tricolore nera, fronte con la firma MARO"><img src="assets/foto/polo-tricolore-lato.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
+      <button type="button" data-foto="3" aria-label="Foto 4: Dettaglio del nastro tricolore sulla manica e della scritta MARO"><img src="assets/foto/polo-tricolore-dettaglio.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
+    </div>
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo">La polo nera con le maniche nei colori d’Italia. Sul retro le ali in rosso e verde: i due colori che Italia e Marocco hanno in comune.</p>

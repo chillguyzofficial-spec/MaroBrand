@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '5'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '7'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -188,7 +188,24 @@ ${lb.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'home lookbook', siz
 function prodotto(p) {
   const altri = CATALOGO.filter(x => x.id !== p.id && x.tipo !== p.tipo).slice(0, 2)
     .concat(CATALOGO.filter(x => x.id !== p.id && x.tipo === p.tipo).slice(0, 1));
-  const galleria = p.foto.map(([id, alt], i) => `<figure>${img(id, alt, { dove: 'scheda ' + p.id, lazy: i > 0, sizes: '(min-width: 960px) 30vw, 100vw' })}</figure>`).join('\n');
+  if (p.foto.length > 4) throw new Error(p.id + ': massimo 4 foto per scheda (stessa struttura per tutti)');
+  const n = p.foto.length;
+  // vetrina a scorrimento: una foto per volta, stesso riquadro 4:5 per tutti i prodotti
+  const foto = p.foto.map(([id, alt], i) =>
+    `        <figure aria-label="Foto ${i + 1} di ${n}"${i ? ' aria-hidden="true"' : ''}>${img(id, alt, { dove: 'scheda ' + p.id, lazy: false, sizes: '(min-width: 960px) 46vw, 100vw' })}</figure>`).join('\n');
+  const comandi = n < 2 ? '' : `
+      <button class="vetrina-freccia prec" type="button" aria-label="Foto precedente" data-vai="-1">‹</button>
+      <button class="vetrina-freccia succ" type="button" aria-label="Foto successiva" data-vai="1">›</button>
+      <span class="vetrina-conta" aria-live="polite">1 / ${n}</span>`;
+  const miniature = n < 2 ? '' : `
+    <div class="miniature" role="group" aria-label="Scegli la foto">
+${p.foto.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="assets/foto/${id}.webp" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
+    </div>`;
+  const galleria = `    <div class="vetrina" aria-label="Foto di ${esc(p.nome)}">
+      <div class="vetrina-binario">
+${foto}
+      </div>${comandi}
+    </div>${miniature}`;
   const corpo = `
 <div class="prodotto" data-id="${p.id}">
   <div class="prodotto-intro">

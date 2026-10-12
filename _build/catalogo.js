@@ -13,7 +13,7 @@ module.exports = [
   {
     id: 'polo-tricolore', tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
     prezzo: 80, pallini: ['#000'], taglie: TAGLIE_POLO,
-    foto: [['polo-tricolore-fronte', 'Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso'], ['polo-tricolore-retro', 'Polo Tricolore nera, retro con le ali rosse e verdi'], ['polo-tricolore-lato', 'Polo Tricolore nera, fronte con la firma MARO'], ['polo-tricolore-tre-quarti', 'Polo Tricolore nera vista di tre quarti'], ['polo-tricolore-dettaglio', 'Dettaglio del nastro tricolore sulla manica e della scritta MARO']],
+    foto: [['polo-tricolore-fronte', 'Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso'], ['polo-tricolore-retro', 'Polo Tricolore nera, retro con le ali rosse e verdi'], ['polo-tricolore-lato', 'Polo Tricolore nera, fronte con la firma MARO'], ['polo-tricolore-dettaglio', 'Dettaglio del nastro tricolore sulla manica e della scritta MARO']],
     testo: 'La polo nera con le maniche nei colori d’Italia. Sul retro le ali in rosso e verde: i due colori che Italia e Marocco hanno in comune.',
     dettagli: ['Piqué di cotone', 'Nastro tricolore sulle maniche', 'Ali rosso e verde sul retro', 'Vestibilità regolare'],
   },
