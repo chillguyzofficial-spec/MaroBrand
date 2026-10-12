@@ -114,14 +114,19 @@ const srv = http.createServer((q, r) => {
         }
         g.putImageData(d, 0, 0);
       }
-      return { url: c.toDataURL('image/webp', l.q || 0.82), w: c.width, h: c.height };
+      // versione piccola (640 px) per telefoni e griglie
+      let piccola = null;
+      if (c.width > 700) { const p = document.createElement('canvas'); p.width = 640; p.height = Math.round(c.height * 640 / c.width); const pg = p.getContext('2d'); pg.imageSmoothingQuality = 'high'; pg.drawImage(c, 0, 0, p.width, p.height); piccola = p.toDataURL('image/webp', 0.8); }
+      return { url: c.toDataURL('image/webp', l.q || 0.82), w: c.width, h: c.height, piccola };
     }, l);
     fs.writeFileSync(path.join(OUT, l.out + '.webp'), Buffer.from(dataUrl.url.split(',')[1], 'base64'));
+    const pic = path.join(OUT, l.out + '-640.webp');
+    if (dataUrl.piccola) fs.writeFileSync(pic, Buffer.from(dataUrl.piccola.split(',')[1], 'base64')); else if (fs.existsSync(pic)) fs.unlinkSync(pic);
     console.log(l.out.padEnd(26), dataUrl.w + '×' + dataUrl.h);
   }
   // dimensioni per il build (width/height nelle <img>, niente salti di impaginazione)
   const dims = {};
-  for (const f of fs.readdirSync(OUT)) {
+  for (const f of fs.readdirSync(OUT).filter(x => !x.endsWith('-640.webp'))) {
     const buf = fs.readFileSync(path.join(OUT, f));
     // webp VP8/VP8L/VP8X: leggiamo le misure dall'intestazione
     const tipo = buf.toString('ascii', 12, 16);

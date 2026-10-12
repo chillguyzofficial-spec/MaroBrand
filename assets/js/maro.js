@@ -34,6 +34,8 @@
     var controlla = function () {
       if (!document.hidden) {
         if (!copia) { parti(attivo); }
+        // la copia si prepara solo poco prima del primo giro (stesso file: arriva dalla cache)
+        if (copia.preload === 'none' && attivo.duration && attivo.currentTime >= attivo.duration - SFUMA - 2.5) { copia.preload = 'auto'; copia.load(); }
         else if (!inCambio && attivo.duration && attivo.currentTime >= attivo.duration - SFUMA) cambia();
         else if (!inCambio) parti(attivo); // se il browser lo ferma, riparte
       }
@@ -365,6 +367,11 @@
 
   /* ---------- lookbook a scorrimento (frecce + dito) ---------- */
   var lbV = $('.lb-vetrina');
+  // le foto del lookbook si caricano tutte solo quando la sezione si avvicina
+  if (lbV && 'IntersectionObserver' in window) {
+    var lbIO = new IntersectionObserver(function (v) { if (v[0].isIntersecting) { lbIO.disconnect(); Array.prototype.forEach.call(lbV.querySelectorAll('img'), function (i) { i.loading = 'eager'; }); } }, { rootMargin: '600px 0px' });
+    lbIO.observe(lbV);
+  }
   if (lbV) {
     var lbB = $('.lb-binario', lbV), lbF = $$('figure', lbB), lbI = 0, lbConta = $('.lb-conta'), lbFrecce = $$('[data-lb]');
     // ultima posizione utile: quando le foto rimaste entrano tutte nella vetrina
