@@ -1,0 +1,160 @@
+/* MARO — Drop 001 */
+(function () {
+  'use strict';
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var CAT = window.MARO_CATALOGO || [];
+  var euro = function (n) { return n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' €'; };
+
+  // blocco dello scorrimento: solo su <html> (sul body rompe la testata sticky)
+  var blocchi = 0;
+  function blocca(si) {
+    blocchi = Math.max(0, blocchi + (si ? 1 : -1));
+    document.documentElement.style.overflow = blocchi ? 'hidden' : '';
+  }
+
+  /* ---------- video d'apertura: i due video di Francesco in alternanza ---------- */
+  var video = $('.apertura-video');
+  if (video) {
+    var lista = (video.getAttribute('data-video') || '').split(' ').filter(Boolean), i = 0;
+    var pausa = $('[data-pausa]');
+    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (ridotto) { video.removeAttribute('autoplay'); video.pause(); }
+    video.addEventListener('ended', function () {
+      i = (i + 1) % lista.length;
+      video.src = lista[i];
+      video.play().catch(function () {});
+    });
+    var fermo = ridotto;
+    function aggiornaPausa() {
+      pausa.setAttribute('aria-pressed', fermo ? 'true' : 'false');
+      pausa.setAttribute('aria-label', fermo ? 'Riproduci il video' : 'Metti in pausa il video');
+    }
+    if (pausa) {
+      aggiornaPausa();
+      pausa.addEventListener('click', function () {
+        fermo = !fermo;
+        if (fermo) video.pause(); else video.play().catch(function () {});
+        aggiornaPausa();
+      });
+    }
+  }
+
+  /* ---------- menu su telefono ---------- */
+  var menu = $('#menu'), menuBtn = $('.menu-apri');
+  function chiudiMenu() {
+    if (!menu.classList.contains('aperto')) return;
+    menu.classList.remove('aperto'); menuBtn.setAttribute('aria-expanded', 'false'); menuBtn.textContent = 'Menu'; blocca(false);
+  }
+  if (menu && menuBtn) {
+    menuBtn.addEventListener('click', function () {
+      if (menu.classList.contains('aperto')) { chiudiMenu(); return; }
+      menu.classList.add('aperto'); menuBtn.setAttribute('aria-expanded', 'true'); menuBtn.textContent = 'Chiudi'; blocca(true);
+    });
+    $$('a', menu).forEach(function (a) { a.addEventListener('click', chiudiMenu); });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 960) chiudiMenu(); });
+  }
+
+  /* ---------- filtri del drop (anche da #polo / #felpe) ---------- */
+  var filtri = $$('[data-filtro]');
+  function filtra(f) {
+    filtri.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-filtro') === f ? 'true' : 'false'); });
+    $$('.drop .scheda').forEach(function (s) { s.hidden = f !== 'tutto' && s.getAttribute('data-tipo') !== f; });
+  }
+  filtri.forEach(function (b) { b.addEventListener('click', function () { filtra(b.getAttribute('data-filtro')); }); });
+  function daHash() {
+    if (!filtri.length) return;
+    if (location.hash === '#polo') filtra('polo');
+    else if (location.hash === '#felpe') filtra('felpa');
+    else if (location.hash === '#drop') filtra('tutto');
+  }
+  window.addEventListener('hashchange', daHash); daHash();
+
+  /* ---------- borsa (salvata solo in questo browser) ---------- */
+  var CHIAVE = 'maro-borsa-1';
+  function leggi() { try { return JSON.parse(localStorage.getItem(CHIAVE)) || []; } catch (e) { return []; } }
+  function salva(r) { try { localStorage.setItem(CHIAVE, JSON.stringify(r)); } catch (e) {} }
+  var righe = leggi().filter(function (r) { return CAT.some(function (p) { return p.id === r.id; }); });
+  var borsa = $('#borsa'), ultimoFocus = null;
+
+  function conta() { return righe.reduce(function (s, r) { return s + r.q; }, 0); }
+  function disegna() {
+    var n = conta(), num = $('.borsa-num'), btn = $('[data-apri-borsa]');
+    num.textContent = n; num.hidden = !n;
+    btn.setAttribute('aria-label', 'Borsa, ' + n + (n === 1 ? ' articolo' : ' articoli'));
+    var box = $('#borsa-righe'), fondo = $('#borsa-fondo');
+    if (!righe.length) {
+      box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 ti aspetta.</p>';
+      fondo.hidden = true; return;
+    }
+    var tot = 0;
+    box.innerHTML = righe.map(function (r, k) {
+      var p = CAT.filter(function (x) { return x.id === r.id; })[0];
+      tot += p.prezzo * r.q;
+      return '<div class="riga"><a href="' + p.id + '.html"><img src="assets/foto/' + p.foto + '.webp" alt="" width="88" height="110"></a>' +
+        '<div><h3>' + p.nome + '</h3><p>' + p.colore + '</p><p>Taglia ' + r.t + ' · ' + euro(p.prezzo) + '</p>' +
+        '<div class="riga-azioni"><button type="button" data-meno="' + k + '" aria-label="Togli uno">−</button><span aria-live="polite">' + r.q + '</span>' +
+        '<button type="button" data-piu="' + k + '" aria-label="Aggiungi uno">+</button><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';
+    }).join('');
+    fondo.hidden = false;
+    fondo.innerHTML = '<div class="totale"><span>Totale</span><span>' + euro(tot) + '</span></div>' +
+      '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
+  }
+  function apri() {
+    ultimoFocus = document.activeElement;
+    borsa.hidden = false; blocca(true);
+    $('.borsa-testa button', borsa).focus();
+  }
+  function chiudi() {
+    if (borsa.hidden) return;
+    borsa.hidden = true; blocca(false);
+    if (ultimoFocus && ultimoFocus.focus) ultimoFocus.focus({ preventScroll: true });
+  }
+  if (borsa) {
+    disegna();
+    $$('[data-apri-borsa]').forEach(function (b) { b.addEventListener('click', apri); });
+    borsa.addEventListener('click', function (e) {
+      var t = e.target.closest('button, .borsa-velo');
+      if (!t) return;
+      if (t.hasAttribute('data-chiudi-borsa')) return chiudi();
+      var k;
+      if ((k = t.getAttribute('data-piu')) !== null) righe[k].q = Math.min(9, righe[k].q + 1);
+      else if ((k = t.getAttribute('data-meno')) !== null) { righe[k].q--; if (righe[k].q < 1) righe.splice(k, 1); }
+      else if ((k = t.getAttribute('data-togli')) !== null) righe.splice(k, 1);
+      else if (t.hasAttribute('data-paga')) { $('.esito-paga', borsa).textContent = 'Anteprima: il pagamento arriverà con il negozio vero.'; return; }
+      else return;
+      salva(righe); disegna();
+      if (!righe.length) $('.borsa-testa button', borsa).focus();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { chiudi(); chiudiMenu && menu && chiudiMenu(); } });
+  }
+
+  /* ---------- scheda prodotto: aggiungi alla borsa ---------- */
+  var prod = $('.prodotto');
+  if (prod) {
+    var fs = $('.taglie', prod), err = $('.taglie-errore', prod);
+    $$('input[name="taglia"]', prod).forEach(function (r) { r.addEventListener('change', function () { fs.classList.remove('manca'); err.hidden = true; }); });
+    $('[data-aggiungi]', prod).addEventListener('click', function () {
+      var scelta = $('input[name="taglia"]:checked', prod);
+      if (!scelta) { fs.classList.add('manca'); err.hidden = false; $('input[name="taglia"]', prod).focus(); return; }
+      var id = prod.getAttribute('data-id'), t = scelta.value;
+      var r = righe.filter(function (x) { return x.id === id && x.t === t; })[0];
+      if (r) r.q = Math.min(9, r.q + 1); else righe.push({ id: id, t: t, q: 1 });
+      salva(righe); disegna(); apri();
+    });
+  }
+
+  /* ---------- iscrizione (anteprima: nessun invio) ---------- */
+  var form = $('.iscriviti-form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = $('input', form), esito = $('.esito', form), v = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+        esito.className = 'esito errore'; esito.textContent = 'Controlla l’indirizzo email.'; input.focus(); return;
+      }
+      esito.className = 'esito'; esito.textContent = 'Sei dentro: ti scriviamo prima del prossimo drop. (Anteprima: nessuna email inviata.)';
+      input.value = '';
+    });
+  }
+})();
