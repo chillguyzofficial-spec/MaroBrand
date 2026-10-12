@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '23'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '24'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -87,6 +87,32 @@ ${corpo}
     <span class="piede-paese">Italia · EUR €</span>
   </div>
 </footer>
+<div class="popup" id="popup" role="dialog" aria-labelledby="popup-titolo" hidden>
+  <button class="popup-chiudi" type="button" aria-label="Chiudi" data-popup-no><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button>
+  <div class="popup-passo" data-passo="1">
+    <p class="popup-occhiello">Benvenuto in MARO</p>
+    <h2 id="popup-titolo">10% sul tuo<br>primo ordine</h2>
+    <p>Iscriviti: ricevi lo sconto e l’accesso anticipato ai prossimi drop.</p>
+    <form class="popup-form" novalidate>
+      <label for="email-popup" class="sr">La tua email</label>
+      <input id="email-popup" type="email" autocomplete="email" placeholder="La tua email" required>
+      <button class="btn btn-nero" type="submit">Voglio lo sconto</button>
+      <p class="popup-errore" role="alert"></p>
+    </form>
+    <button class="popup-no" type="button" data-popup-no>No grazie</button>
+  </div>
+  <div class="popup-passo" data-passo="2" hidden>
+    <p class="popup-occhiello">Sei dentro</p>
+    <h2>Il tuo codice: <span class="popup-codice">MARO10</span></h2>
+    <p>Lo sconto del 10% è già attivo nella tua borsa. Non devi copiare niente.</p>
+    <button class="btn btn-nero" type="button" data-popup-ok>Inizia a comprare</button>
+  </div>
+</div>
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Foto ingrandita" hidden>
+  <button class="zoom-chiudi" type="button" aria-label="Chiudi la foto"><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button>
+  <div class="zoom-area"></div>
+  <p class="zoom-aiuto">Tocca la foto per ingrandire</p>
+</div>
 <div class="borsa" id="borsa" role="dialog" aria-modal="true" aria-labelledby="borsa-titolo" hidden>
   <div class="borsa-velo" data-chiudi-borsa></div>
   <div class="borsa-pannello">
@@ -95,7 +121,7 @@ ${corpo}
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0], src: urlFoto(p.copertina[0]) })))};</script>
+<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0], src: urlFoto(p.copertina[0]), colorePallino: p.pallini[0] })))};</script>
 </body>
 </html>
 `;
@@ -103,7 +129,13 @@ ${corpo}
 
 function scheda(p, dove) {
   const [fid, alt] = p.copertina;
-  return `<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
+  const rapido = `<div class="rapido">
+  <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: ${esc(p.nome)}">+</button>
+  <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di ${esc(p.nome)}" hidden>
+${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <button type="button" data-rapido="${p.id}|${t}"${fin ? ' disabled aria-label="' + t + ', esaurita"' : ''}>${t}</button>`; }).join('\n')}
+  </div>
+</div>`;
+  return `<div class="scheda-cella" data-tipo="${p.tipo}"><a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
   <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}</div>
   <div class="scheda-testo">
     <span class="pallini">${p.pallini.map(c => `<i style="background:${c}"></i>`).join('')}</span>
@@ -111,7 +143,7 @@ function scheda(p, dove) {
     <p>${esc(p.colore)}</p>
     <p class="prezzo">${euro(p.prezzo)}</p>
   </div>
-</a>`;
+</a>${rapido}</div>`;
 }
 
 // ---------- HOME ----------
@@ -252,6 +284,7 @@ function prodotto(p) {
 ${p.foto.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="${urlFoto(id)}" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
     </div>`;
   const galleria = `    <div class="vetrina" aria-label="Foto di ${esc(p.nome)}">
+      <span class="vetrina-zoom" aria-hidden="true">Tocca per ingrandire</span>
       <div class="vetrina-binario">
 ${foto}
       </div>${comandi}
@@ -318,6 +351,11 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
   <div class="griglia griglia-3">
 ${altri.map(x => scheda(x, 'scheda ' + x.id)).join('\n')}
   </div>
+</section>
+
+<section class="visti" aria-labelledby="visti-titolo" hidden>
+  <h2 id="visti-titolo">Visti di recente</h2>
+  <div class="visti-lista"></div>
 </section>`;
   return pagina({ titolo: `${p.nome} — MARO`, descrizione: `${p.nome}, ${p.colore}. Drop 001 MARO.`, corpo, file: p.id + '.html' });
 }

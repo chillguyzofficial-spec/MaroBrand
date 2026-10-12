@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=23">
-<script defer src="assets/js/maro.js?v=23"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=24">
+<script defer src="assets/js/maro.js?v=24"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -122,6 +122,32 @@
     <span class="piede-paese">Italia · EUR €</span>
   </div>
 </footer>
+<div class="popup" id="popup" role="dialog" aria-labelledby="popup-titolo" hidden>
+  <button class="popup-chiudi" type="button" aria-label="Chiudi" data-popup-no><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button>
+  <div class="popup-passo" data-passo="1">
+    <p class="popup-occhiello">Benvenuto in MARO</p>
+    <h2 id="popup-titolo">10% sul tuo<br>primo ordine</h2>
+    <p>Iscriviti: ricevi lo sconto e l’accesso anticipato ai prossimi drop.</p>
+    <form class="popup-form" novalidate>
+      <label for="email-popup" class="sr">La tua email</label>
+      <input id="email-popup" type="email" autocomplete="email" placeholder="La tua email" required>
+      <button class="btn btn-nero" type="submit">Voglio lo sconto</button>
+      <p class="popup-errore" role="alert"></p>
+    </form>
+    <button class="popup-no" type="button" data-popup-no>No grazie</button>
+  </div>
+  <div class="popup-passo" data-passo="2" hidden>
+    <p class="popup-occhiello">Sei dentro</p>
+    <h2>Il tuo codice: <span class="popup-codice">MARO10</span></h2>
+    <p>Lo sconto del 10% è già attivo nella tua borsa. Non devi copiare niente.</p>
+    <button class="btn btn-nero" type="button" data-popup-ok>Inizia a comprare</button>
+  </div>
+</div>
+<div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Foto ingrandita" hidden>
+  <button class="zoom-chiudi" type="button" aria-label="Chiudi la foto"><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button>
+  <div class="zoom-area"></div>
+  <p class="zoom-aiuto">Tocca la foto per ingrandire</p>
+</div>
 <div class="borsa" id="borsa" role="dialog" aria-modal="true" aria-labelledby="borsa-titolo" hidden>
   <div class="borsa-velo" data-chiudi-borsa></div>
   <div class="borsa-pannello">
@@ -130,6 +156,6 @@
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"copertina-polo-linee","src":"assets/foto/copertina-polo-linee.webp?v=1f7f1ff1"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"copertina-polo-tricolore","src":"assets/foto/copertina-polo-tricolore.webp?v=a89807ab"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"copertina-polo-jacquard","src":"assets/foto/copertina-polo-jacquard.webp?v=4a26d038"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"copertina-felpa-stretta","src":"assets/foto/copertina-felpa-stretta.webp?v=4c7d6a13"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"copertina-felpa-firma","src":"assets/foto/copertina-felpa-firma.webp?v=ef30b0b9"},{"id":"felpa-verticale","nome":"Felpa Verticale","colore":"Verde bottiglia, firma MARO verticale sul retro","prezzo":110,"foto":"copertina-felpa-verticale","src":"assets/foto/copertina-felpa-verticale.webp?v=21517de0"}];</script>
+<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"copertina-polo-linee","src":"assets/foto/copertina-polo-linee.webp?v=1f7f1ff1","colorePallino":"#000"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"copertina-polo-tricolore","src":"assets/foto/copertina-polo-tricolore.webp?v=a89807ab","colorePallino":"#000"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"copertina-polo-jacquard","src":"assets/foto/copertina-polo-jacquard.webp?v=4a26d038","colorePallino":"#d9d6cf"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"copertina-felpa-stretta","src":"assets/foto/copertina-felpa-stretta.webp?v=4c7d6a13","colorePallino":"#b9b9b9"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"copertina-felpa-firma","src":"assets/foto/copertina-felpa-firma.webp?v=ef30b0b9","colorePallino":"#1c2440"},{"id":"felpa-verticale","nome":"Felpa Verticale","colore":"Verde bottiglia, firma MARO verticale sul retro","prezzo":110,"foto":"copertina-felpa-verticale","src":"assets/foto/copertina-felpa-verticale.webp?v=21517de0","colorePallino":"#1f3a2c"}];</script>
 </body>
 </html>

@@ -25,7 +25,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   for (const w of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920]) {
     const ctx = await b.newContext({ viewport: { width: w, height: w < 600 ? 800 : 900 } });
     for (const pg of PAGINE) {
-      const p = await ctx.newPage(); const errori = [];
+      await ctx.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); } catch (e) {} });
+  const p = await ctx.newPage(); const errori = [];
       p.on('pageerror', e => errori.push(e.message));
       p.on('response', r => { if (r.status() >= 400) errori.push(r.status() + ' ' + r.url()); });
       await p.goto(BASE + pg, { waitUntil: 'load' });
@@ -39,7 +40,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
-        const imgRotte = [...document.images].filter(i => i.complete && !i.naturalWidth).map(i => i.src);
+        const imgRotte = [...document.images].filter(i => i.getAttribute('src') && i.complete && !i.naturalWidth).map(i => i.src);
         const piccoli = [...document.querySelectorAll('p, a, span, button, li, td, label, summary')].filter(e => e.offsetParent && e.textContent.trim() && parseFloat(getComputedStyle(e).fontSize) < 12).length;
         return { sw: document.documentElement.scrollWidth, W, fuori: fuori.slice(0, 5), imgRotte, piccoli, noindex: !!document.querySelector('meta[name=robots][content*=noindex]') };
       });
@@ -86,6 +87,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
 
   // 2. percorso su telefono
   const ctx = await b.newContext({ ...devices['iPhone 13'], browserName: undefined });
+  await ctx.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); } catch (e) {} });
   const p = await ctx.newPage();
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   const vid = await p.evaluate(() => new Promise(r => setTimeout(() => { const v = document.querySelector('video'); r({ t: v.currentTime, err: v.error && v.error.code }); }, 1500)));
@@ -140,6 +142,24 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.tap('#spedizioni details:first-of-type summary');
   prova(await p.evaluate(() => document.querySelector('#spedizioni details').open), 'aiuto: domanda si apre');
 
+  // aggiunta rapida dalla griglia
+  await p.goto(BASE + 'index.html#drop', { waitUntil: 'load' });
+  await p.tap('.drop .scheda-cella:nth-child(2) .rapido-apri');
+  prova(await p.isVisible('.drop .scheda-cella:nth-child(2) .rapido-taglie') && await p.isDisabled('[data-rapido="polo-tricolore|XL"]'), 'rapido: taglie aperte, XL esaurita disattiva');
+  await p.tap('[data-rapido="polo-tricolore|M"]');
+  prova(!(await p.evaluate(() => document.getElementById('borsa').hidden)) && /Polo Tricolore/.test(await p.textContent('#borsa-righe')), 'rapido: Polo Tricolore M in borsa');
+  await p.tap('.borsa-testa button');
+  await p.evaluate(() => localStorage.removeItem('maro-borsa-1'));
+  // zoom
+  await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
+  await p.tap('.vetrina', { position: { x: 150, y: 200 } });
+  prova(await p.isVisible('#zoom') && await p.evaluate(() => document.documentElement.style.overflow === 'hidden'), 'zoom: tocco sulla foto apre lo zoom');
+  await p.tap('.zoom-area'); prova(await p.evaluate(() => document.querySelector('.zoom-area').classList.contains('dentro')), 'zoom: tocco ingrandisce');
+  await p.tap('.zoom-chiudi'); prova(!(await p.isVisible('#zoom')) && await p.evaluate(() => document.documentElement.style.overflow === ''), 'zoom: si chiude e la pagina scorre');
+  // visti di recente
+  await p.goto(BASE + 'felpa-firma.html', { waitUntil: 'load' });
+  prova(await p.isVisible('.visti') && /Polo Linee/.test(await p.textContent('.visti')), 'visti di recente: compare la Polo Linee');
+
   // conto alla rovescia
   await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);
   prova(await p.evaluate(() => /^[0-9]+$/.test(document.querySelector('[data-u="g"]').textContent) && /^[0-9][0-9]$/.test(document.querySelector('[data-u="s"]').textContent)), 'conto alla rovescia acceso');
@@ -165,15 +185,35 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.tap('.taglie label:nth-child(3)'); await p.tap('[data-aggiungi]');
   prova(!(await p.evaluate(() => document.getElementById('borsa').hidden)), 'con taglia: borsa aperta');
   prova(await p.evaluate(() => document.documentElement.style.overflow === 'hidden' && document.body.style.overflow === ''), 'blocco scorrimento solo su html');
-  prova(/125,90/.test(await p.textContent('.totale')) && /30,00/.test(await p.textContent('.soglia')), 'totale 120 + 5,90 di spedizione, mancano 30 € alla soglia');
+  prova(/113,90/.test(await p.textContent('.totale')) && /30,00/.test(await p.textContent('.soglia')) && /12,00/.test(await p.textContent('.sconto')), 'totale 120 − 10% + 5,90 di spedizione (iscritto), mancano 30 €');
   await p.tap('[data-piu="0"]');
-  prova(/240,00/.test(await p.textContent('.totale')) && /gratuita/i.test(await p.textContent('.soglia')), 'più: 240,00 €, spedizione gratuita');
+  prova(/216,00/.test(await p.textContent('.totale')) && /gratuita/i.test(await p.textContent('.soglia')), 'più: 240 − 10% = 216,00 €, spedizione gratuita');
   if (SHOTS) await p.screenshot({ path: path.join(SHOTS, 'borsa-tel.png') });
   await p.tap('.borsa-testa button');
   prova(await p.evaluate(() => document.querySelector('.borsa-num').textContent) === '2', 'contatore borsa 2');
   await p.goto(BASE + 'index.html');
   prova(await p.evaluate(() => document.querySelector('.borsa-num').textContent) === '2', 'borsa ricordata cambiando pagina');
   await ctx.close();
+
+  // 2b. popup 10% (contesto pulito)
+  {
+    const c = await b.newContext({ ...devices['iPhone 13'] }); const q = await c.newPage();
+    await q.goto(BASE + 'index.html', { waitUntil: 'load' });
+    await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
+    prova(await q.isVisible('#popup'), 'popup: compare dopo un terzo di pagina');
+    await q.tap('.popup-no'); await q.waitForTimeout(400);
+    prova(!(await q.isVisible('#popup')), 'popup: No grazie lo chiude');
+    await q.reload(); await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
+    prova(!(await q.isVisible('#popup')), 'popup: dopo No grazie non ricompare');
+    await q.evaluate(() => localStorage.clear()); await q.reload();
+    await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
+    await q.fill('#email-popup', 'luca@esempio.it'); await q.tap('.popup-form .btn');
+    prova(await q.isVisible('.popup-codice'), 'popup: iscrizione mostra il codice');
+    await q.tap('[data-popup-ok]');
+    await q.goto(BASE + 'polo-linee.html'); await q.tap('.taglie label:nth-child(2)'); await q.tap('[data-aggiungi]');
+    prova(/7,50/.test(await q.textContent('.sconto')), 'popup: sconto 10% applicato in borsa');
+    await c.close();
+  }
 
   // 3. screenshot
   if (SHOTS) {

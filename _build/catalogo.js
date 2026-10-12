@@ -4,7 +4,7 @@ const TAGLIE_FELPA = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 module.exports = [
   {
-    id: 'polo-linee', copertina: ['copertina-polo-linee', 'Polo Linee nera con righe bianche sulle maniche e firma MARO sul petto'], tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
+    id: 'polo-linee', esaurite: ['XXL'], copertina: ['copertina-polo-linee', 'Polo Linee nera con righe bianche sulle maniche e firma MARO sul petto'], tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
     prezzo: 75, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-linee-fronte', 'Polo Linee nera su manichino, fronte, firma MARO sul petto'], ['polo-linee-retro', 'Polo Linee nera, retro con le ali e la scritta Fly with your mind'], ['polo-linee-lato', 'Polo Linee nera, fronte con le righe bianche sulle maniche'], ['polo-linee-tre-quarti', 'Polo Linee nera vista di tre quarti']],
     testo: 'Piqué nero, tre linee bianche sulle maniche. Davanti la firma MARO ricamata, dietro le ali e “Fly with your mind”. Pulita davanti, forte dietro.',
@@ -25,7 +25,7 @@ module.exports = [
     dettagli: ['Maglia jacquard a righe', 'Collo e abbottonatura tortora', 'Firma MARO ricamata tono su tono', 'Vestibilità regolare'],
   },
   {
-    id: 'felpa-stretta', copertina: ['copertina-felpa-stretta', 'Felpa grigia indossata, retro con la stretta di mano'], tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
+    id: 'felpa-stretta', esaurite: ['XS'], copertina: ['copertina-felpa-stretta', 'Felpa grigia indossata, retro con la stretta di mano'], tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
     prezzo: 120, pallini: ['#b9b9b9'], taglie: TAGLIE_FELPA,
     foto: [['felpa-stretta-retro', 'Felpa grigia su manichino, retro con la grande stampa della stretta di mano'], ['felpa-stretta-tre-quarti', 'Felpa grigia vista di tre quarti dal retro'], ['felpa-stretta-fronte', 'Felpa grigia, fronte pulito con cappuccio e tasca']],
     testo: 'Grigio melange. Sulla schiena, in grande, la stretta di mano: il segno del rispetto. Davanti, pulita.',

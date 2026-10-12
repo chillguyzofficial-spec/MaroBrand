@@ -64,7 +64,7 @@
   var filtri = $$('[data-filtro]');
   function filtra(f) {
     filtri.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-filtro') === f ? 'true' : 'false'); });
-    $$('.drop .scheda').forEach(function (s) { s.hidden = f !== 'tutto' && s.getAttribute('data-tipo') !== f; });
+    $$('.drop .scheda').forEach(function (s) { s.hidden = f !== 'tutto' && s.getAttribute('data-tipo') !== f; s.parentNode.hidden = s.hidden; });
   }
   filtri.forEach(function (b) { b.addEventListener('click', function () { filtra(b.getAttribute('data-filtro')); }); });
   function daHash() {
@@ -76,6 +76,13 @@
   window.addEventListener('hashchange', daHash); daHash();
 
   /* ---------- borsa (salvata solo in questo browser) ---------- */
+  // memoria locale protetta (navigazione privata o blocchi: il sito funziona lo stesso)
+  var mem = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var haSconto = function () { return mem.get('maro-sconto') === '1'; };
+  var attivaSconto = function () { mem.set('maro-sconto', '1'); mem.set('maro-iscritto', '1'); if (window.MARO_ridisegna) window.MARO_ridisegna(); };
   var CHIAVE = 'maro-borsa-1';
   function leggi() { try { return JSON.parse(localStorage.getItem(CHIAVE)) || []; } catch (e) { return []; } }
   function salva(r) { try { localStorage.setItem(CHIAVE, JSON.stringify(r)); } catch (e) {} }
@@ -106,10 +113,13 @@
     var SOGLIA = 150, SPED = 5.9, manca = SOGLIA - tot, gratis = manca <= 0;
     var barra = '<div class="soglia"><p>' + (gratis ? '<strong>Spedizione gratuita.</strong>' : 'Ti mancano <strong>' + euro(manca) + '</strong> per la spedizione gratuita.') + '</p>' +
       '<div class="soglia-barra"><i style="width:' + Math.min(100, Math.round(tot / SOGLIA * 100)) + '%"></i></div></div>';
+    // sconto benvenuto 10% (iscrizione): sul subtotale, la soglia di spedizione resta sul subtotale pieno
+    var sconto = haSconto() ? Math.round(tot * 10) / 100 : 0;
     fondo.innerHTML = barra +
       '<div class="riepilogo"><span>Subtotale</span><span>' + euro(tot) + '</span></div>' +
+      (sconto ? '<div class="riepilogo sconto"><span>Sconto benvenuto MARO10</span><span>−' + euro(sconto) + '</span></div>' : '') +
       '<div class="riepilogo"><span>Spedizione</span><span>' + (gratis ? 'Gratuita' : euro(SPED)) + '</span></div>' +
-      '<div class="totale"><span>Totale</span><span>' + euro(tot + (gratis ? 0 : SPED)) + '</span></div>' +
+      '<div class="totale"><span>Totale</span><span>' + euro(tot - sconto + (gratis ? 0 : SPED)) + '</span></div>' +
       '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
   }
   function apri() {
@@ -123,6 +133,12 @@
     if (ultimoFocus && ultimoFocus.focus) ultimoFocus.focus({ preventScroll: true });
   }
   if (borsa) {
+    window.MARO_ridisegna = disegna;
+    window.MARO_aggiungi = function (id, t) {
+      var r = righe.filter(function (x) { return x.id === id && x.t === t; })[0];
+      if (r) r.q = Math.min(9, r.q + 1); else righe.push({ id: id, t: t, q: 1 });
+      salva(righe); disegna(); apri();
+    };
     disegna();
     $$('[data-apri-borsa]').forEach(function (b) { b.addEventListener('click', apri); });
     borsa.addEventListener('click', function (e) {
@@ -161,6 +177,11 @@
       if (x0 === null) return;
       var dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
       if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) vai(i + (dx < 0 ? 1 : -1));
+      v.dataset.tocco = Math.abs(dx) < 8 && Math.abs(dy) < 8 ? '1' : '';
+    });
+    v.addEventListener('click', function (e) {
+      if (e.target.closest('button') || v.dataset.tocco !== '1' || !window.MARO_zoom) return;
+      window.MARO_zoom(figure[i].querySelector('img'));
     });
     v.addEventListener('pointercancel', function () { x0 = null; });
     v.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') vai(i + 1); if (e.key === 'ArrowLeft') vai(i - 1); });
@@ -227,6 +248,106 @@
     });
   }
 
+  /* ---------- aggiunta rapida dalla griglia (+ → taglie → borsa) ---------- */
+  var chiudiRapidi = function (tranne) {
+    $$('.rapido').forEach(function (r) {
+      if (r === tranne) return;
+      $('.rapido-taglie', r).hidden = true; $('.rapido-apri', r).setAttribute('aria-expanded', 'false'); $('.rapido-apri', r).textContent = '+';
+    });
+  };
+  document.addEventListener('click', function (e) {
+    var ap = e.target.closest('.rapido-apri'), tg = e.target.closest('[data-rapido]');
+    if (ap) {
+      var r = ap.parentNode, pan = $('.rapido-taglie', r), aperto = pan.hidden;
+      chiudiRapidi(r);
+      pan.hidden = !aperto; ap.setAttribute('aria-expanded', String(aperto)); ap.textContent = aperto ? '×' : '+';
+      if (aperto) { var primo = $('button:not([disabled])', pan); if (primo) primo.focus({ preventScroll: true }); }
+      return;
+    }
+    if (tg) {
+      var v = tg.getAttribute('data-rapido').split('|');
+      chiudiRapidi(null);
+      if (window.MARO_aggiungi) window.MARO_aggiungi(v[0], v[1]);
+      return;
+    }
+    if (!e.target.closest('.rapido')) chiudiRapidi(null);
+  });
+
+  /* ---------- zoom delle foto prodotto (tocco = ingrandisci nel punto) ---------- */
+  var zoom = $('#zoom');
+  if (zoom) {
+    var zArea = $('.zoom-area', zoom), zImg = document.createElement('img'), zDa = null;
+    zArea.appendChild(zImg);
+    var zChiudi = function () { if (zoom.hidden) return; zoom.hidden = true; zArea.classList.remove('dentro'); blocca(false); if (zDa) zDa.focus({ preventScroll: true }); };
+    window.MARO_zoom = function (img) {
+      zDa = document.activeElement;
+      zImg.src = img.currentSrc || img.src; zImg.alt = img.alt;
+      zArea.classList.remove('dentro'); zoom.hidden = false; blocca(true);
+      $('.zoom-chiudi', zoom).focus();
+    };
+    zArea.addEventListener('click', function (e) {
+      var q = zImg.getBoundingClientRect();
+      zImg.style.transformOrigin = ((e.clientX - q.left) / q.width * 100) + '% ' + ((e.clientY - q.top) / q.height * 100) + '%';
+      zArea.classList.toggle('dentro');
+    });
+    $('.zoom-chiudi', zoom).addEventListener('click', zChiudi);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') zChiudi(); });
+  }
+
+  /* ---------- visti di recente (scheda prodotto) ---------- */
+  var visti = $('.visti');
+  if (prod && visti) {
+    var qui = prod.getAttribute('data-id'), lista = [];
+    try { lista = JSON.parse(mem.get('maro-visti')) || []; } catch (e) {}
+    var altri = lista.filter(function (id) { return id !== qui; }).map(function (id) { return CAT.filter(function (p) { return p.id === id; })[0]; }).filter(Boolean).slice(0, 4);
+    if (altri.length) {
+      $('.visti-lista', visti).innerHTML = altri.map(function (p) {
+        return '<a class="visto" href="' + p.id + '.html"><img src="' + p.src + '" alt="" width="160" height="200" loading="lazy"><span>' + p.nome + '</span><span class="prezzo">' + euro(p.prezzo) + '</span></a>';
+      }).join('');
+      visti.hidden = false;
+    }
+    mem.set('maro-visti', JSON.stringify([qui].concat(lista.filter(function (id) { return id !== qui; })).slice(0, 8)));
+  }
+
+  /* ---------- popup 10% sul primo ordine ---------- */
+  var pop = $('#popup');
+  if (pop) {
+    var GIORNI7 = 7 * 864e5, no = Number(mem.get('maro-popup-no') || 0);
+    var puo = !mem.get('maro-iscritto') && Date.now() - no > GIORNI7;
+    var chiudiPop = function (rifiuto) {
+      pop.classList.remove('visibile');
+      setTimeout(function () { pop.hidden = true; }, 300);
+      if (rifiuto) mem.set('maro-popup-no', String(Date.now()));
+    };
+    var mostra = function () {
+      if (!puo || !pop.hidden) return;
+      // mai sopra menu, borsa o zoom aperti: riprova più tardi
+      var occupato = !$('#borsa').hidden || ($('#menu') && $('#menu').classList.contains('aperto')) || (zoom && !zoom.hidden);
+      if (occupato) { setTimeout(mostra, 4000); return; }
+      puo = false; pop.hidden = false;
+      requestAnimationFrame(function () { pop.classList.add('visibile'); });
+    };
+    if (puo) {
+      setTimeout(mostra, 8000);
+      var suScroll = function () {
+        if (window.scrollY > (document.documentElement.scrollHeight - innerHeight) / 3) { window.removeEventListener('scroll', suScroll); setTimeout(mostra, 600); }
+      };
+      window.addEventListener('scroll', suScroll, { passive: true });
+    }
+    $$('[data-popup-no]', pop).forEach(function (b) { b.addEventListener('click', function () { chiudiPop(true); }); });
+    $('[data-popup-ok]', pop).addEventListener('click', function () { chiudiPop(false); });
+    $('.popup-form', pop).addEventListener('submit', function (e) {
+      e.preventDefault();
+      var inp = $('input', this), er = $('.popup-errore', pop);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { er.textContent = 'Controlla l’indirizzo email.'; inp.focus(); return; }
+      er.textContent = '';
+      attivaSconto();
+      $('[data-passo="1"]', pop).hidden = true; $('[data-passo="2"]', pop).hidden = false;
+      $('[data-popup-ok]', pop).focus();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) chiudiPop(true); });
+  }
+
   /* ---------- conto alla rovescia del prossimo drop ---------- */
   var conto = $('.conto');
   if (conto) {
@@ -289,7 +410,8 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
         esito.className = 'esito errore'; esito.textContent = 'Controlla l’indirizzo email.'; input.focus(); return;
       }
-      esito.className = 'esito'; esito.textContent = 'Sei dentro: ti scriviamo prima del prossimo drop. (Anteprima: nessuna email inviata.)';
+      esito.className = 'esito'; esito.textContent = 'Sei dentro: ti scriviamo prima del prossimo drop, e il 10% sul primo ordine è già nella tua borsa. (Anteprima: nessuna email inviata.)';
+      attivaSconto();
       input.value = '';
     });
   }
