@@ -106,7 +106,7 @@ h1, h2, h3 { margin: 0; }
 
 /* lookbook */
 .lookbook { padding: 0 var(--lato) clamp(48px, 7vw, 96px); }
-.lookbook .titolo { margin-bottom: 28px; }
+
 .lookbook-griglia { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-items: start; }
 .lookbook figure { margin: 0; }
 .lookbook img { width: 100%; }
@@ -343,3 +343,14 @@ details > p { margin: 0 0 20px; }
   .categoria-vai { min-height: 40px; padding: 0 14px; font-size: 14px; }
 }
 .st-firma svg { width: 100%; aspect-ratio: 1; display: block; background: var(--bianco); border: 1.5px solid var(--grigio-2); padding: 8% 0; color: var(--nero); }
+
+/* testi nuovi (giro copy 12/10) */
+.campagna-sotto { font-size: clamp(18px, 1.6vw, 22px); color: #d6d6d6; margin: 24px 0 0; max-width: 24em; }
+.storia-segno { background: var(--nero); color: var(--bianco); aspect-ratio: 1; display: grid; place-items: center; }
+.storia-segno svg { width: 58%; height: auto; }
+.lookbook-testa { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+.lookbook-testa .titolo { margin: 0; }
+.lookbook-testa p { margin: 0; font-weight: 600; color: var(--testo-2); letter-spacing: .06em; text-transform: uppercase; font-size: 14px; }
+.iscriviti-sotto { font-size: 18px; color: var(--testo-2); margin: 16px 0 0; }
+.st-valori .st-passo { display: block; font-size: 15px; margin-bottom: 4px; }
+.st-grafica img { width: 100%; }
