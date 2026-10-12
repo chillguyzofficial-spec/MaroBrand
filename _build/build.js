@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '9'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '10'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -57,7 +57,7 @@ ${SPRITE}
     <a href="index.html#drop">Drop 001</a>
     <a href="index.html#polo">Polo</a>
     <a href="index.html#felpe">Felpe</a>
-    <a href="index.html#storia">Storia</a>
+    <a href="storia.html">Storia</a>
   </nav>
   <div class="azioni">
     <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
@@ -74,7 +74,7 @@ ${corpo}
       <p>Streetwear disegnato a Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Drop 001"><h2>Drop 001</h2><a href="index.html#polo">Polo</a><a href="index.html#felpe">Felpe</a><a href="index.html#lookbook">Lookbook</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="index.html#storia">La storia</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">La storia</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
@@ -131,7 +131,7 @@ function home() {
     <p>Polo e felpe disegnate a Milano. Il Drop 001 è online.</p>
     <div class="pulsanti">
       <a class="btn btn-bianco" href="#drop">Acquista il drop</a>
-      <a class="btn btn-contorno" href="#storia">La storia</a>
+      <a class="btn btn-contorno" href="storia.html">La storia</a>
     </div>
   </div>
 </section>
@@ -181,9 +181,9 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
 <section class="storia" id="storia" aria-labelledby="storia-titolo">
   <div class="storia-testo">
     <span class="linguetta" aria-hidden="true"></span>
-    <h2 id="storia-titolo" class="titolo">Due terre,<br>un volo</h2>
-    <p>MARO nasce a Milano, da chi è cresciuto tra due culture: l’Italia e il Marocco. La stretta di mano è il primo disegno del marchio: due terre che si tengono.</p>
-    <p>Le ali vengono da uno schizzo a penna. L’idea è rimasta quella: <strong>vola con la testa</strong>, anche quando i piedi sono in metro alle otto del mattino.</p>
+    <h2 id="storia-titolo" class="titolo">Più di<br>un logo</h2>
+    <p>MARO nasce da uno schizzo a penna e da una stretta di mano. Dietro ogni capo c’è un’idea semplice: <strong>i piedi restano per strada, la testa vola dove vuole.</strong></p>
+    <a class="btn btn-nero" href="storia.html">Leggi la storia</a>
   </div>
   <div class="storia-foto">${img('storia-stretta-di-mano', 'Due ragazzi si stringono la mano in un parco, uno indossa una felpa MARO', { dove: 'home storia', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
 </section>
@@ -285,43 +285,151 @@ function tabellaTaglie(taglie, k0) {
         <tbody>${taglie.map((t, i) => `<tr><td>${t}</td><td>${52 + (i + k0) * 3}</td><td>${68 + (i + k0) * 2}</td></tr>`).join('')}</tbody>
       </table>`;
 }
+const ICONE = {
+  spedizioni: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 12h26v22H4zM30 20h8l6 7v7H30z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="12" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/><circle cx="36" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/></svg>',
+  resi: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 16H32a10 10 0 0 1 0 20H12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M20 8l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  taglie: '<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="16" width="40" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 16v6M20 16v9M28 16v6M36 16v9" stroke="currentColor" stroke-width="2.4"/></svg>',
+  contatti: '<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10h36v24H20l-10 8v-8H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 20h20M14 26h12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+};
+const domanda = (q, a) => `      <details><summary>${q}</summary><p>${a}</p></details>`;
 function aiuto() {
+  const temi = [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
   const corpo = `
-<div class="aiuto">
-  <h1 class="titolo">Aiuto</h1>
-  <nav class="aiuto-indice" aria-label="In questa pagina">
-    <a href="#spedizioni">Spedizioni</a><a href="#resi">Resi</a><a href="#taglie">Guida alle taglie</a><a href="#contatti">Contatti</a>
+<section class="aiuto-testa" aria-labelledby="aiuto-titolo">
+  <h1 id="aiuto-titolo" class="titolo">Come possiamo<br>aiutarti?</h1>
+  <nav class="aiuto-temi" aria-label="Argomenti">
+${temi.map(([id, t]) => `    <a href="#${id}">${ICONE[id]}<span>${t}</span></a>`).join('\n')}
   </nav>
-  <section id="spedizioni" aria-labelledby="t-sped">
-    <h2 id="t-sped">Spedizioni</h2>
-    <p>Spediamo in tutta Italia in 2–4 giorni lavorativi. Gli ordini fatti entro le 13 partono il giorno stesso. Ricevi il numero di tracciamento via email.</p>
-  </section>
-  <section id="resi" aria-labelledby="t-resi">
-    <h2 id="t-resi">Resi</h2>
-    <p>Hai 14 giorni dalla consegna per restituire un capo, anche solo perché la taglia non va. Il capo deve essere integro, con il cartellino. Il rimborso arriva sullo stesso metodo di pagamento.</p>
-  </section>
-  <section id="taglie" aria-labelledby="t-taglie">
-    <h2 id="t-taglie">Guida alle taglie</h2>
-    <p>Misure del capo steso. Confrontale con un capo tuo che ti sta bene.</p>
-    <div class="aiuto-tabelle">
-      <div><h3>Polo</h3>
-      ${tabellaTaglie(['S', 'M', 'L', 'XL', 'XXL'], 1)}</div>
-      <div><h3>Felpe</h3>
-      ${tabellaTaglie(['XS', 'S', 'M', 'L', 'XL', 'XXL'], 0)}</div>
+</section>
+
+<div class="aiuto">
+  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
+    <div class="aiuto-tema-testa"><h2 id="t-sped">Ordini e spedizioni</h2><p>Tutto quello che succede dal pagamento alla porta di casa.</p></div>
+    <div class="domande">
+${domanda('Dov’è il mio ordine?', 'Appena il pacco parte ricevi un’email con il numero di tracciamento: da lì segui la consegna passo per passo.')}
+${domanda('Quanto ci mette ad arrivare?', 'In Italia 2–4 giorni lavorativi. Gli ordini fatti entro le 13 partono il giorno stesso.')}
+${domanda('Quanto costa la spedizione?', 'Il costo è mostrato nella borsa, prima di pagare. Nessuna sorpresa alla fine.')}
+${domanda('Come posso pagare?', 'Carta di credito o di debito, PayPal e Apple Pay. Il pagamento è protetto e non vediamo mai i dati della tua carta.')}
     </div>
   </section>
-  <section id="contatti" aria-labelledby="t-contatti">
-    <h2 id="t-contatti">Contatti</h2>
-    <p>Email, WhatsApp e social di MARO arriveranno con l’apertura del negozio.</p>
+
+  <section class="aiuto-tema" id="resi" aria-labelledby="t-resi">
+    <div class="aiuto-tema-testa"><h2 id="t-resi">Resi e rimborsi</h2><p>Hai 14 giorni dalla consegna per cambiare idea.</p></div>
+    <div class="domande">
+${domanda('Come faccio un reso?', 'Scrivici con il numero d’ordine: ti mandiamo l’etichetta e le istruzioni. Il capo deve essere integro e con il cartellino.')}
+${domanda('Posso cambiare taglia?', 'Sì: fai il reso del capo e ordina la taglia giusta. Se la taglia è esaurita, ti avvisiamo appena torna.')}
+${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci arriva, sullo stesso metodo che hai usato per pagare.')}
+    </div>
+  </section>
+
+  <section class="aiuto-tema" id="taglie" aria-labelledby="t-taglie">
+    <div class="aiuto-tema-testa"><h2 id="t-taglie">Guida alle taglie</h2><p>Misure del capo steso, in centimetri. Confrontale con un capo tuo che ti sta bene.</p>
+      <figure class="misure-disegno" aria-label="Come prendere le misure">
+        <svg viewBox="0 0 220 200" role="img" aria-label="Disegno di una maglia: il torace si misura da ascella ad ascella, la lunghezza dalla spalla all’orlo">
+          <path d="M70 20 L40 32 L10 90 L34 100 L52 66 L52 186 L168 186 L168 66 L186 100 L210 90 L180 32 L150 20 Q110 44 70 20Z" fill="#f5f5f5" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M56 78 H164" stroke="#c8102e" stroke-width="2.5"/><path d="M56 72v12M164 72v12" stroke="#c8102e" stroke-width="2.5"/>
+          <path d="M140 30 V182" stroke="#007a3d" stroke-width="2.5"/><path d="M134 30h12M134 182h12" stroke="#007a3d" stroke-width="2.5"/>
+        </svg>
+        <figcaption><span class="punto rosso"></span>Torace: da ascella ad ascella · <span class="punto verde"></span>Lunghezza: dalla spalla all’orlo</figcaption>
+      </figure>
+    </div>
+    <div>
+      <div class="filtri taglie-schede" role="group" aria-label="Scegli il capo">
+        <button type="button" data-tabella="polo" aria-pressed="true">Polo</button>
+        <button type="button" data-tabella="felpe" aria-pressed="false">Felpe</button>
+      </div>
+      <div data-tabella-di="polo">${tabellaTaglie(['S', 'M', 'L', 'XL', 'XXL'], 1)}</div>
+      <div data-tabella-di="felpe" hidden>${tabellaTaglie(['XS', 'S', 'M', 'L', 'XL', 'XXL'], 0)}</div>
+      <p class="piccolo">Tra due taglie? Per una vestibilità più comoda scegli la più grande.</p>
+    </div>
+  </section>
+
+  <section class="aiuto-tema" id="contatti" aria-labelledby="t-contatti">
+    <div class="aiuto-tema-testa"><h2 id="t-contatti">Contatti</h2><p>Non hai trovato la risposta? Scrivici.</p></div>
+    <div class="contatto">
+      <p><strong>Email, WhatsApp e Instagram</strong> arriveranno con l’apertura del negozio.</p>
+      <p class="piccolo">Rispondiamo dal lunedì al venerdì, entro un giorno lavorativo.</p>
+    </div>
   </section>
 </div>`;
-  return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
+  return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Ordini, spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
+}
+
+// ---------- STORIA (testi provvisori: da completare con le parole del fondatore) ----------
+function storia() {
+  const passi = [
+    ['storia-dal-foglio-al-file', 'La prima versione digitale della M con le ali', 'Dal foglio al file', 'Lo schizzo viene ridisegnato: linee pulite, proporzioni giuste, pronto per il ricamo o la stampa.'],
+    ['storia-ricamo', 'Una ricamatrice al lavoro sulle ali MARO', 'Il ricamo', 'Simbolo e firma vengono ricamati punto per punto. Il ricamo dura nel tempo e si sente sotto le dita.'],
+    ['storia-dettaglio', 'La firma MARO ricamata tono su tono sulla polo jacquard', 'Il dettaglio', 'Sulla polo jacquard la firma è tono su tono: si vede solo da vicino, come le cose fatte con cura.'],
+  ];
+  const corpo = `
+<section class="st-apertura" aria-labelledby="st-titolo">
+  <div class="st-apertura-testo">
+    <p class="occhiello">La storia di MARO</p>
+    <h1 id="st-titolo">Fly with<br>your mind.</h1>
+    <p class="st-lead">MARO nasce a Milano, tra una fermata della metro e un foglio di carta. È un marchio di abbigliamento, ma prima ancora è un’idea: <strong>i piedi restano per strada, la testa può andare dove vuole.</strong></p>
+  </div>
+  <div class="st-apertura-foto">${img('storia-apertura-colonna', 'La firma MARO su una colonna della metro di Milano', { dove: 'storia apertura', lazy: false, sizes: '(min-width: 960px) 40vw, 100vw' })}</div>
+</section>
+
+<section class="st-capitolo" aria-labelledby="st-c1">
+  <div class="st-num" aria-hidden="true">01</div>
+  <div class="st-testo">
+    <h2 id="st-c1">Tutto parte da un foglio</h2>
+    <p>Il primo disegno di MARO è uno schizzo a penna su un foglio a righe: una M con due ali e un ricciolo sotto. Niente computer, niente agenzia.</p>
+    <p>Da quel foglio è nato il simbolo che oggi è ricamato sul petto delle polo: le stesse ali, ridisegnate per essere riconoscibili anche a tre centimetri.</p>
+  </div>
+  <div class="st-confronto">
+    <figure>${img('storia-schizzo', 'Lo schizzo originale a penna: una M con due ali e un ricciolo', { dove: 'storia schizzo', sizes: '(min-width: 960px) 24vw, 50vw' })}<figcaption>Lo schizzo</figcaption></figure>
+    <figure class="st-simbolo"><svg viewBox="0 0 200 150" role="img" aria-label="Il simbolo MARO di oggi"><use href="#maro-simbolo"/></svg><figcaption>Il simbolo di oggi</figcaption></figure>
+  </div>
+</section>
+
+<section class="st-manifesto" aria-labelledby="st-c2">
+  <div class="st-num" aria-hidden="true">02</div>
+  <h2 id="st-c2">Le ali non sono<br>un ornamento.</h2>
+  <p>Sono il motivo per cui MARO esiste. Ricordano a chi lo indossa che la testa è libera anche quando la giornata non lo è: il treno delle otto, il lavoro, la città che corre. <strong>Si può volare lo stesso.</strong></p>
+</section>
+
+<section class="st-capitolo st-inverso" aria-labelledby="st-c3">
+  <div class="st-num" aria-hidden="true">03</div>
+  <div class="st-testo">
+    <h2 id="st-c3">La stretta di mano</h2>
+    <p>Il secondo disegno è una stretta di mano dentro una nuvola: due mani che si tengono, due mondi che si incontrano.</p>
+    <p>È il segno più personale del marchio. Viene da chi è cresciuto tra culture diverse e ha imparato che <strong>si va più lontano tenendosi</strong>. Oggi è stampato sulla schiena della felpa grigia.</p>
+    <a class="link" href="felpa-stretta.html">Vedi la Felpa Stretta di mano</a>
+  </div>
+  <figure class="st-grafica">${img('storia-stretta-grafica', 'La grafica della stretta di mano dentro una nuvola', { dove: 'storia stretta', sizes: '(min-width: 960px) 40vw, 100vw' })}</figure>
+</section>
+
+<section class="st-processo" aria-labelledby="st-c4">
+  <div class="st-processo-testa"><div class="st-num" aria-hidden="true">04</div><h2 id="st-c4">Come nasce un capo</h2></div>
+  <ol>
+${passi.map(([id, alt, t, d], i) => `    <li><figure>${img(id, alt, { dove: 'storia processo', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">${String(i + 1).padStart(2, '0')}</span><h3>${t}</h3><p>${d}</p></li>`).join('\n')}
+  </ol>
+</section>
+
+<section class="st-valori" aria-labelledby="st-c5">
+  <div class="st-processo-testa"><div class="st-num" aria-hidden="true">05</div><h2 id="st-c5">In cosa crediamo</h2></div>
+  <ul>
+    <li><h3>Disegnato a Milano</h3><p>Ogni grafica nasce qui, per le strade e nelle metro di questa città.</p></li>
+    <li><h3>Drop, non stagioni</h3><p>Pochi capi alla volta, quando sono pronti. Niente collezioni da svendere a fine stagione.</p></li>
+    <li><h3>Un segno, non un logo</h3><p>Le ali e la firma MARO sono disegni fatti a mano, non lettere prese da un catalogo.</p></li>
+  </ul>
+</section>
+
+<section class="st-fine" aria-labelledby="st-fine">
+  <h2 id="st-fine" class="titolo">Indossa<br>la storia.</h2>
+  <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
+</section>`;
+  return pagina({ titolo: 'La storia — MARO', descrizione: 'Come nasce MARO: uno schizzo a penna, una stretta di mano e un’idea. Fly with your mind.', corpo, file: 'storia.html' });
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
+fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
 for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));
 
 // foto preparate ma non usate (avviso, non errore)
 const nonUsate = Object.keys(MISURE).filter(k => !usate.has(k) && k !== 'apertura-locandina');
-console.log(`Pagine: ${2 + CATALOGO.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));
+console.log(`Pagine: ${3 + CATALOGO.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));

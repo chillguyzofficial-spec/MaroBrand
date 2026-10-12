@@ -75,7 +75,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // 1b. schede prodotto: tutte le foto della galleria con la stessa misura, su tutte le schede
   for (const w of [390, 768, 1440]) {
     const c = await b.newContext({ viewport: { width: w, height: 900 } }); const misure = new Set();
-    for (const pg of PAGINE.filter(x => !['index.html', 'aiuto.html'].includes(x))) {
+    for (const pg of PAGINE.filter(x => !['index.html', 'aiuto.html', 'storia.html'].includes(x))) {
       const q = await c.newPage(); await q.goto(BASE + pg, { waitUntil: 'load' });
       (await q.evaluate(() => [...document.querySelectorAll('.vetrina')].map(f => { const r = f.getBoundingClientRect(); return Math.round(r.width) + 'x' + Math.round(r.height); }))).forEach(m => misure.add(m));
       await q.close();
@@ -123,6 +123,14 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.tap('.vetrina-freccia.prec'); prova((await conta()) === '4 / 4', 'indietro dalla prima: 4 / 4');
   await p.waitForTimeout(700);
   prova(await p.evaluate(() => { const v = document.querySelector('.vetrina').getBoundingClientRect(), i = document.querySelectorAll('.vetrina figure')[3].getBoundingClientRect(); return Math.abs(v.left - i.left) < 2; }), 'foto 4 al suo posto');
+
+  // aiuto: tabella taglie polo / felpe
+  await p.goto(BASE + 'aiuto.html#taglie', { waitUntil: 'load' });
+  prova(await p.isVisible('[data-tabella-di="polo"]') && !(await p.isVisible('[data-tabella-di="felpe"]')), 'aiuto: tabella polo visibile');
+  await p.tap('[data-tabella="felpe"]');
+  prova(await p.isVisible('[data-tabella-di="felpe"]') && !(await p.isVisible('[data-tabella-di="polo"]')), 'aiuto: tabella felpe dopo il tocco');
+  await p.tap('#spedizioni details:first-of-type summary');
+  prova(await p.evaluate(() => document.querySelector('#spedizioni details').open), 'aiuto: domanda si apre');
 
   // scheda prodotto + borsa
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });

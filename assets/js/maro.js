@@ -174,6 +174,16 @@
     });
   }
 
+  /* ---------- pagina aiuto: tabella taglie polo / felpe ---------- */
+  var schede = $$('[data-tabella]');
+  schede.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.getAttribute('data-tabella');
+      schede.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      $$('[data-tabella-di]').forEach(function (d) { d.hidden = d.getAttribute('data-tabella-di') !== t; });
+    });
+  });
+
   /* ---------- iscrizione (anteprima: nessun invio) ---------- */
   var form = $('.iscriviti-form');
   if (form) {
