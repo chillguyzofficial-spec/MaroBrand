@@ -64,7 +64,8 @@ h1, h2, h3 { margin: 0; }
 .apertura-video::-webkit-media-controls { display: none !important; }
 .apertura-testo { position: absolute; z-index: 2; left: var(--lato); right: var(--lato); bottom: clamp(28px, 6vh, 64px); }
 .apertura h1 { font: 400 clamp(64px, 10vw, 156px)/.88 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
-.apertura p { font-size: clamp(19px, 1.9vw, 26px); font-weight: 600; line-height: 1.3; max-width: 22em; margin: 18px 0 24px; text-shadow: 0 1px 14px rgba(0,0,0,.7); }
+.apertura .occhiello { font-size: clamp(14px, 1.2vw, 17px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; max-width: none; }
+.apertura p { font-size: clamp(19px, 1.9vw, 26px); font-weight: 600; line-height: 1.3; max-width: 30em; text-wrap: balance; margin: 18px 0 24px; text-shadow: 0 1px 14px rgba(0,0,0,.7); }
 .pulsanti { display: flex; flex-wrap: wrap; gap: 10px; }
 
 /* drop */

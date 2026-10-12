@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '2'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '3'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -119,10 +119,11 @@ function home() {
     <source src="assets/video/home-metro-1.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
+    <p class="occhiello">Abbigliamento streetwear · Milano</p>
     <h1>Fly with<br>your mind</h1>
-    <p>Streetwear nato a Milano. Per chi vola con la testa.</p>
+    <p>Polo e felpe disegnate a Milano. Il Drop 001 è online.</p>
     <div class="pulsanti">
-      <a class="btn btn-bianco" href="#drop">Scopri il drop</a>
+      <a class="btn btn-bianco" href="#drop">Acquista il drop</a>
       <a class="btn btn-contorno" href="#storia">La storia</a>
     </div>
   </div>
