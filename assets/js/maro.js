@@ -350,6 +350,53 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) chiudiPop(true); });
   }
 
+  /* ---------- preferiti (cuore) ---------- */
+  var leggiPref = function () { try { return JSON.parse(mem.get('maro-preferiti')) || []; } catch (e) { return []; } };
+  var pref = leggiPref().filter(function (id) { return CAT.some(function (p) { return p.id === id; }); });
+  var disegnaPref = function () {
+    var n = $('.pref-num'); if (n) { n.textContent = pref.length; n.hidden = !pref.length; }
+    var ap = $('.pref-apri'); if (ap) ap.setAttribute('aria-label', 'Preferiti, ' + pref.length);
+    $$('[data-cuore]').forEach(function (b) {
+      var id = b.getAttribute('data-cuore'), si = pref.indexOf(id) >= 0, p = CAT.filter(function (x) { return x.id === id; })[0];
+      b.setAttribute('aria-pressed', String(si));
+      var t = $('span', b);
+      if (t) t.textContent = si ? 'Salvato nei preferiti' : 'Salva nei preferiti';
+      else if (p) b.setAttribute('aria-label', (si ? 'Togli ' : 'Aggiungi ') + p.nome + (si ? ' dai preferiti' : ' ai preferiti'));
+    });
+    var lista = $('.pref-lista');
+    if (lista) {
+      lista.innerHTML = pref.map(function (id) {
+        var p = CAT.filter(function (x) { return x.id === id; })[0];
+        return '<div class="scheda-cella"><button class="cuore" type="button" data-cuore="' + p.id + '" aria-pressed="true" aria-label="Togli ' + p.nome + ' dai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button>' +
+          '<a class="scheda" href="' + p.id + '.html"><div class="scheda-foto"><img src="' + p.src + '" alt="' + p.nome + '" width="640" height="800" loading="lazy"></div>' +
+          '<div class="scheda-testo"><h3>' + p.nome + '</h3><p>' + p.colore + '</p><p class="prezzo">' + euro(p.prezzo) + '</p></div></a></div>';
+      }).join('');
+      $('.pref-vuoto').hidden = pref.length > 0;
+    }
+  };
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-cuore]'); if (!b) return;
+    e.preventDefault();
+    var id = b.getAttribute('data-cuore'), i = pref.indexOf(id);
+    if (i >= 0) pref.splice(i, 1); else pref.unshift(id);
+    mem.set('maro-preferiti', JSON.stringify(pref));
+    disegnaPref();
+  });
+  disegnaPref();
+
+  /* ---------- condividi il prodotto ---------- */
+  var cond = $('[data-condividi]');
+  if (cond) {
+    cond.addEventListener('click', function () {
+      var dati = { title: document.title, text: 'Guarda questo capo MARO', url: location.href.split('#')[0] };
+      var esito = $('.condividi-esito');
+      if (navigator.share) { navigator.share(dati).catch(function () {}); return; }
+      var fatto = function () { esito.textContent = 'Link copiato: incollalo dove vuoi.'; };
+      if (navigator.clipboard) navigator.clipboard.writeText(dati.url).then(fatto, function () { esito.textContent = dati.url; });
+      else esito.textContent = dati.url;
+    });
+  }
+
   /* ---------- conto alla rovescia del prossimo drop ---------- */
   var conto = $('.conto');
   if (conto) {

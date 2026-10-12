@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '26'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '28'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -32,6 +32,8 @@ const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><
 const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="maro-simbolo" viewBox="0 0 200 150"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></symbol>
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
+<symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+<symbol id="i-condividi" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-borsa" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6L5 8zm4 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>`;
@@ -46,6 +48,15 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <title>${esc(titolo)}</title>
 <meta name="description" content="${esc(descrizione)}">
 <meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MARO">
+<meta property="og:title" content="${esc(titolo)}">
+<meta property="og:description" content="${esc(descrizione)}">
+<meta property="og:image" content="https://chillguyzofficial-spec.github.io/MaroBrand/assets/img/condivisione.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="assets/img/icona-180.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,6 +77,7 @@ ${SPRITE}
     <a href="storia.html">Il brand</a>
   </nav>
   <div class="azioni">
+    <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
     <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
@@ -138,7 +150,8 @@ function scheda(p, dove) {
 ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <button type="button" data-rapido="${p.id}|${t}"${fin ? ' disabled aria-label="' + t + ', esaurita"' : ''}>${t}</button>`; }).join('\n')}
   </div>
 </div>`;
-  return `<div class="scheda-cella" data-tipo="${p.tipo}"><a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
+  const cuore = `<button class="cuore" type="button" data-cuore="${p.id}" aria-pressed="false" aria-label="Aggiungi ${esc(p.nome)} ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button>`;
+  return `<div class="scheda-cella" data-tipo="${p.tipo}">${cuore}<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
   <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}</div>
   <div class="scheda-testo">
     <span class="pallini">${p.pallini.map(c => `<i style="background:${c}"></i>`).join('')}</span>
@@ -324,6 +337,11 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
       <p class="trova-esito" role="status" aria-live="polite"></p>
     </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+    <div class="azioni-scheda">
+      <button class="btn btn-contorno-nero" type="button" data-cuore="${p.id}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva nei preferiti</span></button>
+      <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
+    </div>
+    <p class="condividi-esito" role="status" aria-live="polite"></p>
     <form class="avvisami" hidden novalidate>
       <p><strong>Taglia <span data-taglia-esaurita></span> esaurita.</strong> Ti scriviamo appena torna disponibile.</p>
       <label for="email-avvisami" class="sr">La tua email</label>
@@ -348,6 +366,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
     </details>
   </div>
 </div>
+${recensioni(p)}
 
 <section class="completa" aria-labelledby="completa-titolo">
   <h2 id="completa-titolo" class="titolo">Completa il look</h2>
@@ -361,6 +380,66 @@ ${altri.map(x => scheda(x, 'scheda ' + x.id)).join('\n')}
   <div class="visti-lista"></div>
 </section>`;
   return pagina({ titolo: `${p.nome} — MARO`, descrizione: `${p.nome}, ${p.colore}. Drop 001 MARO.`, corpo, file: p.id + '.html' });
+}
+
+// ---------- RECENSIONI DI ESEMPIO (solo anteprima: per legge, sul sito vero solo recensioni verificate) ----------
+const POOL = [
+  ['Marco R.', 5, 'giusta', 'Tessuto pesante, ricamo pulito. Si vede che è curata nei dettagli.'],
+  ['Giulia S.', 5, 'grande', 'Presa la S e mi sta comoda come volevo. Il retro fa girare la testa a tutti.'],
+  ['Luca D.', 4, 'giusta', 'Bella davvero, colore identico alle foto. Spedizione arrivata in tre giorni.'],
+  ['Sara B.', 5, 'giusta', 'Regalata al mio ragazzo: la mette sempre. Taglia perfetta seguendo la guida.'],
+  ['Andrea M.', 4, 'piccola', 'Vestibilità un po’ stretta sulle spalle, la prossima volta prendo una taglia in più.'],
+  ['Omar K.', 5, 'giusta', 'Qualità alta per il prezzo. Il simbolo ricamato sul petto è il dettaglio migliore.'],
+];
+function recensioni(p) {
+  const h = [...p.id].reduce((a, c) => a + c.charCodeAt(0), 0);
+  const scelte = [0, 1, 2].map(i => POOL[(h + i * 2) % POOL.length]);
+  const media = (scelte.reduce((a, r) => a + r[1], 0) / scelte.length).toFixed(1).replace('.', ',');
+  const fit = { piccola: 0, giusta: 0, grande: 0 }; scelte.forEach(r => fit[r[2]]++);
+  const stelle = n => '<span class="stelle" aria-label="' + n + ' stelle su 5">' + '★'.repeat(n) + '<i>' + '★'.repeat(5 - n) + '</i></span>';
+  return `
+<section class="recensioni" aria-labelledby="rec-titolo">
+  <div class="rec-testa">
+    <h2 id="rec-titolo">Recensioni</h2>
+    <p class="rec-esempio">Recensioni di esempio · sito dimostrativo</p>
+  </div>
+  <div class="rec-sintesi">
+    <div><p class="rec-media">${media}</p>${stelle(Math.round(scelte.reduce((a, r) => a + r[1], 0) / scelte.length))}<p class="piccolo">${scelte.length} recensioni</p></div>
+    <div class="rec-fit"><p>Come veste</p>
+      <div class="fit-barra"><span>Piccola</span><span>Giusta</span><span>Grande</span><i style="left:${Math.round(((fit.giusta * 50) + (fit.grande * 100)) / scelte.length)}%"></i></div>
+    </div>
+  </div>
+  <ul class="rec-lista">
+${scelte.map(r => `    <li><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[3])}</p><p class="piccolo">${esc(r[0])} · veste ${r[2]}</p></li>`).join('\n')}
+  </ul>
+</section>`;
+}
+
+// ---------- PREFERITI ----------
+function preferiti() {
+  const corpo = `
+<section class="preferiti">
+  <h1 class="titolo">Preferiti</h1>
+  <p class="piccolo">Salvati su questo dispositivo.</p>
+  <div class="pref-lista griglia"></div>
+  <div class="pref-vuoto" hidden>
+    <p>Non hai ancora salvato niente. Tocca il cuore su un capo per ritrovarlo qui.</p>
+    <a class="btn btn-nero" href="index.html#drop">Scopri il drop</a>
+  </div>
+</section>`;
+  return pagina({ titolo: 'Preferiti — MARO', descrizione: 'I capi MARO che hai salvato.', corpo, file: 'preferiti.html' });
+}
+
+// ---------- 404 ----------
+function nonTrovata() {
+  const corpo = `
+<section class="nontrovata">
+  <svg class="nt-simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>
+  <h1 class="titolo">Pagina<br>non trovata.</h1>
+  <p>Il link è sbagliato o la pagina non esiste più. Il drop invece c’è.</p>
+  <a class="btn btn-nero" href="index.html#drop">Vai al Drop 001</a>
+</section>`;
+  return pagina({ titolo: 'Pagina non trovata — MARO', descrizione: 'Pagina non trovata.', corpo, file: '404.html' });
 }
 
 // ---------- AIUTO (testi di esempio finché il cliente non conferma) ----------
@@ -506,6 +585,9 @@ function storia() {
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
+fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
+// la 404 di GitHub Pages può comparire a qualsiasi indirizzo: tutti i link partono dalla cartella del sito
+fs.writeFileSync(path.join(ROOT, '404.html'), nonTrovata().replace('<head>', '<head>\n<base href="/MaroBrand/">'));
 for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));
 
 // foto preparate ma non usate (avviso, non errore)

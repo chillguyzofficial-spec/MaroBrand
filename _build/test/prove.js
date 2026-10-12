@@ -15,7 +15,7 @@ const srv = http.createServer((q, r) => {
   r.writeHead(200, { 'content-type': type, 'content-length': size, 'accept-ranges': 'bytes' }); fs.createReadStream(f).pipe(r);
 }).listen(8990);
 const BASE = 'http://localhost:8990/';
-const PAGINE = fs.readdirSync(ROOT).filter(f => f.endsWith('.html'));
+const PAGINE = fs.readdirSync(ROOT).filter(f => f.endsWith('.html') && f !== '404.html'); // la 404 usa <base href="/MaroBrand/">: si prova online
 let ok = 0, ko = 0;
 const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ ' + nome); } };
 
@@ -159,6 +159,19 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // visti di recente
   await p.goto(BASE + 'felpa-firma.html', { waitUntil: 'load' });
   prova(await p.isVisible('.visti') && /Polo Linee/.test(await p.textContent('.visti')), 'visti di recente: compare la Polo Linee');
+
+  // preferiti
+  await p.goto(BASE + 'index.html#drop', { waitUntil: 'load' });
+  await p.tap('.drop .scheda-cella:nth-child(1) .cuore');
+  prova(await p.evaluate(() => document.querySelector('.pref-num').textContent === '1' && document.querySelector('.drop .cuore').getAttribute('aria-pressed') === 'true'), 'preferiti: cuore salva, contatore 1');
+  prova(/index.html/.test(p.url()), 'preferiti: il cuore non apre la scheda');
+  await p.goto(BASE + 'preferiti.html', { waitUntil: 'load' });
+  prova(/Polo Linee/.test(await p.textContent('.pref-lista')) && !(await p.isVisible('.pref-vuoto')), 'preferiti: pagina con la Polo Linee');
+  await p.tap('.pref-lista .cuore');
+  prova(await p.isVisible('.pref-vuoto'), 'preferiti: tolto, pagina vuota');
+  // recensioni di esempio dichiarate
+  await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
+  prova(/di esempio/.test(await p.textContent('.rec-esempio')) && (await p.locator('.rec-lista li').count()) === 3, 'recensioni: 3, marcate di esempio');
 
   // conto alla rovescia
   await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);

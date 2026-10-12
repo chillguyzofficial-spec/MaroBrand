@@ -7,17 +7,28 @@
 <title>MARO — Fly with your mind · Drop 001</title>
 <meta name="description" content="MARO, streetwear da Milano. Drop 001: polo e felpe disponibili ora. Fly with your mind.">
 <meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MARO">
+<meta property="og:title" content="MARO — Fly with your mind · Drop 001">
+<meta property="og:description" content="MARO, streetwear da Milano. Drop 001: polo e felpe disponibili ora. Fly with your mind.">
+<meta property="og:image" content="https://chillguyzofficial-spec.github.io/MaroBrand/assets/img/condivisione.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="assets/img/icona-180.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=26">
-<script defer src="assets/js/maro.js?v=26"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=28">
+<script defer src="assets/js/maro.js?v=28"></script>
 </head>
 <body class="home">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="maro-simbolo" viewBox="0 0 200 150"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></symbol>
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
+<symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+<symbol id="i-condividi" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 <symbol id="i-borsa" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6L5 8zm4 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
@@ -32,6 +43,7 @@
     <a href="storia.html">Il brand</a>
   </nav>
   <div class="azioni">
+    <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
     <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
@@ -78,7 +90,7 @@
     </div>
   </div>
   <div class="griglia">
-<div class="scheda-cella" data-tipo="polo"><a class="scheda" href="polo-linee.html" data-tipo="polo">
+<div class="scheda-cella" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-linee" aria-pressed="false" aria-label="Aggiungi Polo Linee ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-linee.html" data-tipo="polo">
   <div class="scheda-foto"><img src="assets/foto/copertina-polo-linee.webp?v=1f7f1ff1" width="620" height="775" alt="Polo Linee nera con righe bianche sulle maniche e firma MARO sul petto" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#000"></i></span>
@@ -96,7 +108,7 @@
     <button type="button" data-rapido="polo-linee|XXL" disabled aria-label="XXL, esaurita">XXL</button>
   </div>
 </div></div>
-<div class="scheda-cella" data-tipo="polo"><a class="scheda" href="polo-tricolore.html" data-tipo="polo">
+<div class="scheda-cella" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-tricolore" aria-pressed="false" aria-label="Aggiungi Polo Tricolore ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-tricolore.html" data-tipo="polo">
   <div class="scheda-foto"><img src="assets/foto/copertina-polo-tricolore.webp?v=a89807ab" width="620" height="775" alt="Polo Tricolore nera con le maniche verde bianco rosso" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#000"></i></span>
@@ -114,7 +126,7 @@
     <button type="button" data-rapido="polo-tricolore|XXL">XXL</button>
   </div>
 </div></div>
-<div class="scheda-cella" data-tipo="polo"><a class="scheda" href="polo-jacquard.html" data-tipo="polo">
+<div class="scheda-cella" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-jacquard" aria-pressed="false" aria-label="Aggiungi Polo Jacquard ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-jacquard.html" data-tipo="polo">
   <div class="scheda-foto"><img src="assets/foto/copertina-polo-jacquard.webp?v=4a26d038" srcset="assets/foto/copertina-polo-jacquard-640.webp?v=57832b2f 640w, assets/foto/copertina-polo-jacquard.webp?v=4a26d038 1120w" width="1120" height="1400" alt="Polo Jacquard grigio perla con collo tortora" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#d9d6cf"></i></span>
@@ -132,7 +144,7 @@
     <button type="button" data-rapido="polo-jacquard|XXL">XXL</button>
   </div>
 </div></div>
-<div class="scheda-cella" data-tipo="felpa"><a class="scheda" href="felpa-stretta.html" data-tipo="felpa">
+<div class="scheda-cella" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-stretta" aria-pressed="false" aria-label="Aggiungi Felpa Stretta di mano ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-stretta.html" data-tipo="felpa">
   <div class="scheda-foto"><img src="assets/foto/copertina-felpa-stretta.webp?v=4c7d6a13" srcset="assets/foto/copertina-felpa-stretta-640.webp?v=16ccd3d3 640w, assets/foto/copertina-felpa-stretta.webp?v=4c7d6a13 1119w" width="1119" height="1400" alt="Felpa grigia indossata, retro con la stretta di mano" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#b9b9b9"></i></span>
@@ -151,7 +163,7 @@
     <button type="button" data-rapido="felpa-stretta|XXL">XXL</button>
   </div>
 </div></div>
-<div class="scheda-cella" data-tipo="felpa"><a class="scheda" href="felpa-firma.html" data-tipo="felpa">
+<div class="scheda-cella" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-firma" aria-pressed="false" aria-label="Aggiungi Felpa Firma ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-firma.html" data-tipo="felpa">
   <div class="scheda-foto"><img src="assets/foto/copertina-felpa-firma.webp?v=ef30b0b9" srcset="assets/foto/copertina-felpa-firma-640.webp?v=f0969203 640w, assets/foto/copertina-felpa-firma.webp?v=ef30b0b9 1120w" width="1120" height="1400" alt="Felpa blu notte indossata davanti al Duomo di Milano, firma MARO sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#1c2440"></i></span>
@@ -170,7 +182,7 @@
     <button type="button" data-rapido="felpa-firma|XXL">XXL</button>
   </div>
 </div></div>
-<div class="scheda-cella" data-tipo="felpa"><a class="scheda" href="felpa-verticale.html" data-tipo="felpa">
+<div class="scheda-cella" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-verticale" aria-pressed="false" aria-label="Aggiungi Felpa Verticale ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-verticale.html" data-tipo="felpa">
   <div class="scheda-foto"><img src="assets/foto/copertina-felpa-verticale.webp?v=21517de0" srcset="assets/foto/copertina-felpa-verticale-640.webp?v=123a4d19 640w, assets/foto/copertina-felpa-verticale.webp?v=21517de0 1120w" width="1120" height="1400" alt="Felpa verde bottiglia, retro con la firma MARO verticale" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="pallini"><i style="background:#1f3a2c"></i></span>
