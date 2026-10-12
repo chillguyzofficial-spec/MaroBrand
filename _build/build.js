@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '22'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '23'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -173,7 +173,7 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
 
 <section class="vantaggi" aria-label="Acquistare su MARO">
   <ul>
-    <li><strong>Spedizione in 2–4 giorni</strong><span>in tutta Italia</span></li>
+    <li><strong>Spedizione gratuita</strong><span>sopra i 150 €, in 2–4 giorni</span></li>
     <li><strong>Reso entro 14 giorni</strong><span>se la taglia non va</span></li>
     <li><strong>Pagamento sicuro</strong><span>carta, PayPal, Apple Pay</span></li>
     <li><strong>Guida alle taglie</strong><a href="aiuto.html#taglie">trova la tua misura</a></li>
@@ -217,7 +217,11 @@ ${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.leng
 <section class="iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
   <div class="iscriviti-testo">
   <h2 id="iscriviti-titolo" class="titolo">Non perdere il prossimo drop</h2>
-  <p class="iscriviti-sotto">Ti avvisiamo prima dell’uscita, con la data e i capi in anteprima. Niente spam.</p>
+  <div class="conto" data-drop="2026-11-14T18:00:00+01:00" aria-label="Drop 002: sabato 14 novembre, ore 18">
+    <p class="conto-titolo">Drop 002 · sabato 14 novembre, ore 18</p>
+    <div class="conto-cifre" aria-hidden="true"><span><b data-u="g">--</b>giorni</span><span><b data-u="o">--</b>ore</span><span><b data-u="m">--</b>minuti</span><span><b data-u="s">--</b>secondi</span></div>
+  </div>
+  <p class="iscriviti-sotto">Ti avvisiamo prima dell’uscita, con i capi in anteprima. Niente spam.</p>
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
     <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
@@ -265,14 +269,31 @@ ${galleria}
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo">${esc(p.testo)}</p>
+    <p class="vestibilita"><strong>Vestibilità ${p.tipo === 'polo' ? 'regolare' : 'comoda'}.</strong> ${p.tipo === 'polo' ? 'Prendi la tua taglia abituale.' : 'Se sei tra due taglie, scegli la più piccola.'} Il capo in foto è una M.</p>
     <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
-${p.taglie.map(t => `        <label><input type="radio" name="taglia" value="${t}"><span>${t}</span></label>`).join('\n')}
+${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
       </div>
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
+      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
     </fieldset>
+    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
+      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+        <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
+      <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
+        <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
+      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
+        <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
+      <p class="trova-esito" role="status" aria-live="polite"></p>
+    </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+    <form class="avvisami" hidden novalidate>
+      <p><strong>Taglia <span data-taglia-esaurita></span> esaurita.</strong> Ti scriviamo appena torna disponibile.</p>
+      <label for="email-avvisami" class="sr">La tua email</label>
+      <div class="avvisami-riga"><input id="email-avvisami" type="email" autocomplete="email" placeholder="La tua email" required><button class="btn btn-nero" type="submit">Avvisami</button></div>
+      <p class="avvisami-esito" role="status" aria-live="polite"></p>
+    </form>
     <details>
       <summary>Dettagli e materiali</summary>
       <ul>${p.dettagli.map(d => `<li>${esc(d)}</li>`).join('')}</ul>
@@ -331,7 +352,7 @@ ${temi.map(([id, t]) => `    <a href="#${id}">${ICONE[id]}<span>${t}</span></a>`
     <div class="domande">
 ${domanda('Dov’è il mio ordine?', 'Appena il pacco parte ricevi un’email con il numero di tracciamento: da lì segui la consegna passo per passo.')}
 ${domanda('Quanto ci mette ad arrivare?', 'In Italia 2–4 giorni lavorativi. Gli ordini fatti entro le 13 partono il giorno stesso.')}
-${domanda('Quanto costa la spedizione?', 'Il costo è mostrato nella borsa, prima di pagare. Nessuna sorpresa alla fine.')}
+${domanda('Quanto costa la spedizione?', 'In Italia costa 5,90 € ed è gratuita per ordini sopra i 150 €. Il costo è sempre mostrato nella borsa, prima di pagare.')}
 ${domanda('Come posso pagare?', 'Carta di credito o di debito, PayPal e Apple Pay. Il pagamento è protetto e non vediamo mai i dati della tua carta.')}
     </div>
   </section>
@@ -340,7 +361,7 @@ ${domanda('Come posso pagare?', 'Carta di credito o di debito, PayPal e Apple Pa
     <div class="aiuto-tema-testa"><h2 id="t-resi">Resi e rimborsi</h2><p>Hai 14 giorni dalla consegna per cambiare idea.</p></div>
     <div class="domande">
 ${domanda('Come faccio un reso?', 'Scrivici con il numero d’ordine: ti mandiamo l’etichetta e le istruzioni. Il capo deve essere integro e con il cartellino.')}
-${domanda('Posso cambiare taglia?', 'Sì: fai il reso del capo e ordina la taglia giusta. Se la taglia è esaurita, ti avvisiamo appena torna.')}
+${domanda('Posso cambiare taglia?', 'Sì: fai il reso del capo e ordina la taglia giusta. Se è esaurita, nella scheda del capo tocca la taglia e lascia la tua email: ti avvisiamo appena torna.')}
 ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci arriva, sullo stesso metodo che hai usato per pagare.')}
     </div>
   </section>

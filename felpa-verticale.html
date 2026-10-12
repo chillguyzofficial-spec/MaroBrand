@@ -11,8 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=22">
-<script defer src="assets/js/maro.js?v=22"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=23">
+<script defer src="assets/js/maro.js?v=23"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -64,19 +64,36 @@
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo">Verde bottiglia. La firma verticale corre lungo tutta la schiena, dalle spalle all’orlo. Davanti niente: parla il retro.</p>
+    <p class="vestibilita"><strong>Vestibilità comoda.</strong> Se sei tra due taglie, scegli la più piccola. Il capo in foto è una M.</p>
     <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
-        <label><input type="radio" name="taglia" value="XS"><span>XS</span></label>
-        <label><input type="radio" name="taglia" value="S"><span>S</span></label>
-        <label><input type="radio" name="taglia" value="M"><span>M</span></label>
-        <label><input type="radio" name="taglia" value="L"><span>L</span></label>
-        <label><input type="radio" name="taglia" value="XL"><span>XL</span></label>
-        <label><input type="radio" name="taglia" value="XXL"><span>XXL</span></label>
+        <label><input type="radio" name="taglia" value="XS" aria-label="XS"><span>XS</span></label>
+        <label><input type="radio" name="taglia" value="S" aria-label="S"><span>S</span></label>
+        <label class="esaurita"><input type="radio" name="taglia" value="M" data-esaurita aria-label="M, esaurita"><span>M</span></label>
+        <label><input type="radio" name="taglia" value="L" aria-label="L"><span>L</span></label>
+        <label><input type="radio" name="taglia" value="XL" aria-label="XL"><span>XL</span></label>
+        <label><input type="radio" name="taglia" value="XXL" aria-label="XXL"><span>XXL</span></label>
       </div>
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
+      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
     </fieldset>
+    <div class="trova" id="trova" hidden data-taglie="XS,S,M,L,XL,XXL" data-tipo="felpa">
+      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+        <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
+      <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
+        <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
+      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
+        <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
+      <p class="trova-esito" role="status" aria-live="polite"></p>
+    </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+    <form class="avvisami" hidden novalidate>
+      <p><strong>Taglia <span data-taglia-esaurita></span> esaurita.</strong> Ti scriviamo appena torna disponibile.</p>
+      <label for="email-avvisami" class="sr">La tua email</label>
+      <div class="avvisami-riga"><input id="email-avvisami" type="email" autocomplete="email" placeholder="La tua email" required><button class="btn btn-nero" type="submit">Avvisami</button></div>
+      <p class="avvisami-esito" role="status" aria-live="polite"></p>
+    </form>
     <details>
       <summary>Dettagli e materiali</summary>
       <ul><li>Felpa di cotone garzata</li><li>Firma MARO verticale sul retro</li><li>Cappuccio e tasca a marsupio</li><li>Vestibilità comoda</li></ul>

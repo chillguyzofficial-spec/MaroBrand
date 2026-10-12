@@ -102,7 +102,14 @@
         '<button type="button" data-piu="' + k + '" aria-label="Aggiungi uno">+</button><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';
     }).join('');
     fondo.hidden = false;
-    fondo.innerHTML = '<div class="totale"><span>Totale</span><span>' + euro(tot) + '</span></div>' +
+    // spedizione: 5,90 €, gratuita sopra la soglia (valori di esempio)
+    var SOGLIA = 150, SPED = 5.9, manca = SOGLIA - tot, gratis = manca <= 0;
+    var barra = '<div class="soglia"><p>' + (gratis ? '<strong>Spedizione gratuita.</strong>' : 'Ti mancano <strong>' + euro(manca) + '</strong> per la spedizione gratuita.') + '</p>' +
+      '<div class="soglia-barra"><i style="width:' + Math.min(100, Math.round(tot / SOGLIA * 100)) + '%"></i></div></div>';
+    fondo.innerHTML = barra +
+      '<div class="riepilogo"><span>Subtotale</span><span>' + euro(tot) + '</span></div>' +
+      '<div class="riepilogo"><span>Spedizione</span><span>' + (gratis ? 'Gratuita' : euro(SPED)) + '</span></div>' +
+      '<div class="totale"><span>Totale</span><span>' + euro(tot + (gratis ? 0 : SPED)) + '</span></div>' +
       '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
   }
   function apri() {
@@ -163,8 +170,54 @@
   var prod = $('.prodotto');
   if (prod) {
     var fs = $('.taglie', prod), err = $('.taglie-errore', prod);
-    $$('input[name="taglia"]', prod).forEach(function (r) { r.addEventListener('change', function () { fs.classList.remove('manca'); err.hidden = true; }); });
-    $('[data-aggiungi]', prod).addEventListener('click', function () {
+    var btnAgg = $('[data-aggiungi]', prod), avv = $('.avvisami', prod);
+    // taglia esaurita: al posto di "Aggiungi alla borsa" compare "Avvisami"
+    var aggiornaEsaurita = function () {
+      var r = $('input[name="taglia"]:checked', prod), fin = !!(r && r.hasAttribute('data-esaurita'));
+      btnAgg.hidden = fin; avv.hidden = !fin;
+      if (fin) { $('[data-taglia-esaurita]', avv).textContent = r.value; $('.avvisami-esito', avv).textContent = ''; }
+    };
+    $$('input[name="taglia"]', prod).forEach(function (r) { r.addEventListener('change', function () { fs.classList.remove('manca'); err.hidden = true; aggiornaEsaurita(); }); });
+    avv.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var inp = $('input', avv), es = $('.avvisami-esito', avv);
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { es.className = 'avvisami-esito errore'; es.textContent = 'Controlla l’indirizzo email.'; inp.focus(); return; }
+      es.className = 'avvisami-esito'; es.textContent = 'Fatto: ti scriviamo appena torna. (Anteprima: nessuna email inviata.)'; inp.value = '';
+    });
+
+    // trova la tua taglia: tre domande a un tocco
+    var trova = $('.trova', prod), trovaBtn = $('.trova-apri', prod);
+    if (trova) {
+      var risposte = {}, taglie = trova.getAttribute('data-taglie').split(',');
+      trovaBtn.addEventListener('click', function () {
+        trova.hidden = !trova.hidden; trovaBtn.setAttribute('aria-expanded', String(!trova.hidden));
+      });
+      $$('.trova-domanda', trova).forEach(function (d) {
+        $$('button', d).forEach(function (b) {
+          b.addEventListener('click', function () {
+            $$('button', d).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+            risposte[d.getAttribute('data-chiave')] = Number(b.getAttribute('data-v'));
+            if (!('altezza' in risposte && 'corpo' in risposte && 'fit' in risposte)) return;
+            // indice sulla scala XS..XXL: 1=S, 2=M, 3=L, 4=XL
+            var scala = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+            var k = 1 + risposte.altezza + risposte.corpo + risposte.fit;
+            k = Math.max(0, Math.min(scala.length - 1, k));
+            var t = scala[k];
+            if (taglie.indexOf(t) < 0) t = k < 2 ? taglie[0] : taglie[taglie.length - 1];
+            var es = $('.trova-esito', trova);
+            es.innerHTML = 'Ti consigliamo la <strong>' + t + '</strong>. <button type="button" class="link" data-usa="' + t + '">Seleziona ' + t + '</button>';
+          });
+        });
+      });
+      trova.addEventListener('click', function (e) {
+        var u = e.target.closest('[data-usa]'); if (!u) return;
+        var r = $('input[name="taglia"][value="' + u.getAttribute('data-usa') + '"]', prod);
+        r.checked = true; r.dispatchEvent(new Event('change')); r.focus({ preventScroll: true });
+        trova.hidden = true; trovaBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    btnAgg.addEventListener('click', function () {
       var scelta = $('input[name="taglia"]:checked', prod);
       if (!scelta) { fs.classList.add('manca'); err.hidden = false; $('input[name="taglia"]', prod).focus(); return; }
       var id = prod.getAttribute('data-id'), t = scelta.value;
@@ -172,6 +225,21 @@
       if (r) r.q = Math.min(9, r.q + 1); else righe.push({ id: id, t: t, q: 1 });
       salva(righe); disegna(); apri();
     });
+  }
+
+  /* ---------- conto alla rovescia del prossimo drop ---------- */
+  var conto = $('.conto');
+  if (conto) {
+    var arrivo = new Date(conto.getAttribute('data-drop')).getTime();
+    var due = function (n) { return n < 10 ? '0' + n : String(n); };
+    var tic = function () {
+      var d = Math.max(0, Math.floor((arrivo - Date.now()) / 1000));
+      if (!d) { $('.conto-cifre', conto).hidden = true; $('.conto-titolo', conto).textContent = 'Drop 002 disponibile ora'; return; }
+      var v = { g: Math.floor(d / 86400), o: Math.floor(d % 86400 / 3600), m: Math.floor(d % 3600 / 60), s: d % 60 };
+      Object.keys(v).forEach(function (u) { $('[data-u="' + u + '"]', conto).textContent = u === 'g' ? v[u] : due(v[u]); });
+      setTimeout(tic, 1000 - Date.now() % 1000);
+    };
+    tic();
   }
 
   /* ---------- lookbook a scorrimento (frecce + dito) ---------- */

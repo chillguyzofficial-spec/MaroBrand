@@ -11,7 +11,7 @@ module.exports = [
     dettagli: ['Piqué di cotone', 'Firma MARO ricamata sul petto', 'Ali e scritta sul retro', 'Vestibilità regolare'],
   },
   {
-    id: 'polo-tricolore', copertina: ['copertina-polo-tricolore', 'Polo Tricolore nera con le maniche verde bianco rosso'], tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
+    id: 'polo-tricolore', esaurite: ['XL'], copertina: ['copertina-polo-tricolore', 'Polo Tricolore nera con le maniche verde bianco rosso'], tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
     prezzo: 80, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-tricolore-fronte', 'Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso'], ['polo-tricolore-retro', 'Polo Tricolore nera, retro con le ali rosse e verdi'], ['polo-tricolore-lato', 'Polo Tricolore nera, fronte con la firma MARO'], ['polo-tricolore-dettaglio', 'Dettaglio del nastro tricolore sulla manica e della scritta MARO']],
     testo: 'Nera, con il nastro verde, bianco e rosso sulle maniche. Sul retro le ali in rosso e verde. La polo più riconoscibile del drop.',
@@ -32,14 +32,14 @@ module.exports = [
     dettagli: ['Felpa di cotone garzata', 'Stampa sul retro', 'Cappuccio e tasca a marsupio', 'Vestibilità comoda'],
   },
   {
-    id: 'felpa-firma', copertina: ['copertina-felpa-firma', 'Felpa blu notte indossata davanti al Duomo di Milano, firma MARO sul retro'], tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
+    id: 'felpa-firma', esaurite: ['S'], copertina: ['copertina-felpa-firma', 'Felpa blu notte indossata davanti al Duomo di Milano, firma MARO sul retro'], tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
     prezzo: 130, pallini: ['#1c2440'], taglie: TAGLIE_FELPA,
     foto: [['felpa-firma-retro', 'Felpa blu notte su manichino, retro con la firma MARO e le onde tricolore'], ['felpa-firma-tre-quarti', 'Felpa blu notte vista di tre quarti'], ['felpa-firma-fronte', 'Felpa blu notte, fronte con la firma MARO piccola sul petto']],
     testo: 'Blu notte. La firma MARO attraversa la schiena con le onde verde, bianco e rosso. Davanti, la firma piccola sul petto.',
     dettagli: ['Felpa di cotone garzata', 'Firma MARO con onde tricolore sul retro', 'Cappuccio e tasca a marsupio', 'Vestibilità comoda'],
   },
   {
-    id: 'felpa-verticale', copertina: ['copertina-felpa-verticale', 'Felpa verde bottiglia, retro con la firma MARO verticale'],
+    id: 'felpa-verticale', esaurite: ['M'], copertina: ['copertina-felpa-verticale', 'Felpa verde bottiglia, retro con la firma MARO verticale'],
     tipo: 'felpa', nome: 'Felpa Verticale', colore: 'Verde bottiglia, firma MARO verticale sul retro',
     prezzo: 110, pallini: ['#1f3a2c'], taglie: TAGLIE_FELPA,
     foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia, fronte pulito con cappuccio e tasca'], ['felpa-verticale-montagna', 'Felpa verde bottiglia indossata in montagna, di spalle']],

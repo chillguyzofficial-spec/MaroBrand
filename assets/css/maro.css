@@ -436,3 +436,42 @@ details > p { margin: 0 0 20px; }
 .st-fine-simbolo { width: 54px; height: 41px; color: var(--bianco); flex: none; }
 .st-fine h2 { font: 400 clamp(30px, 3.4vw, 48px)/1 var(--titoli); text-transform: uppercase; }
 @media (max-width: 599px) { .st-fine { flex-direction: column; align-items: flex-start; } .st-fine-simbolo { width: 42px; height: 32px; } }
+
+/* scheda: vestibilità, trova la taglia, taglie esaurite, avvisami */
+.vestibilita { font-size: 15px; color: var(--testo-2); margin: -8px 0 18px; }
+.vestibilita strong { color: var(--nero); }
+.taglie label.esaurita span { color: #9a9a9a; background: repeating-linear-gradient(135deg, transparent 0 8px, #f0f0f0 8px 9px); }
+.taglie label.esaurita input:checked + span { color: var(--nero); }
+.trova-apri { margin-top: 12px; padding: 6px 0; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.trova { background: var(--grigio); border-radius: 10px; padding: 18px; margin: -8px 0 20px; }
+.trova[hidden] { display: none; }
+.trova-domanda + .trova-domanda { margin-top: 14px; }
+.trova-domanda p { margin: 0 0 8px; font-weight: 600; }
+.trova-domanda div { display: flex; flex-wrap: wrap; gap: 8px; }
+.trova-domanda button { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--grigio-2); background: var(--bianco); font-weight: 500; }
+.trova-domanda button[aria-pressed="true"] { background: var(--nero); border-color: var(--nero); color: var(--bianco); }
+.trova-esito { margin: 14px 0 0; font-size: 17px; }
+.trova-esito:empty { display: none; }
+.trova-esito .link { border: 0; background: none; padding: 0 0 0 6px; font-weight: 600; }
+[data-aggiungi][hidden], .avvisami[hidden] { display: none; }
+.avvisami { margin-bottom: 28px; }
+.avvisami > p:first-child { margin: 0 0 10px; }
+.avvisami-riga { display: flex; gap: 8px; flex-wrap: wrap; }
+.avvisami-riga input { flex: 1 1 200px; min-height: 52px; padding: 0 18px; border: 1.5px solid #bdbdbd; border-radius: 999px; font-size: 16px; }
+.avvisami-esito { margin: 8px 0 0; font-weight: 500; min-height: 1.5em; }
+.avvisami-esito.errore { color: var(--rosso); }
+
+/* borsa: soglia spedizione gratuita */
+.soglia { margin-bottom: 14px; }
+.soglia p { margin: 0 0 8px; font-size: 15px; }
+.soglia-barra { height: 6px; background: var(--grigio-2); border-radius: 999px; overflow: hidden; }
+.soglia-barra i { display: block; height: 100%; background: var(--nero); transition: width .4s ease; }
+.riepilogo { display: flex; justify-content: space-between; color: var(--testo-2); margin-bottom: 6px; }
+
+/* conto alla rovescia */
+.conto { margin-top: 22px; }
+.conto-titolo { margin: 0 0 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; font-size: 15px; }
+.conto-cifre { display: flex; gap: 10px; }
+.conto-cifre span { display: flex; flex-direction: column; align-items: center; min-width: 72px; padding: 12px 8px; background: var(--nero); color: var(--bianco); border-radius: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.conto-cifre b { font: 400 clamp(30px, 3.4vw, 44px)/1 var(--titoli); margin-bottom: 4px; font-variant-numeric: tabular-nums; }
+@media (max-width: 599px) { .conto-cifre span { min-width: 0; flex: 1; } }

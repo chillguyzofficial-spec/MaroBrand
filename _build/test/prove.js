@@ -140,6 +140,22 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.tap('#spedizioni details:first-of-type summary');
   prova(await p.evaluate(() => document.querySelector('#spedizioni details').open), 'aiuto: domanda si apre');
 
+  // conto alla rovescia
+  await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);
+  prova(await p.evaluate(() => /^[0-9]+$/.test(document.querySelector('[data-u="g"]').textContent) && /^[0-9][0-9]$/.test(document.querySelector('[data-u="s"]').textContent)), 'conto alla rovescia acceso');
+  // trova la tua taglia + taglia esaurita
+  await p.goto(BASE + 'felpa-verticale.html', { waitUntil: 'load' });
+  await p.tap('.trova-apri');
+  await p.tap('[data-chiave="altezza"] [data-v="1"]'); await p.tap('[data-chiave="corpo"] [data-v="0"]'); await p.tap('[data-chiave="fit"] [data-v="0"]');
+  prova(/consigliamo la M/.test(await p.textContent('.trova-esito')), 'trova taglia: 170-179, media, giusta → M');
+  await p.tap('[data-usa="M"]');
+  prova(await p.evaluate(() => document.querySelector('input[value="M"]').checked), 'trova taglia: M selezionata');
+  prova(!(await p.isVisible('[data-aggiungi]')) && await p.isVisible('.avvisami'), 'M esaurita: compare Avvisami al posto di Aggiungi');
+  await p.fill('#email-avvisami', 'sara@esempio.it'); await p.tap('.avvisami .btn');
+  prova(/Fatto/.test(await p.textContent('.avvisami-esito')), 'avvisami: email accettata');
+  await p.tap('.taglie label:nth-child(4)');
+  prova(await p.isVisible('[data-aggiungi]') && !(await p.isVisible('.avvisami')), 'taglia disponibile: torna Aggiungi alla borsa');
+
   // scheda prodotto + borsa
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.tap('.drop .scheda[href="felpa-stretta.html"]'); await p.waitForLoadState('load');
@@ -149,9 +165,9 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.tap('.taglie label:nth-child(3)'); await p.tap('[data-aggiungi]');
   prova(!(await p.evaluate(() => document.getElementById('borsa').hidden)), 'con taglia: borsa aperta');
   prova(await p.evaluate(() => document.documentElement.style.overflow === 'hidden' && document.body.style.overflow === ''), 'blocco scorrimento solo su html');
-  prova(/120,00/.test(await p.textContent('.totale')), 'totale 120,00 €');
+  prova(/125,90/.test(await p.textContent('.totale')) && /30,00/.test(await p.textContent('.soglia')), 'totale 120 + 5,90 di spedizione, mancano 30 € alla soglia');
   await p.tap('[data-piu="0"]');
-  prova(/240,00/.test(await p.textContent('.totale')), 'più: totale 240,00 €');
+  prova(/240,00/.test(await p.textContent('.totale')) && /gratuita/i.test(await p.textContent('.soglia')), 'più: 240,00 €, spedizione gratuita');
   if (SHOTS) await p.screenshot({ path: path.join(SHOTS, 'borsa-tel.png') });
   await p.tap('.borsa-testa button');
   prova(await p.evaluate(() => document.querySelector('.borsa-num').textContent) === '2', 'contatore borsa 2');
