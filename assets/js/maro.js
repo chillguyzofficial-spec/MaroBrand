@@ -13,31 +13,14 @@
     document.documentElement.style.overflow = blocchi ? 'hidden' : '';
   }
 
-  /* ---------- video d'apertura: i due video di Francesco in alternanza ---------- */
+  /* ---------- video d'apertura: sempre in loop, senza pausa ---------- */
   var video = $('.apertura-video');
   if (video) {
-    var lista = (video.getAttribute('data-video') || '').split(' ').filter(Boolean), i = 0;
-    var pausa = $('[data-pausa]');
-    var ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (ridotto) { video.removeAttribute('autoplay'); video.pause(); }
-    video.addEventListener('ended', function () {
-      i = (i + 1) % lista.length;
-      video.src = lista[i];
-      video.play().catch(function () {});
-    });
-    var fermo = ridotto;
-    function aggiornaPausa() {
-      pausa.setAttribute('aria-pressed', fermo ? 'true' : 'false');
-      pausa.setAttribute('aria-label', fermo ? 'Riproduci il video' : 'Metti in pausa il video');
-    }
-    if (pausa) {
-      aggiornaPausa();
-      pausa.addEventListener('click', function () {
-        fermo = !fermo;
-        if (fermo) video.pause(); else video.play().catch(function () {});
-        aggiornaPausa();
-      });
-    }
+    var riparti = function () { if (video.paused && !document.hidden) video.play().catch(function () {}); };
+    // se il browser lo ferma (risparmio energetico, cambio scheda) riparte da solo
+    document.addEventListener('visibilitychange', riparti);
+    video.addEventListener('pause', function () { setTimeout(riparti, 300); });
+    riparti();
   }
 
   /* ---------- menu su telefono ---------- */

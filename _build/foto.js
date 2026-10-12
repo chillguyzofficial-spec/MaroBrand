@@ -27,7 +27,7 @@ const LAVORI = [
   { out: 'lookbook-metro-polo-1', src: 'mockup-ai/metro-gruppo-polo-1.jpg', bn: true },
   { out: 'lookbook-metro-polo-2', src: 'mockup-ai/metro-gruppo-polo-2.jpg', bn: true },
   // locandina del video d'apertura (mostrata finché il video non parte)
-  { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.2, max: 1600 },
+  { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];
 
 const srv = http.createServer((q, r) => {
@@ -77,7 +77,7 @@ const srv = http.createServer((q, r) => {
         }
         g.putImageData(d, 0, 0);
       }
-      return { url: c.toDataURL('image/webp', 0.82), w: c.width, h: c.height };
+      return { url: c.toDataURL('image/webp', l.q || 0.82), w: c.width, h: c.height };
     }, l);
     fs.writeFileSync(path.join(OUT, l.out + '.webp'), Buffer.from(dataUrl.url.split(',')[1], 'base64'));
     console.log(l.out.padEnd(26), dataUrl.w + '×' + dataUrl.h);

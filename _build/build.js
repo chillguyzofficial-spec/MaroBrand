@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '1'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '2'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -115,18 +115,17 @@ function home() {
   ];
   const corpo = `
 <section class="apertura" aria-label="Apertura">
-  <video class="apertura-video" muted playsinline autoplay preload="metadata" poster="assets/foto/apertura-locandina.webp" data-video="assets/video/home-metro-1.mp4 assets/video/home-metro-2.mp4" aria-hidden="true">
+  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="assets/foto/apertura-locandina.webp" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-1.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
     <h1>Fly with<br>your mind</h1>
-    <p>Drop 001. Nato a Milano.</p>
+    <p>Streetwear nato a Milano, tra Italia e Marocco.</p>
     <div class="pulsanti">
       <a class="btn btn-bianco" href="#drop">Scopri il drop</a>
       <a class="btn btn-contorno" href="#storia">La storia</a>
     </div>
   </div>
-  <button class="video-pausa" type="button" aria-label="Metti in pausa il video" data-pausa>II</button>
 </section>
 
 <section class="drop" id="drop" aria-labelledby="drop-titolo">
