@@ -35,7 +35,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.closest('.piede-nome')) return;
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.closest('.piede-nome') || el.classList.contains('apertura-video')) return; // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
