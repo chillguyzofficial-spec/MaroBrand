@@ -120,7 +120,7 @@ function home() {
     ['lookbook-metro-polo-1', 'In metro con le polo MARO'],
     ['lookbook-marmo-capi', 'Felpa verde, felpa blu e polo nera MARO sul marmo'],
     ['lookbook-metro-polo-2', 'Quattro amici in metro con le polo MARO'],
-    ['lookbook-marmo-sartoria', 'Felpe e polo MARO piegate sul marmo con fili, forbici e metro da sarta'],
+    ['lookbook-nastri', 'Felpa verde, felpa blu e polo nera MARO tra nastri verde, bianco e rosso su fondo scuro'],
   ];
   const corpo = `
 <section class="apertura" aria-label="Apertura">
