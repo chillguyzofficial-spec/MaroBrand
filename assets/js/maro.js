@@ -4,6 +4,7 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var CAT = window.MARO_CATALOGO || [];
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var euro = function (n) { return n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' €'; };
 
   // blocco dello scorrimento: solo su <html> (sul body rompe la testata sticky)
@@ -88,7 +89,8 @@
   var CHIAVE = 'maro-borsa-1';
   function leggi() { try { return JSON.parse(localStorage.getItem(CHIAVE)) || []; } catch (e) { return []; } }
   function salva(r) { try { localStorage.setItem(CHIAVE, JSON.stringify(r)); } catch (e) {} }
-  var righe = leggi().filter(function (r) { return CAT.some(function (p) { return p.id === r.id; }); });
+  var CARTA = 'carta-regalo'; // la carta regalo sta nella borsa come le altre righe: t = importo, più i dati per l’email
+  var righe = leggi().filter(function (r) { return r.id === CARTA ? r.t > 0 : CAT.some(function (p) { return p.id === r.id; }); });
   var borsa = $('#borsa'), ultimoFocus = null;
 
   function conta() { return righe.reduce(function (s, r) { return s + r.q; }, 0); }
@@ -101,8 +103,14 @@
       box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 è ancora disponibile, ma non tutte le taglie.</p>';
       fondo.hidden = true; return;
     }
-    var tot = 0;
+    var tot = 0, carte = 0;
     box.innerHTML = righe.map(function (r, k) {
+      if (r.id === CARTA) {
+        carte += r.t * r.q;
+        return '<div class="riga"><a href="carta-regalo.html"><img src="assets/carta-regalo.svg" alt="" width="88" height="110"></a>' +
+          '<div><h3>Carta regalo</h3><p>' + (r.per ? 'Per ' + esc(r.per) + ' · ' : '') + 'via email ' + (r.quando ? 'il ' + r.quando.split('-').reverse().join('/') : 'subito') + '</p><p>' + euro(r.t) + '</p>' +
+          '<div class="riga-azioni"><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';
+      }
       var p = CAT.filter(function (x) { return x.id === r.id; })[0];
       tot += p.prezzo * r.q;
       return '<div class="riga"><a href="' + p.id + '.html"><img src="' + p.src + '" alt="" width="88" height="110"></a>' +
@@ -112,16 +120,17 @@
     }).join('');
     fondo.hidden = false;
     // spedizione: 5,90 €, gratuita sopra la soglia (valori di esempio)
-    var SOGLIA = 150, SPED = 5.9, manca = SOGLIA - tot, gratis = manca <= 0;
-    var barra = '<div class="soglia"><p>' + (gratis ? '<strong>Spedizione gratuita.</strong>' : 'Ti mancano <strong>' + euro(manca) + '</strong> per la spedizione gratuita.') + '</p>' +
+    // la carta regalo arriva via email: niente spedizione, non conta per la soglia e non prende lo sconto
+    var SOGLIA = 150, SPED = 5.9, manca = SOGLIA - tot, gratis = manca <= 0 || tot === 0;
+    var barra = !tot ? '' : '<div class="soglia"><p>' + (gratis ? '<strong>Spedizione gratuita.</strong>' : 'Ti mancano <strong>' + euro(manca) + '</strong> per la spedizione gratuita.') + '</p>' +
       '<div class="soglia-barra"><i style="width:' + Math.min(100, Math.round(tot / SOGLIA * 100)) + '%"></i></div></div>';
     // sconto benvenuto 10% (iscrizione): sul subtotale, la soglia di spedizione resta sul subtotale pieno
     var sconto = haSconto() ? Math.round(tot * 10) / 100 : 0;
     fondo.innerHTML = barra +
-      '<div class="riepilogo"><span>Subtotale</span><span>' + euro(tot) + '</span></div>' +
+      '<div class="riepilogo"><span>Subtotale</span><span>' + euro(tot + carte) + '</span></div>' +
       (sconto ? '<div class="riepilogo sconto"><span>Sconto benvenuto MARO10</span><span>−' + euro(sconto) + '</span></div>' : '') +
-      '<div class="riepilogo"><span>Spedizione</span><span>' + (gratis ? 'Gratuita' : euro(SPED)) + '</span></div>' +
-      '<div class="totale"><span>Totale</span><span>' + euro(tot - sconto + (gratis ? 0 : SPED)) + '</span></div>' +
+      '<div class="riepilogo"><span>Spedizione</span><span>' + (!tot ? 'Via email' : gratis ? 'Gratuita' : euro(SPED)) + '</span></div>' +
+      '<div class="totale"><span>Totale</span><span>' + euro(tot + carte - sconto + (gratis ? 0 : SPED)) + '</span></div>' +
       '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
   }
   function apri() {
@@ -141,6 +150,7 @@
       if (r) r.q = Math.min(9, r.q + 1); else righe.push({ id: id, t: t, q: 1 });
       salva(righe); disegna(); apri();
     };
+    window.MARO_aggiungiCarta = function (dati) { dati.id = CARTA; dati.q = 1; righe.push(dati); salva(righe); disegna(); apri(); };
     disegna();
     $$('[data-apri-borsa]').forEach(function (b) { b.addEventListener('click', apri); });
     borsa.addEventListener('click', function (e) {
@@ -535,4 +545,116 @@
     };
     aggiorna();
   });
+
+  /* ---------- scheda: data di consegna dal vivo (ordini entro le 13 dei giorni lavorativi partono subito; arrivo in 2–4 giorni lavorativi) ---------- */
+  var FESTE = ['01-01', '01-06', '04-25', '05-01', '06-02', '08-15', '11-01', '12-08', '12-25', '12-26'];
+  var pasquetta = function (a) { // lunedì dopo Pasqua (calcolo di Meeus)
+    var b = a % 19, c = Math.floor(a / 100), d = a % 100, e = Math.floor(c / 4), f = c % 4, g = Math.floor((c + 8) / 25), h = Math.floor((c - g + 1) / 3),
+      k = (19 * b + c - e - h + 15) % 30, l = (32 + 2 * f + 2 * Math.floor(d / 4) - k - d % 4) % 7, m = Math.floor((b + 11 * k + 22 * l) / 451),
+      mese = Math.floor((k + l - 7 * m + 114) / 31), giorno = (k + l - 7 * m + 114) % 31 + 1;
+    return new Date(a, mese - 1, giorno + 1);
+  };
+  var due = function (n) { return (n < 10 ? '0' : '') + n; };
+  var lavorativo = function (x) {
+    var g = x.getDay(), p = pasquetta(x.getFullYear());
+    return g !== 0 && g !== 6 && FESTE.indexOf(due(x.getMonth() + 1) + '-' + due(x.getDate())) < 0 && !(x.getMonth() === p.getMonth() && x.getDate() === p.getDate());
+  };
+  var avanti = function (x, n) { var y = new Date(x.getFullYear(), x.getMonth(), x.getDate()); while (n > 0) { y.setDate(y.getDate() + 1); if (lavorativo(y)) n--; } return y; };
+  var GIORNI = ['domenica', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato'];
+  var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+  var giornoTesto = function (x, mese) { return GIORNI[x.getDay()] + ' ' + x.getDate() + (mese ? ' ' + MESI[x.getMonth()] : ''); };
+  $$('[data-consegna]').forEach(function (el) {
+    var aggiorna = function () {
+      var ora = new Date(), oggi = new Date(ora.getFullYear(), ora.getMonth(), ora.getDate());
+      var limite = new Date(ora.getFullYear(), ora.getMonth(), ora.getDate(), 13), subito = lavorativo(oggi) && ora < limite;
+      var parte = subito ? oggi : avanti(oggi, 1), da = avanti(parte, 2), a = avanti(parte, 4);
+      // detto dal punto di vista di chi compra: quando arriva, non quando parte
+      var arrivo = 'arriva tra <strong>' + giornoTesto(da, da.getMonth() !== a.getMonth()) + ' e ' + giornoTesto(a, true) + '</strong>.';
+      if (subito) {
+        var min = Math.ceil((limite - ora) / 60000), h = Math.floor(min / 60), m = min % 60;
+        el.innerHTML = 'Se ordini entro ' + [h ? h + ' h' : '', m || !h ? m + ' min' : ''].filter(Boolean).join(' ') + ', ' + arrivo;
+      } else el.innerHTML = 'Se ordini oggi, ' + arrivo;
+      setTimeout(aggiorna, 30000);
+    };
+    aggiorna();
+  });
+
+  /* ---------- carta regalo: anteprima dal vivo, importo, controllo dei campi, aggiunta alla borsa ---------- */
+  var cr = $('[data-carta]');
+  if (cr) {
+    var campo = function (n) { return $('[name="' + n + '"]', cr); };
+    var importo = 100;
+    var oggiISO = function () { var x = new Date(); return x.getFullYear() + '-' + due(x.getMonth() + 1) + '-' + due(x.getDate()); };
+    // quando inviarla: Oggi / Domani / Un altro giorno (calendario nostro: quello del browser non si adatta al sito)
+    var iso = function (x) { return x.getFullYear() + '-' + due(x.getMonth() + 1) + '-' + due(x.getDate()); };
+    var oggiD = function () { var x = new Date(); return new Date(x.getFullYear(), x.getMonth(), x.getDate()); };
+    var cal = $('#cr-cal', cr), griglia = $('.cr-cal-griglia', cr), vista = oggiD(), scelto = oggiD();
+    vista.setDate(1);
+    var limiteMax = function () { var x = oggiD(); x.setFullYear(x.getFullYear() + 1); return x; };
+    var bottoni = $$('[data-quando]', cr);
+    var segna = function (tipo) { bottoni.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-quando') === tipo)); }); };
+    var scegli = function (x, tipo) {
+      scelto = x; campo('quando').value = iso(x); segna(tipo);
+      // se la data è in un altro anno, l'anno si scrive sempre (14 gennaio 2027, non "14 gennaio")
+      var altroAnno = x.getFullYear() !== oggiD().getFullYear();
+      $('.cr-quando-scelto', cr).textContent = 'Arriva via email ' + (tipo === 'oggi' ? 'oggi, ' : tipo === 'domani' ? 'domani, ' : '') + GIORNI[x.getDay()] + ' ' + x.getDate() + ' ' + MESI[x.getMonth()] + (altroAnno ? ' ' + x.getFullYear() : '') + '.';
+      $('[data-quando="altro"]', cr).textContent = tipo === 'altro' ? x.getDate() + '/' + due(x.getMonth() + 1) + (altroAnno ? '/' + String(x.getFullYear()).slice(2) : '') : 'Altra data';
+    };
+    var disegnaCal = function () {
+      $('.cr-cal-testa p', cr).textContent = MESI[vista.getMonth()] + ' ' + vista.getFullYear();
+      var primo = (vista.getDay() + 6) % 7, giorni = new Date(vista.getFullYear(), vista.getMonth() + 1, 0).getDate(), oggi = oggiD(), max = limiteMax(), h = '';
+      for (var v = 0; v < primo; v++) h += '<span></span>';
+      for (var g = 1; g <= giorni; g++) {
+        var x = new Date(vista.getFullYear(), vista.getMonth(), g), no = x < oggi || x > max;
+        h += '<button type="button" data-giorno="' + iso(x) + '"' + (no ? ' disabled' : '') + (iso(x) === iso(scelto) ? ' aria-pressed="true"' : '') + (iso(x) === iso(oggi) ? ' class="oggi"' : '') + ' aria-label="' + GIORNI[x.getDay()] + ' ' + g + ' ' + MESI[x.getMonth()] + '">' + g + '</button>';
+      }
+      griglia.innerHTML = h;
+      var precMese = new Date(vista.getFullYear(), vista.getMonth(), 0);
+      $('[data-mese="-1"]', cr).disabled = precMese < oggi;
+      $('[data-mese="1"]', cr).disabled = new Date(vista.getFullYear(), vista.getMonth() + 1, 1) > max;
+    };
+    bottoni.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var t = b.getAttribute('data-quando');
+        if (t === 'altro') { var aperto = cal.hidden; cal.hidden = !aperto; b.setAttribute('aria-expanded', String(aperto)); if (aperto) { vista = new Date(scelto.getFullYear(), scelto.getMonth(), 1); disegnaCal(); } return; }
+        var x = oggiD(); if (t === 'domani') x.setDate(x.getDate() + 1);
+        cal.hidden = true; $('[data-quando="altro"]', cr).setAttribute('aria-expanded', 'false'); scegli(x, t);
+      });
+    });
+    $$('[data-mese]', cr).forEach(function (b) { b.addEventListener('click', function () { vista.setMonth(vista.getMonth() + Number(b.getAttribute('data-mese'))); disegnaCal(); }); });
+    griglia.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-giorno]'); if (!b || b.disabled) return;
+      var p = b.getAttribute('data-giorno').split('-'), x = new Date(+p[0], p[1] - 1, +p[2]);
+      scegli(x, 'altro'); cal.hidden = true; $('[data-quando="altro"]', cr).setAttribute('aria-expanded', 'false'); $('[data-quando="altro"]', cr).focus();
+    });
+    scegli(oggiD(), 'oggi');
+    var anteprima = function () {
+      var imp = $('[data-cr-importo]');
+      if (imp.textContent !== importo + ' €' && imp.animate) imp.animate([{ transform: 'translateY(12px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 350, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+      imp.textContent = importo + ' €';
+      $('[data-cr-per]').textContent = campo('per').value.trim() ? 'Per ' + campo('per').value.trim() : 'Per te';
+      $('[data-cr-msg]').textContent = campo('msg').value.trim() || 'Il tuo messaggio comparirà qui.';
+      $('[data-cr-da]').textContent = campo('da').value.trim() ? 'Da ' + campo('da').value.trim() : '';
+      $('[data-cr-conta]').textContent = campo('msg').value.length + '/120';
+    };
+    $$('[data-importo]', cr).forEach(function (b) {
+      b.addEventListener('click', function () {
+        importo = Number(b.getAttribute('data-importo'));
+        $$('[data-importo]', cr).forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        anteprima();
+      });
+    });
+    ['per', 'da', 'msg'].forEach(function (n) { campo(n).addEventListener('input', anteprima); });
+    cr.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var errore = '', email = campo('email').value.trim();
+      if (!campo('per').value.trim()) errore = 'Scrivi il nome di chi riceve la carta.';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) errore = 'Controlla l’email di chi riceve la carta: sembra incompleta.';
+      else if (!campo('quando').value || campo('quando').value < oggiISO()) errore = 'Scegli un giorno da oggi in poi.';
+      $('.cr-esito', cr).textContent = errore;
+      if (errore) return;
+      if (window.MARO_aggiungiCarta) window.MARO_aggiungiCarta({ t: importo, per: campo('per').value.trim(), da: campo('da').value.trim(), email: email, quando: campo('quando').value, msg: campo('msg').value.trim() });
+    });
+    anteprima();
+  }
 })();

@@ -243,6 +243,91 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     await c.close();
   }
 
+  // 2a. zona d'acquisto: nessun elemento sopra un altro (pulsante, consegna, Salva/Condividi), testo di consegna più lungo possibile
+  for (const w of [320, 375, 390, 768, 1024, 1440]) {
+    const c = await b.newContext({ viewport: { width: w, height: 900 } }); const q = await c.newPage();
+    await q.clock.install({ time: new Date('2026-12-23T16:00:00') }); // "Parte giovedì 24 dicembre, arriva tra martedì 29 e giovedì 31 dicembre."
+    for (const pg of ['polo-linee.html', 'felpa-firma.html']) {
+      await q.goto(BASE + pg, { waitUntil: 'load' });
+      const r = await q.evaluate(() => { const box = s => document.querySelector(s).getBoundingClientRect(); const a = box('[data-aggiungi]'), c0 = box('[data-consegna]'), c1 = box('.regalo-scheda'), c = { top: c0.top, bottom: c1.bottom, ok: c1.top >= c0.bottom }, z = box('.azioni-scheda'); if (!c.ok) return { a: 0, cTop: -1, cBot: 0, z: 0 }; return { a: Math.round(a.bottom), cTop: Math.round(c.top), cBot: Math.round(c.bottom), z: Math.round(z.top) }; });
+      prova(r.cTop >= r.a && r.z >= r.cBot, pg + ' @' + w + ': consegna tra il pulsante e Salva/Condividi, senza sovrapporsi ' + JSON.stringify(r));
+    }
+    await c.close();
+  }
+  // 2b. data di consegna: orario limite 13, weekend, festivi (1/11, 8/12), Pasquetta, cambio di mese
+  for (const [quando, atteso] of [
+    ['2026-10-13T10:00:00', 'Se ordini entro 3 h, arriva tra giovedì 15 e lunedì 19 ottobre.'],
+    ['2026-10-13T12:35:30', 'Se ordini entro 25 min, arriva tra giovedì 15 e lunedì 19 ottobre.'],
+    ['2026-10-16T15:00:00', 'Se ordini oggi, arriva tra mercoledì 21 e venerdì 23 ottobre.'],
+    ['2026-10-30T12:00:00', 'Se ordini entro 1 h, arriva tra martedì 3 e giovedì 5 novembre.'],
+    ['2026-10-31T09:00:00', 'Se ordini oggi, arriva tra mercoledì 4 e venerdì 6 novembre.'],
+    ['2026-12-07T14:00:00', 'Se ordini oggi, arriva tra venerdì 11 e martedì 15 dicembre.'],
+    ['2026-12-23T16:00:00', 'Se ordini oggi, arriva tra martedì 29 e giovedì 31 dicembre.'],
+    ['2027-03-29T10:00:00', 'Se ordini oggi, arriva tra giovedì 1 e lunedì 5 aprile.'],
+  ]) {
+    const c = await b.newContext({ viewport: { width: 1280, height: 900 } }); const q = await c.newPage();
+    await q.clock.install({ time: new Date(quando) });
+    await q.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
+    const t = await q.textContent('[data-consegna]');
+    prova(t === atteso, 'consegna ' + quando + ': "' + t + '"');
+    await c.close();
+  }
+  // 2c. carta regalo: errori chiari, anteprima, borsa (via email, fuori dalla soglia e dallo sconto)
+  {
+    const c = await b.newContext({ ...devices['iPhone 13'] });
+    await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); localStorage.setItem('maro-sconto', '1'); } catch (e) {} });
+    const q = await c.newPage(); const err = []; q.on('pageerror', e => err.push(e.message));
+    await q.goto(BASE + 'carta-regalo.html', { waitUntil: 'load' });
+    await q.tap('.cr-form [type=submit]');
+    prova(/nome di chi riceve/.test(await q.textContent('.cr-esito')), 'carta: senza nome, errore chiaro');
+    await q.fill('[name=per]', 'Giulia'); await q.fill('[name=email]', 'giulia@email'); await q.tap('.cr-form [type=submit]');
+    prova(/email/.test(await q.textContent('.cr-esito')), 'carta: email incompleta, errore chiaro');
+    await q.tap('[data-importo="150"]'); await q.fill('[name=msg]', 'Buon compleanno'); await q.fill('[name=da]', 'Marco');
+    const ant = await q.evaluate(() => [...document.querySelectorAll('[data-cr-importo], [data-cr-per], [data-cr-msg], [data-cr-da], [data-cr-conta]')].map(e => e.textContent).join(' | '));
+    prova(ant === '150 € | Per Giulia | Buon compleanno | Da Marco | 15/120', 'carta: anteprima dal vivo ' + ant);
+    await q.fill('[name=email]', 'giulia@email.it'); await q.tap('.cr-form [type=submit]');
+    await q.waitForTimeout(300);
+    const s1 = await q.evaluate(() => ({ aperta: !document.querySelector('#borsa').hidden, riga: document.querySelector('#borsa-righe').textContent, tot: document.querySelector('.totale').textContent, sped: [...document.querySelectorAll('.riepilogo')].map(x => x.textContent).join(' | '), soglia: !!document.querySelector('.soglia') }));
+    prova(s1.aperta && /Carta regalo/.test(s1.riga) && /Per Giulia/.test(s1.riga) && /150,00 €/.test(s1.tot) && /Via email/.test(s1.sped) && !/MARO10/.test(s1.sped) && !s1.soglia, 'carta: in borsa, via email, senza sconto né soglia ' + JSON.stringify(s1));
+    // con un capo da 75 €: sconto e soglia solo sul capo (75 → mancano 75 €), spedizione 5,90
+    await q.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
+    await q.evaluate(() => window.MARO_aggiungi('polo-linee', 'M'));
+    const s2 = await q.evaluate(() => ({ tot: document.querySelector('.totale').textContent, soglia: document.querySelector('.soglia').textContent, sconto: (document.querySelector('.riepilogo.sconto') || {}).textContent || '' }));
+    prova(/75,00/.test(s2.soglia) && /7,50/.test(s2.sconto) && /223,40 €/.test(s2.tot), 'borsa mista: soglia e sconto solo sui capi, totale 150+75-7,50+5,90 ' + JSON.stringify(s2));
+    prova(!err.length, 'carta: nessun errore JS ' + err.join(' | '));
+    // quando inviarla: oggi di default, domani, un altro giorno dal calendario (passato non selezionabile)
+    {
+      const c3 = await b.newContext({ viewport: { width: 390, height: 844 } }); const q3 = await c3.newPage();
+      await q3.clock.install({ time: new Date('2026-10-13T22:00:00') });
+      await q3.goto(BASE + 'carta-regalo.html', { waitUntil: 'load' });
+      const v = () => q3.inputValue('[name=quando]');
+      prova(await v() === '2026-10-13' && /oggi, martedì 13 ottobre/.test(await q3.textContent('.cr-quando-scelto')), 'quando: oggi di default');
+      await q3.click('[data-quando="domani"]'); prova(await v() === '2026-10-14', 'quando: domani');
+      await q3.click('[data-quando="altro"]');
+      const cal = await q3.evaluate(() => ({ aperto: !document.querySelector('#cr-cal').hidden, mese: document.querySelector('.cr-cal-testa p').textContent, passato: document.querySelector('[data-giorno="2026-10-12"]').disabled, prec: document.querySelector('[data-mese="-1"]').disabled, w: Math.round(document.querySelector('#cr-cal').getBoundingClientRect().width), f: Math.round(document.querySelector('.cr-form').getBoundingClientRect().width) }));
+      prova(cal.aperto && cal.mese === 'ottobre 2026' && cal.passato && cal.prec && cal.w === cal.f, 'calendario: aperto su ottobre, passato bloccato, largo come il modulo ' + JSON.stringify(cal));
+      for (const w of [320, 1440]) { await q3.setViewportSize({ width: w, height: 844 }); const sw = await q3.evaluate(() => [document.documentElement.scrollWidth, innerWidth, Math.round(document.querySelector('#cr-cal').getBoundingClientRect().height)]); prova(sw[0] <= sw[1] && sw[2] < 480, 'calendario aperto @' + w + ': niente scorrimento laterale, alto ' + sw[2] + ' px'); }
+      await q3.click('[data-mese="1"]'); await q3.click('[data-giorno="2026-11-14"]');
+      prova(await v() === '2026-11-14' && await q3.isHidden('#cr-cal') && /sabato 14 novembre\.$/.test(await q3.textContent('.cr-quando-scelto')) && (await q3.textContent('[data-quando="altro"]')) === '14/11', 'calendario: scelto il 14 novembre, si chiude, anno non ripetuto');
+      // anno dopo: l'anno si scrive sempre
+      await q3.click('[data-quando="altro"]'); for (let k = 0; k < 2; k++) await q3.click('[data-mese="1"]'); // si riapre su novembre (data scelta)
+      await q3.click('[data-giorno="2027-01-14"]');
+      const anno = [await q3.textContent('.cr-quando-scelto'), await q3.textContent('[data-quando="altro"]')];
+      prova(anno[0] === 'Arriva via email giovedì 14 gennaio 2027.' && anno[1] === '14/01/27', 'calendario: data dell’anno dopo con l’anno scritto ' + JSON.stringify(anno));
+      await c3.close();
+    }
+    // la carta non resta attaccata quando si scorre, e i testi lunghi stanno dentro la carta (telefono e PC)
+    for (const w of [320, 390, 900, 1440]) {
+      const c2 = await b.newContext({ viewport: { width: w, height: 800 } }); const q2 = await c2.newPage();
+      await q2.goto(BASE + 'carta-regalo.html', { waitUntil: 'load' });
+      await q2.fill('[name=per]', 'Massimiliano Alessandro'); await q2.fill('[name=da]', 'Francesca e tutta la famiglia'); await q2.fill('[name=msg]', 'Buon compleanno! Ci vediamo al drop del 14 novembre, scegli quello che vuoi e mettilo subito, ok?');
+      const r = await q2.evaluate(async () => { const c = document.querySelector('.cr-carta'), y0 = c.getBoundingClientRect().top; scrollBy(0, 200); await new Promise(f => setTimeout(f, 100)); const k = c.getBoundingClientRect(); return { scorre: Math.round(y0 - k.top) === 200, dentro: [...c.querySelectorAll('p, .cr-carta-alto')].filter(e => e.offsetParent).every(e => { const r = e.getBoundingClientRect(); return r.bottom <= k.bottom + 1 && r.right <= k.right + 1; }) }; });
+      prova(r.scorre && r.dentro, 'carta @' + w + ': scorre con la pagina e testi dentro ' + JSON.stringify(r));
+      await c2.close();
+    }
+    await c.close();
+  }
+
   // 3. screenshot
   if (SHOTS) {
     for (const [pg, w, nome] of [['index.html', 1440, 'home-pc'], ['index.html', 390, 'home-tel'], ['polo-linee.html', 1440, 'prodotto-pc'], ['felpa-stretta.html', 390, 'prodotto-tel']]) {

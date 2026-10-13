@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '37'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '45'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -34,6 +34,7 @@ const AVVISI = [
   ['Spedizione gratuita sopra i 150 €', 'aiuto.html#spedizioni'],
   ['Reso entro 14 giorni, per qualsiasi motivo', 'aiuto.html#resi'],
   ['-10% sul primo ordine con l’iscrizione', 'index.html#iscriviti'],
+  ['Carta regalo da 50 €, via email', 'carta-regalo.html'],
 ];
 function avviso() {
   const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
@@ -94,6 +95,7 @@ ${avviso()}
     <a href="index.html#polo">Polo</a>
     <a href="index.html#felpe">Felpe</a>
     <a href="storia.html">Il brand</a>
+    <a href="carta-regalo.html">Carta regalo</a>
   </nav>
   <div class="azioni">
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
@@ -111,7 +113,7 @@ ${corpo}
       <p>Streetwear da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Drop 001"><h2>Drop 001</h2><a href="index.html#polo">Polo</a><a href="index.html#felpe">Felpe</a><a href="index.html#lookbook">Lookbook</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
@@ -247,8 +249,6 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   </ul>
 </section>
 
-${fascia([['Drop 001'], ['Polo', true], ['Felpe'], ['Milano', true]], 'fascia-scura', 3)}
-
 <section class="campagna" aria-labelledby="campagna-titolo">
   <div class="campagna-foto">${img('campagna-due-ragazzi', 'Due ragazzi con felpe MARO appoggiati a una ringhiera in un parco di Milano', { dove: 'home campagna', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
   <div class="campagna-testo">
@@ -267,9 +267,11 @@ ${fascia([['Drop 001'], ['Polo', true], ['Felpe'], ['Milano', true]], 'fascia-sc
   <div class="storia-foto">${img('scena-ricamo-mani', 'Mani al lavoro su una ricamatrice che ricama la scritta MARO', { dove: 'home brand', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
 </section>
 
+${fascia([['Milano'], ['Galleria', true], ['Duomo'], ['CityLife', true]], 'fascia-chiara fascia-lookbook', 3)}
+
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
   <div class="lookbook-testa">
-    <div><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Drop 001 per le strade di Milano: Galleria, Duomo, CityLife</p></div>
+    <div><h2 id="lookbook-titolo" class="titolo">Lookbook</h2><p>Il Drop 001 indossato in città, di giorno e di sera.</p></div>
     <div class="lb-comandi">
       <span class="lb-conta" aria-live="polite"></span>
       <button class="lb-freccia" type="button" data-lb="-1" aria-label="Foto precedenti">‹</button>
@@ -365,6 +367,8 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
       <p class="trova-esito" role="status" aria-live="polite"></p>
     </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+    <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
+    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>
     <div class="azioni-scheda">
       <button class="btn btn-contorno-nero" type="button" data-cuore="${p.id}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva</span></button>
       <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
@@ -489,6 +493,60 @@ function recensioni(p) {
 ${scelte.map(r => `    <li><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[4])}</p><p class="piccolo">${esc(r[0])} · taglia ${r[2]} · veste ${r[3]}</p></li>`).join('\n')}
   </ul>
 </section>`;
+}
+
+// ---------- CARTA REGALO (multiuso: si usa su più ordini; dati di esempio, da confermare col cliente) ----------
+function cartaRegalo() {
+  const corpo = `
+<section class="cr" aria-labelledby="cr-titolo">
+  <div class="cr-testa">
+    <h1 id="cr-titolo" class="titolo">Carta regalo</h1>
+    <p class="cr-lead">Regala un capo MARO senza indovinare la taglia: sceglie chi la riceve.</p>
+  </div>
+  <div class="cr-corpo">
+    <div class="cr-anteprima">
+      <div class="cr-carta" aria-hidden="true">
+        <svg class="cr-carta-filigrana" viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>
+        <div class="cr-carta-alto"><span class="cr-carta-marchio"><svg viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>MARO</span><span>Carta regalo</span></div>
+        <p class="cr-carta-importo"><span data-cr-importo>100 €</span></p>
+        <svg class="cr-carta-onda" viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0 22 C60 2 110 38 170 20 S290 4 400 18" stroke="#1f8a4c"/><path d="M0 28 C60 8 110 44 170 26 S290 10 400 24" stroke="#fff"/><path d="M0 34 C60 14 110 50 170 32 S290 16 400 30" stroke="#c8102e"/></svg>
+        <div class="cr-carta-basso">
+          <div><p class="cr-carta-per" data-cr-per>Per te</p><p class="cr-carta-msg" data-cr-msg>Il tuo messaggio comparirà qui.</p><p class="cr-carta-da" data-cr-da></p></div>
+          <p class="cr-carta-codice">MARO-••••-••••<br>valida 12 mesi</p>
+        </div>
+      </div>
+      <p class="piccolo">Anteprima: la carta arriva così, via email, con il codice da usare alla cassa.</p>
+    </div>
+    <form class="cr-form" data-carta novalidate>
+      <fieldset class="cr-importi"><legend>Importo</legend>
+        <div>${[50, 100, 150, 200].map(n => `<button type="button" data-importo="${n}" aria-pressed="${n === 100}">${n} €</button>`).join('')}</div>
+      </fieldset>
+      <label>Per<input name="per" type="text" autocomplete="off" maxlength="30" placeholder="Nome di chi la riceve" required></label>
+      <label>Da<input name="da" type="text" autocomplete="given-name" maxlength="30" placeholder="Il tuo nome (facoltativo)"></label>
+      <label>Messaggio <span class="piccolo" data-cr-conta>0/120</span><textarea name="msg" maxlength="120" rows="3" placeholder="Facoltativo"></textarea></label>
+      <label>Email di chi la riceve<input name="email" type="email" autocomplete="off" placeholder="nome@email.it" required></label>
+      <div class="cr-quando">
+        <p class="cr-etichetta" id="cr-quando-et">Quando inviarla</p>
+        <div class="cr-scelte" role="group" aria-labelledby="cr-quando-et"><button type="button" data-quando="oggi" aria-pressed="true">Oggi</button><button type="button" data-quando="domani" aria-pressed="false">Domani</button><button type="button" data-quando="altro" aria-pressed="false" aria-expanded="false" aria-controls="cr-cal">Altra data</button></div>
+        <div class="cr-cal" id="cr-cal" hidden>
+          <div class="cr-cal-testa"><button type="button" data-mese="-1" aria-label="Mese precedente">‹</button><p aria-live="polite"></p><button type="button" data-mese="1" aria-label="Mese successivo">›</button></div>
+          <div class="cr-cal-nomi" aria-hidden="true"><span>lu</span><span>ma</span><span>me</span><span>gi</span><span>ve</span><span>sa</span><span>do</span></div>
+          <div class="cr-cal-griglia"></div>
+        </div>
+        <p class="cr-quando-scelto" aria-live="polite"></p>
+        <input type="hidden" name="quando">
+      </div>
+      <button class="btn btn-nero btn-largo" type="submit">Aggiungi alla borsa</button>
+      <p class="cr-esito" role="alert"></p>
+    </form>
+  </div>
+  <div class="domande cr-domande">
+    ${domanda('Come arriva?', 'Via email, il giorno che scegli, con un codice da usare alla cassa. Puoi mandarla anche oggi.')}
+    ${domanda('Dove si usa e quanto dura?', 'Su tutto il sito, anche in più ordini, per 12 mesi dall’invio. Se il carrello costa di più, la differenza si paga con carta o PayPal.')}
+    ${domanda('Si può rendere?', 'La carta no, e non si cambia in denaro. I capi comprati con la carta sì: reso entro 14 giorni, e l’importo torna sulla carta.')}
+  </div>
+</section>`;
+  return pagina({ titolo: 'Carta regalo — MARO', descrizione: 'Carta regalo MARO da 50, 100, 150 o 200 €: arriva via email il giorno che scegli e si usa su tutto il sito, anche in più ordini.', corpo, file: 'carta-regalo.html' });
 }
 
 // ---------- PREFERITI ----------
@@ -676,6 +734,7 @@ fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
 fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
+fs.writeFileSync(path.join(ROOT, 'carta-regalo.html'), cartaRegalo());
 // la 404 di GitHub Pages può comparire a qualsiasi indirizzo: tutti i link partono dalla cartella del sito
 fs.writeFileSync(path.join(ROOT, '404.html'), nonTrovata().replace('<head>', '<head>\n<base href="/MaroBrand/">'));
 for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));
