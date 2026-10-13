@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '29'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '37'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -26,6 +26,25 @@ function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw' } = {}) {
   const pic = urlPiccola(id);
   const srcset = pic ? ` srcset="${pic} 640w, ${urlFoto(id)} ${w}w"` : '';
   return `<img src="${urlFoto(id)}"${srcset} width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : (dove === 'home lookbook' ? ' decoding="async"' : ' fetchpriority="high"')} sizes="${sizes}">`;
+}
+
+// ---------- barra in alto: messaggi che scorrono in loop (come Nike); due copie identiche per il giro senza stacco ----------
+const AVVISI = [
+  ['Drop 002 il 14 novembre · accesso anticipato', 'index.html#iscriviti'],
+  ['Spedizione gratuita sopra i 150 €', 'aiuto.html#spedizioni'],
+  ['Reso entro 14 giorni, per qualsiasi motivo', 'aiuto.html#resi'],
+  ['-10% sul primo ordine con l’iscrizione', 'index.html#iscriviti'],
+];
+function avviso() {
+  const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
+  return `<div class="avviso" aria-label="Avvisi"><div class="avviso-nastro"><div class="avviso-giro">${giro(false)}</div><div class="avviso-giro" aria-hidden="true">${giro(true)}</div></div></div>`;
+}
+
+// ---------- fasce grandi a scorrimento in mezzo alle pagine (decorative: nascoste agli screen reader) ----------
+// voci: [testo, contorno?]; ogni giro si ripete finché supera i 2600 px, due giri identici per il loop senza stacco
+function fascia(voci, cls, volte) {
+  const giro = Array.from({ length: volte }, () => voci.map(([t, vuota]) => `<span class="fascia-voce${vuota ? ' fascia-vuota' : ''}">${esc(t)}</span><svg class="fascia-segno" viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>`).join('')).join('');
+  return `<div class="fascia ${cls}" aria-hidden="true"><div class="fascia-nastro"><div class="fascia-giro">${giro}</div><div class="fascia-giro">${giro}</div></div></div>`;
 }
 
 const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
@@ -67,7 +86,7 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <body${file === 'index.html' ? ' class="home"' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
-<div class="avviso"><a href="index.html#iscriviti">Drop 002 il 14 novembre · accesso anticipato</a></div>
+${avviso()}
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home">${SIMBOLO}<span>MARO</span></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
@@ -227,6 +246,8 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
     <li><strong>Guida alle taglie</strong><a href="aiuto.html#taglie">misure in centimetri, capo per capo</a></li>
   </ul>
 </section>
+
+${fascia([['Drop 001'], ['Polo', true], ['Felpe'], ['Milano', true]], 'fascia-scura', 3)}
 
 <section class="campagna" aria-labelledby="campagna-titolo">
   <div class="campagna-foto">${img('campagna-due-ragazzi', 'Due ragazzi con felpe MARO appoggiati a una ringhiera in un parco di Milano', { dove: 'home campagna', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
@@ -395,19 +416,62 @@ ${altri.map(x => scheda(x, 'scheda ' + x.id)).join('\n')}
 }
 
 // ---------- RECENSIONI DI ESEMPIO (solo anteprima: per legge, sul sito vero solo recensioni verificate) ----------
-const POOL = [
-  ['Marco R.', 5, 'giusta', 'Tessuto pesante, ricamo pulito. Si vede che è curata nei dettagli.'],
-  ['Giulia S.', 5, 'grande', 'Presa la S e mi sta comoda come volevo. Il retro lo notano tutti, anche in metro.'],
-  ['Luca D.', 4, 'giusta', 'Bella davvero, colore identico alle foto. Spedizione arrivata in tre giorni.'],
-  ['Sara B.', 5, 'giusta', 'Regalata al mio ragazzo: la mette sempre. Taglia perfetta seguendo la guida.'],
-  ['Andrea M.', 4, 'piccola', 'Vestibilità un po’ stretta sulle spalle, la prossima volta prendo una taglia in più.'],
-  ['Karim T.', 5, 'giusta', 'Il ricamo sul petto è fitto e pulito, dopo dieci lavaggi è ancora perfetto. Vale quello che costa.'],
-];
+// sei per capo, ognuna legata ai dettagli veri di quel capo: [nome, stelle, taglia presa, come veste, testo]
+const RECENSIONI = {
+  'polo-linee': [
+    ['Marco R.', 5, 'M', 'giusta', 'La metto in ufficio sotto la giacca e il venerdì da sola. Le tre linee sulle maniche la rendono diversa dalle solite polo nere.'],
+    ['Youssef B.', 5, 'L', 'giusta', 'Ricamo della firma fitto, non si sfilaccia. Dietro le ali si vedono appena alzi le braccia, mi piace che non siano urlate.'],
+    ['Chiara M.', 4, 'S', 'giusta', 'Presa per il mio ragazzo, gli sta bene. Una stella in meno perché il nero dopo qualche lavaggio è un filo meno intenso.'],
+    ['Davide P.', 5, 'XL', 'grande', 'Ho preso la XL per stare largo e così è stato. Collo a costine che resta in forma, tre bottoni giusti.'],
+    ['Lorenzo D.', 4, 'M', 'piccola', 'Sulle spalle è precisa, se ti piace morbida prendi una taglia in più. Per il resto ottima.'],
+    ['Sofia L.', 5, 'S', 'giusta', '“Fly with your mind” sopra l’orlo è il dettaglio che me l’ha fatta comprare. Tessuto piacevole anche d’estate.'],
+  ],
+  'polo-tricolore': [
+    ['Karim T.', 5, 'M', 'giusta', 'Le maniche a fasce sono il pezzo forte: dal vivo i colori sono pieni, non slavati come temevo.'],
+    ['Federico V.', 5, 'L', 'giusta', 'Le ali rosse e verdi sulla schiena le notano tutti. Indossata a un matrimonio in campagna, mi hanno chiesto dove l’avevo presa.'],
+    ['Amina K.', 4, 'S', 'grande', 'Bellissima, ma su di me la S è un po’ abbondante. Sulle donne conviene scendere di una taglia.'],
+    ['Riccardo N.', 5, 'XL', 'giusta', 'È l’unica polo colorata che ho. Ricamo sul petto pulito, i bottoni sono solidi.'],
+    ['Elena C.', 3, 'M', 'giusta', 'Fatta bene, ma le maniche sono più accese di quanto pensassi: non è una polo per tutti i giorni. Per l’estate però è perfetta.'],
+    ['Hamza L.', 5, 'M', 'giusta', 'La scritta a colori sopra l’orlo riprende le maniche. Si vede che ogni dettaglio è pensato insieme.'],
+  ],
+  'polo-jacquard': [
+    ['Tommaso B.', 5, 'L', 'giusta', 'Il motivo a colonne è tessuto, non stampato: lo senti sotto le dita. Sembra una polo da negozio di via Montenapoleone.'],
+    ['Giulia S.', 5, 'M', 'giusta', 'Il collo color tortora con il grigio perla è elegante senza essere serio. La metto anche la sera.'],
+    ['Samir A.', 4, 'M', 'piccola', 'Tessuto più spesso delle altre polo, quindi un po’ meno elastico: se sei tra due taglie prendi la più grande.'],
+    ['Alessia R.', 5, 'S', 'giusta', 'La firma tono su tono si vede solo da vicino ed è proprio quello che cercavo. Niente loghi in faccia.'],
+    ['Gabriele T.', 5, 'XL', 'giusta', 'Costa di più delle altre e si capisce perché. Dopo un mese di lavaggi il motivo è identico al primo giorno.'],
+    ['Nadia H.', 4, 'S', 'giusta', 'Molto bella, la consiglio. Va lavata a 30 gradi e stesa piana, altrimenti si allunga un poco.'],
+  ],
+  'felpa-stretta': [
+    ['Matteo F.', 5, 'L', 'grande', 'La stretta di mano sulla schiena è grande e definita, dopo i lavaggi niente crepe. Comoda come una felpa deve essere.'],
+    ['Ilaria G.', 5, 'M', 'grande', 'Mi piace che davanti sia pulita: la puoi mettere ovunque. Il messaggio sta dietro, per chi lo vuole leggere.'],
+    ['Simone G.', 4, 'XL', 'grande', 'Molto larga, con la XL arrivo quasi a metà coscia. Io la volevo così, ma per un fit normale scendi di una.'],
+    ['Fatima E.', 5, 'S', 'giusta', 'Il grigio melange è morbido e caldo, cappuccio bello pieno. La uso per andare in palestra e al lavoro.'],
+    ['Andrea M.', 5, 'M', 'grande', 'Regalata a mio fratello per il compleanno. Ha detto che è la sua felpa preferita, e non lo dice mai.'],
+    ['Beatrice O.', 4, 'M', 'grande', 'Tasca a marsupio capiente, polsini che tengono. Il grigio si macchia un po’ facilmente, ma si lava bene.'],
+  ],
+  'felpa-firma': [
+    ['Luca D.', 5, 'L', 'grande', 'Il blu notte dal vivo è ancora più bello che in foto. Le onde della scritta sulla schiena hanno colori vivi.'],
+    ['Martina Z.', 5, 'S', 'grande', 'Firma piccola sul petto, scritta grande dietro: è la combinazione giusta. Felpa pesante, perfetta quando inizia il freddo.'],
+    ['Youssef B.', 5, 'XL', 'grande', 'Presa dopo averla vista addosso a un amico in metro. Comoda, larga, il cappuccio sta su da solo.'],
+    ['Sara B.', 4, 'M', 'grande', 'Bella e calda. Una stella in meno perché la coulisse del cappuccio è un po’ corta.'],
+    ['Riccardo N.', 5, 'L', 'giusta', 'Ho preso la L invece della XL seguendo “Trova la tua taglia” e ci ha preso. Costa ma dura.'],
+    ['Chiara M.', 5, 'S', 'grande', 'La porto con i jeans larghi e le sneakers bianche, sta bene con tutto. Già ordinata anche la polo.'],
+  ],
+  'felpa-verticale': [
+    ['Davide P.', 5, 'M', 'grande', 'La firma che scende dalle spalle all’orlo è il dettaglio più bello del drop. Il verde bottiglia è scuro, elegante.'],
+    ['Sofia L.', 5, 'S', 'grande', 'Davanti niente, dietro tutto: mi piace che la grafica si scopra solo quando ti giri. Tessuto spesso e morbido.'],
+    ['Hamza L.', 4, 'L', 'grande', 'Ottima felpa. Il verde in foto sembra più chiaro, dal vivo è più scuro: a me va bene, ma meglio saperlo.'],
+    ['Elena C.', 5, 'M', 'grande', 'Le fiamme intorno alle lettere hanno tanti dettagli, si vedono anche da lontano. Me la fermano per strada.'],
+    ['Tommaso B.', 5, 'XL', 'grande', 'Taglio comodo, maniche giuste anche per chi ha le braccia lunghe. Cappuccio largo che non schiaccia i capelli.'],
+    ['Amina K.', 4, 'S', 'grande', 'La M era esaurita e ho preso la S: abbondante lo stesso. La prossima la prendo al drop, prima che finisca.'],
+  ],
+};
 function recensioni(p) {
-  const h = [...p.id].reduce((a, c) => a + c.charCodeAt(0), 0);
-  const scelte = [0, 1, 2].map(i => POOL[(h + i * 2) % POOL.length]);
+  const scelte = RECENSIONI[p.id];
+  if (!scelte || scelte.length < 5) throw new Error('Recensioni mancanti per ' + p.id + ' (servono almeno 5)');
   const media = (scelte.reduce((a, r) => a + r[1], 0) / scelte.length).toFixed(1).replace('.', ',');
-  const fit = { piccola: 0, giusta: 0, grande: 0 }; scelte.forEach(r => fit[r[2]]++);
+  const fit = { piccola: 0, giusta: 0, grande: 0 }; scelte.forEach(r => fit[r[3]]++);
   const stelle = n => '<span class="stelle" aria-label="' + n + ' stelle su 5">' + '★'.repeat(n) + '<i>' + '★'.repeat(5 - n) + '</i></span>';
   return `
 <section class="recensioni" aria-labelledby="rec-titolo">
@@ -422,7 +486,7 @@ function recensioni(p) {
     </div>
   </div>
   <ul class="rec-lista">
-${scelte.map(r => `    <li><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[3])}</p><p class="piccolo">${esc(r[0])} · veste ${r[2]}</p></li>`).join('\n')}
+${scelte.map(r => `    <li><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[4])}</p><p class="piccolo">${esc(r[0])} · taglia ${r[2]} · veste ${r[3]}</p></li>`).join('\n')}
   </ul>
 </section>`;
 }
@@ -538,57 +602,71 @@ function storia() {
   <figure class="st-hero-foto">${img('scena-dolomiti', 'Due ragazzi con felpe MARO di spalle davanti alle Dolomiti', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
   <div class="st-hero-testo">
     <p class="occhiello">Il brand</p>
-    <h1 id="st-titolo">Nati<br>a Milano.</h1>
-    <p class="st-lead">MARO è streetwear di Milano: pochi capi, un segno che si riconosce a distanza, grafiche che vivono sulla schiena. <strong>Lo portiamo in metro, in ufficio e fuori città, anche a duemila metri.</strong></p>
+    <h1 id="st-titolo"><span class="st-riga"><span>Nati</span></span> <span class="st-riga"><span>a Milano.</span></span></h1>
+    <p class="st-lead">Streetwear con un segno che si riconosce a distanza e grafiche che vivono sulla schiena. <strong>Lo portiamo in metro, in ufficio e fuori città, anche a duemila metri.</strong></p>
   </div>
 </section>
 
-<section class="st-blocco st-chiaro" aria-labelledby="st-c1">
-  <div class="st-testo">
-    <div class="st-num" aria-hidden="true">01</div>
-    <h2 id="st-c1">Il nome<br>e il segno</h2>
-    <p><strong>MARO è l’anagramma di Omar</strong>, il fondatore: le stesse lettere, in un altro ordine. Un nome personale che, rimescolato, diventa di chi lo indossa.</p>
-    <p>Il simbolo è una M con due ali: lo trovi in grande sulla schiena delle polo Linee e Tricolore.</p>
-    <p>La firma verticale, con le sue fiamme, è l’altro modo di scrivere MARO: piccola sul petto delle polo, lunga quanto tutta la schiena sulla Felpa Verticale.</p>
-  </div>
-  <div class="st-media st-confronto">
-    <figure class="st-simbolo"><svg viewBox="0 0 200 150" role="img" aria-label="Il simbolo MARO: una M con due ali"><use href="#maro-simbolo"/></svg><figcaption>Il simbolo</figcaption></figure>
-    <figure class="st-firma"><svg viewBox="0 0 200 560" role="img" aria-label="La firma verticale MARO con le fiamme"><use href="#maro-firma"/></svg><figcaption>La firma</figcaption></figure>
+<section class="br-intro" aria-labelledby="br-nome">
+  <h2 id="br-nome" class="br-anagramma" data-anagramma><span class="sr">MARO, l’anagramma di Omar</span><span class="br-lettere" aria-hidden="true"><b data-l="M">M</b><b data-l="A">A</b><b data-l="R">R</b><b data-l="O">O</b></span></h2>
+  <p><strong>MARO è l’anagramma di Omar</strong>, il fondatore: le stesse lettere, in un altro ordine. Un nome personale che, rimescolato, diventa di chi lo indossa.</p>
+</section>
+
+<section class="br-domande" aria-labelledby="br-domande">
+  <h2 id="br-domande" class="sr">Domande sul brand</h2>
+  <div class="domande">
+    <details><summary>Quando esce il prossimo drop?</summary><p>Sabato 14 novembre alle 18<span class="br-conto" data-conto-breve="2026-11-14T18:00:00+01:00"></span>. Chi è iscritto vede i capi il giorno prima. <a class="link" href="index.html#iscriviti">Iscriviti</a></p></details>
+    <details><summary>I capi tornano disponibili?</summary><p>Di rado. Ristampiamo solo i colori più richiesti, e chi è iscritto lo sa per primo.</p></details>
+    <details><summary>Quanti pezzi ci sono in ogni drop?</summary><p>Pochi: ogni capo esce in una tiratura limitata. Quando una taglia finisce la trovi segnata nella scheda, con “Avvisami” per sapere se torna.</p></details>
+    <details><summary>Posso vederli dal vivo prima di comprare?</summary><p>Per ora solo online, con reso entro 14 giorni per qualsiasi motivo. Quando organizziamo un pop-up, lo annunciamo prima agli iscritti.</p></details>
+    <details><summary>Dove vengono fatti?</summary><p>In Italia. Ricami e stampe li fa un laboratorio che segue ogni capo dal tessuto al controllo finale.</p></details>
   </div>
 </section>
 
-<section class="st-blocco st-scuro st-inverso" aria-labelledby="st-c2">
-  <div class="st-testo">
-    <div class="st-num" aria-hidden="true">02</div>
-    <h2 id="st-c2">Testa alta.<br>Sempre.</h2>
-    <p><strong>“Fly with your mind” vuol dire una cosa semplice: i piedi restano in città, la testa va dove decidi tu.</strong> Tra lavoro, metro e notti lunghe, le ali sulla schiena stanno lì per ricordarlo.</p>
-  </div>
-  <figure class="st-media">${img('scena-orizzonte', 'Ragazzo con felpa MARO di spalle in cima a una montagna guarda l’orizzonte', { dove: 'brand testa alta', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
-</section>
+<div class="fasce-nome">
+${fascia([['MARO'], ['OMAR', true]], 'fascia-chiara', 5)}
+${fascia([['OMAR', true], ['MARO']], 'fascia-chiara fascia-inversa', 5)}
+</div>
 
-<section class="st-blocco st-grigio" aria-labelledby="st-c3">
-  <div class="st-testo">
-    <div class="st-num" aria-hidden="true">03</div>
-    <h2 id="st-c3">Rispetto</h2>
-    <p>La stretta di mano è il secondo segno di MARO: due persone, un patto, nessun bisogno di altre parole.</p>
-    <p>In strada il rispetto conta più di qualsiasi logo. Per questo l’abbiamo messo al posto del logo: in grande sulla schiena della felpa grigia, con il davanti lasciato vuoto.</p>
-    <a class="link" href="felpa-stretta.html">Felpa Stretta di mano</a>
-  </div>
-  <figure class="st-media">${img('storia-stretta-di-mano', 'Due ragazzi si stringono la mano in un parco di Milano, uno indossa una felpa MARO', { dove: 'brand rispetto', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
-</section>
-
-<section class="st-valori" aria-labelledby="st-c4">
-  <div class="st-num" aria-hidden="true">04</div>
-  <h2 id="st-c4">Come lavoriamo</h2>
+<section class="br-segni" aria-labelledby="br-segni">
+  <h2 id="br-segni" class="titolo">I segni</h2>
   <ul>
-    <li><figure>${img('scena-citta', 'Ragazzo con felpa MARO di spalle in un parco di Milano', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">01</span><h3>Disegnato a Milano</h3><p>Ogni grafica viene disegnata a Milano e provata sul capo, sul tavolo e per strada, prima di andare in produzione.</p></li>
-    <li><figure>${img('scena-ricamo-vicino', 'Una macchina ricama la scritta MARO su una felpa', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">02</span><h3>Ricamato dove conta</h3><p>Le firme sul petto sono ricamate, non stampate: restano nitide lavaggio dopo lavaggio. Le grafiche grandi sulla schiena sono stampate, per tenere il segno pulito anche a quella misura.</p></li>
-    <li><figure>${img('scena-showroom', 'Felpe e polo MARO appese in uno showroom scuro', { dove: 'brand lavoro', sizes: '(min-width: 960px) 30vw, 100vw' })}</figure><span class="st-passo">03</span><h3>Solo drop</h3><p>Niente collezioni di stagione. Escono pochi capi alla volta, quando sono pronti, e chi è iscritto li vede il giorno prima di tutti.</p></li>
+    <li>
+      <figure class="br-zoom" style="--fuoco: 50% 32%">${img('brand-ali', 'Ragazzo di spalle appoggiato a una balaustra, Polo Tricolore MARO con le ali rosse e verdi sulla schiena', { dove: 'brand ali', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
+      <div><h3>Una M. Due ali.</h3><p>Il simbolo di MARO, al centro della schiena delle polo. Davanti resta solo la firma.</p><a class="btn btn-contorno-nero" href="polo-tricolore.html">Polo Tricolore</a></div>
+    </li>
+    <li>
+      <figure class="br-zoom" style="--fuoco: 50% 46%">${img('brand-firma', 'Ragazzo di spalle sulla scala mobile della metro, Felpa Verticale MARO verde con la firma verticale sulla schiena', { dove: 'brand firma', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
+      <div><h3>MARO, dall’alto in basso.</h3><p>Le quattro lettere una sotto l’altra, con le fiamme, dalle spalle all’orlo: la stessa firma che sulla Polo Linee è ricamata piccola sul petto.</p><a class="btn btn-contorno-nero" href="felpa-verticale.html">Felpa Verticale</a></div>
+    </li>
+    <li>
+      <figure class="br-zoom" style="--fuoco: 54% 38%">${img('brand-stretta', 'Due ragazzi si stringono la mano in un parco di Milano, uno indossa una felpa MARO', { dove: 'brand stretta', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
+      <div><h3>Rispetto, prima del logo.</h3><p>Il secondo segno di MARO: due persone, un patto. Sulla felpa grigia prende il posto del logo.</p><a class="btn btn-contorno-nero" href="felpa-stretta.html">Felpa grigia</a></div>
+    </li>
   </ul>
 </section>
 
-<section class="st-fine" aria-labelledby="st-fine">
-  <div class="st-fine-testo"><svg class="st-fine-simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg><h2 id="st-fine">Indossa il segno.</h2></div>
+<section class="br-banner" aria-labelledby="br-motto" data-entra>
+  <div class="br-banner-in">
+  <figure>${img('brand-banner', 'Ragazzo con felpa MARO blu seduto sul bordo di una terrazza guarda Milano e il Duomo illuminati all’ora blu', { dove: 'brand banner', sizes: '100vw' })}</figure>
+  <div class="br-banner-testo">
+    <h2 id="br-motto"><span class="st-riga"><span>Fly</span></span> <span class="st-riga"><span>with</span></span><br><span class="st-riga"><span>your</span></span> <span class="st-riga"><span>mind.</span></span></h2>
+    <p>I piedi restano in città, la testa va dove decidi tu.</p>
+  </div>
+  </div>
+</section>
+
+<section class="br-lavoro" aria-labelledby="br-lavoro">
+  <h2 id="br-lavoro" class="titolo">Come lavoriamo</h2>
+  <ul>
+    <li><figure>${img('scena-citta', 'Ragazzo di spalle con la Felpa Verticale MARO verde su un terrazzo in città, al tramonto', { dove: 'brand lavoro strada', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Provato per strada</h3><p>Ogni grafica va sul capo e si porta in giro per giorni, prima di andare in produzione.</p></li>
+    <li><figure>${img('scena-ricamo-vicino', 'Ricamatrice al lavoro sulla scritta MARO su una felpa verde', { dove: 'brand lavoro ricamo', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Ricamato dove conta</h3><p>Ricamo per le firme piccole, stampa per le grafiche grandi: ogni segno resta pulito, dalla XS alla XXL.</p></li>
+    <li><figure>${img('scena-showroom', 'Felpa verde, felpa blu e Polo Tricolore MARO appese davanti a una parete di marmo scuro', { dove: 'brand lavoro drop', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Niente stagioni. Solo drop.</h3><p>Un drop esce quando è pronto, non quando lo dice il calendario.</p></li>
+  </ul>
+</section>
+
+<section class="st-fine" aria-labelledby="st-fine" data-entra>
+  <div class="st-fine-testo"><svg class="st-fine-simbolo" viewBox="0 0 200 150" aria-hidden="true"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path class="ala-sx" d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path class="ala-dx" d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></svg><h2 id="st-fine">Indossa il segno.</h2></div>
   <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear di Milano: il nome nato dall’anagramma di Omar, le ali, la stretta di mano e come nasce ogni capo.', corpo, file: 'storia.html' });

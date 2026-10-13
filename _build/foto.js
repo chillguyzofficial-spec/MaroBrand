@@ -63,6 +63,14 @@ const LAVORI = [
   // campagna, storia, lookbook (bianco e nero con grana, proporzioni originali)
   { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg' },
   { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg' },
+  // pagina del brand, struttura "I segni" (13/10): foto mai usate prima, intere
+  { out: 'segno-ali', src: 'foto-set-5-2026-10-12/847805131_1768248471058589_4644519022755093556_n.webp' },
+  { out: 'segno-firma-metro', src: 'mockup-ai/metro-insegna-colonna.jpg' },
+  // pagina del brand, struttura Gucci/Nike (13/10 sera): set 7 di Francesco + stretta di mano vera portata a 4:5
+  { out: 'brand-ali', src: 'foto-set-7-brand-2026-10-13/845544434_1504806778073680_1509547925904962727_n.webp' },
+  { out: 'brand-firma', src: 'foto-set-7-brand-2026-10-13/848498400_2565039890682567_9093410238897195326_n.webp' },
+  { out: 'brand-stretta', src: 'foto-reali/stretta-di-mano-parco.jpg', crop: [65, 0, 1076, 1345] },
+  { out: 'brand-banner', src: 'foto-set-7-brand-2026-10-13/847388252_3001004070249275_6814422014820926890_n.webp', max: 2048, q: 0.86 },
   // locandina del video d'apertura (mostrata finché il video non parte)
   { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];
@@ -86,7 +94,9 @@ const srv = http.createServer((q, r) => {
   const b = await chromium.launch({ channel: 'msedge' });
   const p = await b.newPage();
   await p.goto('http://localhost:8981/__vuota');
-  for (const l of LAVORI) {
+  // SOLO=nome1,nome2 → prepara solo quelle foto (le altre restano come sono)
+  const SOLO = process.env.SOLO ? process.env.SOLO.split(',') : null;
+  for (const l of LAVORI.filter(l => !SOLO || SOLO.includes(l.out))) {
     const dataUrl = await p.evaluate(async (l) => {
       let el, W, H;
       const url = '/' + l.src.split('/').map(encodeURIComponent).join('/');

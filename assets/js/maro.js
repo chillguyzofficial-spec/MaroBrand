@@ -469,4 +469,70 @@
       input.value = '';
     });
   }
+
+  /* ---------- pagina del brand: l'anagramma si compone (O·M·A·R → MARO) ---------- */
+  var ana = $('[data-anagramma]');
+  var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ana && !calma && 'IntersectionObserver' in window) {
+    var scatola = $('.br-lettere', ana), lettere = $$('b', scatola);
+    var ordina = function (seq) { seq.split('').forEach(function (l) { scatola.appendChild(lettere.filter(function (x) { return x.getAttribute('data-l') === l; })[0]); }); };
+    // FLIP: si misura dove stanno le lettere in OMAR, si riordina in MARO e si anima dal vecchio posto al nuovo;
+    // la O, che attraversa tutta la parola, salta sopra le altre (animazione nativa, nessuna libreria)
+    var componi = function () {
+      lettere.forEach(function (x) { if (x.getAnimations) x.getAnimations().forEach(function (a) { a.cancel(); }); });
+      ordina('OMAR');
+      var da = {}; lettere.forEach(function (x) { da[x.getAttribute('data-l')] = x.getBoundingClientRect().left; });
+      ordina('MARO');
+      lettere.forEach(function (x, i) {
+        var dx = da[x.getAttribute('data-l')] - x.getBoundingClientRect().left;
+        var eO = x.getAttribute('data-l') === 'O', salto = eO ? '-0.45em' : '0';
+        if (!x.animate) return;
+        x.animate([
+          { transform: 'translate(' + dx + 'px, 0)' },
+          { transform: 'translate(' + dx / 2 + 'px, ' + salto + ')', offset: 0.5 },
+          { transform: 'translate(0, 0)' }
+        ], { duration: eO ? 1700 : 1100, delay: eO ? 0 : 200 + i * 120, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'backwards' }); // la O atterra per ultima, a parola già pronta
+      });
+    };
+    ordina('OMAR');
+    var osservaNome = new IntersectionObserver(function (voci) {
+      if (!voci[0].isIntersecting) return;
+      osservaNome.disconnect(); setTimeout(componi, 900); // OMAR resta fermo un attimo, poi si ricompone
+    }, { threshold: 0.6 });
+    osservaNome.observe(ana);
+    scatola.addEventListener('click', componi);
+  }
+
+  /* ---------- pagina del brand: il banner e il finale entrano quando ci arrivi ---------- */
+  var daEntrare = $$('[data-entra]');
+  if (daEntrare.length && !calma && 'IntersectionObserver' in window) {
+    var osservaEntra = new IntersectionObserver(function (voci) {
+      voci.forEach(function (v) { if (v.isIntersecting) { v.target.classList.remove('in-attesa'); v.target.classList.add('entrato'); osservaEntra.unobserve(v.target); } });
+    }, { threshold: 0.35 });
+    daEntrare.forEach(function (el) { el.classList.add('in-attesa'); osservaEntra.observe(el); });
+  }
+
+  /* ---------- pagina del brand: "Vedi il segno" ingrandisce la foto sul segno ---------- */
+  $$('.br-zoom-btn').forEach(function (bt) {
+    bt.addEventListener('click', function () {
+      var fig = bt.parentNode, acceso = !fig.classList.contains('acceso');
+      fig.classList.toggle('acceso', acceso);
+      bt.setAttribute('aria-pressed', String(acceso));
+      bt.textContent = acceso ? 'Foto intera' : 'Vedi il segno';
+    });
+  });
+
+  /* ---------- conto alla rovescia breve, in una frase (pagina del brand) ---------- */
+  $$('[data-conto-breve]').forEach(function (el) {
+    var quando = new Date(el.getAttribute('data-conto-breve')).getTime();
+    var parola = function (n, uno, tanti) { return n + ' ' + (n === 1 ? uno : tanti); };
+    var aggiorna = function () {
+      var min = Math.floor((quando - Date.now()) / 60000);
+      if (min <= 0) { el.textContent = ' — è già uscito'; return; }
+      var g = Math.floor(min / 1440), o = Math.floor(min % 1440 / 60), m = min % 60;
+      el.textContent = ' — mancano ' + (g ? parola(g, 'giorno', 'giorni') + ' e ' + parola(o, 'ora', 'ore') : o ? parola(o, 'ora', 'ore') + ' e ' + parola(m, 'minuto', 'minuti') : parola(m, 'minuto', 'minuti'));
+      setTimeout(aggiorna, 30000);
+    };
+    aggiorna();
+  });
 })();

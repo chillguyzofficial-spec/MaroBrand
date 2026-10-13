@@ -36,8 +36,10 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario')) return; // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario') || el.closest('.avviso-nastro') || el.closest('.fascia-nastro')) return; // barra e fasce a scorrimento escono apposta, ritagliate // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
+          // foto che si allargano dentro un riquadro che le ritaglia (apertura e banner del brand): conta il riquadro, non la foto
+          if (el.tagName === 'IMG' && getComputedStyle(el.parentElement).overflow === 'hidden') { const f = el.parentElement.getBoundingClientRect(); if (f.left >= -1 && f.right <= W + 1) return; }
           const q = el.getBoundingClientRect(); if (q.width && (q.right > W + 1 || q.left < -1)) fuori.push(el.tagName + '.' + el.className + ' ' + Math.round(q.left) + '→' + Math.round(q.right));
         });
         const imgRotte = [...document.images].filter(i => i.getAttribute('src') && i.complete && !i.naturalWidth).map(i => i.src);
@@ -171,7 +173,20 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.isVisible('.pref-vuoto'), 'preferiti: tolto, pagina vuota');
   // recensioni di esempio dichiarate
   await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
-  prova(/di esempio/.test(await p.textContent('.rec-esempio')) && (await p.locator('.rec-lista li').count()) === 3, 'recensioni: 3, marcate di esempio');
+  prova(/di esempio/.test(await p.textContent('.rec-esempio')), 'recensioni marcate di esempio');
+  // 6 per capo, tutte diverse da un capo all'altro, con taglia e vestibilità; media coerente con le stelle
+  const testiVisti = new Set();
+  for (const id of ['polo-linee', 'polo-tricolore', 'polo-jacquard', 'felpa-stretta', 'felpa-firma', 'felpa-verticale']) {
+    await p.goto(BASE + id + '.html', { waitUntil: 'load' });
+    const r = await p.evaluate(() => ({ n: document.querySelectorAll('.rec-lista li').length, testi: [...document.querySelectorAll('.rec-lista li > p:not(.piccolo)')].map(e => e.textContent), info: [...document.querySelectorAll('.rec-lista .piccolo')].every(e => /taglia (XS|S|M|L|XL|XXL) · veste (piccola|giusta|grande)/.test(e.textContent)), media: document.querySelector('.rec-media').textContent, conto: document.querySelector('.rec-sintesi .piccolo').textContent, stelle: [...document.querySelectorAll('.rec-lista .stelle')].map(s => +s.getAttribute('aria-label')[0]) }));
+    const m = (r.stelle.reduce((a, b) => a + b, 0) / r.stelle.length).toFixed(1).replace('.', ',');
+    prova(r.n === 6 && r.conto === '6 recensioni' && r.info && r.media === m, id + ': 6 recensioni con taglia e vestibilità, media ' + r.media + ' = ' + m);
+    prova(r.testi.every(t => !testiVisti.has(t)), id + ': nessuna recensione ripetuta da un altro capo');
+    r.testi.forEach(t => testiVisti.add(t));
+  }
+  // barra in alto: scorre, due copie uguali, la seconda fuori dalla tabulazione, una riga sola
+  const bar = await p.evaluate(() => { const g = document.querySelectorAll('.avviso-giro'); const a = document.querySelector('.avviso'); return { giri: g.length, uguali: g[0].textContent === g[1].textContent, nascosta: g[1].getAttribute('aria-hidden') === 'true' && [...g[1].querySelectorAll('a')].every(x => x.tabIndex === -1), anim: getComputedStyle(document.querySelector('.avviso-nastro')).animationName, h: a.getBoundingClientRect().height, largo: g[0].getBoundingClientRect().width >= innerWidth }; });
+  prova(bar.giri === 2 && bar.uguali && bar.nascosta && bar.anim === 'avviso-scorre' && bar.h < 40 && bar.largo, 'barra in alto che scorre ' + JSON.stringify(bar));
 
   // conto alla rovescia
   await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);

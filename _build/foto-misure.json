@@ -3,6 +3,22 @@
   1920,
   1080
  ],
+ "brand-ali": [
+  1120,
+  1400
+ ],
+ "brand-banner": [
+  2048,
+  1152
+ ],
+ "brand-firma": [
+  1120,
+  1400
+ ],
+ "brand-stretta": [
+  1076,
+  1345
+ ],
  "campagna-due-ragazzi": [
   1206,
   1382
@@ -174,6 +190,14 @@
  "scena-showroom": [
   1120,
   1400
+ ],
+ "segno-ali": [
+  1400,
+  1400
+ ],
+ "segno-firma-metro": [
+  767,
+  1209
  ],
  "storia-stretta-di-mano": [
   1206,
