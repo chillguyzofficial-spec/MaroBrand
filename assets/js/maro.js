@@ -98,7 +98,7 @@
     btn.setAttribute('aria-label', 'Borsa, ' + n + (n === 1 ? ' articolo' : ' articoli'));
     var box = $('#borsa-righe'), fondo = $('#borsa-fondo');
     if (!righe.length) {
-      box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 ti aspetta.</p>';
+      box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 è ancora disponibile, ma non tutte le taglie.</p>';
       fondo.hidden = true; return;
     }
     var tot = 0;
@@ -204,7 +204,7 @@
     avv.addEventListener('submit', function (e) {
       e.preventDefault();
       var inp = $('input', avv), es = $('.avvisami-esito', avv);
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { es.className = 'avvisami-esito errore'; es.textContent = 'Controlla l’indirizzo email.'; inp.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { es.className = 'avvisami-esito errore'; es.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; inp.focus(); return; }
       es.className = 'avvisami-esito'; es.textContent = 'Fatto: ti scriviamo appena torna. (Anteprima: nessuna email inviata.)'; inp.value = '';
     });
 
@@ -341,7 +341,7 @@
     $('.popup-form', pop).addEventListener('submit', function (e) {
       e.preventDefault();
       var inp = $('input', this), er = $('.popup-errore', pop);
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { er.textContent = 'Controlla l’indirizzo email.'; inp.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { er.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; inp.focus(); return; }
       er.textContent = '';
       attivaSconto();
       $('[data-passo="1"]', pop).hidden = true; $('[data-passo="2"]', pop).hidden = false;
@@ -360,7 +360,7 @@
       var id = b.getAttribute('data-cuore'), si = pref.indexOf(id) >= 0, p = CAT.filter(function (x) { return x.id === id; })[0];
       b.setAttribute('aria-pressed', String(si));
       var t = $('span', b);
-      if (t) t.textContent = si ? 'Salvato nei preferiti' : 'Salva nei preferiti';
+      if (t) { t.textContent = si ? 'Salvato' : 'Salva'; b.setAttribute('aria-label', si ? 'Salvato nei preferiti' : 'Salva nei preferiti'); }
       else if (p) b.setAttribute('aria-label', (si ? 'Togli ' : 'Aggiungi ') + p.nome + (si ? ' dai preferiti' : ' ai preferiti'));
     });
     var lista = $('.pref-lista');
@@ -388,7 +388,7 @@
   var cond = $('[data-condividi]');
   if (cond) {
     cond.addEventListener('click', function () {
-      var dati = { title: document.title, text: 'Guarda questo capo MARO', url: location.href.split('#')[0] };
+      var dati = { title: document.title, text: 'Guarda questo capo del Drop 001 MARO', url: location.href.split('#')[0] };
       var esito = $('.condividi-esito');
       if (navigator.share) { navigator.share(dati).catch(function () {}); return; }
       var fatto = function () { esito.textContent = 'Link copiato: incollalo dove vuoi.'; };
@@ -462,7 +462,7 @@
       e.preventDefault();
       var input = $('input', form), esito = $('.esito', form), v = input.value.trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
-        esito.className = 'esito errore'; esito.textContent = 'Controlla l’indirizzo email.'; input.focus(); return;
+        esito.className = 'esito errore'; esito.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; input.focus(); return;
       }
       esito.className = 'esito'; esito.textContent = 'Sei dentro: ti scriviamo prima del prossimo drop, e il 10% sul primo ordine è già nella tua borsa. (Anteprima: nessuna email inviata.)';
       attivaSconto();

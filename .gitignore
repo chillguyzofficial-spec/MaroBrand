@@ -3,3 +3,4 @@ node_modules/
 *.zip
 PROJECT_BRIEF.md
 PROMPT-CLAUDE-DESIGN.md
+_copy/
