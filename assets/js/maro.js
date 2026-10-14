@@ -657,4 +657,34 @@
     });
     anteprima();
   }
+
+  /* ---------- home › Tiratura limitata: fila a scorrimento, si accende il capo al centro ---------- */
+  $$('[data-giostra]').forEach(function (g) {
+    // voci = solo i capi (figli diretti), non le righe dei dettagli dentro ogni capo
+    var binario = $('.tir-binario', g), voci = Array.prototype.slice.call(binario.children), conta = $('.tir-conta', g), frecce = $$('[data-giostra-vai]', g), att = 0;
+    var piano = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    var accendi = function (k) {
+      att = k;
+      voci.forEach(function (v, x) { v.classList.toggle('attiva', x === k); });
+      conta.textContent = (k + 1) + ' / ' + voci.length;
+      frecce.at(0).disabled = k === 0; frecce.at(1).disabled = k === voci.length - 1;
+    };
+    var vai = function (k) {
+      k = Math.max(0, Math.min(voci.length - 1, k));
+      var v = voci.at(k), dx = v.offsetLeft - (binario.clientWidth - v.offsetWidth) / 2;
+      binario.scrollTo({ left: dx, behavior: piano });
+      accendi(k);
+    };
+    if ('IntersectionObserver' in window) {
+      var oss = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) accendi(voci.indexOf(e.target)); });
+      }, { root: binario, rootMargin: '0px -45% 0px -45%', threshold: 0 });
+      voci.forEach(function (v) { oss.observe(v); });
+    }
+    frecce.forEach(function (f) { f.addEventListener('click', function () { vai(att + Number(f.getAttribute('data-giostra-vai'))); }); });
+    voci.forEach(function (v, k) {
+      $('a', v).addEventListener('click', function (e) { if (k !== att) { e.preventDefault(); vai(k); } });
+    });
+    accendi(0);
+  });
 })();

@@ -64,6 +64,10 @@ const LAVORI = [
   { out: 'campagna-due-ragazzi', src: 'foto-reali/due-ragazzi-parco-ringhiera.jpg' },
   { out: 'storia-stretta-di-mano', src: 'foto-reali/stretta-di-mano-parco.jpg' },
   // pagina del brand, struttura "I segni" (13/10): foto mai usate prima, intere
+  // home › Tiratura limitata (14/10): tre capi appesi in tre posti, 4:5 interi
+  { out: 'tir-jacquard', src: 'foto-tiratura-2026-10-14/846671120_1085441171022353_6506936060070174390_n.webp' },
+  { out: 'tir-tricolore', src: 'foto-tiratura-2026-10-14/848391520_2586203298490276_8227519206258409952_n.webp' },
+  { out: 'tir-verticale', src: 'foto-tiratura-2026-10-14/848652338_955875450907660_6273583632672960041_n.webp' },
   { out: 'segno-ali', src: 'foto-set-5-2026-10-12/847805131_1768248471058589_4644519022755093556_n.webp' },
   { out: 'segno-firma-metro', src: 'mockup-ai/metro-insegna-colonna.jpg' },
   // pagina del brand, struttura Gucci/Nike (13/10 sera): set 7 di Francesco + stretta di mano vera portata a 4:5

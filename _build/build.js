@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '45'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '54'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -183,6 +183,62 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <b
 </a>${rapido}</div>`;
 }
 
+// ---------- IL LOOK COMPLETO (home): compare solo quando ci sono le due foto in assets/foto ----------
+const LOOK = [
+  { foto: 'look-polo-linee', alt: 'Ragazzo a figura intera con la Polo Linee MARO nera, jeans larghi chiari e sneakers bianche, in una strada di Milano', capo: 'polo-linee', con: 'felpa-verticale', nota: 'Con jeans larghi chiari e sneakers bianche.' },
+  { foto: 'look-felpa-firma', alt: 'Ragazza di tre quarti di spalle con la Felpa Firma MARO blu notte, cargo neri e sneakers scure, a una fermata del tram a Milano', capo: 'felpa-firma', con: 'polo-jacquard', nota: 'Con cargo neri e sneakers scure.' },
+];
+function lookCompleto() {
+  // LOOK_PROVA=1 node _build/build.js → anteprima con due foto esistenti, solo per controllare l'impaginazione (mai da pubblicare)
+  const prova = process.env.LOOK_PROVA === '1', foto = (l, k) => prova ? ['campagna-due-ragazzi', 'segno-ali'].at(k) : l.foto;
+  const mancano = prova ? [] : LOOK.filter(l => !MISURE[l.foto]);
+  if (mancano.length) { console.log('Il look completo: nascosto, mancano le foto ' + mancano.map(l => l.foto).join(', ')); return ''; }
+  const cap = id => CATALOGO.find(p => p.id === id);
+  return `<section class="look" aria-labelledby="look-titolo">
+  <div class="look-testa"><h2 id="look-titolo" class="titolo">Il look completo</h2><p>Due modi di portare il Drop 001, con i capi che trovi qui.</p></div>
+  <div class="look-griglia">
+${LOOK.map((l, k) => { const p = cap(l.capo), c = cap(l.con); return `    <article class="look-carta">
+      <figure>${img(foto(l, k), l.alt, { dove: 'home look ' + (k + 1), sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
+      <p class="look-num">Look 0${k + 1}</p>
+      <h3><a href="${p.id}.html">${esc(p.nome)}</a> <span>${euro(p.prezzo)}</span></h3>
+      <p class="look-nota">${esc(l.nota)}</p>
+      <a class="btn btn-nero" href="${p.id}.html">Scegli la taglia</a>
+      <p class="look-con">Completa con <a class="link" href="${c.id}.html">${esc(c.nome)}</a> · ${euro(c.prezzo)}</p>
+    </article>`; }).join('\n')}
+  </div>
+</section>`;
+}
+
+// sezione provvisoria al posto del look, finché non arrivano le sue foto (14/10)
+function tiratura() {
+  const TIR = [
+    { foto: 'tir-jacquard', capo: 'polo-jacquard', dove: 'Firenze', alt: 'Polo Jacquard MARO grigio perla appesa a un balcone di Firenze, con il Duomo sullo sfondo' },
+    { foto: 'tir-tricolore', capo: 'polo-tricolore', dove: 'Duomo di Milano', alt: 'Polo Tricolore MARO vista dal retro, con le ali rosse e verdi, appesa sulle terrazze del Duomo di Milano' },
+    { foto: 'tir-verticale', capo: 'felpa-verticale', dove: 'Piazza del Duomo, Milano', alt: 'Felpa Verticale MARO verde vista dal retro, con la firma verticale, appesa su una terrazza davanti al Duomo di Milano' },
+  ];
+  const cap = id => CATALOGO.find(p => p.id === id);
+  return `<section class="campagna tiratura" aria-labelledby="campagna-titolo">
+  ${fascia([['Tiratura limitata'], ['New', true], ['Drop 001'], ['Pochi pezzi', true]], 'fascia-chiara fascia-tir', 3)}
+  <h2 id="campagna-titolo" class="sr">Tiratura limitata: tre capi del Drop 001</h2>
+  <div class="tir-giostra" data-giostra>
+    <ul class="tir-binario">
+${TIR.map((t, k) => { const p = cap(t.capo); return `      <li${k === 0 ? ' class="attiva"' : ''}><a class="tir-carta" href="${p.id}.html">
+        <figure>${img(t.foto, t.alt, { dove: 'home tiratura ' + (k + 1), sizes: '(min-width: 960px) 440px, 80vw' })}</figure>
+        <div class="tir-info">
+          <p class="tir-dove">${esc(t.dove)}</p>
+          <h3>${esc(p.nome)} <span>${euro(p.prezzo)}</span></h3>
+          <p class="tir-frase">${esc(p.frase)}</p>
+          <ul class="tir-dettagli">${p.dettagli.slice(0, 2).map(d => '<li>' + esc(d) + '</li>').join('')}</ul>
+          <p class="tir-taglie" aria-label="Taglie: ${p.taglie.map(x => (p.esaurite || []).includes(x) ? x + ' esaurita' : x).join(', ')}">${p.taglie.map(x => (p.esaurite || []).includes(x) ? '<s>' + x + '</s>' : '<span>' + x + '</span>').join('')}</p>
+        </div>
+      </a></li>`; }).join('\n')}
+    </ul>
+    <div class="tir-comandi"><button type="button" data-giostra-vai="-1" aria-label="Capo precedente">‹</button><span class="tir-conta" aria-live="polite">1 / ${TIR.length}</span><button type="button" data-giostra-vai="1" aria-label="Capo successivo">›</button></div>
+  </div>
+  <p class="tir-sotto">Pochi pezzi per taglia: quando una finisce, nella scheda trovi «Avvisami».</p>
+</section>`;
+}
+
 // ---------- HOME ----------
 function home() {
   const lb = [
@@ -249,13 +305,7 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   </ul>
 </section>
 
-<section class="campagna" aria-labelledby="campagna-titolo">
-  <div class="campagna-foto">${img('campagna-due-ragazzi', 'Due ragazzi con felpe MARO appoggiati a una ringhiera in un parco di Milano', { dove: 'home campagna', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
-  <div class="campagna-testo">
-    <h2 id="campagna-titolo" class="titolo titolo-xl">Fatto<br>per la<br>città.</h2>
-    <p class="campagna-sotto">Metro alle otto, ufficio, aperitivo, notte. Polo e felpe che reggono la giornata intera, senza passare da casa a cambiarsi.</p>
-  </div>
-</section>
+${lookCompleto() || tiratura()}
 
 <section class="storia" id="storia" aria-labelledby="storia-titolo">
   <div class="storia-testo">
@@ -266,8 +316,6 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   </div>
   <div class="storia-foto">${img('scena-ricamo-mani', 'Mani al lavoro su una ricamatrice che ricama la scritta MARO', { dove: 'home brand', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
 </section>
-
-${fascia([['Milano'], ['Galleria', true], ['Duomo'], ['CityLife', true]], 'fascia-chiara fascia-lookbook', 3)}
 
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
   <div class="lookbook-testa">

@@ -36,7 +36,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario') || el.closest('.avviso-nastro') || el.closest('.fascia-nastro')) return; // barra e fasce a scorrimento escono apposta, ritagliate // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario') || el.closest('.avviso-nastro') || el.closest('.fascia-nastro') || el.closest('.tir-binario')) return; // barra e fasce a scorrimento escono apposta, ritagliate // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           // foto che si allargano dentro un riquadro che le ritaglia (apertura e banner del brand): conta il riquadro, non la foto
           if (el.tagName === 'IMG' && getComputedStyle(el.parentElement).overflow === 'hidden') { const f = el.parentElement.getBoundingClientRect(); if (f.left >= -1 && f.right <= W + 1) return; }
@@ -254,6 +254,35 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     }
     await c.close();
   }
+  // 2a-bis. home › Tiratura limitata: fila a scorrimento, si accende il capo al centro (frecce, dito, tocco su uno spento)
+  for (const dev of ['iPhone SE', 'iPhone 13']) {
+    const c = await b.newContext({ ...devices[dev] }); await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); } catch (e) {} });
+    const q = await c.newPage(); await q.goto(BASE + 'index.html', { waitUntil: 'load' });
+    await q.locator('[data-giostra]').scrollIntoViewIfNeeded(); await q.waitForTimeout(400);
+    const stato = () => q.evaluate(() => ({ att: [...document.querySelectorAll('.tir-binario > li')].findIndex(l => l.classList.contains('attiva')), conta: document.querySelector('.tir-conta').textContent, info: getComputedStyle(document.querySelector('.tir-binario > li.attiva .tir-info')).opacity, sw: document.documentElement.scrollWidth <= innerWidth }));
+    const s0 = await stato(); prova(s0.att === 0 && s0.conta === '1 / 3' && s0.sw, dev + ': fila, primo capo acceso ' + JSON.stringify(s0));
+    await q.click('[data-giostra-vai="1"]'); await q.waitForTimeout(900);
+    const s1 = await stato(); prova(s1.att === 1 && s1.conta === '2 / 3', dev + ': freccia avanti, secondo capo acceso ' + JSON.stringify(s1));
+    await q.locator('.tir-binario > li').nth(2).locator('a').click({ position: { x: 20, y: 40 } }); await q.waitForTimeout(900);
+    const s2 = await stato(); prova(s2.att === 2 && q.url().endsWith('index.html'), dev + ': tocco su un capo spento lo porta al centro senza aprire la scheda ' + JSON.stringify(s2));
+    await q.evaluate(() => document.querySelector('.tir-binario').scrollTo({ left: 0, behavior: 'instant' })); await q.waitForTimeout(700);
+    const s3 = await stato(); prova(s3.att === 0, dev + ': col dito si torna al primo e si riaccende ' + JSON.stringify(s3));
+    const s4 = await q.evaluate(() => { const l = document.querySelector('.tir-binario > li.attiva'); return { bordi: [...document.querySelectorAll('.tir-binario > li')].every(x => x.querySelector('img').getBoundingClientRect().height > 100) }; });
+    prova(s4.bordi, dev + ': foto della fila intere e caricate');
+    await c.close();
+  }
+  // fila su PC: tre capi in vista e leggibili; la rotella sopra la fila fa scorrere la pagina
+  { const c = await b.newContext({ viewport: { width: 1280, height: 800 } }); const q = await c.newPage(); await q.goto(BASE + 'index.html', { waitUntil: 'load' });
+    await q.locator('[data-giostra]').scrollIntoViewIfNeeded(); await q.waitForTimeout(300);
+    const r = await q.evaluate(() => ({ op: [...document.querySelectorAll('.tir-binario > li .tir-info')].map(e => getComputedStyle(e).opacity), dentro: [...document.querySelectorAll('.tir-binario > li')].every(l => { const x = l.getBoundingClientRect(); return x.left >= 0 && x.right <= innerWidth; }) }));
+    prova(r.op.every(o => o === '1') && r.dentro, 'PC: tre capi in vista con le informazioni leggibili ' + JSON.stringify(r));
+    const y0 = await q.evaluate(() => scrollY); const box = await q.locator('.tir-binario > li').nth(1).boundingBox();
+    await q.mouse.move(box.x + box.width / 2, box.y + 100); await q.mouse.wheel(0, 400); await q.waitForTimeout(400);
+    prova((await q.evaluate(() => scrollY)) > y0 + 200, 'PC: la rotella sopra la fila fa scorrere la pagina');
+    await c.close(); }
+  { const c = await b.newContext({ ...devices['iPhone 13'] }); const q = await c.newPage(); await q.goto(BASE + 'index.html', { waitUntil: 'load' });
+    const ov = await q.evaluate(() => getComputedStyle(document.querySelector('.tir-binario')).overflowY);
+    prova(ov === 'hidden', 'telefono: la fila non scorre in verticale (' + ov + ')'); await c.close(); }
   // 2b. data di consegna: orario limite 13, weekend, festivi (1/11, 8/12), Pasquetta, cambio di mese
   for (const [quando, atteso] of [
     ['2026-10-13T10:00:00', 'Se ordini entro 3 h, arriva tra giovedì 15 e lunedì 19 ottobre.'],

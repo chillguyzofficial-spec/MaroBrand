@@ -848,3 +848,71 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 @media (max-width: 399px) { .cr-cal { padding: 10px; } .cr-cal-griglia button { height: 40px; font-size: 15px; } }
 .cr-scelte button { white-space: nowrap; }
 .fascia-lookbook { border-top: 1px solid var(--grigio-2); } /* home: fascia bianca che apre il lookbook, staccata da "Dietro il segno" */
+
+
+/* ---------- il look completo (home, 14/10): foto intere a figura intera, il capo MARO e un secondo capo da abbinare ---------- */
+.look { padding: clamp(48px, 6vw, 96px) var(--lato); }
+.look-testa p { font-size: clamp(17px, 1.4vw, 20px); color: #333; margin: 12px 0 0; }
+.look-griglia { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 40px); margin-top: clamp(24px, 3vw, 40px); }
+.look-carta figure { margin: 0 0 16px; }
+.look-carta img { width: 100%; height: auto; display: block; }
+.look-num { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--testo-2); }
+.look-carta h3 { font: 400 clamp(28px, 2.6vw, 40px)/1.05 var(--titoli); text-transform: uppercase; margin: 6px 0 6px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.look-carta h3 span { font: 600 18px/1 var(--testo); text-transform: none; }
+.look-nota { margin: 0 0 16px; color: #333; }
+.look-con { margin: 14px 0 0; font-size: 15px; color: #333; }
+@media (max-width: 767px) { .look-griglia { grid-template-columns: 1fr; gap: 40px; } }
+
+/* titoli della campagna: righe mai sotto 1, così un accento non tocca la riga sopra (bug 14/10) */
+.campagna .titolo { line-height: 1.02; }
+
+
+/* home › Tiratura limitata (14/10): fascia sopra, fila di tre capi a scorrimento; quello al centro si accende e mostra le informazioni */
+.tiratura { display: block; padding: 0 0 clamp(32px, 4vw, 56px); }
+.fascia-tir { border-bottom: 1px solid #222; }
+.tir-giostra { --tc: min(64vw, 340px); }
+.tir-binario { list-style: none; margin: 0; padding: clamp(24px, 3vw, 40px) calc((100% - var(--tc)) / 2) 0; display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.tir-binario::-webkit-scrollbar { display: none; }
+.tir-binario li { flex: 0 0 var(--tc); scroll-snap-align: center; opacity: .38; transition: opacity .35s ease; }
+.tir-binario li.attiva { opacity: 1; }
+.tir-carta { display: block; color: var(--bianco); }
+.tir-carta figure { margin: 0 0 12px; }
+.tir-carta img { width: 100%; height: auto; display: block; }
+.tir-info { opacity: 0; transform: translateY(6px); transition: opacity .35s ease, transform .35s ease; }
+.attiva .tir-info { opacity: 1; transform: none; }
+.tir-dove { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #9a9a9a; }
+.tir-carta h3 { font: 400 clamp(24px, 2vw, 30px)/1.05 var(--titoli); text-transform: uppercase; margin: 4px 0 8px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+.tir-carta h3 span { font: 600 16px/1 var(--testo); text-transform: none; color: #d6d6d6; }
+.tir-taglie { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.tir-taglie span, .tir-taglie s { min-width: 38px; padding: 5px 7px; border: 1px solid #555; border-radius: 6px; font-size: 13px; font-weight: 600; text-align: center; }
+.tir-taglie s { color: #777; border-color: #333; }
+.tir-comandi { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 18px; }
+.tir-comandi button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #555; background: none; color: var(--bianco); font-size: 24px; line-height: 1; cursor: pointer; }
+.tir-comandi button:disabled { opacity: .3; cursor: default; }
+.tir-conta { font-size: 14px; font-weight: 600; color: #bdbdbd; min-width: 3.5em; text-align: center; }
+.tir-sotto { margin: 16px var(--lato) 0; text-align: center; font-size: 15px; color: #bdbdbd; }
+@media (prefers-reduced-motion: reduce) { .tir-binario { scroll-behavior: auto; } .tir-info, .tir-binario li { transition: none; } }
+
+/* fila più grande e più informazioni sul capo acceso (14/10 notte) */
+.tir-giostra { --tc: min(80vw, 440px); }
+.tir-frase { margin: 0 0 8px; font-size: 16px; line-height: 1.45; color: #e6e6e6; }
+.tir-dettagli { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 4px; }
+.tir-dettagli li { font-size: 14px; line-height: 1.4; color: #bdbdbd; padding-left: 14px; position: relative; }
+.tir-dettagli li::before { content: ''; position: absolute; left: 0; top: .6em; width: 6px; height: 1px; background: #777; }
+
+/* fascia sopra la fila: bianca, più bassa e più fine (14/10 notte) */
+.fascia-tir { padding: 10px 0; border-bottom: 0; }
+.fascia-tir .fascia-voce { font-size: clamp(34px, 4.6vw, 68px); letter-spacing: .03em; }
+.fascia-tir .fascia-vuota { -webkit-text-stroke-width: 1.5px; }
+.fascia-tir .fascia-segno { width: clamp(26px, 3vw, 44px); margin: 0 clamp(14px, 2vw, 28px); }
+/* fila: mai scorrimento verticale dentro (la rotella del mouse restava "agganciata" alla fila) — 14/10 */
+.tir-binario { overflow-y: hidden; overscroll-behavior-x: contain; }
+/* PC: i tre capi stanno tutti in vista, tutti accesi e leggibili, niente scorrimento né frecce */
+@media (min-width: 960px) {
+  .tir-giostra { --tc: auto; }
+  .tir-binario { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); overflow: visible; padding: clamp(28px, 3vw, 44px) var(--lato) 0; scroll-snap-type: none; }
+  .tir-binario > li, .tir-binario > li.attiva { opacity: 1; }
+  .tir-binario .tir-info { opacity: 1; transform: none; }
+  .tir-comandi { display: none; }
+}
+.tir-dettagli li { color: #d4d4d4; font-size: 15px; } .tir-dettagli li::before { background: #9a9a9a; }
