@@ -78,6 +78,48 @@
   }
   window.addEventListener('hashchange', daHash); daHash();
 
+  /* ---------- pagine delle categorie (19/10): filtri taglia/colore/prezzo, ordine, nascondi filtri ---------- */
+  var cat = $('[data-catalogo]');
+  if (cat && $('.griglia', cat)) {
+    var celle = $$('.scheda-cella', cat), griglia = $('.griglia', cat);
+    var btnFiltri = $('[data-filtri-mostra]', cat), scritta = $('[data-filtri-scritta]', cat);
+    function mostraFiltri(si) {
+      cat.classList.toggle('filtri-chiusi', !si);
+      btnFiltri.setAttribute('aria-expanded', si ? 'true' : 'false');
+      scritta.textContent = si ? 'Nascondi filtri' : (window.innerWidth < 960 ? 'Filtri' : 'Mostra filtri');
+    }
+    btnFiltri.addEventListener('click', function () { mostraFiltri(cat.classList.contains('filtri-chiusi')); });
+    mostraFiltri(window.innerWidth >= 960); // sul telefono si parte con i filtri chiusi
+    function scelti(sel, attr) { return $$(sel, cat).filter(function (e) { return e.checked || e.getAttribute('aria-pressed') === 'true'; }).map(function (e) { return e.getAttribute(attr); }); }
+    function applica() {
+      var tg = scelti('[data-f-taglia]', 'data-f-taglia'), col = scelti('[data-f-colore]', 'data-f-colore'), pr = scelti('[data-f-prezzo]', 'data-f-prezzo');
+      var n = 0;
+      celle.forEach(function (c) {
+        var taglie = c.getAttribute('data-taglie').split(' '), prezzo = +c.getAttribute('data-prezzo');
+        var ok = (!tg.length || tg.some(function (t) { return taglie.indexOf(t) > -1; })) &&
+          (!col.length || col.indexOf(c.getAttribute('data-colore')) > -1) &&
+          (!pr.length || pr.some(function (f) { var d = f.split('-'); return prezzo >= +d[0] && prezzo <= +d[1]; }));
+        c.hidden = !ok; if (ok) n++;
+      });
+      $('[data-cat-conta]', cat).textContent = '(' + n + ')';
+      $('[data-cat-nessuno]', cat).hidden = n > 0;
+      var o = $('[data-ordina]', cat).value;
+      celle.slice().sort(function (a, b) {
+        if (o === 'prezzo-su') return a.getAttribute('data-prezzo') - b.getAttribute('data-prezzo');
+        if (o === 'prezzo-giu') return b.getAttribute('data-prezzo') - a.getAttribute('data-prezzo');
+        return a.getAttribute('data-ordine') - b.getAttribute('data-ordine');
+      }).forEach(function (c) { griglia.appendChild(c); });
+    }
+    $$('[data-f-taglia]', cat).forEach(function (b) { b.addEventListener('click', function () { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); applica(); }); });
+    $$('[data-f-colore], [data-f-prezzo]', cat).forEach(function (i) { i.addEventListener('change', applica); });
+    $('[data-ordina]', cat).addEventListener('change', applica);
+    $('[data-filtri-azzera]', cat).addEventListener('click', function () {
+      $$('[data-f-taglia]', cat).forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+      $$('[data-f-colore], [data-f-prezzo]', cat).forEach(function (i) { i.checked = false; });
+      applica();
+    });
+  }
+
   /* ---------- borsa (salvata solo in questo browser) ---------- */
   // memoria locale protetta (navigazione privata o blocchi: il sito funziona lo stesso)
   var mem = {
@@ -511,6 +553,15 @@
     }, { threshold: 0.6 });
     osservaNome.observe(ana);
     scatola.addEventListener('click', componi);
+  }
+
+  /* ---------- Dietro il segno: la seconda foto sta sotto un ritaglio, il caricamento "lazy" non la vede mai → la carichiamo a 800 px dalla sezione ---------- */
+  var scena2 = $('.segno-scena-2 img');
+  if (scena2) {
+    if ('IntersectionObserver' in window) {
+      var oss2 = new IntersectionObserver(function (v) { if (v[0].isIntersecting) { scena2.loading = 'eager'; oss2.disconnect(); } }, { rootMargin: '800px 0px' });
+      oss2.observe($('.segno'));
+    } else scena2.loading = 'eager';
   }
 
   /* ---------- pagina del brand: il banner e il finale entrano quando ci arrivi ---------- */

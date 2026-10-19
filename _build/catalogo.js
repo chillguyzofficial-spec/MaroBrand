@@ -4,7 +4,7 @@ const TAGLIE_FELPA = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 module.exports = [
   {
-    id: 'polo-linee', esaurite: ['XXL'], copertina: ['copertina-polo-linee', 'Polo Linee nera con righe bianche sulle maniche e firma MARO sul petto'], tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
+    id: 'polo-linee', esaurite: ['XXL'], copertina: ['copertina-polo-linee', 'Ragazzo di spalle in una strada bagnata di notte con la Polo Linee MARO nera, ali bianche ricamate sul retro'], tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
     prezzo: 75, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-linee-fronte', 'Polo Linee nera su manichino, fronte, firma MARO sul petto'], ['polo-linee-retro', 'Polo Linee nera, retro con le ali e la scritta Fly with your mind'], ['polo-linee-lato', 'Polo Linee nera, fronte con le righe bianche sulle maniche'], ['polo-linee-tre-quarti', 'Polo Linee nera vista di tre quarti']],
     frase: 'La prima polo MARO, e la più facile da portare.',
@@ -14,7 +14,7 @@ module.exports = [
     descrizione: 'Polo Linee MARO: piqué di cotone nero, tre linee bianche sulle maniche, firma ricamata sul petto e ali sulla schiena. Drop 001, 75 €.',
   },
   {
-    id: 'polo-tricolore', esaurite: ['XL'], copertina: ['copertina-polo-tricolore', 'Polo Tricolore nera con le maniche verde bianco rosso'], tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
+    id: 'polo-tricolore', esaurite: ['XL'], copertina: ['copertina-polo-tricolore', 'Ragazzo di spalle in un parcheggio sotterraneo con la Polo Tricolore MARO nera, ali rosse e verdi sul retro'], tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
     prezzo: 80, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-tricolore-fronte', 'Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso'], ['polo-tricolore-retro', 'Polo Tricolore nera, retro con le ali rosse e verdi'], ['polo-tricolore-lato', 'Polo Tricolore nera, fronte con la firma MARO'], ['polo-tricolore-dettaglio', 'Dettaglio del nastro tricolore sulla manica e della scritta MARO']],
     frase: 'L’unica del drop con il colore addosso.',
@@ -24,7 +24,7 @@ module.exports = [
     descrizione: 'Polo Tricolore MARO: piqué di cotone nero, maniche a fasce rosso, bianco e verde, ali colorate sulla schiena. Drop 001, 80 €.',
   },
   {
-    id: 'polo-jacquard', copertina: ['copertina-polo-jacquard', 'Polo Jacquard grigio perla con collo tortora'], tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
+    id: 'polo-jacquard', copertina: ['copertina-polo-jacquard', 'Ragazzo di fronte in un vicolo di notte con la Polo Jacquard MARO grigio perla'], tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
     prezzo: 95, pallini: ['#d9d6cf'], taglie: TAGLIE_POLO,
     foto: [['polo-jacquard-manichino', 'Polo Jacquard grigio perla su manichino, firma MARO tono su tono sul petto'], ['polo-jacquard-tre-quarti', 'Polo Jacquard vista di tre quarti']],
     frase: 'Per chi preferisce i dettagli che si scoprono da vicino.',
@@ -34,7 +34,7 @@ module.exports = [
     descrizione: 'Polo Jacquard MARO: maglia jacquard a colonne verticali, collo color tortora, firma ricamata tono su tono. Drop 001, 95 €.',
   },
   {
-    id: 'felpa-stretta', esaurite: ['XS'], copertina: ['copertina-felpa-stretta', 'Felpa grigia indossata, retro con la stretta di mano'], tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
+    id: 'felpa-stretta', esaurite: ['XS'], copertina: ['copertina-felpa-stretta', 'Ragazzo di spalle tra le luci al neon con la Felpa Stretta di mano MARO grigia, stretta di mano stampata sul retro'], tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
     prezzo: 120, pallini: ['#b9b9b9'], taglie: TAGLIE_FELPA,
     foto: [['felpa-stretta-retro', 'Felpa grigia su manichino, retro con la grande stampa della stretta di mano'], ['felpa-stretta-tre-quarti', 'Felpa grigia vista di tre quarti dal retro'], ['felpa-stretta-fronte', 'Felpa grigia, fronte pulito con cappuccio e tasca']],
     frase: 'Il segno del rispetto, in grande sulla schiena.',
@@ -44,7 +44,7 @@ module.exports = [
     descrizione: 'Felpa Stretta di mano MARO: cotone garzato grigio melange, cappuccio, stretta di mano stampata in grande sulla schiena. Drop 001, 120 €.',
   },
   {
-    id: 'felpa-firma', esaurite: ['S'], copertina: ['copertina-felpa-firma', 'Felpa blu notte indossata davanti al Duomo di Milano, firma MARO sul retro'], tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
+    id: 'felpa-firma', esaurite: ['S'], copertina: ['copertina-felpa-firma', 'Persona di spalle davanti al Duomo di Milano di notte con la Felpa Firma MARO blu, scritta MARO sul retro'], tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
     prezzo: 130, pallini: ['#1c2440'], taglie: TAGLIE_FELPA,
     foto: [['felpa-firma-retro', 'Felpa blu notte su manichino, retro con la firma MARO e le onde tricolore'], ['felpa-firma-tre-quarti', 'Felpa blu notte vista di tre quarti'], ['felpa-firma-fronte', 'Felpa blu notte, fronte con la firma MARO piccola sul petto']],
     frase: 'Blu notte, come Milano dopo le dieci.',
@@ -54,7 +54,7 @@ module.exports = [
     descrizione: 'Felpa Firma MARO: blu notte, scritta MARO con onde verdi, bianche e rosse sulla schiena, firma piccola sul petto. Drop 001, 130 €.',
   },
   {
-    id: 'felpa-verticale', esaurite: ['M'], copertina: ['copertina-felpa-verticale', 'Felpa verde bottiglia, retro con la firma MARO verticale'],
+    id: 'felpa-verticale', esaurite: ['M'], copertina: ['copertina-felpa-verticale', 'Persona di spalle in un vicolo di notte con la Felpa Verticale MARO verde, firma MARO verticale sul retro'],
     tipo: 'felpa', nome: 'Felpa Verticale', colore: 'Verde bottiglia, firma MARO verticale sul retro',
     prezzo: 110, pallini: ['#1f3a2c'], taglie: TAGLIE_FELPA,
     foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia, fronte pulito con cappuccio e tasca'], ['felpa-verticale-montagna', 'Felpa verde bottiglia indossata in montagna, di spalle']],
@@ -63,5 +63,51 @@ module.exports = [
     dettagli: ['Firma MARO verticale dalle spalle all’orlo', 'Davanti senza grafiche', 'Cappuccio con coulisse', 'Tasca a marsupio', 'Polsini e fondo a costine'],
     cura: 'felpa',
     descrizione: 'Felpa Verticale MARO: verde bottiglia, firma verticale con le fiamme lungo tutta la schiena, davanti libero. Drop 001, 110 €.',
+  },
+  // pantaloni di prova (19/10): foto da Francesco, prezzo, taglie e testi di esempio
+  {
+    id: 'cargo-firma', copertina: ['pant-cargo-copertina', 'Ragazzo in un vicolo di notte con i pantaloni cargo MARO beige, firma verticale sulla gamba'],
+    tipo: 'pantaloni', nome: 'Cargo Firma', colore: 'Beige sabbia, firma MARO verticale sulla gamba',
+    prezzo: 95, pallini: ['#d8cbb3'], taglie: ['S', 'M', 'L', 'XL', 'XXL'],
+    foto: [['pant-cargo-piegato', 'Pantaloni cargo MARO beige piegati, firma verticale sulla gamba'], ['pant-cargo-appeso', 'Pantaloni cargo MARO beige appesi a una gruccia di legno']],
+    frase: 'Tasche grandi, gamba dritta, la firma che scende lungo il fianco.',
+    testo: 'Cargo beige sabbia con due tasche laterali a soffietto e gamba dritta. La firma MARO verticale, con le fiamme, corre lungo la gamba sinistra.',
+    dettagli: ['Firma MARO verticale sulla gamba', 'Due tasche cargo laterali', 'Gamba dritta', 'Passanti per la cintura'],
+    cura: 'pantaloni',
+    descrizione: 'Cargo Firma MARO: pantaloni beige sabbia con tasche laterali e firma verticale sulla gamba. 95 €.',
+  },
+  // accessori di prova (19/10): foto da Francesco, prezzi e testi di esempio
+  {
+    id: 'cappellino-ali', copertina: ['acc-cappellino-copertina', 'Cappellino trucker MARO nero visto di fronte, con le ali ricamate in bianco'],
+    tipo: 'accessori', nome: 'Cappellino Ali', colore: 'Nero, ali ricamate bianche',
+    prezzo: 35, pallini: ['#111'], taglie: ['Unica'],
+    foto: [['acc-cappellino-tre-quarti', 'Cappellino trucker MARO nero di tre quarti, retro in rete'], ['acc-cappellino-dettaglio', 'Dettaglio del ricamo delle ali MARO sul cappellino']],
+    frase: 'Le ali, in prima fila.',
+    testo: 'Trucker nero con il davanti pieno e il retro in rete traspirante. Le ali MARO sono ricamate in bianco al centro, la visiera è curva. Chiusura regolabile dietro.',
+    dettagli: ['Ali MARO ricamate sul davanti', 'Retro in rete traspirante', 'Visiera curva', 'Chiusura regolabile'],
+    cura: 'cappellino',
+    descrizione: 'Cappellino Ali MARO: trucker nero con le ali ricamate in bianco e retro in rete. Taglia unica, 35 €.',
+  },
+  {
+    id: 'berretto-ali', copertina: ['acc-berretto-copertina', 'Berretto MARO nero a coste visto di fronte, con il logo delle ali ricamato sul risvolto'],
+    tipo: 'accessori', nome: 'Berretto Ali', colore: 'Nero, logo ricamato bianco',
+    prezzo: 30, pallini: ['#111'], taglie: ['Unica'],
+    foto: [['acc-berretto-lato', 'Berretto MARO nero visto di lato, logo sul risvolto'], ['acc-berretto-dettaglio', 'Dettaglio del logo MARO ricamato sul berretto'], ['acc-berretto-fronte', 'Berretto MARO nero di fronte su fondo grigio']],
+    frase: 'Caldo, a coste, con il segno sul risvolto.',
+    testo: 'Berretto nero in maglia a coste, con il risvolto largo. Il logo MARO con le ali è ricamato in bianco al centro del risvolto.',
+    dettagli: ['Logo MARO ricamato sul risvolto', 'Maglia a coste', 'Risvolto largo'],
+    cura: 'berretto',
+    descrizione: 'Berretto Ali MARO: nero a coste, logo con le ali ricamato sul risvolto. Taglia unica, 30 €.',
+  },
+  {
+    id: 'borraccia-ali', copertina: ['acc-borraccia-copertina', 'Borraccia MARO nera opaca in piedi, con le ali bianche'],
+    tipo: 'accessori', nome: 'Borraccia Ali', colore: 'Nero opaco, ali bianche',
+    prezzo: 25, pallini: ['#111'], taglie: ['Unica'],
+    foto: [['acc-borraccia-inclinata', 'Borraccia MARO nera inclinata, ali bianche sul lato'], ['acc-borraccia-dettaglio', 'Dettaglio delle ali MARO sulla borraccia']],
+    frase: 'Per il campo, la palestra e la borsa di tutti i giorni.',
+    testo: 'Borraccia nera opaca con tappo a vite. Le ali MARO corrono in bianco lungo il lato.',
+    dettagli: ['Ali MARO bianche sul lato', 'Finitura opaca', 'Tappo a vite'],
+    cura: 'borraccia',
+    descrizione: 'Borraccia Ali MARO: nera opaca con le ali bianche e tappo a vite. 25 €.',
   },
 ];

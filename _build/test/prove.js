@@ -106,11 +106,20 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     prova(await p.evaluate(() => !document.querySelector('#menu').classList.contains('aperto') && document.documentElement.style.overflow === ''), `menu si chiude al ${f * 100}%`);
   }
   // filtri
-  await p.goto(BASE + 'index.html#felpe'); await p.waitForTimeout(200);
-  prova(await p.evaluate(() => document.querySelectorAll('.drop .scheda:not([hidden])').length) === 3, '#felpe mostra 3 felpe');
-  await p.tap('[data-filtro="tutto"]');
-  prova(await p.evaluate(() => document.querySelectorAll('.drop .scheda:not([hidden])').length) === 6, 'Tutto mostra 6 capi');
-  // iscrizione
+  // pagine delle categorie (19/10)
+  await p.goto(BASE + 'felpe.html', { waitUntil: 'load' });
+  prova(await p.evaluate(() => document.querySelectorAll('.catalogo .scheda-cella:not([hidden])').length === 3 && document.querySelector('[data-cat-conta]').textContent === '(3)'), 'felpe.html: 3 felpe, conta (3)');
+  prova(await p.evaluate(() => document.querySelector('.catalogo').classList.contains('filtri-chiusi')), 'telefono: filtri chiusi alla partenza');
+  await p.tap('[data-filtri-mostra]'); await p.tap('[data-f-taglia="S"]');
+  prova(await p.evaluate(() => document.querySelectorAll('.catalogo .scheda-cella:not([hidden])').length) === 2, 'filtro taglia S: 2 felpe (Firma S esaurita)');
+  await p.selectOption('[data-ordina]', 'prezzo-giu');
+  prova(await p.evaluate(() => [...document.querySelectorAll('.catalogo .scheda-cella:not([hidden])')].map(c => +c.dataset.prezzo).join()) === '120,110', 'ordina dal prezzo più alto');
+  await p.goto(BASE + 'shop.html', { waitUntil: 'load' });
+  prova(await p.evaluate(() => document.querySelectorAll('.catalogo .scheda-cella').length) === 10, 'shop.html: tutti i 10 capi');
+  await p.goto(BASE + 'pantaloni.html', { waitUntil: 'load' });
+  prova(await p.evaluate(() => document.querySelectorAll('.catalogo .scheda-cella').length) === 1, 'pantaloni.html: il Cargo Firma');
+  // iscrizione (in home)
+  await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.fill('#email', 'prova'); await p.tap('.iscriviti-form .btn');
   prova(await p.evaluate(() => document.querySelector('.esito').classList.contains('errore')), 'email sbagliata segnalata');
   await p.fill('#email', 'mario.rossi@esempio.it'); await p.tap('.iscriviti-form .btn');
@@ -145,9 +154,9 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.evaluate(() => document.querySelector('#spedizioni details').open), 'aiuto: domanda si apre');
 
   // aggiunta rapida dalla griglia
-  await p.goto(BASE + 'index.html#drop', { waitUntil: 'load' });
-  await p.tap('.drop .scheda-cella:nth-child(2) .rapido-apri');
-  prova(await p.isVisible('.drop .scheda-cella:nth-child(2) .rapido-taglie') && await p.isDisabled('[data-rapido="polo-tricolore|XL"]'), 'rapido: taglie aperte, XL esaurita disattiva');
+  await p.goto(BASE + 'shop.html', { waitUntil: 'load' });
+  await p.tap('.catalogo .scheda-cella:nth-child(2) .rapido-apri');
+  prova(await p.isVisible('.catalogo .scheda-cella:nth-child(2) .rapido-taglie') && await p.isDisabled('[data-rapido="polo-tricolore|XL"]'), 'rapido: taglie aperte, XL esaurita disattiva');
   await p.tap('[data-rapido="polo-tricolore|M"]');
   prova(!(await p.evaluate(() => document.getElementById('borsa').hidden)) && /Polo Tricolore/.test(await p.textContent('#borsa-righe')), 'rapido: Polo Tricolore M in borsa');
   await p.tap('.borsa-testa button');
@@ -163,10 +172,10 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.isVisible('.visti') && /Polo Linee/.test(await p.textContent('.visti')), 'visti di recente: compare la Polo Linee');
 
   // preferiti
-  await p.goto(BASE + 'index.html#drop', { waitUntil: 'load' });
-  await p.tap('.drop .scheda-cella:nth-child(1) .cuore');
-  prova(await p.evaluate(() => document.querySelector('.pref-num').textContent === '1' && document.querySelector('.drop .cuore').getAttribute('aria-pressed') === 'true'), 'preferiti: cuore salva, contatore 1');
-  prova(/index.html/.test(p.url()), 'preferiti: il cuore non apre la scheda');
+  await p.goto(BASE + 'shop.html', { waitUntil: 'load' });
+  await p.tap('.catalogo .scheda-cella:nth-child(1) .cuore');
+  prova(await p.evaluate(() => document.querySelector('.pref-num').textContent === '1' && document.querySelector('.catalogo .cuore').getAttribute('aria-pressed') === 'true'), 'preferiti: cuore salva, contatore 1');
+  prova(/shop.html/.test(p.url()), 'preferiti: il cuore non apre la scheda');
   await p.goto(BASE + 'preferiti.html', { waitUntil: 'load' });
   prova(/Polo Linee/.test(await p.textContent('.pref-lista')) && !(await p.isVisible('.pref-vuoto')), 'preferiti: pagina con la Polo Linee');
   await p.tap('.pref-lista .cuore');
@@ -206,7 +215,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
 
   // scheda prodotto + borsa
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
-  await p.tap('.drop .scheda[href="felpa-stretta.html"]'); await p.waitForLoadState('load');
+  await p.goto(BASE + 'felpe.html', { waitUntil: 'load' }); await p.tap('.catalogo .scheda[href="felpa-stretta.html"]'); await p.waitForLoadState('load');
   await p.tap('[data-aggiungi]');
   prova(await p.isVisible('.taglie-errore'), 'senza taglia: errore');
   prova(await p.evaluate(() => document.getElementById('borsa').hidden), 'senza taglia: borsa chiusa');
@@ -254,6 +263,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     }
     await c.close();
   }
+  // (Tiratura limitata tolta dalla home il 19/10: le prove girano solo se la sezione torna)
+  if (fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').includes('data-giostra')) {
   // 2a-bis. home › Tiratura limitata: fila a scorrimento, si accende il capo al centro (frecce, dito, tocco su uno spento)
   for (const dev of ['iPhone SE', 'iPhone 13']) {
     const c = await b.newContext({ ...devices[dev] }); await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); } catch (e) {} });
@@ -283,6 +294,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   { const c = await b.newContext({ ...devices['iPhone 13'] }); const q = await c.newPage(); await q.goto(BASE + 'index.html', { waitUntil: 'load' });
     const ov = await q.evaluate(() => getComputedStyle(document.querySelector('.tir-binario')).overflowY);
     prova(ov === 'hidden', 'telefono: la fila non scorre in verticale (' + ov + ')'); await c.close(); }
+  }
   // 2b. data di consegna: orario limite 13, weekend, festivi (1/11, 8/12), Pasquetta, cambio di mese
   for (const [quando, atteso] of [
     ['2026-10-13T10:00:00', 'Se ordini entro 3 h, arriva tra giovedì 15 e lunedì 19 ottobre.'],

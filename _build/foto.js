@@ -28,23 +28,47 @@ const LAVORI = [
   // Felpa Verticale (verde bottiglia): render set 4 + vecchia foto in montagna
   { out: 'felpa-verticale-manichino', src: 'foto-set-4-2026-10-12/844207315_2020682351927935_7519315701529958749_n.webp' },
   { out: 'felpa-verticale-fronte', src: 'foto-set-4-2026-10-12/846432527_1605944577978313_7379708338739515515_n.webp' },
-  { out: 'copertina-felpa-verticale', src: 'foto-set-4-2026-10-12/844978870_959320450056637_1130270179930424842_n.webp' },
+  { out: 'copertina-felpa-verticale', src: 'foto-copertine-2026-10-19/felpa-verticale.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
   { out: 'felpa-verticale-montagna', src: 'mockup-ai/felpa-nera-montagne.jpg', crop: [194, 0, 690, 863] },
   // Polo Jacquard: render set 3 (N1 manichino, N3 tre quarti; N2 senza manichino = copertina)
   { out: 'polo-jacquard-manichino', src: 'foto-set-3-2026-10-12/842309532_1786625739245873_7983844797197221728_n.webp' },
   { out: 'polo-jacquard-tre-quarti', src: 'foto-set-3-2026-10-12/848027522_1150423370653244_5846329442587009076_n.webp' },
-  { out: 'copertina-polo-jacquard', src: 'foto-set-3-2026-10-12/847691216_1043673875344393_7451889368981812851_n.webp' },
+  { out: 'copertina-polo-jacquard', src: 'foto-copertine-2026-10-19/polo-jacquard.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
   // copertine della home: SENZA manichino (richiesta di Francesco 12/10)
-  { out: 'copertina-polo-linee', src: 'mockup-ai/polo-nere-tre.jpg', crop: [80, 50, 620, 775] },
-  { out: 'copertina-polo-tricolore', src: 'mockup-ai/polo-nere-tricolore.jpg', crop: [710, 50, 620, 775] },
-  { out: 'copertina-felpa-stretta', src: 'foto-reali/felpa-grigia-retro-stretta-di-mano.jpg', crop: [200, 0, 1324, 1656] },
-  { out: 'copertina-felpa-firma', src: 'foto-reali/felpa-blu-retro-duomo.jpg', crop: [7, 0, 1192, 1490] },
-  // categorie in home (senza manichino)
+  { out: 'copertina-polo-linee', src: 'foto-copertine-2026-10-19/polo-linee.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
+  { out: 'copertina-polo-tricolore', src: 'foto-copertine-2026-10-19/polo-tricolore.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
+  { out: 'copertina-felpa-stretta', src: 'foto-copertine-2026-10-19/felpa-stretta.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
+  { out: 'copertina-felpa-firma', src: 'foto-copertine-2026-10-19/felpa-firma.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
+  // pantaloni di prova (19/10, README in foto-pantaloni-2026-10-19)
+  { out: 'pant-cargo-copertina', src: 'foto-pantaloni-2026-10-19/cargo-indossato-strada.webp' },
+  { out: 'pant-cargo-piegato', src: 'foto-pantaloni-2026-10-19/cargo-piegato.webp' },
+  { out: 'pant-cargo-appeso', src: 'foto-pantaloni-2026-10-19/cargo-appeso.webp' },
+  // accessori di prova (19/10, README in foto-accessori-2026-10-19)
+  { out: 'acc-cappellino-copertina', src: 'foto-accessori-2026-10-19/cappellino-fronte.webp' },
+  { out: 'acc-cappellino-tre-quarti', src: 'foto-accessori-2026-10-19/cappellino-tre-quarti.webp' },
+  { out: 'acc-cappellino-dettaglio', src: 'foto-accessori-2026-10-19/cappellino-dettaglio.webp' },
+  { out: 'acc-berretto-copertina', src: 'foto-accessori-2026-10-19/berretto-fronte.webp' },
+  { out: 'acc-berretto-lato', src: 'foto-accessori-2026-10-19/berretto-lato.webp' },
+  { out: 'acc-berretto-dettaglio', src: 'foto-accessori-2026-10-19/berretto-dettaglio.webp' },
+  { out: 'acc-berretto-fronte', src: 'foto-accessori-2026-10-19/berretto-fronte-2.jpg' },
+  { out: 'acc-borraccia-copertina', src: 'foto-accessori-2026-10-19/borraccia-fronte.webp' },
+  { out: 'acc-borraccia-inclinata', src: 'foto-accessori-2026-10-19/borraccia-inclinata.webp' },
+  { out: 'acc-borraccia-dettaglio', src: 'foto-accessori-2026-10-19/borraccia-dettaglio.webp' },
+  // categorie della home dal 19/10: una città per categoria (README in foto-categorie-2026-10-19)
+  { out: 'cat-polo', src: 'foto-categorie-2026-10-19/1-polo-jacquard-milano.webp' },
+  { out: 'cat-felpe', src: 'foto-categorie-2026-10-19/3-felpa-verde-firenze.webp' },
+  { out: 'cat-pantaloni', src: 'foto-categorie-2026-10-19/4-pantaloni-cargo-napoli.webp' },
+  { out: 'cat-accessori', src: 'foto-categorie-2026-10-19/5-cappellino-ali-venezia.webp', crop: [173, 0, 1126, 1408] },
+  // categorie in home fino al 18/10 (non più usate)
   { out: 'categoria-polo', src: 'mockup-ai/polo-nere-tre.jpg', crop: [1330, 50, 620, 775] },
   { out: 'categoria-felpe', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
   // pagina Storia (bianco e nero con grana, proporzioni originali; lo schizzo resta a colori)
   // scene (set 5 del 12/10): campagna e pagina del brand, a colori, senza tagli
   { out: 'scena-ricamo-mani', src: 'foto-set-5-2026-10-12/845684221_1655451425975308_3820682003388145130_n.webp' },
+  // Dietro il segno dal 19/10: ricamo con il logo di Omar (README in foto-dietro-il-segno-2026-10-19)
+  { out: 'segno-scena-1', src: 'foto-dietro-il-segno-2026-10-19/orizzontale-1-telaio-nero.webp', max: 2048 },
+  { out: 'segno-scena-2', src: 'foto-dietro-il-segno-2026-10-19/orizzontale-2-polo-jacquard.webp', max: 2048 },
+  { out: 'segno-ricamo-logo', src: 'foto-dietro-il-segno-2026-10-19/dietro-il-segno-logo-omar.webp' },
   { out: 'scena-capi-maro', src: 'foto-set-5-2026-10-12/846966136_2610599519436733_3385366467222422541_n.webp' },
   { out: 'scena-orizzonte', src: 'foto-set-5-2026-10-12/846053658_1783488912923974_9001021024052174187_n.webp' },
   { out: 'scena-dolomiti', src: 'foto-set-5-2026-10-12/845962368_1854137572601714_822437747464123275_n.webp', max: 2048, q: 0.86 },

@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '54'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '65'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -48,8 +48,12 @@ function fascia(voci, cls, volte) {
   return `<div class="fascia ${cls}" aria-hidden="true"><div class="fascia-nastro"><div class="fascia-giro">${giro}</div><div class="fascia-giro">${giro}</div></div></div>`;
 }
 
+// logo di Omar (19/10), dentro ogni pagina (un SVG esterno con <use> non si vede aprendo i file da disco)
+const LOGO_SIMBOLO = fs.readFileSync(path.join(ROOT, 'assets/img/logo-maro.svg'), 'utf8').match(/<symbol[\s\S]*?<\/symbol>/)[0].replace('id="logo"', 'id="logo-maro"');
+// logo di Omar (19/10): ali a M con MARO verticale, file unico in assets/img/logo-maro.svg
 const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
 const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+${LOGO_SIMBOLO}
 <symbol id="maro-simbolo" viewBox="0 0 200 150"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></symbol>
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
 <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
@@ -89,13 +93,10 @@ ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${avviso()}
 <header class="testata">
-  <a class="logo" href="index.html" aria-label="MARO, home">${SIMBOLO}<span>MARO</span></a>
+  <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1180 846" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
-    <a href="index.html#drop">Drop 001</a>
-    <a href="index.html#polo">Polo</a>
-    <a href="index.html#felpe">Felpe</a>
-    <a href="storia.html">Il brand</a>
-    <a href="carta-regalo.html">Carta regalo</a>
+    <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
+    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a></div>
   </nav>
   <div class="azioni">
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
@@ -109,10 +110,9 @@ ${corpo}
 <footer class="piede">
   <div class="piede-alto">
     <div class="piede-marchio">
-      <a class="piede-logo" href="index.html" aria-label="MARO, home">${SIMBOLO}<span>MARO</span></a>
       <p>Streetwear da Milano.<br>Fly with your mind.</p>
     </div>
-    <nav aria-label="Drop 001"><h2>Drop 001</h2><a href="index.html#polo">Polo</a><a href="index.html#felpe">Felpe</a><a href="index.html#lookbook">Lookbook</a></nav>
+    <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
@@ -121,6 +121,7 @@ ${corpo}
     <span>© 2026 MARO · Milano</span>
     <span class="nota">Anteprima di presentazione: prezzi, materiali e testi sono di esempio.</span>
     <span class="piede-paese">Italia · EUR €</span>
+    <a class="piede-su" href="#contenuto">Torna su ↑</a>
   </div>
 </footer>
 <div class="popup" id="popup" role="dialog" aria-labelledby="popup-titolo" hidden>
@@ -175,6 +176,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <b
   return `<div class="scheda-cella" data-tipo="${p.tipo}">${cuore}<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
   <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}</div>
   <div class="scheda-testo">
+    <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini">${p.pallini.map(c => `<i style="background:${c}"></i>`).join('')}</span>
     <h3>${esc(p.nome)}</h3>
     <p>${esc(p.colore)}</p>
@@ -207,6 +209,68 @@ ${LOOK.map((l, k) => { const p = cap(l.capo), c = cap(l.con); return `    <artic
     </article>`; }).join('\n')}
   </div>
 </section>`;
+}
+
+// Pagine delle categorie stile Nike (dal 19/10): una pagina per categoria, staccata dal Drop 001.
+// Titolo con il numero di capi, colonna dei filtri (categorie, Taglia, Colore, Prezzo), Nascondi filtri, Ordina per.
+const CATEGORIE = [
+  { file: 'shop.html', nome: 'Tutti i capi', tipo: null, descrizione: 'Tutti i capi MARO: polo e felpe ricamate e stampate.' },
+  { file: 'polo.html', nome: 'Polo', tipo: 'polo', descrizione: 'Le polo MARO: piqué di cotone, firme ricamate e grafiche sul retro.' },
+  { file: 'felpe.html', nome: 'Felpe', tipo: 'felpa', descrizione: 'Le felpe MARO: cotone garzato, grafiche grandi sulla schiena.' },
+  { file: 'pantaloni.html', nome: 'Pantaloni', tipo: 'pantaloni', descrizione: 'I pantaloni MARO sono in arrivo.' },
+  { file: 'accessori.html', nome: 'Accessori', tipo: 'accessori', descrizione: 'Gli accessori MARO sono in arrivo.' },
+];
+const TAGLIE_ORDINE = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Unica'];
+const coloreBase = p => p.colore.split(/[ ,]/)[0];
+const FASCE_PREZZO = [
+  { id: 'sotto-100', nome: 'Sotto i 100 €', da: 0, a: 99.99 },
+  { id: '100-150', nome: '100–150 €', da: 100, a: 150 },
+];
+const freccia = '<svg class="filtro-freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+
+function categoriaPagina(cat) {
+  const capi = CATALOGO.filter(p => !cat.tipo || p.tipo === cat.tipo);
+  const taglie = TAGLIE_ORDINE.filter(t => capi.some(p => p.taglie.includes(t)));
+  const colori = [...new Set(capi.map(coloreBase))];
+  const fasce = FASCE_PREZZO.filter(f => capi.some(p => p.prezzo >= f.da && p.prezzo <= f.a));
+  const menuCat = CATEGORIE.map(c => `<a href="${c.file}"${c.file === cat.file ? ' aria-current="page"' : ''}>${c.nome}</a>`).join('');
+  const vuota = !capi.length;
+  const corpo = `
+<section class="catalogo${vuota ? ' catalogo-vuoto' : ''}" data-catalogo aria-labelledby="cat-titolo">
+  <div class="cat-testa">
+    <h1 id="cat-titolo">${cat.nome}${vuota ? '' : ` <span data-cat-conta>(${capi.length})</span>`}</h1>
+${vuota ? '' : `    <div class="cat-comandi">
+      <button type="button" class="cat-btn" data-filtri-mostra aria-expanded="true" aria-controls="cat-filtri"><span data-filtri-scritta>Nascondi filtri</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <label class="cat-ordina">Ordina per <select data-ordina><option value="evidenza">In evidenza</option><option value="prezzo-su">Prezzo: dal più basso</option><option value="prezzo-giu">Prezzo: dal più alto</option></select></label>
+    </div>`}
+  </div>
+  <div class="cat-corpo">
+    <aside class="cat-filtri" id="cat-filtri" aria-label="Filtri">
+      <nav class="cat-lista" aria-label="Categorie">${menuCat}</nav>
+${vuota ? '' : `      <details class="filtro" open><summary>Taglia${freccia}</summary>
+        <div class="filtro-taglie">${taglie.map(t => `<button type="button" data-f-taglia="${t}" aria-pressed="false">${t}</button>`).join('')}</div>
+        <p class="filtro-nota">Mostra solo i capi con la taglia disponibile.</p>
+      </details>
+      <details class="filtro"><summary>Colore${freccia}</summary>
+        ${colori.map(c => `<label class="filtro-voce"><input type="checkbox" data-f-colore="${c}"> ${c}</label>`).join('\n        ')}
+      </details>
+      <details class="filtro"><summary>Prezzo${freccia}</summary>
+        ${fasce.map(f => `<label class="filtro-voce"><input type="checkbox" data-f-prezzo="${f.da}-${f.a}"> ${f.nome}</label>`).join('\n        ')}
+      </details>`}
+    </aside>
+    <div class="cat-risultati">
+${vuota ? `      <div class="cat-arrivo">
+        <p class="cat-arrivo-titolo">In arrivo</p>
+        <p>${cat.nome} MARO non sono ancora in vendita. Iscriviti: lo sai per primo quando escono, e hai il 10% sul primo ordine.</p>
+        <a class="btn btn-nero" href="index.html#iscriviti">Avvisami</a>
+      </div>` : `      <div class="griglia">
+${capi.map((p, i) => scheda(p, 'scheda ' + p.id).replace('<div class="scheda-cella"', `<div class="scheda-cella" data-ordine="${i}" data-prezzo="${p.prezzo}" data-colore="${esc(coloreBase(p))}" data-taglie="${p.taglie.filter(t => !(p.esaurite || []).includes(t)).join(' ')}"`)).join('\n')}
+      </div>
+      <div class="cat-nessuno" data-cat-nessuno hidden><p>Nessun capo con questi filtri.</p><button type="button" class="btn btn-nero" data-filtri-azzera>Azzera i filtri</button></div>`}
+    </div>
+  </div>
+</section>`;
+  return pagina({ titolo: `${cat.nome} — MARO`, descrizione: cat.descrizione, corpo, file: cat.file });
 }
 
 // sezione provvisoria al posto del look, finché non arrivano le sue foto (14/10)
@@ -260,41 +324,31 @@ function home() {
     <source src="assets/video/home-metro-1.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
-    <p class="occhiello">Streetwear · Milano</p>
     <h1>Fly with<br>your mind</h1>
-    <p>Il primo drop è fuori: tre polo e tre felpe, ricamate e stampate per chi vive la città.</p>
-    <div class="pulsanti">
-      <a class="btn btn-bianco" href="#drop">Acquista il drop</a>
-      <a class="btn btn-contorno" href="storia.html">Il brand</a>
-    </div>
+  </div>
+</section>
+
+<section class="intro" aria-labelledby="intro-titolo">
+  <h2 id="intro-titolo">Il primo drop è fuori</h2>
+  <p>Tre polo e tre felpe, ricamate e stampate per chi vive la città.</p>
+  <div class="pulsanti">
+    <a class="btn btn-nero" href="shop.html">Acquista il drop</a>
+    <a class="btn btn-nero" href="storia.html">Il brand</a>
   </div>
 </section>
 
 <section class="categorie" aria-label="Categorie">
-  <a class="categoria" href="#polo">
-    ${img('categoria-polo', 'Polo nera MARO appesa, retro con le ali', { dove: 'home categorie', sizes: '(min-width: 960px) 50vw, 100vw' })}
-    <span class="categoria-testo"><span class="categoria-nome">Polo</span><span class="categoria-vai">Vedi le 3 polo</span></span>
-  </a>
-  <a class="categoria" href="#felpe">
-    ${img('categoria-felpe', 'Ragazzo con felpa grigia MARO davanti a una parete verde', { dove: 'home categorie', sizes: '(min-width: 960px) 50vw, 100vw' })}
-    <span class="categoria-testo"><span class="categoria-nome">Felpe</span><span class="categoria-vai">Vedi le 3 felpe</span></span>
-  </a>
+${[
+    ['cat-polo', 'Polo', 'polo.html', 'Vedi le polo', 'Polo jacquard beige MARO appesa su una terrazza, dietro il Duomo di Milano'],
+    ['cat-felpe', 'Felpe', 'felpe.html', 'Vedi le felpe', 'Felpa verde MARO con la scritta verticale sulla schiena, dietro il Duomo di Firenze'],
+    ['cat-pantaloni', 'Pantaloni', 'pantaloni.html', 'Vedi i pantaloni', 'Pantaloni cargo beige MARO appesi su una terrazza, dietro il golfo di Napoli e il Vesuvio'],
+    ['cat-accessori', 'Accessori', 'accessori.html', 'Vedi gli accessori', 'Cappellino nero MARO con le ali ricamate, dietro il Canal Grande di Venezia'],
+  ].map(([id, nome, link, vai, alt]) => `  <a class="categoria" href="${link}">
+    ${img(id, alt, { dove: 'home categorie', sizes: '(min-width: 600px) 50vw, 100vw' })}
+    <span class="categoria-testo"><span class="categoria-nome">${nome}</span><span class="categoria-vai">${vai}</span></span>
+  </a>`).join('\n')}
 </section>
 
-<section class="drop" id="drop" aria-labelledby="drop-titolo">
-  <span id="polo" class="ancora"></span><span id="felpe" class="ancora"></span>
-  <div class="drop-testa">
-    <h2 id="drop-titolo" class="titolo">Drop 001</h2>
-    <div class="filtri" role="group" aria-label="Filtra">
-      <button type="button" data-filtro="tutto" aria-pressed="true">Tutto <span>6</span></button>
-      <button type="button" data-filtro="polo" aria-pressed="false">Polo <span>3</span></button>
-      <button type="button" data-filtro="felpa" aria-pressed="false">Felpe <span>3</span></button>
-    </div>
-  </div>
-  <div class="griglia">
-${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
-  </div>
-</section>
 
 <section class="vantaggi" aria-label="Acquistare su MARO">
   <ul>
@@ -305,16 +359,17 @@ ${CATALOGO.map(p => scheda(p, 'scheda ' + p.id)).join('\n')}
   </ul>
 </section>
 
-${lookCompleto() || tiratura()}
-
-<section class="storia" id="storia" aria-labelledby="storia-titolo">
-  <div class="storia-testo">
-    <span class="linguetta" aria-hidden="true"></span>
-    <h2 id="storia-titolo" class="titolo">Dietro<br>il segno</h2>
-    <p>Cosa significano le ali, perché una stretta di mano e come nasce ogni capo MARO.</p>
-    <a class="btn btn-nero" href="storia.html">Leggi la storia</a>
+<section class="segno" id="storia" aria-labelledby="storia-titolo" data-entra>
+  <div class="segno-scena">
+    ${img('segno-scena-1', 'Mani tatuate che ricamano a mano la firma verticale MARO su un telaio nero, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
+    <div class="segno-scena-2" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home brand', sizes: '100vw' })}</div>
+    <span class="segno-ago" aria-hidden="true"></span>
   </div>
-  <div class="storia-foto">${img('scena-ricamo-mani', 'Mani al lavoro su una ricamatrice che ricama la scritta MARO', { dove: 'home brand', sizes: '(min-width: 960px) 50vw, 100vw' })}</div>
+  <div class="segno-testo">
+    <h2 id="storia-titolo" class="segno-titolo"><span>Dietro</span><span class="segno-vuoto">il segno</span></h2>
+    <p>Cosa significano le ali, perché una stretta di mano e come nasce ogni capo MARO.</p>
+    <a class="btn btn-bianco" href="storia.html">Leggi la storia</a>
+  </div>
 </section>
 
 <section class="lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
@@ -358,12 +413,17 @@ ${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.leng
 const CURA = {
   polo: [['Composizione', '100% cotone, piqué da circa 220 g/m²'], ['Lavaggio', 'a 30 °C al rovescio, niente asciugatrice'], ['Stiro', 'a bassa temperatura, evitando il ricamo']],
   jacquard: [['Composizione', '100% cotone, maglia jacquard'], ['Lavaggio', 'a 30 °C al rovescio, niente asciugatrice'], ['Stiro', 'a bassa temperatura, evitando il ricamo']],
+  pantaloni: [['Composizione', '100% cotone, tela'], ['Lavaggio', 'a 30 °C al rovescio'], ['Stiro', 'a media temperatura, mai sulla stampa']],
+  cappellino: [['Materiali', 'davanti in cotone, retro in rete di poliestere'], ['Pulizia', 'a mano con acqua fredda, niente lavatrice']],
+  berretto: [['Composizione', 'maglia a coste in acrilico'], ['Lavaggio', 'a mano o a 30 °C, asciugatura in piano']],
+  borraccia: [['Materiale', 'acciaio inox, finitura opaca'], ['Pulizia', 'a mano, niente lavastoviglie']],
   felpa: [['Composizione', '80% cotone, 20% poliestere, garzato all’interno, circa 380 g/m²'], ['Lavaggio', 'a 30 °C al rovescio, niente asciugatrice'], ['Stiro', 'mai sulla stampa']],
 };
 function prodotto(p) {
   if (!p.frase || !CURA[p.cura] || !p.descrizione) throw new Error(p.id + ': mancano frase, cura o descrizione');
   const altri = CATALOGO.filter(x => x.id !== p.id && x.tipo !== p.tipo).slice(0, 2)
     .concat(CATALOGO.filter(x => x.id !== p.id && x.tipo === p.tipo).slice(0, 1));
+  const acc = p.tipo === 'accessori';
   if (p.foto.length > 4) throw new Error(p.id + ': massimo 4 foto per scheda (stessa struttura per tutti)');
   const n = p.foto.length;
   // vetrina a scorrimento: una foto per volta, stesso riquadro 4:5 per tutti i prodotti
@@ -384,9 +444,9 @@ ${foto}
       </div>${comandi}
     </div>${miniature}`;
   const corpo = `
-<div class="prodotto" data-id="${p.id}">
+<div class="prodotto" data-id="${p.id}" data-tipo="${p.tipo}">
   <div class="prodotto-intro">
-    <a class="indietro" href="index.html#drop">← Drop 001</a>
+    <a class="indietro" href="${({ polo: 'polo', felpa: 'felpe', pantaloni: 'pantaloni', accessori: 'accessori' })[p.tipo]}.html">← ${({ polo: 'Polo', felpa: 'Felpe', pantaloni: 'Pantaloni', accessori: 'Accessori' })[p.tipo]}</a>
     <h1>${esc(p.nome)}</h1>
     <p class="colore">${esc(p.colore)}</p>
     <p class="prezzo">${euro(p.prezzo)}</p>
@@ -396,16 +456,15 @@ ${galleria}
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo"><strong>${esc(p.frase)}</strong> ${esc(p.testo)}</p>
-    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> In foto: taglia M, su manichino.</p>
-    <fieldset class="taglie">
+${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> In foto: taglia M, su manichino.</p>
+`}    <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
 ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
       </div>
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
-      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
-    </fieldset>
-    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
+${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>\n'}    </fieldset>
+${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
       <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
         <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
       <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
@@ -414,10 +473,9 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
         <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
       <p class="trova-esito" role="status" aria-live="polite"></p>
     </div>
-    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+`}    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
     <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
-    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>
-    <div class="azioni-scheda">
+${acc ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>\n'}    <div class="azioni-scheda">
       <button class="btn btn-contorno-nero" type="button" data-cuore="${p.id}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva</span></button>
       <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
     </div>
@@ -437,7 +495,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
       <ul>${CURA[p.cura].map(([k, v]) => `<li><strong>${k}:</strong> ${esc(v)}</li>`).join('')}</ul>
       <p class="piccolo">Dati di esempio, da confermare con l’etichetta del capo.</p>
     </details>
-    <details>
+${acc || p.tipo === 'pantaloni' ? '' : `    <details>
       <summary>Guida alle taglie</summary>
       <table class="guida">
         <thead><tr><th>Taglia</th><th>Torace (cm)</th><th>Lunghezza (cm)</th></tr></thead>
@@ -445,7 +503,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `      
       </table>
       <p class="piccolo">Misure del capo steso, di esempio.</p>
     </details>
-    <details>
+`}    <details>
       <summary>Spedizione e resi</summary>
       <p>Spedizione in Italia in 2–4 giorni lavorativi, gratuita sopra i 150 €. Reso entro 14 giorni dalla consegna, per qualsiasi motivo. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
@@ -521,6 +579,7 @@ const RECENSIONI = {
 };
 function recensioni(p) {
   const scelte = RECENSIONI[p.id];
+  if (!scelte && (p.tipo === 'accessori' || p.tipo === 'pantaloni')) return ''; // accessori di prova: niente recensioni inventate
   if (!scelte || scelte.length < 5) throw new Error('Recensioni mancanti per ' + p.id + ' (servono almeno 5)');
   const media = (scelte.reduce((a, r) => a + r[1], 0) / scelte.length).toFixed(1).replace('.', ',');
   const fit = { piccola: 0, giusta: 0, grande: 0 }; scelte.forEach(r => fit[r[3]]++);
@@ -606,7 +665,7 @@ function preferiti() {
   <div class="pref-lista griglia"></div>
   <div class="pref-vuoto" hidden>
     <p>Non hai ancora salvato niente. Tocca il cuore su un capo per ritrovarlo qui.</p>
-    <a class="btn btn-nero" href="index.html#drop">Guarda il Drop 001</a>
+    <a class="btn btn-nero" href="shop.html">Guarda tutti i capi</a>
   </div>
 </section>`;
   return pagina({ titolo: 'Preferiti — MARO', descrizione: 'I capi MARO che hai salvato.', corpo, file: 'preferiti.html' });
@@ -619,7 +678,7 @@ function nonTrovata() {
   <svg class="nt-simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>
   <h1 class="titolo">Pagina<br>non trovata.</h1>
   <p>Il link è sbagliato o la pagina non esiste più. Il drop invece c’è.</p>
-  <a class="btn btn-nero" href="index.html#drop">Vai al Drop 001</a>
+  <a class="btn btn-nero" href="shop.html">Vai allo shop</a>
 </section>`;
   return pagina({ titolo: 'Pagina non trovata — MARO', descrizione: 'Pagina non trovata.', corpo, file: '404.html' });
 }
@@ -773,12 +832,13 @@ ${fascia([['OMAR', true], ['MARO']], 'fascia-chiara fascia-inversa', 5)}
 
 <section class="st-fine" aria-labelledby="st-fine" data-entra>
   <div class="st-fine-testo"><svg class="st-fine-simbolo" viewBox="0 0 200 150" aria-hidden="true"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path class="ala-sx" d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path class="ala-dx" d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></svg><h2 id="st-fine">Indossa il segno.</h2></div>
-  <a class="btn btn-bianco" href="index.html#drop">Acquista il drop</a>
+  <a class="btn btn-bianco" href="shop.html">Acquista il drop</a>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear di Milano: il nome nato dall’anagramma di Omar, le ali, la stretta di mano e come nasce ogni capo.', corpo, file: 'storia.html' });
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
+for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), categoriaPagina(cat));
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
 fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
