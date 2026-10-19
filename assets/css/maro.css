@@ -1061,7 +1061,8 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .segno-maniglia svg { width: 24px; height: 24px; }
 .segno-cucitura:focus-visible .segno-maniglia { outline: 3px solid var(--bianco); outline-offset: 3px; }
 .segno.a-mano .segno-scena:active .segno-maniglia { transform: translate(-50%, -50%) scale(1.08); }
-.segno-aiuto { position: absolute; top: calc(50% + 38px); left: 0; transform: translateX(-50%); white-space: nowrap; font-size: 13px; font-weight: 600; letter-spacing: .02em; padding: 5px 12px; border-radius: 999px; background: rgba(0,0,0,.6); color: var(--bianco); transition: opacity .4s; }
+/* scritta coordinata al pallino (Francesco, 19/10: "scritto un po' male"): bianco pieno, maiuscolo spaziato, la riga non la attraversa */
+.segno-aiuto { position: absolute; z-index: 1; top: calc(50% + 40px); left: 0; transform: translateX(-50%); white-space: nowrap; font: 700 12px/1 var(--testo); letter-spacing: .14em; text-transform: uppercase; padding: 9px 14px 8px; border-radius: 999px; background: var(--bianco); color: var(--nero); box-shadow: 0 4px 18px rgba(0,0,0,.35); transition: opacity .4s; }
 .segno.toccato .segno-aiuto { opacity: 0; }
 
 /* ---------- testata (Omar, 19/10 sera): logo a sinistra, menu al centro, icone a destra, come Nike ---------- */
