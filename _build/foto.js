@@ -44,22 +44,22 @@ const LAVORI = [
   { out: 'pant-cargo-piegato', src: 'foto-pantaloni-2026-10-19/cargo-piegato.webp' },
   { out: 'pant-cargo-appeso', src: 'foto-pantaloni-2026-10-19/cargo-appeso.webp' },
   // accessori di prova (19/10, README in foto-accessori-2026-10-19)
-  { out: 'acc-cappellino-copertina', src: 'foto-accessori-2026-10-19/cappellino-fronte.webp' },
-  { out: 'acc-cappellino-tre-quarti', src: 'foto-accessori-2026-10-19/cappellino-tre-quarti.webp' },
-  { out: 'acc-cappellino-dettaglio', src: 'foto-accessori-2026-10-19/cappellino-dettaglio.webp' },
-  { out: 'acc-berretto-copertina', src: 'foto-accessori-2026-10-19/berretto-fronte.webp' },
-  { out: 'acc-berretto-lato', src: 'foto-accessori-2026-10-19/berretto-lato.webp' },
-  { out: 'acc-berretto-dettaglio', src: 'foto-accessori-2026-10-19/berretto-dettaglio.webp' },
-  { out: 'acc-berretto-fronte', src: 'foto-accessori-2026-10-19/berretto-fronte-2.jpg' },
+  { out: 'acc-cappellino-copertina', src: 'foto-logo-nuovo-2026-10-19/cappellino-fronte.webp' },
+  { out: 'acc-cappellino-tre-quarti', src: 'foto-logo-nuovo-2026-10-19/cappellino-tre-quarti.webp' },
+  { out: 'acc-cappellino-dettaglio', src: 'foto-logo-nuovo-2026-10-19/cappellino-dettaglio.webp' },
+  { out: 'acc-berretto-copertina', src: 'foto-logo-nuovo-2026-10-19/berretto-fronte.webp' },
+  { out: 'acc-berretto-lato', src: 'foto-logo-nuovo-2026-10-19/berretto-lato.webp' },
+  { out: 'acc-berretto-dettaglio', src: 'foto-logo-nuovo-2026-10-19/berretto-dettaglio.webp' },
+  { out: 'acc-berretto-fronte', src: 'foto-logo-nuovo-2026-10-19/berretto-fronte-2.webp' },
   { out: 'acc-borraccia-copertina', src: 'foto-accessori-2026-10-19/borraccia-fronte.webp' }, // logo girato di lato: non più usata dal 19/10
-  { out: 'acc-borraccia-dritta', src: 'foto-accessori-2026-10-19/borraccia-fronte-dritta.webp' }, // copertina dal 19/10: logo dritto di fronte
-  { out: 'acc-borraccia-inclinata', src: 'foto-accessori-2026-10-19/borraccia-inclinata.webp' },
-  { out: 'acc-borraccia-dettaglio', src: 'foto-accessori-2026-10-19/borraccia-dettaglio.webp' },
+  { out: 'acc-borraccia-dritta', src: 'foto-logo-nuovo-2026-10-19/borraccia-fronte-dritta.webp' }, // copertina dal 19/10: logo dritto di fronte
+  { out: 'acc-borraccia-inclinata', src: 'foto-logo-nuovo-2026-10-19/borraccia-inclinata.webp' },
+  { out: 'acc-borraccia-dettaglio', src: 'foto-logo-nuovo-2026-10-19/borraccia-dettaglio.webp' },
   // categorie della home dal 19/10: una città per categoria (README in foto-categorie-2026-10-19)
   { out: 'cat-polo', src: 'foto-categorie-2026-10-19/1-polo-jacquard-milano.webp' },
   { out: 'cat-felpe', src: 'foto-categorie-2026-10-19/3-felpa-verde-firenze.webp' },
   { out: 'cat-pantaloni', src: 'foto-categorie-2026-10-19/4-pantaloni-cargo-napoli.webp' },
-  { out: 'cat-accessori', src: 'foto-categorie-2026-10-19/5-cappellino-ali-venezia.webp', crop: [173, 0, 1126, 1408] },
+  { out: 'cat-accessori', src: 'foto-logo-nuovo-2026-10-19/5-cappellino-ali-venezia.webp', crop: [173, 0, 1126, 1408] },
   // categorie in home fino al 18/10 (non più usate)
   { out: 'categoria-polo', src: 'mockup-ai/polo-nere-tre.jpg', crop: [1330, 50, 620, 775] },
   { out: 'categoria-felpe', src: 'foto-reali/felpa-grigia-parete-verde.jpg', crop: [65, 0, 1076, 1345] },
@@ -67,11 +67,11 @@ const LAVORI = [
   // scene (set 5 del 12/10): campagna e pagina del brand, a colori, senza tagli
   { out: 'scena-ricamo-mani', src: 'foto-set-5-2026-10-12/845684221_1655451425975308_3820682003388145130_n.webp' },
   // Dietro il segno dal 19/10: ricamo con il logo di Omar (README in foto-dietro-il-segno-2026-10-19)
-  { out: 'segno-scena-1', src: 'foto-dietro-il-segno-2026-10-19/orizzontale-1-telaio-nero.webp', max: 2048 },
-  { out: 'segno-scena-2', src: 'foto-dietro-il-segno-2026-10-19/orizzontale-2-polo-jacquard.webp', max: 2048 },
+  { out: 'segno-scena-1', src: 'foto-logo-nuovo-2026-10-19/orizzontale-1-telaio-nero.webp', crop: [0, 2, 2096, 1179], max: 2048 },
+  { out: 'segno-scena-2', src: 'foto-logo-nuovo-2026-10-19/orizzontale-2-polo-jacquard.webp', crop: [0, 2, 2096, 1179], max: 2048 },
   { out: 'segno-ricamo-logo', src: 'foto-dietro-il-segno-2026-10-19/dietro-il-segno-logo-omar.webp' },
   { out: 'scena-capi-maro', src: 'foto-set-5-2026-10-12/846966136_2610599519436733_3385366467222422541_n.webp' }, // MARO orizzontale coi capi: sostituita il 19/10
-  { out: 'scena-composizione', src: 'foto-composizione-2026-10-19/composizione-capi-accessori-marmo.png' }, // iscrizione in home dal 19/10 (Francesco)
+  { out: 'scena-composizione', src: 'foto-logo-nuovo-2026-10-19/composizione-capi-accessori-marmo.webp' }, // iscrizione in home dal 19/10 (Francesco)
   { out: 'scena-orizzonte', src: 'foto-set-5-2026-10-12/846053658_1783488912923974_9001021024052174187_n.webp' },
   { out: 'scena-dolomiti', src: 'foto-set-5-2026-10-12/845962368_1854137572601714_822437747464123275_n.webp', max: 2048, q: 0.86 },
   { out: 'scena-citta', src: 'foto-set-5-2026-10-12/846613319_4604241063165391_3335941884249520016_n.webp' },
@@ -102,22 +102,22 @@ const LAVORI = [
   { out: 'brand-stretta', src: 'foto-reali/stretta-di-mano-parco.jpg', crop: [65, 0, 1076, 1345] },
   { out: 'brand-banner', src: 'foto-set-7-brand-2026-10-13/847388252_3001004070249275_6814422014820926890_n.webp', max: 2048, q: 0.86 },
   // pagina del brand v4 (19/10): una foto per sport, intere (README in foto-brand-2026-10-19)
-  { out: 'bn-tennis', src: 'foto-brand-2026-10-19/1-tennis-servizio-colonne-polo-tricolore.webp', crop: [0, 0, 1920, 1120], max: 1920, q: 0.86 }, // un filo più bassa (richiesta di Francesco): si toglie solo il fondo, pallina e racchetta intere
-  { out: 'bn-corsa', src: 'foto-brand-2026-10-19/2-corsa-colosseo-polo-linee.webp', max: 1920, q: 0.86 },
-  { out: 'bn-basket', src: 'foto-brand-2026-10-19/3-basket-vicolo-jacquard-cargo.webp', max: 1600 },
+  { out: 'bn-tennis', src: 'foto-logo-nuovo-2026-10-19/1-tennis-servizio-colonne-polo-tricolore.webp', crop: [0, 0, 1920, 1120], max: 1920, q: 0.86 }, // un filo più bassa (richiesta di Francesco): si toglie solo il fondo, pallina e racchetta intere
+  { out: 'bn-corsa', src: 'foto-logo-nuovo-2026-10-19/2-corsa-colosseo-polo-linee.webp', max: 1920, q: 0.86 },
+  { out: 'bn-basket', src: 'foto-logo-nuovo-2026-10-19/3-basket-duomo-jacquard-cargo.webp', max: 1600 },
   { out: 'bn-boxe', src: 'foto-brand-2026-10-19/4-boxe-palestra-jacquard-cargo.webp', max: 1600 },
-  { out: 'bn-allenamento', src: 'foto-brand-2026-10-19/5-allenamento-felpa-verticale-borraccia.webp', max: 1600 },
-  { out: 'bn-ali', src: 'foto-brand-2026-10-19/6-cappellino-borraccia-polo-linee.webp', max: 1600 },
+  { out: 'bn-allenamento', src: 'foto-logo-nuovo-2026-10-19/5-allenamento-felpa-verticale-borraccia.webp', max: 1600 },
+  { out: 'bn-ali', src: 'foto-logo-nuovo-2026-10-19/6-cappellino-borraccia-polo-linee.webp', max: 1600 },
   // copertine delle schede dal 19/10: foto della campagna sportiva ritagliate in 4:5 sul capo (scelta di Francesco:
   // stessa campagna della pagina del brand, eccezione voluta alla regola delle foto doppie; ritagli diversi, id diversi)
-  { out: 'cop-polo-linee', src: 'foto-brand-2026-10-19/2-corsa-colosseo-polo-linee.webp', crop: [340, 0, 1024, 1280] },
-  { out: 'cop-polo-tricolore', src: 'foto-brand-2026-10-19/1-tennis-servizio-colonne-polo-tricolore.webp', crop: [262, 0, 1024, 1280] },
+  { out: 'cop-polo-linee', src: 'foto-logo-nuovo-2026-10-19/2-corsa-colosseo-polo-linee.webp', crop: [340, 0, 1024, 1280] },
+  { out: 'cop-polo-tricolore', src: 'foto-logo-nuovo-2026-10-19/1-tennis-servizio-colonne-polo-tricolore.webp', crop: [262, 0, 1024, 1280] },
   { out: 'cop-polo-jacquard', src: 'foto-brand-2026-10-19/4-boxe-palestra-jacquard-cargo.webp', crop: [0, 180, 1184, 1480] },
-  { out: 'cop-felpa-verticale', src: 'foto-brand-2026-10-19/5-allenamento-felpa-verticale-borraccia.webp', crop: [0, 120, 1280, 1600] },
-  { out: 'cop-cargo-firma', src: 'foto-brand-2026-10-19/3-basket-vicolo-jacquard-cargo.webp', crop: [0, 160, 1280, 1600] },
-  { out: 'cop-cappellino-ali', src: 'foto-brand-2026-10-19/6-cappellino-borraccia-polo-linee.webp', crop: [190, 0, 1242, 1552] },
-  { out: 'cop-felpa-firma', src: 'foto-brand-2026-10-19/7-basket-duomo-felpa-firma.webp', crop: [2, 0, 1292, 1615] },
-  { out: 'cop-felpa-stretta', src: 'foto-brand-2026-10-19/8-boxe-felpa-stretta-di-mano.webp', crop: [2, 0, 1292, 1615] },
+  { out: 'cop-felpa-verticale', src: 'foto-logo-nuovo-2026-10-19/5-allenamento-felpa-verticale-borraccia.webp', crop: [0, 120, 1280, 1600] },
+  { out: 'cop-cargo-firma', src: 'foto-logo-nuovo-2026-10-19/3-basket-duomo-jacquard-cargo.webp', crop: [0, 160, 1280, 1600] },
+  { out: 'cop-cappellino-ali', src: 'foto-logo-nuovo-2026-10-19/6-cappellino-borraccia-polo-linee.webp', crop: [169, 0, 1126, 1408] },
+  { out: 'cop-felpa-firma', src: 'foto-logo-nuovo-2026-10-19/7-basket-duomo-felpa-firma.webp', crop: [2, 0, 1292, 1615] },
+  { out: 'cop-felpa-stretta', src: 'foto-logo-nuovo-2026-10-19/8-boxe-felpa-stretta-di-mano.webp', crop: [2, 0, 1292, 1615] },
   // copertine delle schede in palazzo (19/10, README in foto-schede-palazzo-2026-10-19); la foto sportiva va al passaggio del mouse
   { out: 'pal-polo-linee', src: 'foto-schede-palazzo-2026-10-19/polo-linee.webp', crop: [2, 0, 1292, 1615] },
   { out: 'pal-polo-tricolore', src: 'foto-schede-palazzo-2026-10-19/polo-tricolore.webp', crop: [2, 0, 1292, 1615] },

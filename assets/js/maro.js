@@ -675,6 +675,49 @@
 
   var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Dietro il segno A MANO: la cucitura si trascina (mouse subito; dito solo con gesto orizzontale, il verticale scorre la pagina),
+     un clic la porta lì, frecce da tastiera ---------- */
+  var cucitura = $('.segno.a-mano .segno-cucitura');
+  if (cucitura) {
+    var scenaS = cucitura.parentNode, segnoS = scenaS.closest('.segno');
+    var mettiTaglio = function (pct) {
+      pct = Math.max(0, Math.min(100, pct));
+      scenaS.style.setProperty('--taglio', pct + '%');
+      cucitura.setAttribute('aria-valuenow', String(Math.round(pct)));
+      cucitura.setAttribute('aria-valuetext', pct < 5 ? 'telaio nero' : pct > 95 ? 'Polo Jacquard' : 'metà e metà');
+    };
+    var daPuntatore = function (e) { var r = scenaS.getBoundingClientRect(); mettiTaglio((e.clientX - r.left) / r.width * 100); };
+    var tira = null; // {x, y, deciso, id}
+    scenaS.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('a, button')) return;
+      tira = { x: e.clientX, y: e.clientY, deciso: e.pointerType === 'mouse', id: e.pointerId };
+      if (tira.deciso) { try { scenaS.setPointerCapture(e.pointerId); } catch (x) {} daPuntatore(e); segnoS.classList.add('toccato'); e.preventDefault(); }
+    });
+    scenaS.addEventListener('pointermove', function (e) {
+      if (!tira || e.pointerId !== tira.id) return;
+      if (!tira.deciso) {
+        var dx = Math.abs(e.clientX - tira.x), dy = Math.abs(e.clientY - tira.y);
+        if (dy > 10 && dy > dx) { tira = null; return; } // scorrimento verticale: è la pagina
+        if (dx < 8) return;
+        tira.deciso = true; try { scenaS.setPointerCapture(e.pointerId); } catch (x) {} segnoS.classList.add('toccato');
+      }
+      daPuntatore(e);
+    });
+    var lascia = function (e) {
+      // tocco breve senza trascinare (dito): la riga va dove si è toccato
+      if (tira && !tira.deciso && e.type === 'pointerup' && Math.abs(e.clientX - tira.x) < 8 && Math.abs(e.clientY - tira.y) < 8) { daPuntatore(e); segnoS.classList.add('toccato'); }
+      tira = null;
+    };
+    scenaS.addEventListener('pointerup', lascia);
+    scenaS.addEventListener('pointercancel', lascia);
+    cucitura.addEventListener('keydown', function (e) {
+      var ora = Number(cucitura.getAttribute('aria-valuenow')), passo = e.shiftKey ? 20 : 5;
+      var nuovo = e.key === 'ArrowLeft' ? ora - passo : e.key === 'ArrowRight' ? ora + passo : e.key === 'Home' ? 0 : e.key === 'End' ? 100 : null;
+      if (nuovo === null) return;
+      e.preventDefault(); mettiTaglio(nuovo); segnoS.classList.add('toccato');
+    });
+  }
+
   /* ---------- Dietro il segno: la seconda foto sta sotto un ritaglio, il caricamento "lazy" non la vede mai → la carichiamo a 800 px dalla sezione ---------- */
   var scena2 = $('.segno-scena-2 img');
   if (scena2) {

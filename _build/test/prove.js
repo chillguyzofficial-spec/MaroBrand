@@ -193,9 +193,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     prova(r.testi.every(t => !testiVisti.has(t)), id + ': nessuna recensione ripetuta da un altro capo');
     r.testi.forEach(t => testiVisti.add(t));
   }
-  // barra in alto: scorre, due copie uguali, la seconda fuori dalla tabulazione, una riga sola
-  const bar = await p.evaluate(() => { const g = document.querySelectorAll('.avviso-giro'); const a = document.querySelector('.avviso'); return { giri: g.length, uguali: g[0].textContent === g[1].textContent, nascosta: g[1].getAttribute('aria-hidden') === 'true' && [...g[1].querySelectorAll('a')].every(x => x.tabIndex === -1), anim: getComputedStyle(document.querySelector('.avviso-nastro')).animationName, h: a.getBoundingClientRect().height, largo: g[0].getBoundingClientRect().width >= innerWidth }; });
-  prova(bar.giri === 2 && bar.uguali && bar.nascosta && bar.anim === 'avviso-scorre' && bar.h < 40 && bar.largo, 'barra in alto che scorre ' + JSON.stringify(bar));
+  // barra in alto: IN PAUSA dal 19/10 notte (Omar cambierà le scritte) → non deve esserci, e l'apertura non lascia lo spazio
+  prova(await p.evaluate(() => !document.querySelector('.avviso')), 'barra in alto in pausa (AVVISI_ACCESI = false)');
 
   // conto alla rovescia
   await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);

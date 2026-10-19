@@ -59,7 +59,8 @@ h1, h2, h3 { margin: 0; }
 .menu-apri { display: none; min-height: 44px; padding: 0 14px; border: 1.5px solid var(--nero); border-radius: 999px; background: none; font-weight: 600; }
 
 /* apertura con video */
-.apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
+:root:has(.avviso) { --avviso: 34px; } /* altezza della barra degli avvisi, solo se è accesa */
+.apertura { position: relative; height: calc(100svh - var(--testata) - var(--avviso, 0px)); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
 /* il video copre sempre tutta la larghezza (Omar, 19/10: niente fascia nera a sinistra sugli schermi larghi); la colonna con MARO resta in vista */
 .apertura-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 70% 50%; }
 .apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.15) 40%, rgba(0,0,0,0) 60%), linear-gradient(0deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
@@ -1036,8 +1037,21 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 
 @media (prefers-reduced-motion: reduce) {
   .segno .segno-titolo span, .segno .segno-scena-2, .segno .segno-ago { animation: none !important; opacity: 1; transform: none; }
-  .segno .segno-scena-2, .segno .segno-ago { display: none; }
+  .segno:not(.a-mano) .segno-scena-2, .segno .segno-ago { display: none; }
 }
+/* Dietro il segno A MANO (19/10 notte, Francesco): la cucitura parte al centro e la sposta chi guarda (trascina o clicca);
+   a sinistra della riga la scena 2, a destra la scena 1 */
+.segno.a-mano .segno-scena { --taglio: 50%; touch-action: pan-y; cursor: ew-resize; -webkit-user-select: none; user-select: none; }
+.segno.a-mano .segno-scena img { -webkit-user-drag: none; pointer-events: none; }
+.segno.a-mano .segno-scena-2 { animation: none !important; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
+.segno-cucitura { position: absolute; top: 0; bottom: 0; left: var(--taglio); z-index: 3; width: 0; outline: none; }
+.segno-cucitura::before { content: ''; position: absolute; top: 0; bottom: 0; left: -1.5px; border-left: 3px dashed rgba(255,255,255,.95); }
+.segno-maniglia { position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 50%; background: var(--bianco); color: var(--nero); display: grid; place-items: center; box-shadow: 0 4px 18px rgba(0,0,0,.35); transition: transform .2s; }
+.segno-maniglia svg { width: 24px; height: 24px; }
+.segno-cucitura:focus-visible .segno-maniglia { outline: 3px solid var(--bianco); outline-offset: 3px; }
+.segno.a-mano .segno-scena:active .segno-maniglia { transform: translate(-50%, -50%) scale(1.08); }
+.segno-aiuto { position: absolute; top: calc(50% + 38px); left: 0; transform: translateX(-50%); white-space: nowrap; font-size: 13px; font-weight: 600; letter-spacing: .02em; padding: 5px 12px; border-radius: 999px; background: rgba(0,0,0,.6); color: var(--bianco); transition: opacity .4s; }
+.segno.toccato .segno-aiuto { opacity: 0; }
 
 /* ---------- testata (Omar, 19/10 sera): logo a sinistra, menu al centro, icone a destra, come Nike ---------- */
 @media (min-width: 960px) {
