@@ -1068,3 +1068,13 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 
 /* accessori (19/10): foto quasi quadrate su fondo grigio da studio, il riquadro prende lo stesso grigio */
 .scheda-cella[data-tipo="accessori"] .scheda-foto, .prodotto[data-tipo="accessori"] .vetrina { background: #e0e0e0; }
+
+/* telefono e tablet (19/10): logo al centro anche qui — Menu a sinistra, preferiti e borsa a destra */
+@media (max-width: 959px) {
+  .testata { grid-template-columns: 1fr auto 1fr; }
+  .logo { grid-column: 2; grid-row: 1; justify-self: center; }
+  .azioni { display: contents; }
+  .menu-apri { grid-column: 1; grid-row: 1; justify-self: start; }
+  .pref-apri { grid-column: 3; grid-row: 1; justify-self: end; margin-right: 46px; }
+  .borsa-apri { grid-column: 3; grid-row: 1; justify-self: end; }
+}
