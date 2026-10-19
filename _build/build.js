@@ -38,24 +38,26 @@ const AVVISI = [
   ['Carta regalo da 50 €, via email', 'carta-regalo.html'],
 ];
 function avviso() {
-  const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
+  const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
   return `<div class="avviso" aria-label="Avvisi"><div class="avviso-nastro"><div class="avviso-giro">${giro(false)}</div><div class="avviso-giro" aria-hidden="true">${giro(true)}</div></div></div>`;
 }
 
 // ---------- fasce grandi a scorrimento in mezzo alle pagine (decorative: nascoste agli screen reader) ----------
 // voci: [testo, contorno?]; ogni giro si ripete finché supera i 2600 px, due giri identici per il loop senza stacco
 function fascia(voci, cls, volte) {
-  const giro = Array.from({ length: volte }, () => voci.map(([t, vuota]) => `<span class="fascia-voce${vuota ? ' fascia-vuota' : ''}">${esc(t)}</span><svg class="fascia-segno" viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>`).join('')).join('');
+  const giro = Array.from({ length: volte }, () => voci.map(([t, vuota]) => `<span class="fascia-voce${vuota ? ' fascia-vuota' : ''}">${esc(t)}</span><svg class="fascia-segno" viewBox="${LOGO_VB}"><use href="#maro-simbolo"/></svg>`).join('')).join('');
   return `<div class="fascia ${cls}" aria-hidden="true"><div class="fascia-nastro"><div class="fascia-giro">${giro}</div><div class="fascia-giro">${giro}</div></div></div>`;
 }
 
 // logo di Omar (19/10), dentro ogni pagina (un SVG esterno con <use> non si vede aprendo i file da disco)
-const LOGO_SIMBOLO = fs.readFileSync(path.join(ROOT, 'assets/img/logo-maro.svg'), 'utf8').match(/<symbol[\s\S]*?<\/symbol>/)[0].replace('id="logo"', 'id="logo-maro"');
-// logo di Omar (19/10): ali a M con MARO verticale, file unico in assets/img/logo-maro.svg
-const SIMBOLO = `<svg class="simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
+const LOGO_FILE = fs.readFileSync(path.join(ROOT, 'assets/img/logo-maro.svg'), 'utf8');
+const LOGO_SIMBOLO = LOGO_FILE.match(/<symbol[\s\S]*?<\/symbol>/)[0].replace('id="logo"', 'id="logo-maro"');
+const LOGO_VB = LOGO_FILE.match(/viewBox="([^"]+)"/)[1];
+// logo di Omar (19/10 sera): M con le ali e i riccioli (design-source/logo-omar-m-alata-2026-10-19); il vecchio (ali + MARO verticale) è tolto ovunque
+const SIMBOLO = `<svg class="simbolo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
 const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 ${LOGO_SIMBOLO}
-<symbol id="maro-simbolo" viewBox="0 0 200 150"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></symbol>
+${LOGO_SIMBOLO.replace('id="logo-maro"', 'id="maro-simbolo"')}
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
 <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
 <symbol id="i-condividi" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -98,7 +100,7 @@ ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${avviso()}
 <header class="testata">
-  <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1180 846" aria-hidden="true"><use href="#logo-maro"/></svg></a>
+  <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
     <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
@@ -629,8 +631,8 @@ function cartaRegalo() {
   <div class="cr-corpo">
     <div class="cr-anteprima">
       <div class="cr-carta" aria-hidden="true">
-        <svg class="cr-carta-filigrana" viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>
-        <div class="cr-carta-alto"><span class="cr-carta-marchio"><svg viewBox="0 0 200 150"><use href="#maro-simbolo"/></svg>MARO</span><span>Carta regalo</span></div>
+        <svg class="cr-carta-filigrana" viewBox="${LOGO_VB}"><use href="#maro-simbolo"/></svg>
+        <div class="cr-carta-alto"><span class="cr-carta-marchio"><svg viewBox="${LOGO_VB}"><use href="#maro-simbolo"/></svg>MARO</span><span>Carta regalo</span></div>
         <p class="cr-carta-importo"><span data-cr-importo>100 €</span></p>
         <svg class="cr-carta-onda" viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0 22 C60 2 110 38 170 20 S290 4 400 18" stroke="#1f8a4c"/><path d="M0 28 C60 8 110 44 170 26 S290 10 400 24" stroke="#fff"/><path d="M0 34 C60 14 110 50 170 32 S290 16 400 30" stroke="#c8102e"/></svg>
         <div class="cr-carta-basso">
@@ -691,7 +693,7 @@ function preferiti() {
 function nonTrovata() {
   const corpo = `
 <section class="nontrovata">
-  <svg class="nt-simbolo" viewBox="0 0 200 150" aria-hidden="true"><use href="#maro-simbolo"/></svg>
+  <svg class="nt-simbolo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>
   <h1 class="titolo">Pagina<br>non trovata.</h1>
   <p>Il link è sbagliato o la pagina non esiste più. Il drop invece c’è.</p>
   <a class="btn btn-nero" href="shop.html">Vai allo shop</a>
@@ -824,7 +826,7 @@ function storia() {
 </section>
 
 <section class="bn-fine" aria-labelledby="bn-motto" data-entra>
-  <svg class="bn-fine-logo" viewBox="0 0 1180 846" aria-hidden="true"><use href="#logo-maro"/></svg>
+  <svg class="bn-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
   <h2 id="bn-motto">Fly with<br>your mind.</h2>
   <p>I piedi in campo, la testa dove decidi tu.</p>
   <a class="btn btn-bianco" href="shop.html">Acquista il drop</a>
