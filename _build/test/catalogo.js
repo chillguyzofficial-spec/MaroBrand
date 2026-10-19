@@ -29,7 +29,17 @@ const visibili = pg => pg.$$eval('.scheda-cella', cs => cs.filter(c => !c.hidden
       if (!tel) {
         await pg.hover('.scheda-cella:first-child .scheda'); await pg.waitForTimeout(500);
         prova(await pg.$eval('.scheda-cella:first-child .scheda-foto-2', i => getComputedStyle(i).opacity === '1'), nome + ' ' + file + ': seconda foto al passaggio del mouse');
-      } else prova(await pg.$$eval('.scheda-foto-2', is => is.every(i => getComputedStyle(i).display === 'none')), nome + ' ' + file + ': niente seconda foto sul telefono');
+      } else {
+        // telefono: la seconda foto si scorre col dito, i pallini seguono, la scheda resta 4:5 e la pagina non scorre di lato
+        const f0 = '.scheda-cella:first-child .scheda-foto';
+        prova(await pg.$eval(f0, f => f.scrollWidth >= f.clientWidth * 2 - 2 && getComputedStyle(f).overflowX === 'auto'), nome + ' ' + file + ': seconda foto scorrevole');
+        await pg.$eval(f0, f => f.scrollTo({ left: f.clientWidth, behavior: 'instant' })); await pg.waitForTimeout(1200);
+        const st = await pg.$eval('.scheda-cella:first-child', c => { const f = c.querySelector('.scheda-foto'), s = c.querySelector('.scheda-foto-2'), r = s.getBoundingClientRect(), fr = f.getBoundingClientRect(); return { dentro: Math.abs(r.left - fr.left) < 2, ok: s.complete && s.naturalWidth > 0, punto: [...c.querySelectorAll('.scheda-punti i')].map(i => i.classList.contains('acceso')).join() }; });
+        prova(st.dentro && st.ok, nome + ' ' + file + ': seconda foto in vista e caricata ' + JSON.stringify(st));
+        prova(st.punto === 'false,true', nome + ' ' + file + ': secondo pallino acceso');
+        prova(await pg.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), nome + ' ' + file + ': nessuno scorrimento laterale della pagina');
+        await pg.$eval(f0, f => f.scrollTo({ left: 0, behavior: 'instant' })); await pg.waitForTimeout(200);
+      }
       // apre i filtri (sul telefono è il pannello dal basso)
       if (tel) {
         prova(await pg.$eval('[data-catalogo]', c => c.classList.contains('filtri-chiusi')), nome + ' ' + file + ': filtri chiusi all’arrivo');

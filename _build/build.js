@@ -177,7 +177,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <b
 </div>`;
   const cuore = `<button class="cuore" type="button" data-cuore="${p.id}" aria-pressed="false" aria-label="Aggiungi ${esc(p.nome)} ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button>`;
   return `<div class="scheda-cella" data-tipo="${p.tipo}">${cuore}<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
-  <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}${seconda ? img(seconda, '', { ripeti: true, cls: 'scheda-foto-2', sizes: '(min-width: 960px) 32vw, 50vw' }) : ''}</div>
+  <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}${seconda ? img(seconda, '', { ripeti: true, cls: 'scheda-foto-2', sizes: '(min-width: 960px) 32vw, 50vw' }) : ''}</div>${seconda ? '<span class="scheda-punti" aria-hidden="true"><i class="acceso"></i><i></i></span>' : ''}
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini">${p.pallini.map(c => `<i style="background:${c}"></i>`).join('')}</span>

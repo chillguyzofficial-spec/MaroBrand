@@ -1200,3 +1200,17 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 }
 @keyframes foglio-su { from { transform: translateY(100%); } to { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .cat-filtri { animation: none !important; } .scheda-foto-2 { transition: none; } }
+
+/* telefono (nessun mouse): la seconda foto si scorre col dito dentro la scheda, due pallini dicono che c'è (Francesco 19/10) */
+.scheda-punti { display: none; }
+@media (hover: none) {
+  .scheda { position: relative; }
+  .scheda-foto { display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .scheda-foto::-webkit-scrollbar { display: none; }
+  .scheda-foto > img { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+  .scheda-foto-2 { display: block !important; position: static; opacity: 1; }
+  .scheda:hover .scheda-foto img { transform: none; }
+  .scheda-punti { display: flex; gap: 6px; position: absolute; left: 10px; top: 10px; z-index: 1; padding: 6px 8px; border-radius: 999px; background: rgba(0, 0, 0, .45); pointer-events: none; }
+  .scheda-punti i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, .55); transition: background .2s, transform .2s; }
+  .scheda-punti i.acceso { background: #fff; transform: scale(1.25); }
+}

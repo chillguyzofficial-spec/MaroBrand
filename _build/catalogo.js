@@ -57,7 +57,7 @@ module.exports = [
     id: 'felpa-verticale', esaurite: ['M'], copertina: ['pal-felpa-verticale', 'Ragazzo di spalle sotto un porticato di marmo con la Felpa Verticale MARO verde, firma verticale sulla schiena'], seconda: 'cop-felpa-verticale',
     tipo: 'felpa', nome: 'Felpa Verticale', colore: 'Verde bottiglia, firma MARO verticale sul retro',
     prezzo: 110, pallini: ['#1f3a2c'], taglie: TAGLIE_FELPA,
-    foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino trasparente in un palazzo di marmo, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
+    foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino trasparente in un palazzo di marmo, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia vista davanti in un palazzo di marmo, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
     frase: 'Verde bottiglia, con una firma che scende dall’alto in basso.',
     testo: 'La firma MARO verticale, con le sue fiamme, corre lungo tutta la schiena, dalle spalle all’orlo. Il davanti è completamente libero. Taglio comodo, cappuccio e tasca a marsupio: va con i jeans, con la tuta e sotto una giacca.',
     dettagli: ['Firma MARO verticale dalle spalle all’orlo', 'Davanti senza grafiche', 'Cappuccio con coulisse', 'Tasca a marsupio', 'Polsini e fondo a costine'],
@@ -66,7 +66,7 @@ module.exports = [
   },
   // pantaloni di prova (19/10): foto da Francesco, prezzo, taglie e testi di esempio
   {
-    id: 'cargo-firma', copertina: ['cop-cargo-firma', 'Ragazzo palleggia in un vicolo con il Cargo Firma MARO beige, firma verticale lungo la gamba'],
+    id: 'cargo-firma', copertina: ['pal-cargo-firma', 'Ragazzo in un palazzo con colonne di marmo con il Cargo Firma MARO beige, firma verticale lungo la gamba'], seconda: 'cop-cargo-firma',
     tipo: 'pantaloni', nome: 'Cargo Firma', colore: 'Beige sabbia, firma MARO verticale sulla gamba',
     prezzo: 95, pallini: ['#d8cbb3'], taglie: ['S', 'M', 'L', 'XL', 'XXL'],
     foto: [['pant-cargo-piegato', 'Pantaloni cargo MARO beige piegati, firma verticale sulla gamba'], ['pant-cargo-appeso', 'Pantaloni cargo MARO beige appesi a una gruccia di legno']],

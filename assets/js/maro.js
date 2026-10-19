@@ -78,6 +78,22 @@
   }
   window.addEventListener('hashchange', daHash); daHash();
 
+  /* ---------- schede su telefono: pallino acceso sulla foto visibile mentre si scorre la seconda foto ---------- */
+  $$('.scheda-punti').forEach(function (pt) {
+    var foto = pt.parentNode.querySelector('.scheda-foto'), punti = $$('i', pt);
+    if (!foto) return;
+    foto.addEventListener('scroll', function () {
+      var k = Math.round(foto.scrollLeft / Math.max(1, foto.clientWidth));
+      punti.forEach(function (p, i) { p.classList.toggle('acceso', i === k); });
+      if (k > 0) { var s = foto.querySelector('.scheda-foto-2'); if (s && s.loading === 'lazy') s.loading = 'eager'; }
+    }, { passive: true });
+    // la seconda foto sta fuori vista a destra: la si carica appena la scheda si avvicina, così non è vuota al primo scorrimento
+    if ('IntersectionObserver' in window) {
+      var o = new IntersectionObserver(function (v) { if (v[0].isIntersecting) { var s = foto.querySelector('.scheda-foto-2'); if (s) s.loading = 'eager'; o.disconnect(); } }, { rootMargin: '400px 0px' });
+      o.observe(foto);
+    }
+  });
+
   /* ---------- pagine delle categorie (19/10): filtri taglia/colore/prezzo, ordine, nascondi filtri ---------- */
   var cat = $('[data-catalogo]');
   if (cat && $('.griglia', cat)) {
