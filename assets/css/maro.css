@@ -46,7 +46,7 @@ h1, h2, h3 { margin: 0; }
 .testata { position: sticky; top: 0; z-index: 30; height: var(--testata); background: var(--bianco); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; padding: 0 var(--lato); border-bottom: 1px solid var(--grigio-2); }
 .logo { display: flex; align-items: center; gap: 10px; justify-self: start; }
 .logo .simbolo { width: 44px; height: 33px; }
-.logo-maro { display: block; height: 56px; width: auto; aspect-ratio: 1180 / 846; }
+.logo-maro { display: block; height: 56px; width: auto; aspect-ratio: 1778 / 1103; }
 .logo span { font: 400 30px/1 var(--titoli); letter-spacing: .01em; }
 .menu { display: flex; gap: 28px; font-weight: 600; }
 .menu a { padding: 8px 2px; border-bottom: 2px solid transparent; }
@@ -62,12 +62,12 @@ h1, h2, h3 { margin: 0; }
 .apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
 /* il video copre sempre tutta la larghezza (Omar, 19/10: niente fascia nera a sinistra sugli schermi larghi); la colonna con MARO resta in vista */
 .apertura-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 70% 50%; }
-.apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.15) 40%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
+.apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.15) 40%, rgba(0,0,0,0) 60%), linear-gradient(0deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
 .apertura-video { z-index: 0; transition: opacity 1s linear; }
 .apertura-video[data-copia] { opacity: 0; }
 .apertura::after { z-index: 2; }
 .apertura-video::-webkit-media-controls { display: none !important; }
-.apertura-testo { position: absolute; z-index: 3; left: var(--lato); right: var(--lato); bottom: clamp(28px, 6vh, 64px); }
+.apertura-testo { position: absolute; z-index: 3; left: var(--lato); right: var(--lato); top: clamp(28px, 6vh, 64px); } /* in alto (Omar, 19/10) */
 .apertura h1 { font: 400 clamp(64px, 10vw, 156px)/.88 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
 .apertura .occhiello { font-size: clamp(14px, 1.2vw, 17px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; max-width: none; }
 .apertura p { font-size: clamp(19px, 1.9vw, 26px); font-weight: 600; line-height: 1.3; max-width: 30em; text-wrap: balance; margin: 18px 0 24px; text-shadow: 0 1px 14px rgba(0,0,0,.7); }
@@ -245,7 +245,7 @@ details > p { margin: 0 0 20px; }
   .apertura { height: auto; min-height: 0; max-height: none; padding-top: 40svh; }
   .apertura-video { left: 0; width: 100%; height: 40svh; aspect-ratio: auto; object-position: 66% 50%; -webkit-mask-image: none; mask-image: none; }
   .apertura::after { inset: 0 0 auto 0; height: 40svh; background: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 100%) !important; }
-  .apertura-testo { position: relative; left: auto; right: auto; bottom: auto; padding: 4px var(--lato) 28px; }
+  .apertura-testo { position: relative; left: auto; right: auto; top: auto; bottom: auto; padding: 4px var(--lato) 28px; }
   .apertura h1 { font-size: clamp(48px, 15vw, 64px); }
   .apertura p { margin: 12px 0 18px; }
   .apertura .occhiello { margin-bottom: 10px; }
@@ -604,7 +604,7 @@ details > p { margin: 0 0 20px; }
 
 /* 404 */
 .nontrovata { padding: clamp(56px, 10vw, 140px) var(--lato); display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
-.nt-simbolo { width: 90px; height: 68px; }
+.nt-simbolo { width: 96px; height: auto; aspect-ratio: 1778 / 1103; }
 .nontrovata p { font-size: 18px; margin: 0; }
 
 /* ---------- Pagina del brand: struttura "I segni" (13/10). Tutto su nero, un segno per blocco, foto intere ---------- */
@@ -735,7 +735,7 @@ details > p { margin: 0 0 20px; }
 .avviso a { display: block; padding: 8px 0; line-height: 1.4; white-space: nowrap; text-decoration: none; }
 .avviso a:hover, .avviso a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
 .avviso a:focus-visible { outline-color: var(--bianco); outline-offset: -2px; }
-.avviso-segno { width: 18px; height: 14px; margin: 0 26px; flex: none; color: var(--bianco); opacity: .85; }
+.avviso-segno { width: 24px; height: auto; aspect-ratio: 1778 / 1103; margin: 0 26px; flex: none; color: var(--bianco); opacity: .85; }
 @keyframes avviso-scorre { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) {
   .avviso-nastro { animation: none; width: auto; justify-content: center; }
@@ -749,7 +749,7 @@ details > p { margin: 0 0 20px; }
 .fascia-giro { display: flex; align-items: center; flex: none; }
 .fascia-voce { font: 400 clamp(64px, 10vw, 150px)/.9 var(--titoli); text-transform: uppercase; white-space: nowrap; padding-top: .06em; }
 .fascia-vuota { color: transparent; -webkit-text-stroke: 2px currentColor; }
-.fascia-segno { width: clamp(44px, 6vw, 84px); height: auto; aspect-ratio: 4 / 3; margin: 0 clamp(20px, 3vw, 44px); flex: none; fill: currentColor; }
+.fascia-segno { width: clamp(44px, 6vw, 84px); height: auto; aspect-ratio: 1778 / 1103; margin: 0 clamp(20px, 3vw, 44px); flex: none; fill: currentColor; }
 .fascia-chiara { background: var(--bianco); color: var(--nero); }
 .fascia-chiara .fascia-vuota { -webkit-text-stroke-color: var(--nero); }
 .fascia-scura { background: var(--nero); color: var(--bianco); }
@@ -819,7 +819,7 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .cr-carta-filigrana { position: absolute !important; z-index: 0 !important; right: -8%; top: 50%; width: 62%; height: auto; transform: translateY(-50%); fill: #fff; opacity: .07; }
 .cr-carta-onda { position: absolute !important; z-index: 0 !important; left: 0; right: 0; bottom: 22%; width: 100%; height: 14%; fill: none; stroke-width: 2.2; opacity: .9; }
 .cr-carta-marchio { display: inline-flex; align-items: center; gap: 10px; font: 400 clamp(20px, 2.4vw, 30px)/1 var(--titoli); letter-spacing: .04em; }
-.cr-carta-marchio svg { width: clamp(34px, 4.4vw, 54px); height: auto; aspect-ratio: 4 / 3; fill: currentColor; }
+.cr-carta-marchio svg { width: clamp(34px, 4.4vw, 54px); height: auto; aspect-ratio: 1778 / 1103; fill: currentColor; }
 .cr-carta-alto > span:last-child { color: #bdbdbd; }
 .cr-carta-importo span { display: inline-block; transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s ease; }
 .cr-carta-basso { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
@@ -1039,20 +1039,17 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
   .segno .segno-scena-2, .segno .segno-ago { display: none; }
 }
 
-/* ---------- testata con il logo al centro (19/10): menu diviso a sinistra e a destra ---------- */
+/* ---------- testata (Omar, 19/10 sera): logo a sinistra, menu al centro, icone a destra, come Nike ---------- */
 @media (min-width: 960px) {
-  .testata { grid-template-columns: 1fr auto 1fr; height: 72px; }
+  .testata { grid-template-columns: 1fr auto 1fr; height: 72px; column-gap: clamp(20px, 3vw, 48px); }
   :root { --testata: 72px; }
-  .menu { display: contents; }
-  .menu-sx, .menu-dx { display: flex; gap: 28px; font-weight: 600; }
-  .menu-sx { grid-column: 1; grid-row: 1; justify-self: end; }
-  .testata { column-gap: clamp(28px, 3.4vw, 56px); }
-  .menu-dx { grid-column: 3; grid-row: 1; justify-self: start; }
-  .logo { grid-column: 2; grid-row: 1; justify-self: center; }
+  .logo { grid-column: 1; grid-row: 1; justify-self: start; }
+  .menu { grid-column: 2; grid-row: 1; display: flex; gap: 28px; }
+  .menu-sx, .menu-dx { display: contents; }
   .azioni { grid-column: 3; grid-row: 1; justify-self: end; }
-  .logo .logo-maro { height: 58px; }
+  .logo .logo-maro { height: 50px; }
 }
-@media (min-width: 960px) and (max-width: 1199px) { .menu-sx, .menu-dx { gap: 18px; font-size: 15px; } }
+@media (min-width: 960px) and (max-width: 1199px) { .menu { gap: 18px; font-size: 15px; } }
 @media (max-width: 959px) { .menu-sx, .menu-dx { display: contents; } }
 
 /* ---------- footer su bianco caldo (19/10) ---------- */
@@ -1073,14 +1070,11 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 /* accessori (19/10): foto quasi quadrate su fondo grigio da studio, il riquadro prende lo stesso grigio */
 .scheda-cella[data-tipo="accessori"] .scheda-foto, .prodotto[data-tipo="accessori"] .vetrina { background: #e0e0e0; }
 
-/* telefono e tablet (19/10): logo al centro anche qui — Menu a sinistra, preferiti e borsa a destra */
+/* telefono e tablet (Omar, 19/10 sera): logo a sinistra; a destra preferiti, borsa e Menu */
 @media (max-width: 959px) {
-  .testata { grid-template-columns: 1fr auto 1fr; }
-  .logo { grid-column: 2; grid-row: 1; justify-self: center; }
-  .azioni { display: contents; }
-  .menu-apri { grid-column: 1; grid-row: 1; justify-self: start; }
-  .pref-apri { grid-column: 3; grid-row: 1; justify-self: end; margin-right: 46px; }
-  .borsa-apri { grid-column: 3; grid-row: 1; justify-self: end; }
+  .testata { grid-template-columns: auto 1fr; }
+  .logo { grid-column: 1; grid-row: 1; justify-self: start; }
+  .azioni { grid-column: 2; grid-row: 1; justify-self: end; gap: 6px; }
 }
 
 /* ---------- pagina del brand v4 (19/10): stile Nike, firma verticale, una foto per sport (intere, mai tagliate) ---------- */
@@ -1122,7 +1116,7 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 @media (max-width: 767px) { .bn-ali { grid-template-columns: 1fr; } }
 
 .bn-fine { background: var(--nero); color: var(--bianco); text-align: center; padding: clamp(80px, 11vw, 160px) var(--lato); display: grid; justify-items: center; }
-.bn-fine-logo { width: clamp(150px, 18vw, 240px); height: auto; aspect-ratio: 1180 / 846; color: var(--bianco); margin-bottom: 36px; }
+.bn-fine-logo { width: clamp(150px, 18vw, 240px); height: auto; aspect-ratio: 1778 / 1103; color: var(--bianco); margin-bottom: 36px; }
 .bn-fine h2 { font: 400 clamp(56px, 9vw, 140px)/.95 var(--titoli); text-transform: uppercase; }
 .bn-fine p { font-size: clamp(17px, 1.5vw, 20px); color: #d4d4d4; margin: 20px 0 32px; }
 .bn-fine.in-attesa .bn-fine-logo { opacity: 0; transform: translateY(24px) scale(.9); }
