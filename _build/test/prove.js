@@ -21,6 +21,10 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
 
 (async () => {
   const b = await chromium.launch({ channel: 'msedge' });
+  // il sito parla con un motore finto locale (mai con quello vero): ogni nuova finestra lo riceve all'avvio
+  const motore = await require('./motore-finto').avvia(8985, 'http://localhost:8990');
+  const nuovaFinestra = b.newContext.bind(b);
+  b.newContext = async (o) => { const c = await nuovaFinestra(o); await c.addInitScript((u) => { window.MARO_MOTORE = u; }, motore.url); return c; };
   // 1. tutte le pagine a tutte le larghezze
   for (const w of [320, 375, 390, 430, 768, 1024, 1280, 1440, 1920]) {
     const ctx = await b.newContext({ viewport: { width: w, height: w < 600 ? 800 : 900 } });
@@ -123,7 +127,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.fill('#email', 'prova'); await p.tap('.iscriviti-form .btn');
   prova(await p.evaluate(() => document.querySelector('.esito').classList.contains('errore')), 'email sbagliata segnalata');
   await p.fill('#email', 'mario.rossi@esempio.it'); await p.tap('.iscriviti-form .btn');
-  prova(await p.evaluate(() => /Sei dentro/.test(document.querySelector('.esito').textContent)), 'email valida accettata (anche con la s)');
+  prova(await p.waitForFunction(() => /Sei dentro/.test(document.querySelector('.esito').textContent), null, { timeout: 5000 }).then(() => true, () => false), 'email valida accettata (anche con la s)');
   // lookbook a scorrimento (telefono: una foto per volta)
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.evaluate(() => document.querySelector('#lookbook').scrollIntoView());
@@ -247,7 +251,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     prova(!(await q.isVisible('#popup')), 'popup: dopo No grazie non ricompare');
     await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForTimeout(1600);
     await q.fill('#email-popup', 'luca@esempio.it'); await q.tap('.popup-form .btn');
-    prova(await q.isVisible('.popup-codice'), 'popup: iscrizione mostra il codice');
+    prova(await q.waitForSelector('.popup-codice', { state: 'visible', timeout: 5000 }).then(() => true, () => false), 'popup: iscrizione mostra il codice');
     await q.tap('[data-popup-ok]');
     await q.goto(BASE + 'polo-linee.html'); await q.tap('.taglie label:nth-child(2)'); await q.tap('[data-aggiungi]');
     prova(/7,50/.test(await q.textContent('.sconto')), 'popup: sconto 10% applicato in borsa');
@@ -318,7 +322,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // 2c. carta regalo: errori chiari, anteprima, borsa (via email, fuori dalla soglia e dallo sconto)
   {
     const c = await b.newContext({ ...devices['iPhone 13'] });
-    await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); localStorage.setItem('maro-sconto', '1'); } catch (e) {} });
+    await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); localStorage.setItem('maro-motore', '1'); localStorage.setItem('maro-codice', JSON.stringify({ tipo: 'benvenuto', codice: 'MARO-PROV', pct: 10 })); } catch (e) {} });
     const q = await c.newPage(); const err = []; q.on('pageerror', e => err.push(e.message));
     await q.goto(BASE + 'carta-regalo.html', { waitUntil: 'load' });
     await q.tap('.cr-form [type=submit]');
@@ -382,5 +386,5 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     }
   }
   console.log(`\nProve: ${ok} ok, ${ko} fallite`);
-  await b.close(); srv.close(); process.exit(ko ? 1 : 0);
+  await b.close(); srv.close(); await motore.chiudi(); process.exit(ko ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

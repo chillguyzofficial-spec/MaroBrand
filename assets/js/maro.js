@@ -185,39 +185,46 @@
     get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
     set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   };
-  /* ---------- codici sconto (19/10): uno per persona, monouso, mai sommati ----------
-     DIMOSTRAZIONE nel browser: con il motore (fase 2) i codici li crea e li segna come usati il server, e il premio a chi
-     invita parte dal pagamento Stripe dell'amico. Qui tutto resta in localStorage di questo browser.
+  /* ---------- motore (Cloudflare Worker, 19/10 sera): codici, pagamento Stripe, ordini, account ----------
+     Il motore decide prezzi, codici e ordini; nel browser restano solo comodità (borsa, codice attivo, token di accesso).
+     Nelle prove automatiche window.MARO_MOTORE punta a un motore finto locale. */
+  var MOTORE = window.MARO_MOTORE || 'https://maro-motore.chillguyzofficial.workers.dev';
+  var api = function (percorso, corpo, token) {
+    var h = { 'content-type': 'application/json' };
+    if (token) h.authorization = 'Bearer ' + token;
+    return fetch(MOTORE + percorso, { method: corpo === undefined ? 'GET' : 'POST', headers: h, body: corpo === undefined ? undefined : JSON.stringify(corpo) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { d.stato = r.status; d.ok = r.ok; return d; }); },
+        function () { return { ok: false, stato: 0, errore: 'Il negozio non risponde: controlla la connessione e riprova tra un minuto.' }; });
+  };
+  /* ---------- codici sconto: uno per persona, monouso, mai sommati (li crea e li segna come usati il motore) ----------
      maro-codice  = codice attivo in borsa {tipo: benvenuto|amico|buono, codice, pct|euro}
-     maro-emessi  = codici dati a questo browser (per il campo "Hai un codice?") · maro-usati = codici già usati in un ordine
-     maro-ordini  = ordini di prova · maro-mio-invito = il proprio codice "Porta un amico" (solo dopo il primo ordine) */
+     maro-emessi  = codici visti da questo browser · maro-usati = codici usati negli ordini fatti da qui
+     maro-ordini  = ordini fatti da qui (numero e totale) · maro-mio-invito = il proprio codice "Porta un amico" (dopo il primo ordine)
+     maro-token   = accesso a "Il mio account" (del token il motore salva solo l'impronta) */
   var leggiJ = function (k, d) { try { return JSON.parse(mem.get(k)) || d; } catch (e) { return d; } };
   var scriviJ = function (k, v) { mem.set(k, JSON.stringify(v)); };
   var togliK = function (k) { try { localStorage.removeItem(k); } catch (e) {} };
-  var AMICO_PCT = 10, AMICO_BUONO = 10;
-  // codice leggibile: niente 0/O e 1/I che si confondono
-  var nuovoCodice = function (pref, seme) {
-    var a = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', h = 2166136261, s = String(seme), out = '';
-    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
-    for (var j = 0; j < 4; j++) { out += a[(h >>> 0) % a.length]; h = Math.imul(h ^ (h >>> 13), 2654435761); }
-    return pref + '-' + out;
-  };
+  var AMICO_PCT = 10; // come nel motore (valori di esempio da confermare con Omar)
   var codiceAttivo = function () { return leggiJ('maro-codice', null); };
   var haOrdinato = function () { return leggiJ('maro-ordini', []).length > 0; };
   var emetti = function (c) { var e = leggiJ('maro-emessi', []); if (!e.some(function (x) { return x.codice === c.codice; })) { e.push(c); scriviJ('maro-emessi', e); } };
-  // vecchia versione (MARO10 uguale per tutti): chi era già iscritto riceve un codice personale
-  if (mem.get('maro-sconto') === '1' && !codiceAttivo()) { var vecchio = { tipo: 'benvenuto', codice: nuovoCodice('MARO', 'vecchio' + Date.now()), pct: 10 }; scriviJ('maro-codice', vecchio); emetti(vecchio); }
+  // codici della dimostrazione (creati nel browser, il motore non li conosce): via, sia attivo sia nell'elenco
   togliK('maro-sconto');
-  // iscrizione: una email = un codice (stessa email, stesso codice); se c'è già un codice attivo non se ne aggiunge un altro
+  if (mem.get('maro-motore') !== '1') { togliK('maro-codice'); togliK('maro-emessi'); togliK('maro-usati'); togliK('maro-ordini'); togliK('maro-mio-invito'); togliK('maro-account'); togliK('maro-utente'); mem.set('maro-motore', '1'); }
+  // iscrizione: una email = un codice (stessa email, stesso codice, lo decide il motore); se in borsa c'è già un codice resta quello
+  // → Promise di {tipo, codice, pct} | {usato: true} | {errore}
   var attivaSconto = function (email) {
-    mem.set('maro-iscritto', '1');
-    var att = codiceAttivo();
-    if (att) { if (window.MARO_ridisegna) window.MARO_ridisegna(); return att; }
-    var c = { tipo: 'benvenuto', codice: nuovoCodice('MARO', String(email || Date.now()).trim().toLowerCase()), pct: 10 };
-    if (leggiJ('maro-usati', []).indexOf(c.codice) > -1) return { usato: true, codice: c.codice };
-    scriviJ('maro-codice', c); emetti(c);
-    if (window.MARO_ridisegna) window.MARO_ridisegna();
-    return c;
+    return api('/api/iscrizione', { email: String(email || '').trim() }).then(function (d) {
+      if (!d.ok) return { errore: d.errore || 'Non riusciamo a iscriverti adesso: riprova tra un minuto.' };
+      mem.set('maro-iscritto', '1');
+      if (d.usato) return { usato: true };
+      var c = { tipo: 'benvenuto', codice: d.codice, pct: d.pct }, att = codiceAttivo();
+      emetti(c);
+      if (att) return att;
+      scriviJ('maro-codice', c);
+      if (window.MARO_ridisegna) window.MARO_ridisegna();
+      return c;
+    });
   };
   // avviso breve in basso (link amico, codice già usato…)
   var avvisa = function (testo) {
@@ -237,9 +244,13 @@
     if (haOrdinato()) return avvisoAmico('Lo sconto amico vale sul primo ordine, e tu hai già ordinato su MARO.');
     var att = codiceAttivo();
     if (att && att.tipo !== 'amico') return avvisoAmico('Hai già il tuo ' + (att.pct || 10) + '% attivo in borsa: un codice per ordine.');
-    if (!att) { var c = { tipo: 'amico', codice: nuovoCodice('AMICO', ref + Date.now()), pct: AMICO_PCT, da: ref }; scriviJ('maro-codice', c); emetti(c); }
-    mem.set('maro-iscritto', '1'); // niente popup: lo sconto c'è già
-    avvisoAmico('Un amico ti regala il ' + AMICO_PCT + '% sul primo ordine. È già nella tua borsa.');
+    // il codice dell'invito (AMICO-XXXX di chi invita) va in borsa; il motore lo controlla e al pagamento dà all'amico il suo
+    api('/api/codice', { codice: ref }).then(function (d) {
+      if (!d.ok) return avvisoAmico(d.stato === 0 ? d.errore : 'Questo link amico non è valido. Puoi sempre iscriverti per il 10% sul primo ordine.');
+      if (!codiceAttivo()) { var c = { tipo: 'amico', codice: d.codice, pct: d.pct || AMICO_PCT }; scriviJ('maro-codice', c); emetti(c); if (window.MARO_ridisegna) window.MARO_ridisegna(); }
+      mem.set('maro-iscritto', '1'); // niente popup: lo sconto c'è già
+      avvisoAmico('Un amico ti regala il ' + AMICO_PCT + '% sul primo ordine. È già nella tua borsa.');
+    });
   })();
   var CHIAVE = 'maro-borsa-1';
   function leggi() { try { return JSON.parse(localStorage.getItem(CHIAVE)) || []; } catch (e) { return []; } }
@@ -296,27 +307,32 @@
     esitoCodice = '';
   }
   var totaleUltimo = null, codiceAperto = false, esitoCodice = '';
-  // campo "Hai un codice?": accetta solo codici dati a questa persona e non ancora usati (con il motore lo controlla il server)
+  // campo "Hai un codice?": lo controlla il motore (esiste, non è usato, non è annullato)
   function provaCodice(testo) {
     var t = String(testo || '').trim().toUpperCase().replace(/\s+/g, '');
     codiceAperto = true;
     if (!t) { esitoCodice = 'Scrivi il codice che trovi nell’email.'; return disegna(); }
     if (codiceAttivo()) { esitoCodice = 'Un codice per ordine: togli quello attivo per usare questo.'; return disegna(); }
-    if (leggiJ('maro-usati', []).indexOf(t) > -1) { esitoCodice = 'Questo codice è già stato usato: vale una volta sola.'; return disegna(); }
-    var c = leggiJ('maro-emessi', []).filter(function (x) { return x.codice === t; })[0];
-    if (!c) { esitoCodice = 'Codice non valido. Controlla di averlo scritto come nell’email (es. MARO-7K2Q).'; return disegna(); }
-    scriviJ('maro-codice', c); codiceAperto = false; disegna();
+    esitoCodice = 'Controllo il codice…'; disegna();
+    api('/api/codice', { codice: t }).then(function (d) {
+      codiceAperto = true;
+      if (!d.ok) { esitoCodice = d.errore || 'Codice non valido.'; return disegna(); }
+      var c = { tipo: d.tipo, codice: d.codice, pct: d.pct || undefined, euro: d.euro || undefined };
+      scriviJ('maro-codice', c); emetti(c); codiceAperto = false; disegna();
+    });
   }
-  // pagamento di prova: con il motore qui parte Stripe Checkout, che torna su ordine-confermato.html
-  function pagaProva() {
-    var c = codiceAttivo(), ordini = leggiJ('maro-ordini', []);
-    var id = 'MR' + Date.now().toString(36).toUpperCase().slice(-6);
-    ordini.push({ id: id, data: new Date().toISOString(), righe: righe, codice: c ? c.codice : null, conti: totaleUltimo });
-    scriviJ('maro-ordini', ordini);
-    if (c) { var u = leggiJ('maro-usati', []); u.push(c.codice); scriviJ('maro-usati', u); togliK('maro-codice'); }
-    if (!mem.get('maro-mio-invito')) mem.set('maro-mio-invito', nuovoCodice('AMICO', id + Math.random()));
-    righe = []; salva(righe);
-    location.href = 'ordine-confermato.html';
+  // pagamento: il motore prezza la borsa e apre Stripe Checkout, che al termine torna su ordine-confermato.html?s=…
+  function paga(btn) {
+    var c = codiceAttivo(), esito = function (t) { var e = $('.esito-paga', borsa); if (e) e.textContent = t; };
+    if (righe.some(function (r) { return r.id === CARTA; })) return esito('La carta regalo arriva presto nel pagamento online: per ora toglila dalla borsa.');
+    btn.disabled = true; btn.textContent = 'Apro il pagamento sicuro…'; esito('');
+    api('/api/checkout', { righe: righe.map(function (r) { return { id: r.id, t: r.t, q: r.q }; }), codice: c ? c.codice : undefined }).then(function (d) {
+      if (d.ok && d.url) { location.href = d.url; return; }
+      // codice nel frattempo usato o non più valido: si toglie dalla borsa, così il cliente può pagare senza
+      if (d.stato === 409 && c && /codice/i.test(d.errore || '')) { togliK('maro-codice'); disegna(); }
+      else { btn.disabled = false; btn.textContent = 'Vai al pagamento'; }
+      esito(d.errore || 'Il pagamento non è partito: riprova tra un minuto.');
+    });
   }
   function apri() {
     ultimoFocus = document.activeElement;
@@ -346,7 +362,7 @@
       if ((k = t.getAttribute('data-piu')) !== null) righe[k].q = Math.min(9, righe[k].q + 1);
       else if ((k = t.getAttribute('data-meno')) !== null) { righe[k].q--; if (righe[k].q < 1) righe.splice(k, 1); }
       else if ((k = t.getAttribute('data-togli')) !== null) righe.splice(k, 1);
-      else if (t.hasAttribute('data-paga')) return pagaProva();
+      else if (t.hasAttribute('data-paga')) return paga(t);
       else if (t.hasAttribute('data-togli-codice')) { togliK('maro-codice'); codiceAperto = true; disegna(); var ic = $('#borsa-codice-in'); if (ic) ic.focus(); return; }
       else return;
       salva(righe); disegna();
@@ -541,11 +557,15 @@
       var inp = $('input', this), er = $('.popup-errore', pop);
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { er.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; inp.focus(); return; }
       er.textContent = '';
-      var c = attivaSconto(inp.value);
-      if (c.usato) { er.textContent = 'Con questa email il codice è già stato usato: vale una volta sola.'; return; }
-      $('[data-mio-codice]', pop).textContent = c.codice;
-      $('[data-passo="1"]', pop).hidden = true; $('[data-passo="2"]', pop).hidden = false;
-      $('[data-popup-ok]', pop).focus();
+      var btn = $('button[type=submit]', this); btn.disabled = true;
+      attivaSconto(inp.value).then(function (c) {
+        btn.disabled = false;
+        if (c.errore) { er.textContent = c.errore; return; }
+        if (c.usato) { er.textContent = 'Con questa email il codice è già stato usato: vale una volta sola.'; return; }
+        $('[data-mio-codice]', pop).textContent = c.codice;
+        $('[data-passo="1"]', pop).hidden = true; $('[data-passo="2"]', pop).hidden = false;
+        $('[data-popup-ok]', pop).focus();
+      });
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) chiudiPop(true); });
   }
@@ -655,21 +675,24 @@
     });
   });
 
-  /* ---------- iscrizione (anteprima: nessun invio) ---------- */
+  /* ---------- iscrizione (il motore salva l'email e crea il codice; le email partiranno con Resend) ---------- */
   var form = $('.iscriviti-form');
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var input = $('input', form), esito = $('.esito', form), v = input.value.trim();
+      var input = $('input', form), esito = $('.esito', form), v = input.value.trim(), btn = $('button[type=submit]', form);
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
         esito.className = 'esito errore'; esito.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; input.focus(); return;
       }
-      var c = attivaSconto(v);
-      esito.className = 'esito';
-      esito.textContent = c.usato ? 'Sei dentro: ti scriviamo prima del prossimo drop. Il codice di benvenuto di questa email è già stato usato.'
-        : c.tipo === 'benvenuto' ? 'Sei dentro: il tuo codice ' + c.codice + ' (10% sul primo ordine, una volta sola) è già nella tua borsa. Ti scriviamo prima del prossimo drop. (Anteprima: nessuna email inviata.)'
-        : 'Sei dentro: ti scriviamo prima del prossimo drop. In borsa hai già un codice attivo (' + c.codice + '): un codice per ordine.';
-      input.value = '';
+      btn.disabled = true; esito.className = 'esito'; esito.textContent = 'Un attimo…';
+      attivaSconto(v).then(function (c) {
+        btn.disabled = false;
+        if (c.errore) { esito.className = 'esito errore'; esito.textContent = c.errore; return; }
+        esito.textContent = c.usato ? 'Sei dentro: ti scriviamo prima del prossimo drop. Il codice di benvenuto di questa email è già stato usato.'
+          : c.tipo === 'benvenuto' ? 'Sei dentro: il tuo codice ' + c.codice + ' (10% sul primo ordine, una volta sola) è già nella tua borsa. Ti scriviamo prima del prossimo drop. (Anteprima: nessuna email inviata.)'
+          : 'Sei dentro: ti scriviamo prima del prossimo drop. In borsa hai già un codice attivo (' + c.codice + '): un codice per ordine.';
+        input.value = '';
+      });
     });
   }
 
@@ -879,68 +902,123 @@
     accendi(0);
   });
 
-  /* ---------- Porta un amico: il proprio link (solo dopo il primo ordine), copia / WhatsApp / condividi ---------- */
-  var mioInvito = mem.get('maro-mio-invito');
-  $$('[data-invito]').forEach(function (box) {
-    var senza = box.parentNode.querySelector('[data-invito-senza]');
-    if (!mioInvito || !haOrdinato()) return;
-    var base = location.href.replace(/[?#].*$/, '').replace(/[^/]*$/, '');
-    var link = base + '?amico=' + mioInvito;
-    var testo = 'Ti regalo il ' + AMICO_PCT + '% sul primo ordine MARO: ';
-    box.hidden = false; if (senza) senza.hidden = true;
-    var campo = $('[data-invito-link]', box), esito = $('.invito-esito', box);
-    campo.value = link;
-    $('[data-invito-wa]', box).href = 'https://wa.me/?text=' + encodeURIComponent(testo + link);
-    $('[data-invito-copia]', box).addEventListener('click', function () {
-      var ok = function () { esito.textContent = 'Link copiato. Incollalo dove vuoi.'; };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link).then(ok, function () { campo.select(); ok(); });
-      else { campo.select(); try { document.execCommand('copy'); } catch (e) {} ok(); }
+  /* ---------- Porta un amico: il proprio link (dopo il primo ordine), copia / WhatsApp / condividi ---------- */
+  // si ridisegna anche dopo: quando la conferma d'ordine o l'account ricevono il link dal motore
+  var disegnaInviti = function (codice) {
+    var mio = codice || (haOrdinato() && mem.get('maro-mio-invito'));
+    $$('[data-invito]').forEach(function (box) {
+      var senza = box.parentNode.querySelector('[data-invito-senza]');
+      if (!mio) return;
+      var base = location.href.replace(/[?#].*$/, '').replace(/[^/]*$/, '');
+      var link = base + '?amico=' + mio, testo = 'Ti regalo il ' + AMICO_PCT + '% sul primo ordine MARO: ';
+      box.hidden = false; if (senza) senza.hidden = true;
+      $('[data-invito-link]', box).value = link;
+      $('[data-invito-wa]', box).href = 'https://wa.me/?text=' + encodeURIComponent(testo + link);
+      box.dataset.link = link; box.dataset.testo = testo;
+      if (box.dataset.pronto) return;
+      box.dataset.pronto = '1';
+      var campo = $('[data-invito-link]', box), esito = $('.invito-esito', box);
+      $('[data-invito-copia]', box).addEventListener('click', function () {
+        var ok = function () { esito.textContent = 'Link copiato. Incollalo dove vuoi.'; };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(box.dataset.link).then(ok, function () { campo.select(); ok(); });
+        else { campo.select(); try { document.execCommand('copy'); } catch (e) {} ok(); }
+      });
+      var cond = $('[data-invito-condividi]', box);
+      if (navigator.share) {
+        cond.hidden = false;
+        cond.addEventListener('click', function () { navigator.share({ title: 'MARO', text: box.dataset.testo, url: box.dataset.link }).catch(function () {}); });
+      }
     });
-    var cond = $('[data-invito-condividi]', box);
-    if (navigator.share) {
-      cond.hidden = false;
-      cond.addEventListener('click', function () { navigator.share({ title: 'MARO', text: testo, url: link }).catch(function () {}); });
-    }
-  });
-  /* ---------- Il mio account (dimostrazione): accesso finto, codici disponibili/usati, ordini ---------- */
+  };
+  disegnaInviti();
+  // tornati da Stripe senza pagare: la borsa è ancora lì
+  if (/[?&]pagamento=annullato/.test(location.search)) {
+    try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    setTimeout(function () { avvisa('Pagamento annullato: nessun addebito. La tua borsa è ancora qui.'); }, 400);
+  }
+
+  /* ---------- Il mio account (motore): accesso, conferma email, codici disponibili/usati, ordini, link amico ---------- */
   var contoFuori = $('[data-conto-fuori]');
   if (contoFuori) {
-    var dentro = $('[data-conto-dentro]');
+    var dentro = $('[data-conto-dentro]'), avvisoConto = $('[data-conto-avviso]');
     var dataIt = function (iso) { var d = new Date(iso); return isNaN(d) ? '' : d.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' }); };
-    var descr = function (c) { return c.tipo === 'amico' ? AMICO_PCT + '% · invito di un amico' : c.tipo === 'buono' ? euro(c.euro) + ' · premio Porta un amico' : '10% · iscrizione alla newsletter'; };
+    var descr = function (c) { return c.tipo === 'amico' ? AMICO_PCT + '% · invito di un amico' : c.tipo === 'buono' ? euro(c.euro) + ' · premio Porta un amico' : (c.pct || 10) + '% · iscrizione alla newsletter'; };
+    var tokenConto = function () { return mem.get('maro-token'); };
+    // finché le email non partono (Resend), in prova il motore restituisce il link: lo mostriamo per poterlo provare
+    var linkProva = function (testo, link) {
+      return esc(testo) + (link ? ' <a class="link" href="' + esc(link) + '" data-link-prova>(Anteprima, le email non partono ancora: apri il link da qui)</a>' : '');
+    };
+    var mostraAvviso = function (html) { if (!avvisoConto) return; avvisoConto.innerHTML = html || ''; avvisoConto.hidden = !html; };
+    var codiciConto = [];
+    var fuori = function () { contoFuori.hidden = false; dentro.hidden = true; };
+    // pagina di tracciamento dei corrieri: solo Poste pubblica la pagina dei risultati col numero; per gli altri la pagina
+    // ufficiale di ricerca + "Copia numero" (da verificare con un numero vero quando Omar dice quale corriere usa)
+    var CORRIERI = {
+      poste: ['Poste Italiane', 'https://www.poste.it/cerca/#/risultati-spedizioni/', true], brt: ['BRT', 'https://www.brt.it/'],
+      gls: ['GLS', 'https://www.gls-italy.com/'], sda: ['SDA', 'https://www.sda.it/'], inpost: ['InPost', 'https://inpost.it/'],
+      dhl: ['DHL', 'https://www.dhl.com/it-it/home/tracciamento.html'], ups: ['UPS', 'https://www.ups.com/track?loc=it_IT'], altro: ['Corriere', '']
+    };
+    var disegnaOrdine = function (o) {
+      var pezzi = (o.righe || []).reduce(function (s, r) { return s + r.quantita; }, 0);
+      var chiuso = o.stato === 'reso' || o.stato === 'annullato';
+      var tappe = [['Pagato', o.pagato_il], ['In preparazione', o.pagato_il], ['Spedito', o.spedito_il], ['Consegnato', o.consegnato_il]];
+      var arrivato = o.consegnato_il ? 3 : o.spedito_il ? 2 : 1; // indice dell'ultima tappa raggiunta
+      var etichetta = chiuso ? (o.stato === 'reso' ? 'Reso' : 'Annullato') : tappe[arrivato][0];
+      var cor = CORRIERI[o.corriere] || CORRIERI.altro;
+      var traccia = o.tracking ? '<div class="acc-traccia"><p><b>' + esc(cor[0]) + '</b> · numero di spedizione <span class="acc-num">' + esc(o.tracking) + '</span></p><div class="acc-traccia-azioni">' +
+        (cor[1] ? '<a class="btn btn-nero" target="_blank" rel="noopener" href="' + esc(cor[1] + (cor[2] ? encodeURIComponent(o.tracking) : '')) + '">Traccia il pacco</a>' : '') +
+        '<button type="button" class="btn btn-contorno-nero" data-copia-num="' + esc(o.tracking) + '">Copia numero</button></div><p class="acc-sotto piccolo" role="status"></p></div>' : '';
+      var c = o.consegna, indirizzo = c ? [c.nome, c.riga1, c.riga2, [c.cap, c.citta, c.provincia].filter(Boolean).join(' ')].filter(Boolean).map(esc).join('<br>') : '';
+      return '<li class="acc-ordine"><details><summary><div><b>Ordine ' + esc(o.numero) + '</b><span>' + dataIt(o.pagato_il) + ' · ' + pezzi + (pezzi === 1 ? ' articolo' : ' articoli') + '</span></div>' +
+        '<span class="acc-stato' + (chiuso ? ' usato' : arrivato === 3 ? ' attivo' : '') + '">' + etichetta + '</span><em>' + euro(o.totale) + '</em></summary><div class="acc-ordine-dentro">' +
+        (chiuso ? '' : '<ol class="acc-tappe">' + tappe.map(function (t, k) {
+          return '<li class="' + (k < arrivato ? 'fatta' : k === arrivato ? 'fatta attuale' : '') + '"><b>' + t[0] + '</b>' + (k !== 1 && t[1] && k <= arrivato ? '<span>' + dataIt(t[1]) + '</span>' : k === 1 && arrivato === 1 ? '<span>di solito parte entro 48 ore</span>' : '') + '</li>';
+        }).join('') + '</ol>') + traccia +
+        '<table class="acc-righe"><tbody>' + (o.righe || []).map(function (r) {
+          return '<tr><td>' + esc(r.nome) + ' · taglia ' + esc(r.taglia) + (r.quantita > 1 ? ' × ' + r.quantita : '') + '</td><td>' + euro(r.prezzo_cent * r.quantita / 100) + '</td></tr>';
+        }).join('') +
+        (o.sconto ? '<tr><td>Sconto' + (o.codice ? ' ' + esc(o.codice) : '') + '</td><td>−' + euro(o.sconto) + '</td></tr>' : '') +
+        '<tr><td>Spedizione</td><td>' + (o.spedizione ? euro(o.spedizione) : 'Gratuita') + '</td></tr><tr class="tot"><td>Totale</td><td>' + euro(o.totale) + '</td></tr></tbody></table>' +
+        (indirizzo ? '<p class="acc-consegna"><b>Consegna a</b><br>' + indirizzo + '</p>' : '') +
+        '</div></details></li>';
+    };
+    dentro.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-copia-num]'); if (!b) return;
+      var n = b.getAttribute('data-copia-num'), es = b.parentNode.nextElementSibling;
+      var ok = function () { es.textContent = 'Numero copiato: incollalo nella pagina del corriere.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(n).then(ok, function () { es.textContent = n; }); else es.textContent = n;
+    });
     var disegnaConto = function () {
-      var email = mem.get('maro-utente');
-      contoFuori.hidden = !!email; dentro.hidden = !email;
-      if (!email) return;
-      $('[data-conto-email]').textContent = email;
-      var io = leggiJ('maro-account', []).filter(function (x) { return x.email === email; })[0];
-      $('[data-conto-nome]').textContent = io && io.nome ? ', ' + io.nome : '';
-      var usati = leggiJ('maro-usati', []), ordini = leggiJ('maro-ordini', []), att = codiceAttivo();
-      var emessi = leggiJ('maro-emessi', []);
-      var liberi = emessi.filter(function (c) { return usati.indexOf(c.codice) < 0; });
-      var spesi = emessi.filter(function (c) { return usati.indexOf(c.codice) > -1; });
-      $('[data-codici-liberi]').innerHTML = liberi.length ? liberi.map(function (c) {
-        var inBorsa = att && att.codice === c.codice;
-        return '<li><div><b>' + esc(c.codice) + '</b><span>' + esc(descr(c)) + '</span></div>' +
-          (inBorsa ? '<em class="acc-stato attivo">Attivo in borsa</em>' : att ? '<em class="acc-stato">Disponibile</em>' : '<button type="button" class="btn btn-contorno-nero" data-usa-codice="' + esc(c.codice) + '">Metti in borsa</button>') + '</li>';
-      }).join('') : '<li class="acc-vuoto">Nessun codice disponibile. <a class="link" href="index.html#iscriviti">Iscriviti</a> per il 10% sul primo ordine.</li>';
-      $('[data-codici-usati]').innerHTML = spesi.length ? spesi.map(function (c) {
-        var o = ordini.filter(function (x) { return x.codice === c.codice; })[0];
-        return '<li><div><b>' + esc(c.codice) + '</b><span>' + esc(descr(c)) + (o ? ' · usato il ' + dataIt(o.data) + ', ordine ' + esc(o.id) : '') + '</span></div><em class="acc-stato usato">Usato</em></li>';
-      }).join('') : '<li class="acc-vuoto">Nessuno, per ora.</li>';
-      $('[data-conto-ordini]').innerHTML = ordini.length ? ordini.slice().reverse().map(function (o) {
-        var pezzi = (o.righe || []).reduce(function (s, r) { return s + r.q; }, 0);
-        return '<li><div><b>Ordine ' + esc(o.id) + '</b><span>' + dataIt(o.data) + ' · ' + pezzi + (pezzi === 1 ? ' articolo' : ' articoli') + (o.codice ? ' · codice ' + esc(o.codice) : '') + '</span></div><em>' + (o.conti ? euro(o.conti.totale) : '') + '</em></li>';
-      }).join('') : '<li class="acc-vuoto">Nessun ordine, per ora.</li>';
+      var tk = tokenConto();
+      if (!tk || $('[data-acc-nuova]')) return fuori(); // mentre si sceglie una nuova password si resta su quel modulo
+      api('/api/io', undefined, tk).then(function (d) {
+        if (d.stato === 401) { togliK('maro-token'); return fuori(); }
+        contoFuori.hidden = true; dentro.hidden = false;
+        if (!d.ok) { mostraAvviso(esc(d.errore)); return; }
+        $('[data-conto-email]').textContent = d.email;
+        $('[data-conto-nome]').textContent = d.nome ? ', ' + d.nome : '';
+        if (!d.email_verificata) {
+          var l = null; try { l = sessionStorage.getItem('maro-link-conferma'); } catch (e) {}
+          mostraAvviso(linkProva('Ti abbiamo mandato un’email per confermare l’indirizzo: dopo la conferma qui compaiono i tuoi codici e i tuoi ordini.', l));
+        } else if (avvisoConto && !avvisoConto.dataset.fisso) mostraAvviso('');
+        codiciConto = d.codici || [];
+        var att = codiceAttivo();
+        var liberi = codiciConto.filter(function (c) { return c.stato === 'disponibile'; }), spesi = codiciConto.filter(function (c) { return c.stato === 'usato'; });
+        $('[data-codici-liberi]').innerHTML = liberi.length ? liberi.map(function (c) {
+          var inBorsa = att && att.codice === c.codice;
+          return '<li><div><b>' + esc(c.codice) + '</b><span>' + esc(descr(c)) + '</span></div>' +
+            (inBorsa ? '<em class="acc-stato attivo">Attivo in borsa</em>' : att ? '<em class="acc-stato">Disponibile</em>' : '<button type="button" class="btn btn-contorno-nero" data-usa-codice="' + esc(c.codice) + '">Metti in borsa</button>') + '</li>';
+        }).join('') : '<li class="acc-vuoto">Nessun codice disponibile. <a class="link" href="index.html#iscriviti">Iscriviti</a> per il 10% sul primo ordine.</li>';
+        $('[data-codici-usati]').innerHTML = spesi.length ? spesi.map(function (c) {
+          return '<li><div><b>' + esc(c.codice) + '</b><span>' + esc(descr(c)) + (c.usato_il ? ' · usato il ' + dataIt(c.usato_il) : '') + (c.ordine ? ', ordine ' + esc(c.ordine) : '') + '</span></div><em class="acc-stato usato">Usato</em></li>';
+        }).join('') : '<li class="acc-vuoto">Nessuno, per ora.</li>';
+        var ordini = d.ordini || [];
+        $('[data-conto-ordini]').innerHTML = ordini.length ? ordini.map(disegnaOrdine).join('') : '<li class="acc-vuoto">Nessun ordine, per ora.</li>';
+        if (d.invito && ordini.length) { mem.set('maro-mio-invito', d.invito); disegnaInviti(d.invito); }
+      });
     };
-    // ---- Accedi / Registrati (dimostrazione: account in questo browser, della password solo l'impronta SHA-256) ----
+    // ---- Accedi / Registrati ----
     var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    var accounts = function () { return leggiJ('maro-account', []); };
-    var impronta = function (email, pw) {
-      var dati = new TextEncoder().encode('maro|' + email + '|' + pw);
-      if (!(window.crypto && crypto.subtle)) return Promise.resolve(null); // senza contesto sicuro niente impronta: si rifiuta
-      return crypto.subtle.digest('SHA-256', dati).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); });
-    };
     var regolePw = { lung: function (p) { return p.length >= 8; }, num: function (p) { return /\d/.test(p); }, maiu: function (p) { return /[A-Z]/.test(p); } };
     var formA = $('[data-acc-accedi]'), formR = $('[data-acc-registrati]'), schede = $$('[data-acc-scheda]');
     var vaiScheda = function (nome, fuoco) {
@@ -952,25 +1030,30 @@
       s.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); vaiScheda(schede[(i + 1) % 2].getAttribute('data-acc-scheda'), true); } });
     });
     if (/registrati/.test(location.hash)) vaiScheda('registrati');
-    var entra = function (email) { mem.set('maro-utente', email); disegnaConto(); window.scrollTo(0, 0); };
+    var entra = function (token) { mem.set('maro-token', token); disegnaConto(); window.scrollTo(0, 0); };
+    var occupato = function (form, si) { var b = $('button[type=submit]', form); if (b) b.disabled = si; };
     formA.addEventListener('submit', function (e) {
       e.preventDefault();
       var es = $('[data-acc-esito]', formA), email = $('#acc-email').value.trim().toLowerCase(), pw = $('#acc-pw').value;
       $('[data-acc-info]').textContent = '';
       if (!EMAIL_OK.test(email)) { es.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; $('#acc-email').focus(); return; }
       if (!pw) { es.textContent = 'Scrivi la password.'; $('#acc-pw').focus(); return; }
-      var a = accounts().filter(function (x) { return x.email === email; })[0];
-      impronta(email, pw).then(function (h) {
+      occupato(formA, true); es.textContent = '';
+      api('/api/accedi', { email: email, password: pw }).then(function (d) {
+        occupato(formA, false);
         // stesso messaggio se l'email non esiste o la password è sbagliata: non si rivela chi è registrato
-        if (!a || !h || a.hash !== h) { es.textContent = 'Email o password non corretti. Non hai un account? Passa a «Registrati».'; return; }
-        es.textContent = ''; entra(email);
+        if (!d.ok) { es.textContent = d.stato === 401 ? 'Email o password non corretti. Non hai un account? Passa a «Registrati».' : d.errore; return; }
+        $('#acc-pw').value = ''; entra(d.token);
       });
     });
     $('[data-acc-dimenticata]').addEventListener('click', function () {
       var email = $('#acc-email').value.trim(), info = $('[data-acc-info]');
       if (!EMAIL_OK.test(email)) { $('[data-acc-esito]').textContent = 'Scrivi prima la tua email, poi tocca «Password dimenticata?».'; $('#acc-email').focus(); return; }
       $('[data-acc-esito]').textContent = '';
-      info.textContent = 'Se esiste un account con questa email, ti abbiamo mandato un link per scegliere una nuova password. (Anteprima: nessuna email inviata.)';
+      api('/api/password-dimenticata', { email: email }).then(function (d) {
+        if (!d.ok) { info.textContent = d.errore; return; }
+        info.innerHTML = linkProva('Se esiste un account con questa email, ti abbiamo mandato un link per scegliere una nuova password.', d.anteprima_link);
+      });
     });
     var pwR = $('#reg-pw');
     pwR.addEventListener('input', function () {
@@ -985,32 +1068,121 @@
       var manca = Object.keys(regolePw).filter(function (k) { return !regolePw[k](pw); });
       if (manca.length) { pwR.dispatchEvent(new Event('input')); return errore('La password non va ancora bene: guarda i punti sotto il campo.', pwR); }
       if (!$('[data-reg-privacy]').checked) return errore('Per creare l’account serve la conferma dell’informativa privacy.', $('[data-reg-privacy]'));
-      if (accounts().some(function (x) { return x.email === email; })) { vaiScheda('accedi'); $('#acc-email').value = email; $('[data-acc-esito]').textContent = 'Esiste già un account con questa email: accedi con la tua password.'; $('#acc-pw').focus(); return; }
-      impronta(email, pw).then(function (h) {
-        if (!h) return errore('Questo browser non permette di creare l’account di prova (serve una connessione sicura).');
-        var lista = accounts(); lista.push({ nome: nome.slice(0, 40), email: email, hash: h, newsletter: $('[data-reg-newsletter]').checked, creato: new Date().toISOString() });
-        scriviJ('maro-account', lista);
-        es.textContent = '';
-        // prima il codice, poi l'ingresso: così l'elenco "I tuoi codici" lo mostra subito
-        var c = $('[data-reg-newsletter]').checked ? attivaSconto(email) : null;
-        entra(email);
-        if (c && c.codice && !c.usato) avvisa('Benvenuto! Il tuo codice ' + c.codice + ' è nel tuo account e già in borsa.');
-        else avvisa('Account creato. Benvenuto in MARO.');
+      var news = $('[data-reg-newsletter]').checked;
+      occupato(formR, true); es.textContent = '';
+      api('/api/registrati', { nome: nome.slice(0, 40), email: email, password: pw, privacy: true, newsletter: news }).then(function (d) {
+        occupato(formR, false);
+        if (d.stato === 409) { vaiScheda('accedi'); $('#acc-email').value = email; $('[data-acc-esito]').textContent = 'Esiste già un account con questa email: accedi con la tua password.'; $('#acc-pw').focus(); return; }
+        if (!d.ok) return errore(d.errore);
+        pwR.value = '';
+        try { if (d.anteprima_link) sessionStorage.setItem('maro-link-conferma', d.anteprima_link); } catch (x) {}
+        // con la newsletter il codice va subito in borsa (nell'elenco dell'account compare dopo la conferma dell'email)
+        (news ? attivaSconto(email) : Promise.resolve(null)).then(function (c) {
+          entra(d.token);
+          if (c && c.codice && c.tipo === 'benvenuto') avvisa('Benvenuto! Il tuo codice ' + c.codice + ' è già in borsa.');
+          else avvisa('Account creato. Benvenuto in MARO.');
+        });
       });
     });
-    $('[data-conto-esci]').addEventListener('click', function () { togliK('maro-utente'); disegnaConto(); });
+    $('[data-conto-esci]').addEventListener('click', function () {
+      var tk = tokenConto(); togliK('maro-token'); fuori();
+      if (tk) api('/api/esci', {}, tk);
+    });
+    var formEl = $('[data-acc-elimina]');
+    if (formEl) formEl.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var pw = $('#el-pw').value, es = $('[data-el-esito]');
+      if (!pw) { es.textContent = 'Scrivi la tua password per confermare.'; $('#el-pw').focus(); return; }
+      occupato(formEl, true);
+      api('/api/elimina-account', { password: pw }, tokenConto()).then(function (d) {
+        occupato(formEl, false);
+        if (!d.ok) { es.textContent = d.errore; return; }
+        $('#el-pw').value = ''; formEl.parentNode.open = false;
+        // nel browser restano solo comodità: via anche codice in borsa e link amico di questa persona
+        ['maro-token', 'maro-codice', 'maro-emessi', 'maro-mio-invito', 'maro-iscritto'].forEach(togliK);
+        fuori(); $('[data-acc-info]').textContent = 'Account eliminato. Ci dispiace vederti andare: se torni, ti aspettiamo.';
+        window.scrollTo(0, 0);
+      });
+    });
     dentro.addEventListener('click', function (e) {
       var b = e.target.closest('[data-usa-codice]'); if (!b) return;
-      var c = leggiJ('maro-emessi', []).filter(function (x) { return x.codice === b.getAttribute('data-usa-codice'); })[0];
-      if (c && !codiceAttivo()) { scriviJ('maro-codice', c); if (window.MARO_ridisegna) window.MARO_ridisegna(); disegnaConto(); avvisa('Codice ' + c.codice + ' attivo nella tua borsa.'); }
+      var c = codiciConto.filter(function (x) { return x.codice === b.getAttribute('data-usa-codice'); })[0];
+      if (c && !codiceAttivo()) {
+        var att = { tipo: c.tipo, codice: c.codice, pct: c.pct, euro: c.euro };
+        scriviJ('maro-codice', att); emetti(att);
+        if (window.MARO_ridisegna) window.MARO_ridisegna(); disegnaConto(); avvisa('Codice ' + c.codice + ' attivo nella tua borsa.');
+      }
     });
+    // link dalle email: #conferma=… (conferma l'indirizzo) · #nuova-password=… (scegli la password)
+    var puliscIndirizzo = function () { try { history.replaceState(null, '', location.pathname); } catch (e) {} };
+    var usaLinkIndirizzo = function () {
+    var mLink = /#(conferma|nuova-password)=([A-Za-z0-9_-]{20,})/.exec(location.hash);
+    if (!mLink) return;
+    if (mLink[1] === 'conferma') {
+      puliscIndirizzo();
+      api('/api/conferma', { token: mLink[2] }).then(function (d) {
+        try { sessionStorage.removeItem('maro-link-conferma'); } catch (e) {}
+        if (avvisoConto) avvisoConto.dataset.fisso = '1';
+        mostraAvviso(esc(d.ok ? 'Email confermata. Ora qui trovi i tuoi codici e i tuoi ordini.' : d.errore));
+        if (!tokenConto()) { $('[data-acc-info]').textContent = d.ok ? 'Email confermata: accedi per vedere codici e ordini.' : d.errore; }
+        disegnaConto();
+      });
+    } else {
+      puliscIndirizzo();
+      var vecchio = $('[data-acc-nuova]'); if (vecchio) vecchio.remove();
+      var np = document.createElement('form');
+      np.className = 'acc-pannello'; np.noValidate = true; np.setAttribute('data-acc-nuova', '');
+      np.innerHTML = '<h2>Scegli una nuova password</h2><div class="acc-campo"><label for="np-pw">Nuova password</label><input id="np-pw" type="password" autocomplete="new-password" required></div>' +
+        '<p class="acc-sotto">Almeno 8 caratteri, un numero e una lettera maiuscola.</p><p class="acc-esito" role="alert"></p><button type="submit" class="btn btn-nero btn-largo">Salva la password</button>';
+      formA.parentNode.insertBefore(np, formA);
+      fuori(); formA.hidden = true; formR.hidden = true; schede.forEach(function (s) { s.parentNode.hidden = true; });
+      np.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var pw = $('#np-pw').value, es = $('.acc-esito', np);
+        if (!Object.keys(regolePw).every(function (k) { return regolePw[k](pw); })) { es.textContent = 'La password non va ancora bene: almeno 8 caratteri, un numero e una maiuscola.'; $('#np-pw').focus(); return; }
+        occupato(np, true);
+        api('/api/conferma', { token: mLink[2], password: pw }).then(function (d) {
+          occupato(np, false);
+          if (!d.ok) { es.textContent = d.errore; return; }
+          np.remove(); schede.forEach(function (s) { s.parentNode.hidden = false; }); vaiScheda('accedi');
+          if (avvisoConto) avvisoConto.dataset.fisso = '1';
+          mostraAvviso('Password cambiata. Per sicurezza abbiamo chiuso gli accessi dagli altri dispositivi.');
+          entra(d.token);
+        });
+      });
+      $('#np-pw').focus();
+    }
+    };
+    // il link si usa all'apertura della pagina e anche se si apre mentre si è già qui (cambia solo il #)
+    window.addEventListener('hashchange', usaLinkIndirizzo);
+    usaLinkIndirizzo();
     disegnaConto();
   }
 
-  // conferma d'ordine: numero e totale dell'ultimo ordine di prova
+  /* ---------- conferma d'ordine: il motore dice numero, totale e link amico (la conferma di Stripe arriva in pochi secondi) ---------- */
   var testoOrdine = $('[data-ordine-testo]');
-  if (testoOrdine) {
-    var ult = leggiJ('maro-ordini', []).slice(-1)[0];
-    if (ult) testoOrdine.textContent = 'Ordine ' + ult.id + (ult.conti ? ' · totale ' + euro(ult.conti.totale) : '') + (ult.codice ? ' · codice ' + ult.codice + ' usato' : '') + '. Ti abbiamo mandato la conferma via email e ti scriviamo di nuovo quando il pacco parte, di solito entro 48 ore.';
+  var sessione = (/[?&]s=(cs_[A-Za-z0-9_]+)/.exec(location.search) || [])[1];
+  if (testoOrdine && sessione) {
+    var DOPO = ' Ti abbiamo mandato la conferma via email e ti scriviamo di nuovo quando il pacco parte, di solito entro 48 ore.';
+    testoOrdine.textContent = 'Stiamo registrando il tuo ordine…';
+    var tentativi = 0;
+    var chiediOrdine = function () {
+      api('/api/ordine?s=' + encodeURIComponent(sessione)).then(function (d) {
+        if (d.ok && d.numero) {
+          testoOrdine.textContent = 'Ordine ' + d.numero + ' · totale ' + euro(d.totale) + (d.codice ? ' · codice ' + d.codice + ' usato' : '') + '.' + DOPO;
+          // ordine registrato: borsa vuota, codice usato tolto, link "Porta un amico" pronto
+          righe = []; salva(righe); if (borsa) disegna();
+          togliK('maro-codice');
+          var o = leggiJ('maro-ordini', []);
+          if (!o.some(function (x) { return x.id === d.numero; })) { o.push({ id: d.numero, data: new Date().toISOString(), codice: d.codice, conti: { totale: d.totale } }); scriviJ('maro-ordini', o); }
+          if (d.codice) { var u = leggiJ('maro-usati', []); if (u.indexOf(d.codice) < 0) { u.push(d.codice); scriviJ('maro-usati', u); } }
+          if (d.invito) { mem.set('maro-mio-invito', d.invito); disegnaInviti(d.invito); }
+          return;
+        }
+        if (++tentativi < 15 && (d.in_attesa || d.stato === 0)) return setTimeout(chiediOrdine, 1500);
+        testoOrdine.textContent = 'Il pagamento è andato a buon fine: l’ordine sta arrivando nel nostro sistema.' + DOPO;
+      });
+    };
+    chiediOrdine();
   }
 })();
