@@ -18,6 +18,8 @@ const FERMO = x => x === 'none' || x === 'matrix(1, 0, 0, 1, 0, 0)';
     prova(!(await pg.$('.br-lettere, .fascia')), nome + ': nessuna scritta MARO orizzontale animata');
     prova(!/\bOMAR\b/.test(await pg.$eval('main, body', e => e.innerText)), nome + ': nessun OMAR in maiuscolo');
     prova(await pg.$$eval('.bn-voce', es => es.length === 3 && es.every(e => e.classList.contains('in-attesa'))), nome + ': 3 sport, in attesa prima di arrivarci');
+    // la linea verticale sta dietro: riquadri della foto e del testo sempre opachi e neri, sfuma solo il contenuto (bug 19/10)
+    prova(await pg.$$eval('.bn-voce figure, .bn-voce-testo', es => es.every(e => { const s = getComputedStyle(e); return s.opacity === '1' && s.backgroundColor === 'rgb(0, 0, 0)'; })), nome + ': riquadri opachi durante l’entrata, la linea non passa sopra');
     // firma verticale di Omar accanto al testo d'apertura (al posto dell'anagramma, tolto il 19/10)
     prova(!(await pg.$('[data-anagramma], .bn-lettere')), nome + ': anagramma tolto');
     const fi = await pg.$eval('.bn-firma', i => { const r = i.getBoundingClientRect(), l = document.querySelector('.bn-lead').getBoundingClientRect(); return { ok: i.complete && i.naturalWidth > 0, w: r.width, h: r.height, l: r.left, r: r.right, lead: l.width, accanto: l.left > r.right }; });

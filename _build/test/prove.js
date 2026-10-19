@@ -235,15 +235,17 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // 2b. popup 10% (contesto pulito)
   {
     const c = await b.newContext({ ...devices['iPhone 13'] }); const q = await c.newPage();
+    // dal 19/10 il popup compare appena si entra nell'abbigliamento, mai in home
     await q.goto(BASE + 'index.html', { waitUntil: 'load' });
-    await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
-    prova(await q.isVisible('#popup'), 'popup: compare dopo un terzo di pagina');
+    await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1600);
+    prova(!(await q.isVisible('#popup')), 'popup: mai in home');
+    await q.goto(BASE + 'polo.html', { waitUntil: 'load' }); await q.waitForTimeout(1600);
+    prova(await q.isVisible('#popup'), 'popup: compare appena entri nell’abbigliamento');
     await q.tap('.popup-no'); await q.waitForTimeout(400);
     prova(!(await q.isVisible('#popup')), 'popup: No grazie lo chiude');
-    await q.reload(); await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
+    await q.reload(); await q.waitForTimeout(1600);
     prova(!(await q.isVisible('#popup')), 'popup: dopo No grazie non ricompare');
-    await q.evaluate(() => localStorage.clear()); await q.reload();
-    await q.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2)); await q.waitForTimeout(1400);
+    await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForTimeout(1600);
     await q.fill('#email-popup', 'luca@esempio.it'); await q.tap('.popup-form .btn');
     prova(await q.isVisible('.popup-codice'), 'popup: iscrizione mostra il codice');
     await q.tap('[data-popup-ok]');

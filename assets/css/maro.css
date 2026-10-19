@@ -1214,3 +1214,109 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
   .scheda-punti i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, .55); transition: background .2s, transform .2s; }
   .scheda-punti i.acceso { background: #fff; transform: scale(1.25); }
 }
+
+/* ---------- codici e Porta un amico (19/10) ---------- */
+.sconto-togli { margin-left: 6px; padding: 0; border: 0; background: none; font: 500 13px var(--testo); color: var(--testo-2); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 32px; }
+.borsa-codice { margin: 8px 0 14px; border-top: 1px solid var(--grigio-2); }
+.borsa-codice summary { display: flex; align-items: center; min-height: 44px; font-weight: 600; cursor: pointer; list-style: none; }
+.borsa-codice summary::-webkit-details-marker { display: none; }
+.borsa-codice summary::after { content: '+'; margin-left: auto; font-size: 20px; }
+.borsa-codice[open] summary::after { content: '−'; }
+.borsa-codice-form { display: flex; gap: 8px; }
+.borsa-codice-form input { flex: 1; min-width: 0; min-height: 46px; padding: 0 14px; border: 1.5px solid var(--grigio-2); border-radius: 999px; font: 600 15px var(--testo); letter-spacing: .06em; text-transform: uppercase; }
+.borsa-codice-form input:focus { border-color: var(--nero); outline: 0; }
+.borsa-codice-form .btn { min-height: 46px; padding: 0 18px; }
+.borsa-codice-esito { margin: 8px 0 0; font-size: 14px; color: var(--rosso); }
+.borsa-codice-esito:empty { display: none; }
+
+.maro-avviso { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 90; transform: translate(-50%, 20px); opacity: 0; width: max-content; max-width: calc(100% - 32px); padding: 14px 20px; border-radius: 14px; background: var(--nero); color: var(--bianco); font-weight: 600; font-size: 15px; line-height: 1.4; box-shadow: 0 8px 30px rgba(0, 0, 0, .25); transition: opacity .3s, transform .3s; }
+.maro-avviso.visibile { opacity: 1; transform: translate(-50%, 0); }
+
+.amico { max-width: 1100px; margin: 0 auto; padding: clamp(40px, 7vw, 96px) var(--lato) clamp(56px, 8vw, 112px); }
+.amico .occhiello { font-size: 14px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; }
+.amico h1 { font: 400 clamp(56px, 9vw, 128px)/.95 var(--titoli); text-transform: uppercase; }
+.amico-lead { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; color: #333; max-width: 36em; margin: 22px 0 0; }
+.invito, .amico-senza { margin: 36px 0 0; padding: clamp(22px, 3vw, 32px); border-radius: 18px; background: var(--grigio); max-width: 720px; }
+.invito[hidden], .amico-senza[hidden] { display: none; }
+.invito-riga { display: flex; gap: 8px; }
+.invito-riga input { flex: 1; min-width: 0; min-height: 50px; padding: 0 16px; border: 1.5px solid var(--grigio-2); border-radius: 999px; background: var(--bianco); font: 500 15px var(--testo); color: var(--nero); }
+.invito-azioni { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.invito-esito { margin: 10px 0 0; font-size: 14px; color: var(--verde); font-weight: 600; }
+.invito-esito:empty { display: none; }
+.amico-senza p { margin: 0 0 16px; line-height: 1.6; }
+.amico-passi { list-style: none; margin: clamp(48px, 7vw, 88px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.amico-passi b { display: block; font: 400 44px/1 var(--titoli); margin-bottom: 14px; }
+.amico-passi h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+.amico-passi p { margin: 0; line-height: 1.6; color: #333; }
+.amico-nota { margin: 32px 0 0; font-size: 14px; color: var(--testo-2); max-width: 46em; }
+.ordine-prova { margin: 14px 0 0; font-size: 14px; color: var(--testo-2); }
+.ordine-amico { margin-top: clamp(40px, 6vw, 72px); padding-top: clamp(32px, 5vw, 56px); border-top: 1px solid var(--grigio-2); }
+.ordine-amico h2 { font: 400 clamp(36px, 5vw, 64px)/1 var(--titoli); text-transform: uppercase; }
+.ordine-amico > p { font-size: 17px; color: #333; margin: 12px 0 0; }
+.ordine-amico .link { display: inline-block; margin-top: 18px; font-weight: 600; }
+@media (max-width: 767px) { .amico-passi { grid-template-columns: 1fr; gap: 24px; } .invito-riga { flex-direction: column; } .invito-azioni .btn { flex: 1; } }
+.invito-azioni .btn { white-space: nowrap; }
+
+/* ---------- Il mio account (19/10, dimostrazione) ---------- */
+.acc [hidden] { display: none !important; }
+.acc-form { display: flex; gap: 8px; margin-top: 28px; max-width: 560px; }
+.acc-form input { flex: 1; min-width: 0; min-height: 52px; padding: 0 18px; border: 1.5px solid var(--grigio-2); border-radius: 999px; font: 500 16px var(--testo); }
+.acc-form input:focus { border-color: var(--nero); outline: 0; }
+.acc-esito { margin: 10px 0 0; color: var(--rosso); font-size: 14px; }
+.acc-esito:empty { display: none; }
+.acc-prova { margin-top: 20px; padding: 20px; border-radius: 16px; background: var(--grigio); max-width: 560px; }
+.acc-prova p { margin: 0 0 14px; line-height: 1.5; }
+.acc-chi { margin: 18px 0 0; font-size: 17px; }
+.acc-esci { border: 0; background: none; padding: 0; font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 44px; }
+.acc-blocco { margin-top: clamp(40px, 6vw, 64px); padding-top: clamp(28px, 4vw, 40px); border-top: 1px solid var(--grigio-2); }
+.acc-blocco h2 { font: 400 clamp(32px, 4.4vw, 52px)/1 var(--titoli); text-transform: uppercase; }
+.acc-sotto { margin: 10px 0 20px; color: #333; line-height: 1.6; max-width: 40em; }
+.acc-h3 { font-size: 15px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--testo-2); margin: 28px 0 10px; }
+.acc-codici, .acc-ordini { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; max-width: 760px; }
+.acc-codici li, .acc-ordini li { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; padding: 16px 18px; border-radius: 14px; background: var(--grigio); }
+.acc-codici li div, .acc-ordini li div { display: grid; gap: 4px; min-width: 0; }
+.acc-codici b { font: 700 18px var(--testo); letter-spacing: .08em; }
+.acc-codici span, .acc-ordini span { color: var(--testo-2); font-size: 14px; }
+.acc-codici.usati li { background: none; border: 1.5px dashed var(--grigio-2); }
+.acc-codici.usati b { text-decoration: line-through; color: var(--testo-2); }
+.acc-codici .btn { min-height: 44px; padding: 0 18px; }
+.acc-stato { font-style: normal; font-weight: 700; font-size: 14px; padding: 6px 12px; border-radius: 999px; background: var(--bianco); }
+.acc-stato.attivo { background: var(--verde); color: var(--bianco); }
+.acc-stato.usato { background: var(--grigio-2); color: var(--testo-2); }
+.acc-ordini em { font-style: normal; font-weight: 700; }
+.acc-vuoto { background: none !important; padding: 4px 0 !important; color: var(--testo-2); }
+@media (max-width: 767px) { .acc-form { flex-direction: column; } }
+
+/* ---------- account: icona in testata (solo PC; su telefono è nel menu) + Accedi / Registrati ---------- */
+.acc-apri { position: relative; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; }
+.acc-apri:hover { background: var(--grigio); }
+.acc-apri svg { width: 24px; height: 24px; }
+.menu .solo-tel { display: none; }
+@media (max-width: 959px) { .acc-apri { display: none; } .menu .solo-tel { display: block; } }
+.acc-schede { display: flex; gap: 28px; margin: 32px 0 0; border-bottom: 1px solid var(--grigio-2); max-width: 520px; }
+.acc-schede button { min-height: 52px; padding: 0; border: 0; background: none; font: 600 18px var(--testo); color: var(--testo-2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.acc-schede button[aria-selected="true"] { color: var(--nero); border-bottom-color: var(--nero); }
+.acc-pannello { display: grid; gap: 14px; max-width: 520px; padding-top: 24px; }
+.acc-campo { display: grid; gap: 6px; }
+.acc-campo label { font-weight: 600; font-size: 15px; }
+.acc-campo input { min-height: 52px; padding: 0 16px; border: 1.5px solid var(--grigio-2); border-radius: 12px; font: 500 16px var(--testo); }
+.acc-campo input:focus { border-color: var(--nero); outline: 0; }
+.acc-regole { list-style: none; margin: -4px 0 4px; padding: 0; display: grid; gap: 4px; font-size: 14px; color: var(--testo-2); }
+.acc-regole li::before { content: '○'; display: inline-block; width: 20px; }
+.acc-regole li.ok { color: var(--verde); }
+.acc-regole li.ok::before { content: '✓'; }
+.acc-spunta { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.5; cursor: pointer; min-height: 44px; }
+.acc-spunta input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--nero); }
+.acc-spunta em { color: var(--testo-2); font-style: normal; }
+.acc-link { justify-self: start; min-height: 44px; padding: 0; border: 0; background: none; font: 500 15px var(--testo); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--nero); }
+.acc-info { margin: 0; font-size: 14px; color: var(--verde); font-weight: 600; line-height: 1.5; }
+.acc-info:empty, .acc-pannello .acc-esito:empty { display: none; }
+.acc-pannello .acc-esito { margin: 0; color: var(--rosso); font-size: 14px; }
+.acc-codici li.acc-vuoto, .acc-ordini li.acc-vuoto { display: block; }
+
+/* entrata degli sport: sfuma solo il contenuto, il riquadro nero resta pieno e copre sempre la linea verticale (Francesco 19/10: "la linea copre la foto mentre scorro") */
+.bn-voce.in-attesa figure, .bn-voce.in-attesa .bn-voce-testo { opacity: 1; }
+.bn-voce.in-attesa figure img, .bn-voce.in-attesa .bn-voce-testo > * { opacity: 0; }
+.bn-voce figure img, .bn-voce-testo > * { transition: opacity .9s ease; }
+.bn-voce-testo { background: var(--nero); }
+@media (prefers-reduced-motion: reduce) { .bn-voce figure img, .bn-voce-testo > * { transition: none; } }

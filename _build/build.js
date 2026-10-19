@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '67'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '68'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -59,9 +59,13 @@ ${LOGO_SIMBOLO}
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
 <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
 <symbol id="i-condividi" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-utente" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
 <symbol id="i-borsa" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6L5 8zm4 0V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>`;
+
+// popup del 10%: solo quando si entra nell'abbigliamento (pagine categoria e schede), richiesta di Omar alla call del 18/10
+const conPopup = f => CATEGORIE.some(c => c.file === f) || CATALOGO.some(p => p.id + '.html' === f);
 
 function pagina({ titolo, descrizione, corpo, file }) {
   return `<!doctype html>
@@ -89,7 +93,7 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <link rel="stylesheet" href="assets/css/maro.css?v=${V}">
 <script defer src="assets/js/maro.js?v=${V}"></script>
 </head>
-<body${file === 'index.html' ? ' class="home"' : ''}>
+<body${file === 'index.html' ? ' class="home"' : ''}${conPopup(file) ? ' data-popup' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${avviso()}
@@ -97,9 +101,10 @@ ${avviso()}
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1180 846" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
-    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a></div>
+    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
   </nav>
   <div class="azioni">
+    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a>
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
     <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
@@ -114,7 +119,7 @@ ${corpo}
       <p>Streetwear da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
@@ -130,7 +135,7 @@ ${corpo}
   <div class="popup-passo" data-passo="1">
     <p class="popup-occhiello">Prima volta qui?</p>
     <h2 id="popup-titolo">10% sul tuo<br>primo ordine</h2>
-    <p>Lasciaci la tua email: 10% sul primo ordine e i prossimi drop in anteprima, il giorno prima di tutti.</p>
+    <p>Lasciaci la tua email: un codice tutto tuo con il 10% sul primo ordine, e i prossimi drop il giorno prima di tutti.</p>
     <form class="popup-form" novalidate>
       <label for="email-popup" class="sr">La tua email</label>
       <input id="email-popup" type="email" autocomplete="email" placeholder="La tua email" required>
@@ -141,9 +146,9 @@ ${corpo}
   </div>
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
-    <h2>Il tuo codice: <span class="popup-codice">MARO10</span></h2>
-    <p>Lo sconto del 10% è già attivo nella tua borsa. Non devi copiare niente.</p>
-    <button class="btn btn-nero" type="button" data-popup-ok>Vai al Drop 001</button>
+    <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
+    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
+    <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>
 <div class="zoom" id="zoom" role="dialog" aria-modal="true" aria-label="Foto ingrandita" hidden>
@@ -823,6 +828,131 @@ function storia() {
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
 }
 
+// ---------- PORTA UN AMICO (19/10, richiesta di Omar alla call del 18/10) ----------
+// Regole (valori di esempio, da confermare con Omar): l'amico ha il 10% sul primo ordine; chi invita riceve un codice da 10 €
+// quando l'ordine dell'amico supera i 14 giorni del reso. Invita solo chi ha già comprato. I codici non si sommano.
+// Oggi è una dimostrazione nel browser; con il motore (fase 2) codici, ordini e premi li gestisce il server + Stripe.
+const AMICO_PCT = 10, AMICO_BUONO = 10;
+const blocInvito = `<div class="invito" data-invito hidden>
+    <p class="occhiello">Il tuo link</p>
+    <div class="invito-riga"><input type="text" readonly data-invito-link aria-label="Il tuo link da condividere"><button type="button" class="btn btn-nero" data-invito-copia>Copia</button></div>
+    <div class="invito-azioni"><a class="btn btn-contorno-nero" data-invito-wa target="_blank" rel="noopener" aria-label="Invia il link su WhatsApp">WhatsApp</a><button type="button" class="btn btn-contorno-nero" data-invito-condividi hidden>Condividi</button></div>
+    <p class="invito-esito" role="status"></p>
+  </div>`;
+const regoleAmico = `<ol class="amico-passi">
+    <li><b>01</b><h3>Condividi il tuo link</h3><p>Dopo il primo ordine ricevi un link tutto tuo: lo trovi qui e nell’email di conferma.</p></li>
+    <li><b>02</b><h3>Il tuo amico ha il ${AMICO_PCT}%</h3><p>Aprendo il link trova lo sconto già nella borsa, sul suo primo ordine.</p></li>
+    <li><b>03</b><h3>Tu ricevi ${AMICO_BUONO} €</h3><p>Quando il suo ordine supera i 14 giorni per il reso, ti mandiamo via email un codice da ${AMICO_BUONO} € per il prossimo acquisto.</p></li>
+  </ol>
+  <p class="amico-nota">Un codice per ordine: lo sconto amico non si somma al ${AMICO_PCT}% dell’iscrizione. Il link vale per chi non ha mai ordinato su MARO. Condizioni di esempio, da confermare.</p>`;
+function portaUnAmico() {
+  const corpo = `
+<section class="amico" aria-labelledby="amico-titolo">
+  <div class="amico-testa">
+    <p class="occhiello">Porta un amico</p>
+    <h1 id="amico-titolo">${AMICO_PCT}% a lui.<br>${AMICO_BUONO} € a te.</h1>
+    <p class="amico-lead">Hai già un capo MARO? Mandalo a chi lo porterebbe bene: lui ha il ${AMICO_PCT}% sul primo ordine, tu un codice da ${AMICO_BUONO} € quando il suo ordine è confermato.</p>
+  </div>
+  ${blocInvito}
+  <div class="amico-senza" data-invito-senza>
+    <p><strong>Il tuo link arriva con il primo ordine.</strong> Così lo sconto va davvero a un amico nuovo, e non a un’altra email della stessa persona.</p>
+    <a class="btn btn-nero" href="shop.html">Guarda i capi</a>
+  </div>
+  ${regoleAmico}
+</section>`;
+  return pagina({ titolo: 'Porta un amico — MARO', descrizione: `Invita un amico su MARO: lui ha il ${AMICO_PCT}% sul primo ordine, tu un codice da ${AMICO_BUONO} € quando il suo ordine è confermato.`, corpo, file: 'porta-un-amico.html' });
+}
+// pagina su cui Stripe rimanderà dopo il pagamento (success_url); oggi la apre il pagamento di prova della borsa
+function ordineConfermato() {
+  const corpo = `
+<section class="amico ordine-ok" aria-labelledby="ordine-titolo">
+  <div class="amico-testa">
+    <p class="occhiello">Ordine ricevuto</p>
+    <h1 id="ordine-titolo">Grazie.<br>È tuo.</h1>
+    <p class="amico-lead" data-ordine-testo>Ti abbiamo mandato la conferma via email. Ti scriviamo di nuovo quando il pacco parte, di solito entro 48 ore.</p>
+    <p class="ordine-prova">Anteprima: pagamento di prova, nessun addebito e nessuna email inviata.</p>
+  </div>
+  <div class="ordine-amico">
+    <h2>Porta un amico</h2>
+    <p>Lui ha il ${AMICO_PCT}% sul primo ordine, tu ${AMICO_BUONO} € sul prossimo.</p>
+    ${blocInvito}
+    <div class="amico-senza" data-invito-senza><p>Il tuo link comparirà qui dopo il pagamento.</p></div>
+    <a class="link" href="porta-un-amico.html">Come funziona</a>
+  </div>
+</section>`;
+  return pagina({ titolo: 'Ordine ricevuto — MARO', descrizione: 'Conferma del tuo ordine MARO.', corpo, file: 'ordine-confermato.html' });
+}
+
+// ---------- IL MIO ACCOUNT (19/10): Accedi / Registrati con email e password, codici disponibili e usati, ordini, link amico ----------
+// DIMOSTRAZIONE: account salvati solo in questo browser (della password resta solo l'impronta SHA-256, mai il testo).
+// Con il motore (fase 2): account, password (hash lato server), codici, ordini e premi nel database (D1); il codice risulta
+// "usato" solo dopo il pagamento riuscito su Stripe; "Password dimenticata" manda un link via email.
+function account() {
+  const campo = (id, etichetta, tipo, extra = '') => `<div class="acc-campo"><label for="${id}">${etichetta}</label><input id="${id}" type="${tipo}" ${extra}></div>`;
+  const corpo = `
+<section class="amico acc" aria-labelledby="conto-titolo">
+  <div data-conto-fuori>
+    <p class="occhiello">Il mio account</p>
+    <h1 id="conto-titolo">Entra in MARO.</h1>
+    <p class="amico-lead">Nel tuo account trovi i codici sconto, quelli che hai già usato, i tuoi ordini e il link per invitare un amico.</p>
+    <div class="acc-schede" role="tablist" aria-label="Accedi o registrati">
+      <button type="button" role="tab" id="tab-accedi" aria-controls="pan-accedi" aria-selected="true" data-acc-scheda="accedi">Accedi</button>
+      <button type="button" role="tab" id="tab-registrati" aria-controls="pan-registrati" aria-selected="false" tabindex="-1" data-acc-scheda="registrati">Registrati</button>
+    </div>
+    <form class="acc-pannello" id="pan-accedi" role="tabpanel" aria-labelledby="tab-accedi" data-acc-accedi novalidate>
+      ${campo('acc-email', 'Email', 'email', 'autocomplete="email" required')}
+      ${campo('acc-pw', 'Password', 'password', 'autocomplete="current-password" required')}
+      <p class="acc-esito" role="alert" data-acc-esito></p>
+      <button type="submit" class="btn btn-nero btn-largo">Accedi</button>
+      <button type="button" class="acc-link" data-acc-dimenticata>Password dimenticata?</button>
+      <p class="acc-info" data-acc-info role="status"></p>
+    </form>
+    <form class="acc-pannello" id="pan-registrati" role="tabpanel" aria-labelledby="tab-registrati" data-acc-registrati hidden novalidate>
+      ${campo('reg-nome', 'Nome', 'text', 'autocomplete="given-name" required maxlength="40"')}
+      ${campo('reg-email', 'Email', 'email', 'autocomplete="email" required')}
+      ${campo('reg-pw', 'Password', 'password', 'autocomplete="new-password" required aria-describedby="reg-pw-regole"')}
+      <ul class="acc-regole" id="reg-pw-regole" data-pw-regole>
+        <li data-regola="lung">Almeno 8 caratteri</li>
+        <li data-regola="num">Almeno un numero</li>
+        <li data-regola="maiu">Almeno una lettera maiuscola</li>
+      </ul>
+      <label class="acc-spunta"><input type="checkbox" data-reg-newsletter checked> <span>Voglio i drop in anteprima e il <strong>10% sul primo ordine</strong> (newsletter, ti cancelli quando vuoi).</span></label>
+      <label class="acc-spunta"><input type="checkbox" data-reg-privacy required> <span>Ho letto l’informativa privacy. <em>(obbligatorio)</em></span></label>
+      <p class="acc-esito" role="alert" data-reg-esito></p>
+      <button type="submit" class="btn btn-nero btn-largo">Crea l’account</button>
+    </form>
+    <p class="ordine-prova">Anteprima: gli account di prova restano in questo browser. Nel negozio vero sono custoditi sul server.</p>
+  </div>
+  <div data-conto-dentro hidden>
+    <p class="occhiello">Il mio account</p>
+    <h1>Ciao<span data-conto-nome></span>.</h1>
+    <p class="acc-chi"><span data-conto-email></span> · <button type="button" class="acc-esci" data-conto-esci>Esci</button></p>
+    <p class="ordine-prova">Anteprima: account di prova, i dati sono quelli salvati in questo browser.</p>
+    <div class="acc-blocco">
+      <h2>I tuoi codici</h2>
+      <p class="acc-sotto">Ogni codice vale una volta sola. Diventa «usato» solo quando completi un ordine: finché resta qui, è tuo.</p>
+      <ul class="acc-codici" data-codici-liberi></ul>
+      <h3 class="acc-h3">Già usati</h3>
+      <ul class="acc-codici usati" data-codici-usati></ul>
+    </div>
+    <div class="acc-blocco">
+      <h2>I tuoi ordini</h2>
+      <ul class="acc-ordini" data-conto-ordini></ul>
+    </div>
+    <div class="acc-blocco">
+      <h2>Porta un amico</h2>
+      <p class="acc-sotto">Lui ha il ${AMICO_PCT}% sul primo ordine, tu ${AMICO_BUONO} € sul prossimo. <a class="link" href="porta-un-amico.html">Come funziona</a></p>
+      ${blocInvito}
+      <div class="amico-senza" data-invito-senza><p>Il tuo link arriva con il primo ordine.</p><a class="btn btn-nero" href="shop.html">Guarda i capi</a></div>
+    </div>
+  </div>
+</section>`;
+  return pagina({ titolo: 'Il mio account — MARO', descrizione: 'Il tuo account MARO: codici sconto, ordini e link per invitare un amico.', corpo, file: 'account.html' });
+}
+
+fs.writeFileSync(path.join(ROOT, 'account.html'), account());
+fs.writeFileSync(path.join(ROOT, 'porta-un-amico.html'), portaUnAmico());
+fs.writeFileSync(path.join(ROOT, 'ordine-confermato.html'), ordineConfermato());
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), categoriaPagina(cat));
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
