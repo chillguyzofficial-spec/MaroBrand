@@ -54,10 +54,10 @@ module.exports = [
     descrizione: 'Felpa Firma MARO: blu notte, scritta MARO con onde verdi, bianche e rosse sulla schiena, firma piccola sul petto. Drop 001, 130 €.',
   },
   {
-    id: 'felpa-verticale', esaurite: ['M'], copertina: ['cop-felpa-verticale', 'Ragazzo beve da una borraccia in un parco di allenamento con la Felpa Verticale MARO verde, firma verticale sulla schiena'],
+    id: 'felpa-verticale', esaurite: ['M'], copertina: ['pal-felpa-verticale', 'Ragazzo di spalle sotto un porticato di marmo con la Felpa Verticale MARO verde, firma verticale sulla schiena'], seconda: 'cop-felpa-verticale',
     tipo: 'felpa', nome: 'Felpa Verticale', colore: 'Verde bottiglia, firma MARO verticale sul retro',
     prezzo: 110, pallini: ['#1f3a2c'], taglie: TAGLIE_FELPA,
-    foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
+    foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino trasparente in un palazzo di marmo, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
     frase: 'Verde bottiglia, con una firma che scende dall’alto in basso.',
     testo: 'La firma MARO verticale, con le sue fiamme, corre lungo tutta la schiena, dalle spalle all’orlo. Il davanti è completamente libero. Taglio comodo, cappuccio e tasca a marsupio: va con i jeans, con la tuta e sotto una giacca.',
     dettagli: ['Firma MARO verticale dalle spalle all’orlo', 'Davanti senza grafiche', 'Cappuccio con coulisse', 'Tasca a marsupio', 'Polsini e fondo a costine'],

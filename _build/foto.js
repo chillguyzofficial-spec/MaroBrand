@@ -26,7 +26,7 @@ const LAVORI = [
   { out: 'felpa-firma-tre-quarti', src: 'foto-set-2-2026-10-12/844861471_4656824397880401_7427535886801104678_n.webp' },
   { out: 'felpa-firma-fronte', src: 'foto-set-2-2026-10-12/847420150_1406026624930256_5378025056577203795_n.webp' },
   // Felpa Verticale (verde bottiglia): render set 4 + vecchia foto in montagna
-  { out: 'felpa-verticale-manichino', src: 'foto-set-4-2026-10-12/844207315_2020682351927935_7519315701529958749_n.webp' },
+  { out: 'felpa-verticale-manichino', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale-manichino.jpeg', crop: [1, 0, 1280, 1600] }, // dal 19/10 manichino nel palazzo (prima: set 4)
   { out: 'felpa-verticale-fronte', src: 'foto-set-4-2026-10-12/846432527_1605944577978313_7379708338739515515_n.webp' },
   { out: 'copertina-felpa-verticale', src: 'foto-copertine-2026-10-19/felpa-verticale.webp', }, // dal 19/10, intera 9:16 (Francesco: non tagliare)
   { out: 'felpa-verticale-montagna', src: 'mockup-ai/felpa-nera-montagne.jpg', crop: [194, 0, 690, 863] },
@@ -124,6 +124,7 @@ const LAVORI = [
   { out: 'pal-polo-jacquard', src: 'foto-schede-palazzo-2026-10-19/polo-jacquard.webp', crop: [2, 0, 1292, 1615] },
   { out: 'pal-felpa-firma', src: 'foto-schede-palazzo-2026-10-19/felpa-firma.webp', crop: [2, 0, 1292, 1615] },
   { out: 'pal-felpa-stretta', src: 'foto-schede-palazzo-2026-10-19/felpa-stretta.webp', crop: [2, 0, 1292, 1615] },
+  { out: 'pal-felpa-verticale', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale.jpeg', crop: [2, 0, 1292, 1615] },
   // locandina del video d'apertura (mostrata finché il video non parte)
   { out: 'apertura-locandina', src: 'video-home/home-metro-1.mp4', t: 0.05, max: 1920, q: 0.92 },
 ];
