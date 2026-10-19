@@ -385,7 +385,7 @@ ${[
   <div class="segno-scena">
     ${SEGNO_DUE_SCENE ? `${img('segno-scena-1', 'Mani che ricamano a mano la firma verticale MARO su un telaio nero, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
     <div class="segno-scena-2" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home brand', sizes: '100vw' })}</div>
-    ${SEGNO_A_MANO ? `<div class="segno-cucitura" role="slider" tabindex="0" aria-label="Scorri tra le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scorrere</span></div>` : '<span class="segno-ago" aria-hidden="true"></span>'}`
+    ${SEGNO_A_MANO ? `<div class="segno-cucitura" role="slider" tabindex="0" aria-label="Confronta le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scoprire</span></div>` : '<span class="segno-ago" aria-hidden="true"></span>'}`
     : img('segno-scena-2', 'Mani che ricamano a mano la firma verticale MARO sul petto della Polo Jacquard, su un telaio, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
   </div>
   <div class="segno-testo">
