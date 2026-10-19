@@ -60,8 +60,9 @@ h1, h2, h3 { margin: 0; }
 
 /* apertura con video */
 .apertura { position: relative; height: calc(100svh - var(--testata) - 34px); min-height: 520px; max-height: 1000px; background: #000; color: var(--bianco); overflow: hidden; }
-.apertura-video { position: absolute; top: 0; right: 0; height: 100%; width: auto; max-width: none; aspect-ratio: 16 / 9; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%); mask-image: linear-gradient(90deg, transparent 0, #000 22%); }
-.apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,.38) 38%, rgba(0,0,0,0) 62%), linear-gradient(180deg, rgba(0,0,0,0) 35%, rgba(0,0,0,.6) 100%); }
+/* il video copre sempre tutta la larghezza (Omar, 19/10: niente fascia nera a sinistra sugli schermi larghi); la colonna con MARO resta in vista */
+.apertura-video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 70% 50%; }
+.apertura::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,.15) 40%, rgba(0,0,0,0) 60%), linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.55) 100%); }
 .apertura-video { z-index: 0; transition: opacity 1s linear; }
 .apertura-video[data-copia] { opacity: 0; }
 .apertura::after { z-index: 2; }
