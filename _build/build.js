@@ -37,7 +37,15 @@ const AVVISI = [
   ['-10% sul primo ordine con l’iscrizione', 'index.html#iscriviti'],
   ['Carta regalo da 50 €, via email', 'carta-regalo.html'],
 ];
+// Dietro il segno (home): le due scene che si alternano "cucite". Dal 19/10 notte UNA sola (la scena col telaio nero aveva
+// le mani tatuate, Omar non vuole tatuaggi) → con una foto nuova al posto di segno-scena-1 rimettere true
+const SEGNO_DUE_SCENE = true; // 19/10 notte: arrivata la scena col telaio nero senza tatuaggi
+// 19/10 notte (Francesco): niente cucitura automatica, la riga al centro la sposta chi guarda (trascina o clicca) → false = di nuovo automatica
+const SEGNO_A_MANO = true;
+// IN PAUSA dal 19/10 notte: a Omar piace la barra ma non le scritte, le cambierà più avanti → per riaccenderla: true
+const AVVISI_ACCESI = false;
 function avviso() {
+  if (!AVVISI_ACCESI) return '';
   const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
   return `<div class="avviso" aria-label="Avvisi"><div class="avviso-nastro"><div class="avviso-giro">${giro(false)}</div><div class="avviso-giro" aria-hidden="true">${giro(true)}</div></div></div>`;
 }
@@ -373,11 +381,12 @@ ${[
   </ul>
 </section>
 
-<section class="segno" id="storia" aria-labelledby="storia-titolo" data-entra>
+<section class="segno${SEGNO_DUE_SCENE && SEGNO_A_MANO ? ' a-mano' : ''}" id="storia" aria-labelledby="storia-titolo" data-entra>
   <div class="segno-scena">
-    ${img('segno-scena-1', 'Mani tatuate che ricamano a mano la firma verticale MARO su un telaio nero, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
+    ${SEGNO_DUE_SCENE ? `${img('segno-scena-1', 'Mani che ricamano a mano la firma verticale MARO su un telaio nero, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
     <div class="segno-scena-2" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home brand', sizes: '100vw' })}</div>
-    <span class="segno-ago" aria-hidden="true"></span>
+    ${SEGNO_A_MANO ? `<div class="segno-cucitura" role="slider" tabindex="0" aria-label="Scorri tra le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scorrere</span></div>` : '<span class="segno-ago" aria-hidden="true"></span>'}`
+    : img('segno-scena-2', 'Mani che ricamano a mano la firma verticale MARO sul petto della Polo Jacquard, su un telaio, in un laboratorio alla luce di una lampada', { dove: 'home brand', sizes: '100vw' })}
   </div>
   <div class="segno-testo">
     <h2 id="storia-titolo" class="segno-titolo"><span>Dietro</span><span class="segno-vuoto">il segno</span></h2>

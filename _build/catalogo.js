@@ -24,7 +24,7 @@ module.exports = [
     descrizione: 'Polo Tricolore MARO: piqué di cotone nero, maniche a fasce rosso, bianco e verde, ali colorate sulla schiena. Drop 001, 80 €.',
   },
   {
-    id: 'polo-jacquard', copertina: ['pal-polo-jacquard', 'Ragazzo sotto un porticato di marmo con la Polo Jacquard MARO beige'], seconda: 'cop-polo-jacquard', tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
+    id: 'polo-jacquard', copertina: ['pal-polo-jacquard', 'Ragazzo sotto un porticato di marmo con la Polo Jacquard MARO beige'], seconda: 'cop-cargo-firma' /* 19/10 notte: il pugile era tatuato; Francesco: stessa foto del Cargo, è un completo */, tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
     prezzo: 95, pallini: ['#d9d6cf'], taglie: TAGLIE_POLO,
     foto: [['polo-jacquard-manichino', 'Polo Jacquard grigio perla su manichino, firma MARO tono su tono sul petto'], ['polo-jacquard-tre-quarti', 'Polo Jacquard vista di tre quarti']],
     frase: 'Per chi preferisce i dettagli che si scoprono da vicino.',

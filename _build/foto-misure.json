@@ -5,15 +5,15 @@
  ],
  "acc-berretto-dettaglio": [
   1400,
-  1331
+  1339
  ],
  "acc-berretto-fronte": [
-  1024,
-  980
+  1400,
+  1339
  ],
  "acc-berretto-lato": [
   1400,
-  1331
+  1339
  ],
  "acc-borraccia-copertina": [
   1400,
@@ -21,7 +21,7 @@
  ],
  "acc-borraccia-dettaglio": [
   1400,
-  1331
+  1339
  ],
  "acc-borraccia-dritta": [
   1400,
@@ -29,27 +29,27 @@
  ],
  "acc-borraccia-inclinata": [
   1400,
-  1331
+  1339
  ],
  "acc-cappellino-copertina": [
   1400,
-  1331
+  1339
  ],
  "acc-cappellino-dettaglio": [
   1400,
-  1331
+  1339
  ],
  "acc-cappellino-tre-quarti": [
   1400,
-  1331
+  1339
  ],
  "apertura-locandina": [
   1920,
   1080
  ],
  "bn-ali": [
-  1600,
-  1522
+  1472,
+  1408
  ],
  "bn-allenamento": [
   1067,
@@ -328,8 +328,8 @@
   1400
  ],
  "scena-composizione": [
-  1092,
-  1092
+  1400,
+  1400
  ],
  "scena-dolomiti": [
   2048,
