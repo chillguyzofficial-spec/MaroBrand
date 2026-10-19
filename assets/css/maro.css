@@ -203,6 +203,17 @@ details > p { margin: 0 0 20px; }
 .borsa-testa svg { width: 24px; height: 24px; }
 .borsa-righe { flex: 1; overflow-y: auto; padding: 8px var(--lato); }
 .borsa-vuota { color: var(--testo-2); padding: 24px 0; }
+/* "Completa il look" (19/10 notte): accessori proposti in fondo ai capi */
+.borsa-abbina { margin: 16px 0 8px; padding: 16px; border-radius: 14px; background: var(--grigio); }
+.borsa-abbina h3 { font-size: 14px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin: 0; }
+.borsa-abbina > p { margin: 4px 0 12px; font-size: 14px; color: var(--testo-2); }
+.borsa-abbina ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.borsa-abbina li { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.borsa-abbina img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; background: #e0e0e0; display: block; }
+.borsa-abbina li div { display: grid; gap: 2px; min-width: 0; }
+.borsa-abbina b { font-size: 15px; }
+.borsa-abbina span { font-size: 14px; color: var(--testo-2); }
+.borsa-abbina .btn { min-height: 44px; padding: 0 16px; font-size: 14px; }
 .riga { display: grid; grid-template-columns: 88px 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--grigio-2); }
 .riga img { width: 72px; aspect-ratio: 9/16; object-fit: contain; background: var(--grigio); }
 .riga h3 { font-size: 16px; font-weight: 600; }

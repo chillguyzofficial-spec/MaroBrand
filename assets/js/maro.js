@@ -260,6 +260,18 @@
   var borsa = $('#borsa'), ultimoFocus = null;
 
   function conta() { return righe.reduce(function (s, r) { return s + r.q; }, 0); }
+  // "Completa il look" (Francesco, 19/10 notte): con un capo in borsa si propongono gli accessori non ancora presi, uno a tocco
+  // (dentro la parte che scorre, in fondo ai capi: su un telefono piccolo non schiaccia l'elenco)
+  function abbina() {
+    var prodotto = function (id) { return CAT.filter(function (x) { return x.id === id; })[0]; };
+    var capo = righe.some(function (r) { var p = prodotto(r.id); return p && p.tipo !== 'accessori'; });
+    var acc = CAT.filter(function (p) { return p.tipo === 'accessori' && !righe.some(function (r) { return r.id === p.id; }); });
+    if (!capo || !acc.length) return '';
+    return '<div class="borsa-abbina"><h3>Completa il look</h3><p>Abbinalo a un accessorio MARO, taglia unica.</p><ul>' + acc.map(function (p) {
+      return '<li><a href="' + p.id + '.html" tabindex="-1"><img src="' + p.src + '" alt="" width="64" height="64" loading="lazy"></a><div><b>' + esc(p.nome) + '</b><span>' + euro(p.prezzo) + '</span></div>' +
+        '<button type="button" class="btn btn-contorno-nero" data-abbina="' + p.id + '" aria-label="Aggiungi ' + esc(p.nome) + ' alla borsa">Aggiungi</button></li>';
+    }).join('') + '</ul></div>';
+  }
   function disegna() {
     var n = conta(), num = $('.borsa-num'), btn = $('[data-apri-borsa]');
     num.textContent = n; num.hidden = !n;
@@ -283,7 +295,7 @@
         '<div><h3>' + p.nome + '</h3><p>' + p.colore + '</p><p>Taglia ' + r.t + ' · ' + euro(p.prezzo) + '</p>' +
         '<div class="riga-azioni"><button type="button" data-meno="' + k + '" aria-label="Togli uno">−</button><span aria-live="polite">' + r.q + '</span>' +
         '<button type="button" data-piu="' + k + '" aria-label="Aggiungi uno">+</button><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';
-    }).join('');
+    }).join('') + abbina();
     fondo.hidden = false;
     // spedizione: 5,90 €, gratuita sopra la soglia (valori di esempio)
     // la carta regalo arriva via email: niente spedizione, non conta per la soglia e non prende lo sconto
@@ -362,6 +374,12 @@
       if ((k = t.getAttribute('data-piu')) !== null) righe[k].q = Math.min(9, righe[k].q + 1);
       else if ((k = t.getAttribute('data-meno')) !== null) { righe[k].q--; if (righe[k].q < 1) righe.splice(k, 1); }
       else if ((k = t.getAttribute('data-togli')) !== null) righe.splice(k, 1);
+      else if ((k = t.getAttribute('data-abbina')) !== null) {
+        righe.push({ id: k, t: 'Unica', q: 1 }); salva(righe); disegna();
+        // il fuoco va al prossimo accessorio proposto, o alla riga appena aggiunta
+        var dopo = $('[data-abbina]', borsa) || $('.borsa-righe .riga:last-child button', borsa); if (dopo) dopo.focus();
+        return;
+      }
       else if (t.hasAttribute('data-paga')) return paga(t);
       else if (t.hasAttribute('data-togli-codice')) { togliK('maro-codice'); codiceAperto = true; disegna(); var ic = $('#borsa-codice-in'); if (ic) ic.focus(); return; }
       else return;
