@@ -23,6 +23,10 @@
   1400,
   1331
  ],
+ "acc-borraccia-dritta": [
+  1400,
+  1339
+ ],
  "acc-borraccia-inclinata": [
   1400,
   1331
@@ -42,6 +46,30 @@
  "apertura-locandina": [
   1920,
   1080
+ ],
+ "bn-ali": [
+  1600,
+  1522
+ ],
+ "bn-allenamento": [
+  1067,
+  1600
+ ],
+ "bn-basket": [
+  1067,
+  1600
+ ],
+ "bn-boxe": [
+  904,
+  1600
+ ],
+ "bn-corsa": [
+  1920,
+  1280
+ ],
+ "bn-tennis": [
+  1920,
+  1120
  ],
  "brand-ali": [
   1120,
@@ -86,6 +114,38 @@
  "categoria-polo": [
   620,
   775
+ ],
+ "cop-cappellino-ali": [
+  1120,
+  1400
+ ],
+ "cop-cargo-firma": [
+  1120,
+  1400
+ ],
+ "cop-felpa-firma": [
+  1120,
+  1400
+ ],
+ "cop-felpa-stretta": [
+  1120,
+  1400
+ ],
+ "cop-felpa-verticale": [
+  1120,
+  1400
+ ],
+ "cop-polo-jacquard": [
+  1120,
+  1400
+ ],
+ "cop-polo-linee": [
+  1024,
+  1280
+ ],
+ "cop-polo-tricolore": [
+  1024,
+  1280
  ],
  "copertina-felpa-firma": [
   788,
@@ -179,6 +239,26 @@
   1120,
   1400
  ],
+ "pal-felpa-firma": [
+  1120,
+  1400
+ ],
+ "pal-felpa-stretta": [
+  1120,
+  1400
+ ],
+ "pal-polo-jacquard": [
+  1120,
+  1400
+ ],
+ "pal-polo-linee": [
+  1120,
+  1400
+ ],
+ "pal-polo-tricolore": [
+  1120,
+  1400
+ ],
  "pant-cargo-appeso": [
   1123,
   1400
@@ -238,6 +318,10 @@
  "scena-citta": [
   1120,
   1400
+ ],
+ "scena-composizione": [
+  1092,
+  1092
  ],
  "scena-dolomiti": [
   2048,

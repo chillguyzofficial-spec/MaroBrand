@@ -82,15 +82,53 @@
   var cat = $('[data-catalogo]');
   if (cat && $('.griglia', cat)) {
     var celle = $$('.scheda-cella', cat), griglia = $('.griglia', cat);
-    var btnFiltri = $('[data-filtri-mostra]', cat), scritta = $('[data-filtri-scritta]', cat);
+    var btnFiltri = $('[data-filtri-mostra]', cat), scritta = $('[data-filtri-scritta]', cat), velo = $('.cat-velo', cat);
+    var telefono = function () { return window.innerWidth < 960; };
+    var ultimoFuoco = null;
+    // PC: colonna a sinistra che si nasconde · telefono: pannello che sale dal basso, sopra la pagina (scroll bloccato solo su html)
     function mostraFiltri(si) {
       cat.classList.toggle('filtri-chiusi', !si);
       btnFiltri.setAttribute('aria-expanded', si ? 'true' : 'false');
-      scritta.textContent = si ? 'Nascondi filtri' : (window.innerWidth < 960 ? 'Filtri' : 'Mostra filtri');
+      aggiornaScritta();
+      var foglio = si && telefono();
+      velo.hidden = !foglio;
+      document.documentElement.classList.toggle('foglio-aperto', foglio);
+      if (foglio) { ultimoFuoco = document.activeElement; var x = $('[data-filtri-chiudi]', cat); if (x) x.focus(); }
+      else if (ultimoFuoco && telefono()) { ultimoFuoco.focus(); ultimoFuoco = null; }
+    }
+    // "Filtri (2)": quanti filtri sono attivi, visibile anche a pannello chiuso
+    function aggiornaScritta() {
+      var nf = $$('[data-f-taglia][aria-pressed="true"], [data-f-colore]:checked, [data-f-prezzo]:checked', cat).length;
+      scritta.textContent = !cat.classList.contains('filtri-chiusi') ? 'Nascondi filtri' : (telefono() ? 'Filtri' : 'Mostra filtri') + (nf ? ' (' + nf + ')' : '');
     }
     btnFiltri.addEventListener('click', function () { mostraFiltri(cat.classList.contains('filtri-chiusi')); });
-    mostraFiltri(window.innerWidth >= 960); // sul telefono si parte con i filtri chiusi
+    $$('[data-filtri-chiudi]', cat).forEach(function (b) { b.addEventListener('click', function () { mostraFiltri(false); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && telefono() && !cat.classList.contains('filtri-chiusi')) mostraFiltri(false); });
+    var eraTelefono = telefono();
+    window.addEventListener('resize', function () { if (telefono() !== eraTelefono) { eraTelefono = telefono(); mostraFiltri(!eraTelefono); } });
+    mostraFiltri(!telefono()); // sul telefono si parte con i filtri chiusi
     function scelti(sel, attr) { return $$(sel, cat).filter(function (e) { return e.checked || e.getAttribute('aria-pressed') === 'true'; }).map(function (e) { return e.getAttribute(attr); }); }
+    // filtri attivi come pillole sopra la griglia: un tocco sulla ✕ toglie quel filtro
+    var boxScelti = $('[data-cat-scelti]', cat);
+    function pillole() {
+      var voci = [];
+      $$('[data-f-taglia][aria-pressed="true"]', cat).forEach(function (b) { voci.push(['Taglia ' + b.getAttribute('data-f-taglia'), function () { b.setAttribute('aria-pressed', 'false'); }]); });
+      $$('[data-f-colore]', cat).forEach(function (i) { if (i.checked) voci.push([i.getAttribute('data-f-colore'), function () { i.checked = false; }]); });
+      $$('[data-f-prezzo]', cat).forEach(function (i) { if (i.checked) voci.push([i.getAttribute('data-f-nome'), function () { i.checked = false; }]); });
+      boxScelti.innerHTML = '';
+      voci.forEach(function (v) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'cat-pillola';
+        b.innerHTML = '<span></span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chiudi"/></svg>';
+        b.firstChild.textContent = v[0]; b.setAttribute('aria-label', 'Togli il filtro ' + v[0]);
+        b.addEventListener('click', function () { v[1](); applica(); });
+        boxScelti.appendChild(b);
+      });
+      if (voci.length > 1) {
+        var tutti = document.createElement('button'); tutti.type = 'button'; tutti.className = 'cat-pillola-tutti'; tutti.textContent = 'Cancella tutto';
+        tutti.addEventListener('click', azzera); boxScelti.appendChild(tutti);
+      }
+      boxScelti.hidden = !voci.length;
+    }
     function applica() {
       var tg = scelti('[data-f-taglia]', 'data-f-taglia'), col = scelti('[data-f-colore]', 'data-f-colore'), pr = scelti('[data-f-prezzo]', 'data-f-prezzo');
       var n = 0;
@@ -103,6 +141,10 @@
       });
       $('[data-cat-conta]', cat).textContent = '(' + n + ')';
       $('[data-cat-nessuno]', cat).hidden = n > 0;
+      var mostraN = $('[data-filtri-mostra-n]', cat);
+      if (mostraN) mostraN.textContent = n ? 'Mostra ' + n + (n === 1 ? ' capo' : ' capi') : 'Nessun capo';
+      aggiornaScritta();
+      pillole();
       var o = $('[data-ordina]', cat).value;
       celle.slice().sort(function (a, b) {
         if (o === 'prezzo-su') return a.getAttribute('data-prezzo') - b.getAttribute('data-prezzo');
@@ -113,11 +155,12 @@
     $$('[data-f-taglia]', cat).forEach(function (b) { b.addEventListener('click', function () { b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') === 'true' ? 'false' : 'true'); applica(); }); });
     $$('[data-f-colore], [data-f-prezzo]', cat).forEach(function (i) { i.addEventListener('change', applica); });
     $('[data-ordina]', cat).addEventListener('change', applica);
-    $('[data-filtri-azzera]', cat).addEventListener('click', function () {
+    function azzera() {
       $$('[data-f-taglia]', cat).forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
       $$('[data-f-colore], [data-f-prezzo]', cat).forEach(function (i) { i.checked = false; });
       applica();
-    });
+    }
+    $$('[data-filtri-azzera]', cat).forEach(function (b) { b.addEventListener('click', azzera); });
   }
 
   /* ---------- borsa (salvata solo in questo browser) ---------- */
@@ -522,38 +565,7 @@
     });
   }
 
-  /* ---------- pagina del brand: l'anagramma si compone (O·M·A·R → MARO) ---------- */
-  var ana = $('[data-anagramma]');
   var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (ana && !calma && 'IntersectionObserver' in window) {
-    var scatola = $('.br-lettere', ana), lettere = $$('b', scatola);
-    var ordina = function (seq) { seq.split('').forEach(function (l) { scatola.appendChild(lettere.filter(function (x) { return x.getAttribute('data-l') === l; })[0]); }); };
-    // FLIP: si misura dove stanno le lettere in OMAR, si riordina in MARO e si anima dal vecchio posto al nuovo;
-    // la O, che attraversa tutta la parola, salta sopra le altre (animazione nativa, nessuna libreria)
-    var componi = function () {
-      lettere.forEach(function (x) { if (x.getAnimations) x.getAnimations().forEach(function (a) { a.cancel(); }); });
-      ordina('OMAR');
-      var da = {}; lettere.forEach(function (x) { da[x.getAttribute('data-l')] = x.getBoundingClientRect().left; });
-      ordina('MARO');
-      lettere.forEach(function (x, i) {
-        var dx = da[x.getAttribute('data-l')] - x.getBoundingClientRect().left;
-        var eO = x.getAttribute('data-l') === 'O', salto = eO ? '-0.45em' : '0';
-        if (!x.animate) return;
-        x.animate([
-          { transform: 'translate(' + dx + 'px, 0)' },
-          { transform: 'translate(' + dx / 2 + 'px, ' + salto + ')', offset: 0.5 },
-          { transform: 'translate(0, 0)' }
-        ], { duration: eO ? 1700 : 1100, delay: eO ? 0 : 200 + i * 120, easing: 'cubic-bezier(.45, 0, .2, 1)', fill: 'backwards' }); // la O atterra per ultima, a parola già pronta
-      });
-    };
-    ordina('OMAR');
-    var osservaNome = new IntersectionObserver(function (voci) {
-      if (!voci[0].isIntersecting) return;
-      osservaNome.disconnect(); setTimeout(componi, 900); // OMAR resta fermo un attimo, poi si ricompone
-    }, { threshold: 0.6 });
-    osservaNome.observe(ana);
-    scatola.addEventListener('click', componi);
-  }
 
   /* ---------- Dietro il segno: la seconda foto sta sotto un ritaglio, il caricamento "lazy" non la vede mai → la carichiamo a 800 px dalla sezione ---------- */
   var scena2 = $('.segno-scena-2 img');
@@ -571,6 +583,26 @@
       voci.forEach(function (v) { if (v.isIntersecting) { v.target.classList.remove('in-attesa'); v.target.classList.add('entrato'); osservaEntra.unobserve(v.target); } });
     }, { threshold: 0.35 });
     daEntrare.forEach(function (el) { el.classList.add('in-attesa'); osservaEntra.observe(el); });
+  }
+
+  /* ---------- pagina del brand v4: la linea verticale si disegna mentre scorri, i punti si accendono quando la raggiungi ---------- */
+  var filo = $('.bn-filo');
+  if (filo) {
+    var luce = $('.bn-filo-luce', filo), sezFilo = filo.parentNode, punti = $$('.bn-punto', sezFilo), giroFilo = 0;
+    var disegna = function () {
+      giroFilo = 0;
+      var r = sezFilo.getBoundingClientRect(), meta = window.innerHeight * 0.6;
+      var p = Math.max(0, Math.min(1, (meta - r.top) / r.height));
+      luce.style.transform = 'scaleY(' + p + ')';
+      punti.forEach(function (pt) { pt.classList.toggle('acceso', pt.getBoundingClientRect().top < meta); });
+    };
+    if (calma) { luce.style.transform = 'none'; punti.forEach(function (pt) { pt.classList.add('acceso'); }); }
+    else {
+      var chiedi = function () { if (!giroFilo) giroFilo = requestAnimationFrame(disegna); };
+      window.addEventListener('scroll', chiedi, { passive: true });
+      window.addEventListener('resize', chiedi);
+      disegna();
+    }
   }
 
   /* ---------- pagina del brand: "Vedi il segno" ingrandisce la foto sul segno ---------- */

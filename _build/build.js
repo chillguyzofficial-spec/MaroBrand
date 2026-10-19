@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '66'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '67'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -20,8 +20,9 @@ const urlPiccola = id => { const f = 'assets/foto/' + id + '-640.webp'; return f
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const euro = n => n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' €';
 
-function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw' } = {}) {
-  usa(id, dove);
+// ripeti: foto già usata altrove e mostrata di nuovo apposta (es. il manichino che compare al passaggio del mouse sulla scheda)
+function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw', ripeti = false } = {}) {
+  if (ripeti) { if (!MISURE[id]) throw new Error('Foto mancante: ' + id); } else usa(id, dove);
   const [w, h] = MISURE[id];
   const pic = urlPiccola(id);
   const srcset = pic ? ` srcset="${pic} 640w, ${urlFoto(id)} ${w}w"` : '';
@@ -166,6 +167,8 @@ ${corpo}
 
 function scheda(p, dove) {
   const [fid, alt] = p.copertina;
+  // seconda foto al passaggio del mouse: la foto sportiva della campagna (p.seconda) oppure il capo da solo (manichino o prodotto)
+  const seconda = p.seconda || (p.foto || []).map(f => f[0]).find(id => id !== fid && MISURE[id]);
   const rapido = `<div class="rapido">
   <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: ${esc(p.nome)}">+</button>
   <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di ${esc(p.nome)}" hidden>
@@ -174,7 +177,7 @@ ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <b
 </div>`;
   const cuore = `<button class="cuore" type="button" data-cuore="${p.id}" aria-pressed="false" aria-label="Aggiungi ${esc(p.nome)} ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button>`;
   return `<div class="scheda-cella" data-tipo="${p.tipo}">${cuore}<a class="scheda" href="${p.id}.html" data-tipo="${p.tipo}">
-  <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}</div>
+  <div class="scheda-foto">${img(fid, alt, { dove, sizes: '(min-width: 960px) 32vw, 50vw' })}${seconda ? img(seconda, '', { ripeti: true, cls: 'scheda-foto-2', sizes: '(min-width: 960px) 32vw, 50vw' }) : ''}</div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini">${p.pallini.map(c => `<i style="background:${c}"></i>`).join('')}</span>
@@ -231,7 +234,7 @@ const freccia = '<svg class="filtro-freccia" viewBox="0 0 24 24" aria-hidden="tr
 function categoriaPagina(cat) {
   const capi = CATALOGO.filter(p => !cat.tipo || p.tipo === cat.tipo);
   const taglie = TAGLIE_ORDINE.filter(t => capi.some(p => p.taglie.includes(t)));
-  const colori = [...new Set(capi.map(coloreBase))];
+  const colori = [...new Map(capi.map(p => [coloreBase(p), p.pallini[0]]))]; // [nome, pallino]
   const fasce = FASCE_PREZZO.filter(f => capi.some(p => p.prezzo >= f.da && p.prezzo <= f.a));
   const menuCat = CATEGORIE.map(c => `<a href="${c.file}"${c.file === cat.file ? ' aria-current="page"' : ''}>${c.nome}</a>`).join('');
   const vuota = !capi.length;
@@ -246,24 +249,28 @@ ${vuota ? '' : `    <div class="cat-comandi">
   </div>
   <div class="cat-corpo">
     <aside class="cat-filtri" id="cat-filtri" aria-label="Filtri">
+${vuota ? '' : `      <div class="cat-foglio-testa"><h2>Filtri</h2><button type="button" data-filtri-chiudi aria-label="Chiudi i filtri"><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button></div>`}
       <nav class="cat-lista" aria-label="Categorie">${menuCat}</nav>
 ${vuota ? '' : `      <details class="filtro" open><summary>Taglia${freccia}</summary>
         <div class="filtro-taglie">${taglie.map(t => `<button type="button" data-f-taglia="${t}" aria-pressed="false">${t}</button>`).join('')}</div>
         <p class="filtro-nota">Mostra solo i capi con la taglia disponibile.</p>
       </details>
       <details class="filtro"><summary>Colore${freccia}</summary>
-        ${colori.map(c => `<label class="filtro-voce"><input type="checkbox" data-f-colore="${c}"> ${c}</label>`).join('\n        ')}
+        <div class="filtro-colori">${colori.map(([c, hex]) => `<label class="filtro-colore"><input type="checkbox" data-f-colore="${c}"><i style="background:${hex}"></i><span>${c}</span></label>`).join('')}</div>
       </details>
       <details class="filtro"><summary>Prezzo${freccia}</summary>
-        ${fasce.map(f => `<label class="filtro-voce"><input type="checkbox" data-f-prezzo="${f.da}-${f.a}"> ${f.nome}</label>`).join('\n        ')}
-      </details>`}
+        ${fasce.map(f => `<label class="filtro-voce"><input type="checkbox" data-f-prezzo="${f.da}-${f.a}" data-f-nome="${f.nome}"> ${f.nome}</label>`).join('\n        ')}
+      </details>
+      <div class="cat-foglio-fondo"><button type="button" class="btn btn-contorno-nero" data-filtri-azzera>Cancella tutto</button><button type="button" class="btn btn-nero" data-filtri-chiudi data-filtri-mostra-n>Mostra ${capi.length} capi</button></div>`}
     </aside>
+${vuota ? '' : `    <div class="cat-velo" data-filtri-chiudi hidden></div>`}
     <div class="cat-risultati">
 ${vuota ? `      <div class="cat-arrivo">
         <p class="cat-arrivo-titolo">In arrivo</p>
         <p>${cat.nome} MARO non sono ancora in vendita. Iscriviti: lo sai per primo quando escono, e hai il 10% sul primo ordine.</p>
         <a class="btn btn-nero" href="index.html#iscriviti">Avvisami</a>
-      </div>` : `      <div class="griglia">
+      </div>` : `      <div class="cat-scelti" data-cat-scelti hidden aria-live="polite"></div>
+      <div class="griglia">
 ${capi.map((p, i) => scheda(p, 'scheda ' + p.id).replace('<div class="scheda-cella"', `<div class="scheda-cella" data-ordine="${i}" data-prezzo="${p.prezzo}" data-colore="${esc(coloreBase(p))}" data-taglie="${p.taglie.filter(t => !(p.esaurite || []).includes(t)).join(' ')}"`)).join('\n')}
       </div>
       <div class="cat-nessuno" data-cat-nessuno hidden><p>Nessun capo con questi filtri.</p><button type="button" class="btn btn-nero" data-filtri-azzera>Azzera i filtri</button></div>`}
@@ -367,7 +374,7 @@ ${[
   </div>
   <div class="segno-testo">
     <h2 id="storia-titolo" class="segno-titolo"><span>Dietro</span><span class="segno-vuoto">il segno</span></h2>
-    <p>Cosa significano le ali, perché una stretta di mano e come nasce ogni capo MARO.</p>
+    <p>La firma che si legge dall’alto in basso, le ali di Omar e gli sport da cui nasce ogni capo MARO.</p>
     <a class="btn btn-bianco" href="storia.html">Leggi la storia</a>
   </div>
 </section>
@@ -403,7 +410,7 @@ ${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.leng
     <p class="esito" role="status" aria-live="polite"></p>
   </form>
   </div>
-  <figure class="iscriviti-foto">${img('scena-capi-maro', 'Felpe e polo MARO disposte sul marmo a comporre la scritta MARO', { dove: 'home iscrizione', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
+  <figure class="iscriviti-foto">${img('scena-composizione', 'Felpa verde, polo nera, cappellino, berretto e borraccia MARO disposti dall’alto su marmo e pietra, con rami d’ulivo e moschettoni', { dove: 'home iscrizione', sizes: '(min-width: 960px) 45vw, 100vw' })}</figure>
 </section>`;
   return pagina({ titolo: 'MARO — Fly with your mind · Drop 001', descrizione: 'MARO, streetwear da Milano. Drop 001: tre polo e tre felpe con il segno delle ali, ricamate e stampate. Spedizione gratuita sopra i 150 €.', corpo, file: 'index.html' });
 }
@@ -760,81 +767,60 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
   return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Ordini, spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
 }
 
-// ---------- STORIA (testi provvisori: da completare con le parole del fondatore) ----------
+// ---------- STORIA v4 (19/10): stile Nike, una foto per sport, la firma che scende in verticale (MARO mai in orizzontale) ----------
+const SEGNI_SPORT = [
+  { foto: 'bn-corsa', sport: 'Corsa', titolo: 'Sul petto.', testo: 'Ricamata piccola sulla Polo Linee, con tre righe bianche che scendono dalle spalle lungo le maniche.', link: ['polo-linee.html', 'Polo Linee'], alt: 'Ragazzo corre su una pista di atletica davanti al Colosseo al tramonto, con la Polo Linee MARO nera e la firma verticale sul petto' },
+  { foto: 'bn-basket', sport: 'Basket', titolo: 'Lungo la gamba.', testo: 'In grande sul Cargo Firma, dal fianco al ginocchio: si legge anche mentre corri.', link: ['cargo-firma.html', 'Cargo Firma'], alt: 'Ragazzo palleggia in un vicolo con graffiti, con la Polo Jacquard e il Cargo Firma MARO beige, firma verticale lungo la gamba' },
+  { foto: 'bn-allenamento', sport: 'Allenamento', titolo: 'Sulla schiena.', testo: 'Sulla Felpa Verticale la firma va dalle spalle all’orlo, alta quanto la schiena.', link: ['felpa-verticale.html', 'Felpa Verticale'], alt: 'Ragazzo di spalle beve da una borraccia in un parco di allenamento all’aperto, con la Felpa Verticale MARO verde e la firma verticale sulla schiena' },
+];
 function storia() {
+  const voci = SEGNI_SPORT.map((s, i) => `
+    <li class="bn-voce" data-entra>
+      <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(s.sport)}</p>
+      <figure style="--r: ${(MISURE[s.foto][0] / MISURE[s.foto][1]).toFixed(4)}">${img(s.foto, s.alt, { dove: 'brand ' + s.sport.toLowerCase(), sizes: '(min-width: 1240px) 1200px, 100vw' })}</figure>
+      <div class="bn-voce-testo"><h3>${esc(s.titolo)}</h3><p>${esc(s.testo)}</p><a class="btn btn-bianco" href="${s.link[0]}">${esc(s.link[1])}</a></div>
+    </li>`).join('');
   const corpo = `
-<section class="st-hero" aria-labelledby="st-titolo">
-  <figure class="st-hero-foto">${img('scena-dolomiti', 'Due ragazzi con felpe MARO di spalle davanti alle Dolomiti', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
-  <div class="st-hero-testo">
+<section class="bn-apertura" aria-labelledby="bn-titolo">
+  <figure>${img('bn-tennis', 'Tennista al servizio tra due colonne di marmo, con la Polo Tricolore MARO nera e le righe verde bianco rosso sulle maniche', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
+  <div class="bn-apertura-testo">
     <p class="occhiello">Il brand</p>
-    <h1 id="st-titolo"><span class="st-riga"><span>Nati</span></span> <span class="st-riga"><span>a Milano.</span></span></h1>
-    <p class="st-lead">Streetwear con un segno che si riconosce a distanza e grafiche che vivono sulla schiena. <strong>Lo portiamo in metro, in ufficio e fuori città, anche a duemila metri.</strong></p>
+    <h1 id="bn-titolo">In campo<br>dal 2020.</h1>
+    <div class="bn-intro">
+      <img class="bn-firma" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="">
+      <p class="bn-lead">MARO nasce nel 2020 da Omar, e il nome è il suo, con le lettere in un altro ordine. Polo, felpe e pantaloni con il taglio dello sport, tennis e padel prima di tutto, e la cura di un capo da portare anche dopo la partita.</p>
+    </div>
   </div>
 </section>
 
-<section class="br-intro" aria-labelledby="br-nome">
-  <h2 id="br-nome" class="br-anagramma" data-anagramma><span class="sr">MARO, l’anagramma di Omar</span><span class="br-lettere" aria-hidden="true"><b data-l="M">M</b><b data-l="A">A</b><b data-l="R">R</b><b data-l="O">O</b></span></h2>
-  <p><strong>MARO è l’anagramma di Omar</strong>, il fondatore: le stesse lettere, in un altro ordine. Un nome personale che, rimescolato, diventa di chi lo indossa.</p>
+<section class="bn-linea" aria-labelledby="bn-segno">
+  <div class="bn-filo" aria-hidden="true"><span class="bn-filo-luce"></span></div>
+  <header class="bn-linea-testa">
+    <p class="occhiello">Il segno</p>
+    <h2 id="bn-segno">Si legge<br>dall’alto<br>in basso.</h2>
+    <p>La firma MARO non si scrive in orizzontale: quattro lettere una sotto l’altra, sul petto, lungo la gamba, sulla schiena. È la regola del brand, e vale per ogni capo.</p>
+  </header>
+  <ol class="bn-voci">${voci}
+  </ol>
 </section>
 
-<section class="br-domande" aria-labelledby="br-domande">
-  <h2 id="br-domande" class="sr">Domande sul brand</h2>
-  <div class="domande">
-    <details><summary>Quando esce il prossimo drop?</summary><p>Sabato 14 novembre alle 18<span class="br-conto" data-conto-breve="2026-11-14T18:00:00+01:00"></span>. Chi è iscritto vede i capi il giorno prima. <a class="link" href="index.html#iscriviti">Iscriviti</a></p></details>
-    <details><summary>I capi tornano disponibili?</summary><p>Di rado. Ristampiamo solo i colori più richiesti, e chi è iscritto lo sa per primo.</p></details>
-    <details><summary>Quanti pezzi ci sono in ogni drop?</summary><p>Pochi: ogni capo esce in una tiratura limitata. Quando una taglia finisce la trovi segnata nella scheda, con “Avvisami” per sapere se torna.</p></details>
-    <details><summary>Posso vederli dal vivo prima di comprare?</summary><p>Per ora solo online, con reso entro 14 giorni per qualsiasi motivo. Quando organizziamo un pop-up, lo annunciamo prima agli iscritti.</p></details>
-    <details><summary>Dove vengono fatti?</summary><p>In Italia. Ricami e stampe li fa un laboratorio che segue ogni capo dal tessuto al controllo finale.</p></details>
+<section class="bn-ali" aria-labelledby="bn-simbolo">
+  <figure>${img('bn-ali', 'Ragazzo con la Polo Linee MARO tiene una borraccia nera con le ali bianche, sul cappellino le stesse ali ricamate con MARO in verticale', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
+  <div class="bn-ali-testo">
+    <p class="occhiello">Il simbolo</p>
+    <h2 id="bn-simbolo">Le ali.</h2>
+    <p>Una M che apre le ali, con MARO in verticale al centro. Lo trovi sugli accessori: il cappellino, il berretto e la borraccia.</p>
+    <a class="btn btn-nero" href="accessori.html">Accessori</a>
   </div>
 </section>
 
-<div class="fasce-nome">
-${fascia([['MARO'], ['OMAR', true]], 'fascia-chiara', 5)}
-${fascia([['OMAR', true], ['MARO']], 'fascia-chiara fascia-inversa', 5)}
-</div>
-
-<section class="br-segni" aria-labelledby="br-segni">
-  <h2 id="br-segni" class="titolo">I segni</h2>
-  <ul>
-    <li>
-      <figure class="br-zoom" style="--fuoco: 50% 32%">${img('brand-ali', 'Ragazzo di spalle appoggiato a una balaustra, Polo Tricolore MARO con le ali rosse e verdi sulla schiena', { dove: 'brand ali', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
-      <div><h3>Una M. Due ali.</h3><p>Il simbolo di MARO, al centro della schiena delle polo. Davanti resta solo la firma.</p><a class="btn btn-contorno-nero" href="polo-tricolore.html">Polo Tricolore</a></div>
-    </li>
-    <li>
-      <figure class="br-zoom" style="--fuoco: 50% 46%">${img('brand-firma', 'Ragazzo di spalle sulla scala mobile della metro, Felpa Verticale MARO verde con la firma verticale sulla schiena', { dove: 'brand firma', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
-      <div><h3>MARO, dall’alto in basso.</h3><p>Le quattro lettere una sotto l’altra, con le fiamme, dalle spalle all’orlo: la stessa firma che sulla Polo Linee è ricamata piccola sul petto.</p><a class="btn btn-contorno-nero" href="felpa-verticale.html">Felpa Verticale</a></div>
-    </li>
-    <li>
-      <figure class="br-zoom" style="--fuoco: 54% 38%">${img('brand-stretta', 'Due ragazzi si stringono la mano in un parco di Milano, uno indossa una felpa MARO', { dove: 'brand stretta', sizes: '(min-width: 960px) 30vw, 40vw' })}<button class="br-zoom-btn" type="button" aria-pressed="false">Vedi il segno</button></figure>
-      <div><h3>Rispetto, prima del logo.</h3><p>Il secondo segno di MARO: due persone, un patto. Sulla felpa grigia prende il posto del logo.</p><a class="btn btn-contorno-nero" href="felpa-stretta.html">Felpa grigia</a></div>
-    </li>
-  </ul>
-</section>
-
-<section class="br-banner" aria-labelledby="br-motto" data-entra>
-  <div class="br-banner-in">
-  <figure>${img('brand-banner', 'Ragazzo con felpa MARO blu seduto sul bordo di una terrazza guarda Milano e il Duomo illuminati all’ora blu', { dove: 'brand banner', sizes: '100vw' })}</figure>
-  <div class="br-banner-testo">
-    <h2 id="br-motto"><span class="st-riga"><span>Fly</span></span> <span class="st-riga"><span>with</span></span><br><span class="st-riga"><span>your</span></span> <span class="st-riga"><span>mind.</span></span></h2>
-    <p>I piedi restano in città, la testa va dove decidi tu.</p>
-  </div>
-  </div>
-</section>
-
-<section class="br-lavoro" aria-labelledby="br-lavoro">
-  <h2 id="br-lavoro" class="titolo">Come lavoriamo</h2>
-  <ul>
-    <li><figure>${img('scena-citta', 'Ragazzo di spalle con la Felpa Verticale MARO verde su un terrazzo in città, al tramonto', { dove: 'brand lavoro strada', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Provato per strada</h3><p>Ogni grafica va sul capo e si porta in giro per giorni, prima di andare in produzione.</p></li>
-    <li><figure>${img('scena-ricamo-vicino', 'Ricamatrice al lavoro sulla scritta MARO su una felpa verde', { dove: 'brand lavoro ricamo', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Ricamato dove conta</h3><p>Ricamo per le firme piccole, stampa per le grafiche grandi: ogni segno resta pulito, dalla XS alla XXL.</p></li>
-    <li><figure>${img('scena-showroom', 'Felpa verde, felpa blu e Polo Tricolore MARO appese davanti a una parete di marmo scuro', { dove: 'brand lavoro drop', sizes: '(min-width: 768px) 30vw, 100vw' })}</figure><h3>Niente stagioni. Solo drop.</h3><p>Un drop esce quando è pronto, non quando lo dice il calendario.</p></li>
-  </ul>
-</section>
-
-<section class="st-fine" aria-labelledby="st-fine" data-entra>
-  <div class="st-fine-testo"><svg class="st-fine-simbolo" viewBox="0 0 200 150" aria-hidden="true"><g transform="translate(0 15)" fill="currentColor"><path d="M62 110V32L76 18H88L100 44L112 18H124L138 32V110H116V60L106 82H94L84 60V110Z"/><path class="ala-sx" d="M52 26L2 2L8 42L20 42L24 66L36 64L42 88L52 92Z"/><path class="ala-dx" d="M148 26L198 2L192 42L180 42L176 66L164 64L158 88L148 92Z"/></g></svg><h2 id="st-fine">Indossa il segno.</h2></div>
+<section class="bn-fine" aria-labelledby="bn-motto" data-entra>
+  <svg class="bn-fine-logo" viewBox="0 0 1180 846" aria-hidden="true"><use href="#logo-maro"/></svg>
+  <h2 id="bn-motto">Fly with<br>your mind.</h2>
+  <p>I piedi in campo, la testa dove decidi tu.</p>
   <a class="btn btn-bianco" href="shop.html">Acquista il drop</a>
 </section>`;
-  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO, streetwear di Milano: il nome nato dall’anagramma di Omar, le ali, la stretta di mano e come nasce ogni capo.', corpo, file: 'storia.html' });
+  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
 }
 
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());

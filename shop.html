@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=66">
-<script defer src="assets/js/maro.js?v=66"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=67">
+<script defer src="assets/js/maro.js?v=67"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -59,27 +59,27 @@
   </div>
   <div class="cat-corpo">
     <aside class="cat-filtri" id="cat-filtri" aria-label="Filtri">
+      <div class="cat-foglio-testa"><h2>Filtri</h2><button type="button" data-filtri-chiudi aria-label="Chiudi i filtri"><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button></div>
       <nav class="cat-lista" aria-label="Categorie"><a href="shop.html" aria-current="page">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
       <details class="filtro" open><summary>Taglia<svg class="filtro-freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></summary>
         <div class="filtro-taglie"><button type="button" data-f-taglia="XS" aria-pressed="false">XS</button><button type="button" data-f-taglia="S" aria-pressed="false">S</button><button type="button" data-f-taglia="M" aria-pressed="false">M</button><button type="button" data-f-taglia="L" aria-pressed="false">L</button><button type="button" data-f-taglia="XL" aria-pressed="false">XL</button><button type="button" data-f-taglia="XXL" aria-pressed="false">XXL</button><button type="button" data-f-taglia="Unica" aria-pressed="false">Unica</button></div>
         <p class="filtro-nota">Mostra solo i capi con la taglia disponibile.</p>
       </details>
       <details class="filtro"><summary>Colore<svg class="filtro-freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></summary>
-        <label class="filtro-voce"><input type="checkbox" data-f-colore="Nero"> Nero</label>
-        <label class="filtro-voce"><input type="checkbox" data-f-colore="Grigio"> Grigio</label>
-        <label class="filtro-voce"><input type="checkbox" data-f-colore="Blu"> Blu</label>
-        <label class="filtro-voce"><input type="checkbox" data-f-colore="Verde"> Verde</label>
-        <label class="filtro-voce"><input type="checkbox" data-f-colore="Beige"> Beige</label>
+        <div class="filtro-colori"><label class="filtro-colore"><input type="checkbox" data-f-colore="Nero"><i style="background:#111"></i><span>Nero</span></label><label class="filtro-colore"><input type="checkbox" data-f-colore="Grigio"><i style="background:#b9b9b9"></i><span>Grigio</span></label><label class="filtro-colore"><input type="checkbox" data-f-colore="Blu"><i style="background:#1c2440"></i><span>Blu</span></label><label class="filtro-colore"><input type="checkbox" data-f-colore="Verde"><i style="background:#1f3a2c"></i><span>Verde</span></label><label class="filtro-colore"><input type="checkbox" data-f-colore="Beige"><i style="background:#d8cbb3"></i><span>Beige</span></label></div>
       </details>
       <details class="filtro"><summary>Prezzo<svg class="filtro-freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"/></svg></summary>
-        <label class="filtro-voce"><input type="checkbox" data-f-prezzo="0-99.99"> Sotto i 100 €</label>
-        <label class="filtro-voce"><input type="checkbox" data-f-prezzo="100-150"> 100–150 €</label>
+        <label class="filtro-voce"><input type="checkbox" data-f-prezzo="0-99.99" data-f-nome="Sotto i 100 €"> Sotto i 100 €</label>
+        <label class="filtro-voce"><input type="checkbox" data-f-prezzo="100-150" data-f-nome="100–150 €"> 100–150 €</label>
       </details>
+      <div class="cat-foglio-fondo"><button type="button" class="btn btn-contorno-nero" data-filtri-azzera>Cancella tutto</button><button type="button" class="btn btn-nero" data-filtri-chiudi data-filtri-mostra-n>Mostra 10 capi</button></div>
     </aside>
+    <div class="cat-velo" data-filtri-chiudi hidden></div>
     <div class="cat-risultati">
+      <div class="cat-scelti" data-cat-scelti hidden aria-live="polite"></div>
       <div class="griglia">
 <div class="scheda-cella" data-ordine="0" data-prezzo="75" data-colore="Nero" data-taglie="S M L XL" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-linee" aria-pressed="false" aria-label="Aggiungi Polo Linee ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-linee.html" data-tipo="polo">
-  <div class="scheda-foto"><img src="assets/foto/copertina-polo-linee.webp?v=918a59e1" srcset="assets/foto/copertina-polo-linee-640.webp?v=dc4eb8c7 640w, assets/foto/copertina-polo-linee.webp?v=918a59e1 788w" width="788" height="1400" alt="Ragazzo di spalle in una strada bagnata di notte con la Polo Linee MARO nera, ali bianche ricamate sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/pal-polo-linee.webp?v=3ddb5fdd" srcset="assets/foto/pal-polo-linee-640.webp?v=295b232a 640w, assets/foto/pal-polo-linee.webp?v=3ddb5fdd 1120w" width="1120" height="1400" alt="Ragazzo in un palazzo con colonne di marmo con la Polo Linee MARO nera, righe bianche sulle maniche e firma verticale sul petto" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/cop-polo-linee.webp?v=8839c9a1" srcset="assets/foto/cop-polo-linee-640.webp?v=9101d6d9 640w, assets/foto/cop-polo-linee.webp?v=8839c9a1 1024w" width="1024" height="1280" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#000"></i></span>
@@ -98,7 +98,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="1" data-prezzo="80" data-colore="Nero" data-taglie="S M L XXL" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-tricolore" aria-pressed="false" aria-label="Aggiungi Polo Tricolore ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-tricolore.html" data-tipo="polo">
-  <div class="scheda-foto"><img src="assets/foto/copertina-polo-tricolore.webp?v=4974af55" srcset="assets/foto/copertina-polo-tricolore-640.webp?v=5b92f6fc 640w, assets/foto/copertina-polo-tricolore.webp?v=4974af55 788w" width="788" height="1400" alt="Ragazzo di spalle in un parcheggio sotterraneo con la Polo Tricolore MARO nera, ali rosse e verdi sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/pal-polo-tricolore.webp?v=a6a7e4ce" srcset="assets/foto/pal-polo-tricolore-640.webp?v=54de8d73 640w, assets/foto/pal-polo-tricolore.webp?v=a6a7e4ce 1120w" width="1120" height="1400" alt="Ragazzo in un palazzo con colonne di marmo con la Polo Tricolore MARO nera, righe verde bianco rosso sulle maniche" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/cop-polo-tricolore.webp?v=dd95d144" srcset="assets/foto/cop-polo-tricolore-640.webp?v=3fa1ab61 640w, assets/foto/cop-polo-tricolore.webp?v=dd95d144 1024w" width="1024" height="1280" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#000"></i></span>
@@ -117,7 +117,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="2" data-prezzo="95" data-colore="Grigio" data-taglie="S M L XL XXL" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-jacquard" aria-pressed="false" aria-label="Aggiungi Polo Jacquard ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-jacquard.html" data-tipo="polo">
-  <div class="scheda-foto"><img src="assets/foto/copertina-polo-jacquard.webp?v=1a393891" srcset="assets/foto/copertina-polo-jacquard-640.webp?v=2259770f 640w, assets/foto/copertina-polo-jacquard.webp?v=1a393891 788w" width="788" height="1400" alt="Ragazzo di fronte in un vicolo di notte con la Polo Jacquard MARO grigio perla" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/pal-polo-jacquard.webp?v=02d75632" srcset="assets/foto/pal-polo-jacquard-640.webp?v=681602a0 640w, assets/foto/pal-polo-jacquard.webp?v=02d75632 1120w" width="1120" height="1400" alt="Ragazzo sotto un porticato di marmo con la Polo Jacquard MARO beige" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/cop-polo-jacquard.webp?v=038e373b" srcset="assets/foto/cop-polo-jacquard-640.webp?v=fd6dc34b 640w, assets/foto/cop-polo-jacquard.webp?v=038e373b 1120w" width="1120" height="1400" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#d9d6cf"></i></span>
@@ -136,7 +136,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="3" data-prezzo="120" data-colore="Grigio" data-taglie="S M L XL XXL" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-stretta" aria-pressed="false" aria-label="Aggiungi Felpa Stretta di mano ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-stretta.html" data-tipo="felpa">
-  <div class="scheda-foto"><img src="assets/foto/copertina-felpa-stretta.webp?v=2d529338" srcset="assets/foto/copertina-felpa-stretta-640.webp?v=125ffdfa 640w, assets/foto/copertina-felpa-stretta.webp?v=2d529338 788w" width="788" height="1400" alt="Ragazzo di spalle tra le luci al neon con la Felpa Stretta di mano MARO grigia, stretta di mano stampata sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/pal-felpa-stretta.webp?v=0635e9b1" srcset="assets/foto/pal-felpa-stretta-640.webp?v=19db2357 640w, assets/foto/pal-felpa-stretta.webp?v=0635e9b1 1120w" width="1120" height="1400" alt="Ragazzo di spalle in un palazzo con colonne di marmo con la Felpa Stretta di mano MARO grigia, stretta di mano stampata sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/cop-felpa-stretta.webp?v=65e6e73d" srcset="assets/foto/cop-felpa-stretta-640.webp?v=18ce335c 640w, assets/foto/cop-felpa-stretta.webp?v=65e6e73d 1120w" width="1120" height="1400" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#b9b9b9"></i></span>
@@ -156,7 +156,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="4" data-prezzo="130" data-colore="Blu" data-taglie="XS M L XL XXL" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-firma" aria-pressed="false" aria-label="Aggiungi Felpa Firma ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-firma.html" data-tipo="felpa">
-  <div class="scheda-foto"><img src="assets/foto/copertina-felpa-firma.webp?v=12b1b684" srcset="assets/foto/copertina-felpa-firma-640.webp?v=b7130ac2 640w, assets/foto/copertina-felpa-firma.webp?v=12b1b684 788w" width="788" height="1400" alt="Persona di spalle davanti al Duomo di Milano di notte con la Felpa Firma MARO blu, scritta MARO sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/pal-felpa-firma.webp?v=3bda5e9b" srcset="assets/foto/pal-felpa-firma-640.webp?v=f1e0f530 640w, assets/foto/pal-felpa-firma.webp?v=3bda5e9b 1120w" width="1120" height="1400" alt="Ragazzo di spalle in un palazzo con colonne di marmo con la Felpa Firma MARO blu, scritta MARO sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/cop-felpa-firma.webp?v=7b63a4d9" srcset="assets/foto/cop-felpa-firma-640.webp?v=8eea70fc 640w, assets/foto/cop-felpa-firma.webp?v=7b63a4d9 1120w" width="1120" height="1400" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#1c2440"></i></span>
@@ -176,7 +176,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="5" data-prezzo="110" data-colore="Verde" data-taglie="XS S L XL XXL" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-verticale" aria-pressed="false" aria-label="Aggiungi Felpa Verticale ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-verticale.html" data-tipo="felpa">
-  <div class="scheda-foto"><img src="assets/foto/copertina-felpa-verticale.webp?v=21914c64" srcset="assets/foto/copertina-felpa-verticale-640.webp?v=c9c65185 640w, assets/foto/copertina-felpa-verticale.webp?v=21914c64 788w" width="788" height="1400" alt="Persona di spalle in un vicolo di notte con la Felpa Verticale MARO verde, firma MARO verticale sul retro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/cop-felpa-verticale.webp?v=2d7f3af8" srcset="assets/foto/cop-felpa-verticale-640.webp?v=0c389482 640w, assets/foto/cop-felpa-verticale.webp?v=2d7f3af8 1120w" width="1120" height="1400" alt="Ragazzo beve da una borraccia in un parco di allenamento con la Felpa Verticale MARO verde, firma verticale sulla schiena" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/felpa-verticale-manichino.webp?v=d4f23cd3" srcset="assets/foto/felpa-verticale-manichino-640.webp?v=52f55898 640w, assets/foto/felpa-verticale-manichino.webp?v=d4f23cd3 1120w" width="1120" height="1400" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#1f3a2c"></i></span>
@@ -196,7 +196,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="6" data-prezzo="95" data-colore="Beige" data-taglie="S M L XL XXL" data-tipo="pantaloni"><button class="cuore" type="button" data-cuore="cargo-firma" aria-pressed="false" aria-label="Aggiungi Cargo Firma ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="cargo-firma.html" data-tipo="pantaloni">
-  <div class="scheda-foto"><img src="assets/foto/pant-cargo-copertina.webp?v=2d24a0da" srcset="assets/foto/pant-cargo-copertina-640.webp?v=fef975f2 640w, assets/foto/pant-cargo-copertina.webp?v=2d24a0da 791w" width="791" height="1400" alt="Ragazzo in un vicolo di notte con i pantaloni cargo MARO beige, firma verticale sulla gamba" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/cop-cargo-firma.webp?v=5c0e93b1" srcset="assets/foto/cop-cargo-firma-640.webp?v=77caeb82 640w, assets/foto/cop-cargo-firma.webp?v=5c0e93b1 1120w" width="1120" height="1400" alt="Ragazzo palleggia in un vicolo con il Cargo Firma MARO beige, firma verticale lungo la gamba" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/pant-cargo-piegato.webp?v=49abaaf5" srcset="assets/foto/pant-cargo-piegato-640.webp?v=a6c9fc99 640w, assets/foto/pant-cargo-piegato.webp?v=49abaaf5 1123w" width="1123" height="1400" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#d8cbb3"></i></span>
@@ -215,7 +215,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="7" data-prezzo="35" data-colore="Nero" data-taglie="Unica" data-tipo="accessori"><button class="cuore" type="button" data-cuore="cappellino-ali" aria-pressed="false" aria-label="Aggiungi Cappellino Ali ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="cappellino-ali.html" data-tipo="accessori">
-  <div class="scheda-foto"><img src="assets/foto/acc-cappellino-copertina.webp?v=3592c087" srcset="assets/foto/acc-cappellino-copertina-640.webp?v=9d21604e 640w, assets/foto/acc-cappellino-copertina.webp?v=3592c087 1400w" width="1400" height="1331" alt="Cappellino trucker MARO nero visto di fronte, con le ali ricamate in bianco" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/acc-cappellino-copertina.webp?v=3592c087" srcset="assets/foto/acc-cappellino-copertina-640.webp?v=9d21604e 640w, assets/foto/acc-cappellino-copertina.webp?v=3592c087 1400w" width="1400" height="1331" alt="Cappellino trucker MARO nero visto di fronte, con le ali ricamate in bianco" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/acc-cappellino-tre-quarti.webp?v=1074e083" srcset="assets/foto/acc-cappellino-tre-quarti-640.webp?v=4c4c1277 640w, assets/foto/acc-cappellino-tre-quarti.webp?v=1074e083 1400w" width="1400" height="1331" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#111"></i></span>
@@ -230,7 +230,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="8" data-prezzo="30" data-colore="Nero" data-taglie="Unica" data-tipo="accessori"><button class="cuore" type="button" data-cuore="berretto-ali" aria-pressed="false" aria-label="Aggiungi Berretto Ali ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="berretto-ali.html" data-tipo="accessori">
-  <div class="scheda-foto"><img src="assets/foto/acc-berretto-copertina.webp?v=34e8dc37" srcset="assets/foto/acc-berretto-copertina-640.webp?v=959e39a8 640w, assets/foto/acc-berretto-copertina.webp?v=34e8dc37 1400w" width="1400" height="1331" alt="Berretto MARO nero a coste visto di fronte, con il logo delle ali ricamato sul risvolto" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/acc-berretto-copertina.webp?v=34e8dc37" srcset="assets/foto/acc-berretto-copertina-640.webp?v=959e39a8 640w, assets/foto/acc-berretto-copertina.webp?v=34e8dc37 1400w" width="1400" height="1331" alt="Berretto MARO nero a coste visto di fronte, con il logo delle ali ricamato sul risvolto" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/acc-berretto-lato.webp?v=512456cf" srcset="assets/foto/acc-berretto-lato-640.webp?v=3eee712e 640w, assets/foto/acc-berretto-lato.webp?v=512456cf 1400w" width="1400" height="1331" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#111"></i></span>
@@ -245,7 +245,7 @@
   </div>
 </div></div>
 <div class="scheda-cella" data-ordine="9" data-prezzo="25" data-colore="Nero" data-taglie="Unica" data-tipo="accessori"><button class="cuore" type="button" data-cuore="borraccia-ali" aria-pressed="false" aria-label="Aggiungi Borraccia Ali ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="borraccia-ali.html" data-tipo="accessori">
-  <div class="scheda-foto"><img src="assets/foto/acc-borraccia-copertina.webp?v=8d4b5bda" srcset="assets/foto/acc-borraccia-copertina-640.webp?v=59f9864e 640w, assets/foto/acc-borraccia-copertina.webp?v=8d4b5bda 1400w" width="1400" height="1331" alt="Borraccia MARO nera opaca in piedi, con le ali bianche" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
+  <div class="scheda-foto"><img src="assets/foto/acc-borraccia-dritta.webp?v=07c96d72" srcset="assets/foto/acc-borraccia-dritta-640.webp?v=b7f09467 640w, assets/foto/acc-borraccia-dritta.webp?v=07c96d72 1400w" width="1400" height="1339" alt="Borraccia MARO nera opaca vista di fronte, con il logo delle ali bianco al centro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/acc-borraccia-inclinata.webp?v=35266817" srcset="assets/foto/acc-borraccia-inclinata-640.webp?v=27a4371d 640w, assets/foto/acc-borraccia-inclinata.webp?v=35266817 1400w" width="1400" height="1331" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div>
   <div class="scheda-testo">
     <span class="scheda-etichetta">Drop 001</span>
     <span class="pallini"><i style="background:#111"></i></span>
@@ -316,6 +316,6 @@
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"copertina-polo-linee","src":"assets/foto/copertina-polo-linee-640.webp?v=dc4eb8c7","colorePallino":"#000"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"copertina-polo-tricolore","src":"assets/foto/copertina-polo-tricolore-640.webp?v=5b92f6fc","colorePallino":"#000"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"copertina-polo-jacquard","src":"assets/foto/copertina-polo-jacquard-640.webp?v=2259770f","colorePallino":"#d9d6cf"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"copertina-felpa-stretta","src":"assets/foto/copertina-felpa-stretta-640.webp?v=125ffdfa","colorePallino":"#b9b9b9"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"copertina-felpa-firma","src":"assets/foto/copertina-felpa-firma-640.webp?v=b7130ac2","colorePallino":"#1c2440"},{"id":"felpa-verticale","nome":"Felpa Verticale","colore":"Verde bottiglia, firma MARO verticale sul retro","prezzo":110,"foto":"copertina-felpa-verticale","src":"assets/foto/copertina-felpa-verticale-640.webp?v=c9c65185","colorePallino":"#1f3a2c"},{"id":"cargo-firma","nome":"Cargo Firma","colore":"Beige sabbia, firma MARO verticale sulla gamba","prezzo":95,"foto":"pant-cargo-copertina","src":"assets/foto/pant-cargo-copertina-640.webp?v=fef975f2","colorePallino":"#d8cbb3"},{"id":"cappellino-ali","nome":"Cappellino Ali","colore":"Nero, ali ricamate bianche","prezzo":35,"foto":"acc-cappellino-copertina","src":"assets/foto/acc-cappellino-copertina-640.webp?v=9d21604e","colorePallino":"#111"},{"id":"berretto-ali","nome":"Berretto Ali","colore":"Nero, logo ricamato bianco","prezzo":30,"foto":"acc-berretto-copertina","src":"assets/foto/acc-berretto-copertina-640.webp?v=959e39a8","colorePallino":"#111"},{"id":"borraccia-ali","nome":"Borraccia Ali","colore":"Nero opaco, ali bianche","prezzo":25,"foto":"acc-borraccia-copertina","src":"assets/foto/acc-borraccia-copertina-640.webp?v=59f9864e","colorePallino":"#111"}];</script>
+<script>window.MARO_CATALOGO=[{"id":"polo-linee","nome":"Polo Linee","colore":"Nero, righe bianche sulle maniche","prezzo":75,"foto":"pal-polo-linee","src":"assets/foto/pal-polo-linee-640.webp?v=295b232a","colorePallino":"#000"},{"id":"polo-tricolore","nome":"Polo Tricolore","colore":"Nero, maniche verde bianco rosso","prezzo":80,"foto":"pal-polo-tricolore","src":"assets/foto/pal-polo-tricolore-640.webp?v=54de8d73","colorePallino":"#000"},{"id":"polo-jacquard","nome":"Polo Jacquard","colore":"Grigio perla, collo tortora","prezzo":95,"foto":"pal-polo-jacquard","src":"assets/foto/pal-polo-jacquard-640.webp?v=681602a0","colorePallino":"#d9d6cf"},{"id":"felpa-stretta","nome":"Felpa Stretta di mano","colore":"Grigio melange, stampa sul retro","prezzo":120,"foto":"pal-felpa-stretta","src":"assets/foto/pal-felpa-stretta-640.webp?v=19db2357","colorePallino":"#b9b9b9"},{"id":"felpa-firma","nome":"Felpa Firma","colore":"Blu notte, firma MARO sul retro","prezzo":130,"foto":"pal-felpa-firma","src":"assets/foto/pal-felpa-firma-640.webp?v=f1e0f530","colorePallino":"#1c2440"},{"id":"felpa-verticale","nome":"Felpa Verticale","colore":"Verde bottiglia, firma MARO verticale sul retro","prezzo":110,"foto":"cop-felpa-verticale","src":"assets/foto/cop-felpa-verticale-640.webp?v=0c389482","colorePallino":"#1f3a2c"},{"id":"cargo-firma","nome":"Cargo Firma","colore":"Beige sabbia, firma MARO verticale sulla gamba","prezzo":95,"foto":"cop-cargo-firma","src":"assets/foto/cop-cargo-firma-640.webp?v=77caeb82","colorePallino":"#d8cbb3"},{"id":"cappellino-ali","nome":"Cappellino Ali","colore":"Nero, ali ricamate bianche","prezzo":35,"foto":"acc-cappellino-copertina","src":"assets/foto/acc-cappellino-copertina-640.webp?v=9d21604e","colorePallino":"#111"},{"id":"berretto-ali","nome":"Berretto Ali","colore":"Nero, logo ricamato bianco","prezzo":30,"foto":"acc-berretto-copertina","src":"assets/foto/acc-berretto-copertina-640.webp?v=959e39a8","colorePallino":"#111"},{"id":"borraccia-ali","nome":"Borraccia Ali","colore":"Nero opaco, ali bianche","prezzo":25,"foto":"acc-borraccia-dritta","src":"assets/foto/acc-borraccia-dritta-640.webp?v=b7f09467","colorePallino":"#111"}];</script>
 </body>
 </html>
