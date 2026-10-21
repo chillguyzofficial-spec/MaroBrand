@@ -315,7 +315,7 @@
       '<div class="riepilogo"><span>Spedizione</span><span>' + (!tot ? 'Via email' : gratis ? 'Gratuita' : euro(SPED)) + '</span></div>' +
       '<div class="totale"><span>Totale</span><span>' + euro(totaleUltimo.totale) + '</span></div>' +
       (sconto ? '' : '<details class="borsa-codice"' + (codiceAperto ? ' open' : '') + '><summary>Hai un codice sconto?</summary><form class="borsa-codice-form" novalidate><label for="borsa-codice-in" class="sr">Codice sconto</label><input id="borsa-codice-in" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Es. MARO-7K2Q" maxlength="20"><button type="submit" class="btn btn-contorno-nero">Applica</button></form><p class="borsa-codice-esito" role="alert">' + esc(esitoCodice) + '</p></details>') +
-      '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
+      '<p class="prova-borsa">Pagamento di prova, nessun addebito: carta 4242 4242 4242 4242, data futura, CVC qualsiasi.</p>' + '<button type="button" class="btn btn-nero btn-largo" data-paga>Vai al pagamento</button><p class="piccolo esito-paga" role="status"></p>';
     esitoCodice = '';
   }
   var totaleUltimo = null, codiceAperto = false, esitoCodice = '';

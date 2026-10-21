@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '73'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '74'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -44,6 +44,10 @@ const SEGNO_DUE_SCENE = true; // 19/10 notte: arrivata la scena col telaio nero 
 const SEGNO_A_MANO = true;
 // IN PAUSA dal 19/10 notte: a Omar piace la barra ma non le scritte, le cambierà più avanti → per riaccenderla: true
 const AVVISI_ACCESI = false;
+// SOLO ramo motore-collegato (21/10): versione di prova pubblicata a parte. Fascia gialla su ogni pagina: chi la apre
+// deve sapere che non paga davvero e quale carta usare. Prima del negozio vero: false (e togliere la riga in borsa in maro.js)
+const NEGOZIO_PROVA = true;
+const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
   if (!AVVISI_ACCESI) return '';
   const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
@@ -106,6 +110,7 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <body${file === 'index.html' ? ' class="home"' : ''}${conPopup(file) ? ' data-popup' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
+${fasciaProva()}
 ${avviso()}
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>

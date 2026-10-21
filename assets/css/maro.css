@@ -1437,3 +1437,9 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .bn-voce figure img, .bn-voce-testo > * { transition: opacity .9s ease; }
 .bn-voce-testo { background: var(--nero); }
 @media (prefers-reduced-motion: reduce) { .bn-voce figure img, .bn-voce-testo > * { transition: none; } }
+
+/* SOLO ramo motore-collegato (21/10): avviso del negozio di prova. Giallo = avviso, fuori dalla palette apposta */
+.prova-fascia { background: #ffe14d; color: #000; text-align: center; font-size: 13px; line-height: 1.4; padding: 8px var(--lato); }
+.prova-fascia strong { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.prova-borsa { background: #fff6c2; border-left: 3px solid #e0b800; color: #000; font-size: 13px; line-height: 1.45; padding: 8px 10px; margin: 0 0 12px; }
+@media (max-width: 520px) { .prova-fascia span { display: none; } }
