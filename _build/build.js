@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '85'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '86'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -841,10 +841,10 @@ function storia() {
 <section class="bn-apertura" aria-labelledby="bn-titolo">
   <figure class="bn-video">
     <!-- 21/10: video di Francesco (colore selettivo: ragazzo, racchetta e pallina a colori, sfondo grigio) al posto della foto bn-tennis -->
-    <video autoplay muted playsinline preload="auto" width="864" height="496" poster="${(usa('bn-tennis-locandina', 'brand apertura video'), urlFoto('bn-tennis-locandina'))}" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis grigio" data-video-brand>
+    <video autoplay muted playsinline preload="auto" width="864" height="496" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${(usa('bn-tennis-locandina', 'brand apertura video'), urlFoto('bn-tennis-locandina'))}" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis grigio" data-video-brand>
       <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
     </video>
-    <video muted playsinline preload="auto" width="864" height="496" aria-hidden="true" data-video-brand-copia>
+    <video muted playsinline preload="auto" width="864" height="496" aria-hidden="true" data-video-brand-copia disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback">
       <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
     </video>
     <p class="bn-video-frase">Immagina.<br>Credi.<br>Agisci.</p>
