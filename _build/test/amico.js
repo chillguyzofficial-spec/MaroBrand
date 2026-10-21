@@ -35,9 +35,9 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     await pg.goto(B + 'polo.html'); await pg.waitForTimeout(1600);
     prova(await popupVisibile(pg), nome + ': popup appena entri nell’abbigliamento (polo.html)');
     await pg.fill('#email-popup', 'Prova@Esempio.it'); await pg.click('.popup-form button[type=submit]');
-    await aspettaTesto(pg, '[data-mio-codice]', /MARO-[A-Z0-9]{4}/);
+    await aspettaTesto(pg, '[data-mio-codice]', /MARO-[A-Z0-9]{6}/);
     const cod = await testo(pg, '[data-mio-codice]');
-    prova(/^MARO-[A-HJ-NP-Z2-9]{4}$/.test(cod), nome + ': codice personale dal motore ' + cod);
+    prova(/^MARO-[A-HJ-NP-Z2-9]{6}$/.test(cod), nome + ': codice personale dal motore ' + cod);
     prova(m.sql("SELECT newsletter FROM clienti WHERE email = 'prova@esempio.it'")[0]?.newsletter === 1, nome + ': iscrizione salvata nel motore');
     await pg.click('[data-popup-ok]'); await pg.waitForTimeout(400);
     await pg.goto(B + 'polo-linee.html'); await pg.waitForTimeout(1600);
@@ -61,7 +61,7 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     prova(o1 && o1.totale_cent === 7340 && o1.codice === cod && m.sql("SELECT pezzi FROM magazzino WHERE prodotto = 'polo-linee'")[0].pezzi === 4, nome + ': ordine nel motore, pezzi scalati');
     await aspettaTesto(pg, '[data-invito-link]', /./, 2000);
     const link = await pg.$eval('[data-invito-link]', e => e.value);
-    prova(/\?amico=AMICO-[A-HJ-NP-Z2-9]{4}$/.test(link) && await pg.$eval('[data-invito]', e => !e.hidden), nome + ': link amico ' + link);
+    prova(/\?amico=AMICO-[A-HJ-NP-Z2-9]{6}$/.test(link) && await pg.$eval('[data-invito]', e => !e.hidden), nome + ': link amico ' + link);
     prova((await pg.$eval('[data-invito-wa]', a => a.href)).startsWith('https://wa.me/?text='), nome + ': link WhatsApp');
     prova(await pg.$eval('.borsa-num', e => e.hidden), nome + ': borsa vuota dopo l’ordine');
     prova(await senzaLaterale(pg), nome + ': conferma senza scorrimento laterale');
@@ -156,7 +156,7 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     prova(await aspettaTesto(pg, '.iscriviti-form .esito', /un codice per ordine/), nome + ': iscrizione non somma un secondo codice');
     // togli e rimetti il codice dal campo
     await pg.click('[data-apri-borsa]'); await pg.waitForTimeout(200);
-    const codA = (rA.match(/AMICO-[A-Z0-9]{4}/) || [''])[0];
+    const codA = (rA.match(/AMICO-[A-Z0-9]{6}/) || [''])[0];
     await pg.click('[data-togli-codice]'); await pg.waitForTimeout(200);
     prova(!(await pg.$('.riepilogo.sconto')) && await pg.$eval('.borsa-codice', d => d.open), nome + ': codice tolto, campo aperto');
     await pg.fill('#borsa-codice-in', codA); await pg.click('.borsa-codice-form button');
@@ -173,8 +173,8 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     await pg.click('#pan-registrati button[type=submit]');
     await aspettaTesto(pg, '[data-conto-avviso]', /confermare/);
     await pg.click('[data-conto-avviso] [data-link-prova]');
-    prova(await aspettaTesto(pg, '[data-codici-liberi]', /MARO-[A-Z0-9]{4}[\s\S]*Attivo in borsa/), nome + ': account amico, codice di benvenuto attivo in borsa');
-    prova(/AMICO-[A-Z0-9]{4}[\s\S]*Usato/.test(await testo(pg, '[data-codici-usati]')), nome + ': account amico, il suo codice amico risulta usato');
+    prova(await aspettaTesto(pg, '[data-codici-liberi]', /MARO-[A-Z0-9]{6}[\s\S]*Attivo in borsa/), nome + ': account amico, codice di benvenuto attivo in borsa');
+    prova(/AMICO-[A-Z0-9]{6}[\s\S]*Usato/.test(await testo(pg, '[data-codici-usati]')), nome + ': account amico, il suo codice amico risulta usato');
     await pg.evaluate(() => localStorage.removeItem('maro-codice')); await pg.reload();
     await pg.waitForSelector('[data-usa-codice]', { timeout: 5000 }).catch(() => {});
     await pg.click('[data-usa-codice]');

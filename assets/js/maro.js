@@ -371,8 +371,9 @@
     var c = codiceAttivo(), esito = function (t) { var e = $('.esito-paga', borsa); if (e) e.textContent = t; };
     if (righe.some(function (r) { return r.id === CARTA; })) return esito('La carta regalo arriva presto nel pagamento online: per ora toglila dalla borsa.');
     btn.disabled = true; btn.textContent = 'Apro il pagamento sicuro…'; esito('');
-    api('/api/checkout', { righe: righe.map(function (r) { return { id: r.id, t: r.t, q: r.q }; }), codice: c ? c.codice : undefined }).then(function (d) {
-      if (d.ok && d.url) { location.href = d.url; return; }
+    // 21/10: il pagamento aperto prima (annullato o abbandonato) va al motore, che lo chiude e restituisce codice e pezzi prenotati
+    api('/api/checkout', { righe: righe.map(function (r) { return { id: r.id, t: r.t, q: r.q }; }), codice: c ? c.codice : undefined, precedente: mem.get('maro-pagamento-aperto') || undefined }).then(function (d) {
+      if (d.ok && d.url) { if (d.sessione) mem.set('maro-pagamento-aperto', d.sessione); location.href = d.url; return; }
       // codice nel frattempo usato o non più valido: si toglie dalla borsa, così il cliente può pagare senza
       if (d.stato === 409 && c && /codice/i.test(d.errore || '')) { togliK('maro-codice'); disegna(); }
       else { btn.disabled = false; btn.textContent = 'Vai al pagamento'; }
@@ -548,6 +549,7 @@
   var zoom = $('#zoom');
   if (zoom) {
     var zArea = $('.zoom-area', zoom), zImg = document.createElement('img'), zDa = null;
+    zImg.alt = ''; // finché lo zoom è chiuso è vuota; all'apertura prende l'alt della foto (bug hunt 21/10: img senza alt)
     zArea.appendChild(zImg);
     var zChiudi = function () { if (zoom.hidden) return; zoom.hidden = true; zArea.classList.remove('dentro'); blocca(false); if (zDa) zDa.focus({ preventScroll: true }); };
     window.MARO_zoom = function (img) {
@@ -1066,7 +1068,7 @@
     var tokenConto = function () { return mem.get('maro-token'); };
     // finché le email non partono (Resend), in prova il motore restituisce il link: lo mostriamo per poterlo provare
     var linkProva = function (testo, link) {
-      return esc(testo) + (link ? ' <a class="link" href="' + esc(link) + '" data-link-prova>(Anteprima, le email non partono ancora: apri il link da qui)</a>' : '');
+      return esc(testo) + (link ? ' <a class="link" href="' + esc(link) + '" data-link-prova>(Negozio di prova: a questo indirizzo l’email non parte ancora, apri il link da qui)</a>' : '');
     };
     var mostraAvviso = function (html) { if (!avvisoConto) return; avvisoConto.innerHTML = html || ''; avvisoConto.hidden = !html; };
     var codiciConto = [];
@@ -1140,6 +1142,15 @@
     };
     // ---- Accedi / Registrati ----
     var EMAIL_OK = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    // nome credibile (21/10): stesse regole del motore (che decide comunque). Nessuno può sapere se un nome è vero,
+    // ma si fermano quelli palesemente inventati: «djbdbuddbud», «aaa», «test»
+    var nomeCredibile = function (n) {
+      var s = String(n || '').trim().replace(/\s+/g, ' ');
+      if (s.length < 2 || s.length > 40 || !/^[\p{L}][\p{L}' -]*$/u.test(s)) return false;
+      var l = s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      if (!/[aeiouy]/.test(l) || /[bcdfghjklmnpqrstvwxz]{5,}/.test(l) || /(\p{L})\1\1/u.test(l)) return false;
+      return !s.split(/[ '-]/).some(function (p) { return /^(test|prova|asdf|qwerty|qwertz|nome|cognome|xxx|aaa|abc|abcd|ciao|pippo|boh|nessuno|anonimo|admin)$/i.test(p); });
+    };
     var regolePw = { lung: function (p) { return p.length >= 8; }, num: function (p) { return /\d/.test(p); }, maiu: function (p) { return /[A-Z]/.test(p); } };
     var formA = $('[data-acc-accedi]'), formR = $('[data-acc-registrati]'), schede = $$('[data-acc-scheda]');
     var vaiScheda = function (nome, fuoco) {
@@ -1263,6 +1274,7 @@
       var es = $('[data-reg-esito]'), nome = $('#reg-nome').value.trim(), email = $('#reg-email').value.trim().toLowerCase(), pw = pwR.value;
       var errore = function (t, el) { es.textContent = t; if (el) el.focus(); };
       if (!nome) return errore('Scrivi il tuo nome.', $('#reg-nome'));
+      if (!nomeCredibile(nome)) return errore('Scrivi il tuo nome vero: ci serve per le spedizioni e per salutarti nelle email.', $('#reg-nome'));
       if (!EMAIL_OK.test(email)) return errore('Questa email non sembra completa: controlla la @ e il punto.', $('#reg-email'));
       var manca = Object.keys(regolePw).filter(function (k) { return !regolePw[k](pw); });
       if (manca.length) { pwR.dispatchEvent(new Event('input')); return errore('La password non va ancora bene: guarda i punti sotto il campo.', pwR); }
@@ -1340,6 +1352,13 @@
   /* ---------- conferma d'ordine: il motore dice numero, totale e link amico (la conferma di Stripe arriva in pochi secondi) ---------- */
   var testoOrdine = $('[data-ordine-testo]');
   var sessione = (/[?&]s=(cs_[A-Za-z0-9_]+)/.exec(location.search) || [])[1];
+  // aperta senza un pagamento dietro (link salvato, indirizzo scritto a mano): niente «Grazie, è tuo» (bug hunt 21/10)
+  if (testoOrdine && !sessione) {
+    var tOrd = $('#ordine-titolo'); if (tOrd) tOrd.textContent = 'Nessun ordine qui.';
+    $('.ordine-ok .occhiello').textContent = 'Conferma d’ordine';
+    testoOrdine.innerHTML = 'Questa pagina mostra la conferma subito dopo il pagamento. I tuoi ordini li trovi in <a class="link" href="account.html">Il mio account</a>.';
+    var oAm = $('.ordine-amico'); if (oAm) oAm.hidden = true;
+  }
   if (testoOrdine && sessione) {
     var DOPO = ' Ti abbiamo mandato la conferma via email e ti scriviamo di nuovo quando il pacco parte, di solito entro 48 ore.';
     testoOrdine.textContent = 'Stiamo registrando il tuo ordine…';
@@ -1350,7 +1369,7 @@
           testoOrdine.textContent = 'Ordine ' + d.numero + ' · totale ' + euro(d.totale) + (d.codice ? ' · codice ' + d.codice + ' usato' : '') + '.' + DOPO;
           // ordine registrato: borsa vuota, codice usato tolto, link "Porta un amico" pronto
           righe = []; salva(righe); if (borsa) disegna();
-          togliK('maro-codice');
+          togliK('maro-codice'); togliK('maro-pagamento-aperto');
           var o = leggiJ('maro-ordini', []);
           if (!o.some(function (x) { return x.id === d.numero; })) { o.push({ id: d.numero, data: new Date().toISOString(), codice: d.codice, conti: { totale: d.totale } }); scriviJ('maro-ordini', o); }
           if (d.codice) { var u = leggiJ('maro-usati', []); if (u.indexOf(d.codice) < 0) { u.push(d.codice); scriviJ('maro-usati', u); } }

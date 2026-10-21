@@ -20,7 +20,7 @@ function d1() {
 
 async function avvia(porta, sito) {
   const { default: motore } = await import(require('url').pathToFileURL(path.join(DIR, 'src', 'index.js')).href);
-  const WHSEC = 'whsec_finto', sessioni = new Map(), coupon = new Map(), stato = { email: 'cliente@esempio.it' };
+  const WHSEC = 'whsec_finto', sessioni = new Map(), statoSess = new Map(), coupon = new Map(), stato = { email: 'cliente@esempio.it' };
   const env = { DB: d1(), STRIPE_SECRET_KEY: 'sk_test_finta', STRIPE_WEBHOOK_SECRET: WHSEC, SITO: sito, ORIGINI: sito, MODALITA: 'prova' };
   const BASE = 'http://localhost:' + porta;
   // Stripe finto: solo le chiamate del motore a api.stripe.com, il resto passa
@@ -31,9 +31,14 @@ async function avvia(porta, sito) {
     if (url.endsWith('/coupons')) { const id = 'cpn_' + (coupon.size + 1); coupon.set(id, Number(c.amount_off)); return new Response(JSON.stringify({ id }), { status: 200 }); }
     if (url.endsWith('/checkout/sessions')) {
       const id = 'cs_test_finto' + String(sessioni.size + 1).padStart(8, '0');
-      sessioni.set(id, c);
+      sessioni.set(id, c); statoSess.set(id, 'open');
       return new Response(JSON.stringify({ id, url: BASE + '/finto-stripe?s=' + id }), { status: 200 });
     }
+    // 21/10: stato dei pagamenti (open → complete | expired), chiusura, impronta della carta (ogni email la sua carta)
+    let m;
+    if ((m = /\/checkout\/sessions\/(cs_[A-Za-z0-9_]+)\/expire$/.exec(url))) { if (statoSess.get(m[1]) !== 'open') return new Response('{"error":{"message":"non aperta"}}', { status: 400 }); statoSess.set(m[1], 'expired'); return new Response(JSON.stringify({ id: m[1], status: 'expired' }), { status: 200 }); }
+    if ((m = /\/checkout\/sessions\/(cs_[A-Za-z0-9_]+)$/.exec(url))) return statoSess.has(m[1]) ? new Response(JSON.stringify({ id: m[1], status: statoSess.get(m[1]) }), { status: 200 }) : new Response('{}', { status: 404 });
+    if ((m = /\/payment_intents\/(pi_[A-Za-z0-9_]+)/.exec(url))) return new Response(JSON.stringify({ id: m[1], payment_method: { card: { fingerprint: 'carta-' + m[1] } } }), { status: 200 });
     return new Response('{"error":{"message":"finto"}}', { status: 404 });
   };
   const srv = http.createServer(async (q, r) => {
@@ -44,7 +49,8 @@ async function avvia(porta, sito) {
       const righe = Object.keys(c).filter((k) => /^line_items\[\d+\]\[quantity\]$/.test(k)).map((k) => { const i = k.match(/\d+/)[0]; return Number(c[`line_items[${i}][price_data][unit_amount]`]) * Number(c[k]); });
       const sub = righe.reduce((a, b) => a + b, 0), sped = Number(c['shipping_options[0][shipping_rate_data][fixed_amount][amount]']), sconto = coupon.get(c['discounts[0][coupon]']) || 0;
       const email = c.customer_email || stato.email;
-      const sessione = { id, payment_status: 'paid', customer_details: { email, name: 'Cliente Prova' }, collected_information: { shipping_details: { name: 'Mario Prova', address: { line1: 'Via delle Prove 1', postal_code: '20121', city: 'Milano', state: 'MI', country: 'IT' } } }, amount_subtotal: sub, amount_total: sub - sconto + sped, total_details: { amount_discount: sconto, amount_shipping: sped },
+      statoSess.set(id, 'complete');
+      const sessione = { id, payment_intent: 'pi_' + id.slice(3), payment_status: 'paid', customer_details: { email, name: 'Cliente Prova' }, collected_information: { shipping_details: { name: 'Mario Prova', address: { line1: 'Via delle Prove 1', postal_code: '20121', city: 'Milano', state: 'MI', country: 'IT' } } }, amount_subtotal: sub, amount_total: sub - sconto + sped, total_details: { amount_discount: sconto, amount_shipping: sped },
         metadata: { righe: c['metadata[righe]'], codice: c['metadata[codice]'] || '', tipo_codice: c['metadata[tipo_codice]'] || '' } };
       const corpo = JSON.stringify({ type: 'checkout.session.completed', data: { object: sessione } }), t = Math.floor(Date.now() / 1000);
       await motore.fetch(new Request(BASE + '/api/stripe/webhook', { method: 'POST', body: corpo, headers: { 'stripe-signature': `t=${t},v1=${createHmac('sha256', WHSEC).update(t + '.' + corpo).digest('hex')}` } }), env);

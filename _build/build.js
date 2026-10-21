@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '77'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '78'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -915,7 +915,7 @@ function ordineConfermato() {
     <p class="occhiello">Ordine ricevuto</p>
     <h1 id="ordine-titolo">Grazie.<br>È tuo.</h1>
     <p class="amico-lead" data-ordine-testo>Ti abbiamo mandato la conferma via email. Ti scriviamo di nuovo quando il pacco parte, di solito entro 48 ore.</p>
-    <p class="ordine-prova">Anteprima: pagamento di prova, nessun addebito e nessuna email inviata.</p>
+    <p class="ordine-prova">Anteprima: pagamento di prova, nessun addebito.</p>
   </div>
   <div class="ordine-amico">
     <h2>Porta un amico</h2>

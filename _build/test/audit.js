@@ -6,7 +6,8 @@ const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedon
 const { avvia } = require('./motore-finto');
 const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };
-const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); if (u.endsWith('/')) u += 'index.html'; const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8977);
+// il server locale rimappa /MaroBrand/… : 404.html usa indirizzi assoluti apposta (GitHub la serve da qualunque percorso)
+const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]).replace(/^\/MaroBrand\//, '/'); if (u.endsWith('/')) u += 'index.html'; const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8977);
 const B = 'http://localhost:8977/';
 const PAGINE = fs.readdirSync(ROOT).filter((f) => f.endsWith('.html'));
 let ok = 0, ko = 0; const prova = (c, n) => { if (c) ok++; else { ko++; console.log('  ✗ ' + n); } };
@@ -70,9 +71,9 @@ const DISP = [['PC', { viewport: { width: 1440, height: 900 } }], ['iPhone 13', 
         for (const dove of [0, 0.5, 1]) {
           await pg.evaluate((d) => scrollTo(0, (document.documentElement.scrollHeight - innerHeight) * d), dove); await pg.waitForTimeout(150);
           const prima = await pg.evaluate(() => scrollY);
-          await pg.click('.menu-apri').catch(() => {}); await pg.waitForTimeout(350);
+          await pg.evaluate(() => document.querySelector('.menu-apri').click()); await pg.waitForTimeout(350);
           const aperto = await pg.evaluate(() => { const m = document.getElementById('menu'), r = m.getBoundingClientRect(); return document.querySelector('.menu-apri').getAttribute('aria-expanded') === 'true' && r.height > 100 && r.top < innerHeight && getComputedStyle(m).visibility !== 'hidden'; });
-          await pg.click('.menu-apri').catch(() => {}); await pg.waitForTimeout(350);
+          await pg.evaluate(() => document.querySelector('.menu-apri').click()); await pg.waitForTimeout(350);
           const dopo = await pg.evaluate(() => ({ y: scrollY, bloc: getComputedStyle(document.documentElement).overflow === 'hidden', esp: document.querySelector('.menu-apri').getAttribute('aria-expanded') }));
           prova(aperto && dopo.esp === 'false' && !dopo.bloc && Math.abs(dopo.y - prima) < 3, etich + ' ' + f + ': menu al ' + dove * 100 + '% (aperto ' + aperto + ', scorrimento ' + prima + '→' + dopo.y + ')');
         }
@@ -81,9 +82,8 @@ const DISP = [['PC', { viewport: { width: 1440, height: 900 } }], ['iPhone 13', 
     // borsa con un capo, sullo schermo più basso: il pulsante di pagamento si raggiunge e l'avviso di prova c'è
     if (nome === 'iPhone SE' || nome === 'PC') {
       await pg.goto(B + 'polo-linee.html'); await pg.waitForTimeout(400);
-      const taglia = await pg.$('[data-taglia]:not([disabled]):not(.esaurita)');
-      if (taglia) await taglia.click();
-      await pg.click('[data-aggiungi], .aggiungi-borsa, button:has-text("Aggiungi alla borsa")').catch(() => {});
+      await pg.evaluate(() => { const i = [...document.querySelectorAll('input[name=taglia]')].find((x) => !x.disabled); if (i) i.closest('label').click(); });
+      await pg.evaluate(() => document.querySelector('[data-aggiungi]').click());
       await pg.waitForTimeout(600);
       if (!(await pg.isVisible('#borsa'))) { await pg.click('[data-apri-borsa]').catch(() => {}); await pg.waitForTimeout(500); }
       const bo = await pg.evaluate(() => { const p = document.querySelector('[data-paga]'); if (!p) return null; p.scrollIntoView({ block: 'center' }); const r = p.getBoundingClientRect(); return { dentro: r.top >= 0 && r.bottom <= innerHeight, prova: !!document.querySelector('.prova-borsa'), righe: document.querySelectorAll('#borsa-righe > *').length }; });
