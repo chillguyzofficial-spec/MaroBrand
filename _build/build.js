@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '78'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '80'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -46,7 +46,11 @@ const SEGNO_A_MANO = true;
 const AVVISI_ACCESI = false;
 // SOLO ramo motore-collegato (21/10): versione di prova pubblicata a parte. Fascia gialla su ogni pagina: chi la apre
 // deve sapere che non paga davvero e quale carta usare. Prima del negozio vero: false (e togliere la riga in borsa in maro.js)
-const NEGOZIO_PROVA = true;
+// VETRINA (21/10, decisione di Francesco): finché Omar non ha la partita IVA il sito non vende online.
+// Niente borsa, pagamento, account, Porta un amico, carta regalo; sulle schede «Iscriviti al drop».
+// Il negozio completo è nel ramo negozio-completo: per riaccenderlo qui basta VETRINA = false.
+const VETRINA = true;
+const NEGOZIO_PROVA = !VETRINA;
 const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
   if (!AVVISI_ACCESI) return '';
@@ -117,12 +121,12 @@ ${avviso()}
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
-    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
+    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a>'}</div>
   </nav>
   <div class="azioni">
-    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
+${VETRINA ? '' : `    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>`}
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
+${VETRINA ? '' : `    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>`}
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
@@ -135,8 +139,8 @@ ${corpo}
       <p>Streetwear da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a>'}<a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2>${VETRINA ? '<a href="aiuto.html#spedizioni">Il drop</a>' : '<a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a>'}<a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -163,7 +167,7 @@ ${corpo}
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
     <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
-    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
+${VETRINA ? '    <p>Conservalo: vale una volta sola, sul primo ordine, quando apre il drop. Ti scriviamo prima dell’apertura.</p>' : `    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>`}
     <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>
@@ -186,11 +190,18 @@ ${corpo}
 `;
 }
 
+// vetrina (21/10): al posto dell'acquisto, le taglie in chiaro e l'iscrizione al drop (apre il popup del 10%)
+const dropScheda = (p, acc) => `${acc ? '' : '    <p class="taglie-vetrina"><strong>Taglie: ' + p.taglie.join(' · ') + '</strong></p>\n'}    <div class="drop-scheda">
+      <p class="drop-occhiello">Il drop apre presto</p>
+      <p>Iscriviti: ti scriviamo prima dell’apertura, con l’accesso anticipato e un codice del 10% sul primo ordine.</p>
+      <button class="btn btn-nero btn-largo" type="button" data-apri-popup>Iscriviti al drop</button>
+    </div>
+`;
 function scheda(p, dove) {
   const [fid, alt] = p.copertina;
   // seconda foto al passaggio del mouse: la foto sportiva della campagna (p.seconda) oppure il capo da solo (manichino o prodotto)
   const seconda = p.seconda || (p.foto || []).map(f => f[0]).find(id => id !== fid && MISURE[id]);
-  const rapido = `<div class="rapido">
+  const rapido = VETRINA ? '' : `<div class="rapido">
   <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: ${esc(p.nome)}">+</button>
   <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di ${esc(p.nome)}" hidden>
 ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `    <button type="button" data-rapido="${p.id}|${t}"${fin ? ' disabled aria-label="' + t + ', esaurita"' : ''}>${t}</button>`; }).join('\n')}
@@ -357,10 +368,10 @@ function home() {
 </section>
 
 <section class="intro" aria-labelledby="intro-titolo">
-  <h2 id="intro-titolo">Il primo drop è fuori</h2>
-  <p>Tre polo e tre felpe, ricamate e stampate per chi vive la città.</p>
+  <h2 id="intro-titolo">${VETRINA ? 'Il primo drop sta arrivando' : 'Il primo drop è fuori'}</h2>
+  <p>${VETRINA ? 'Guarda i capi e iscriviti: ti scriviamo prima dell’apertura.' : 'Tre polo e tre felpe, ricamate e stampate per chi vive la città.'}</p>
   <div class="pulsanti">
-    <a class="btn btn-nero" href="shop.html">Acquista il drop</a>
+    <a class="btn btn-nero" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'}</a>
     <a class="btn btn-nero" href="storia.html">Il brand</a>
   </div>
 </section>
@@ -378,14 +389,14 @@ ${[
 </section>
 
 
-<section class="vantaggi" aria-label="Acquistare su MARO">
+${VETRINA ? '' : `<section class="vantaggi" aria-label="Acquistare su MARO">
   <ul>
     <li><strong>Spedizione gratuita</strong><span>sopra i 150 €, in 2–4 giorni</span></li>
     <li><strong>Reso entro 14 giorni</strong><span>anche se hai solo cambiato idea</span></li>
     <li><strong>Pagamento sicuro</strong><span>carta, PayPal, Apple Pay</span></li>
     <li><strong>Guida alle taglie</strong><a href="aiuto.html#taglie">misure in centimetri, capo per capo</a></li>
   </ul>
-</section>
+</section>`}
 
 <section class="segno${SEGNO_DUE_SCENE && SEGNO_A_MANO ? ' a-mano' : ''}" id="storia" aria-labelledby="storia-titolo" data-entra>
   <div class="segno-scena">
@@ -426,8 +437,8 @@ ${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.leng
   </div>
   <p class="iscriviti-sotto">Ti scriviamo il giorno prima dell’uscita, con i capi in anteprima. Una email per drop, niente di più.</p>
   <ul class="iscriviti-vantaggi">
-    <li><b>10% sul primo ordine.</b> Ti iscrivi e ricevi un codice tuo, già nella borsa: vale una volta, su tutti i capi.</li>
-    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un link personale: chi lo usa ha il 10% sul suo primo ordine, tu un buono da 10 € per il prossimo. <a class="link" href="porta-un-amico.html">Come funziona</a></li>
+${VETRINA ? '    <li><b>10% sul primo ordine.</b> Ti iscrivi e ricevi un codice tuo: vale una volta, su tutti i capi, quando apre il drop.</li>' : `    <li><b>10% sul primo ordine.</b> Ti iscrivi e ricevi un codice tuo, già nella borsa: vale una volta, su tutti i capi.</li>`}
+${VETRINA ? '' : `    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un link personale: chi lo usa ha il 10% sul suo primo ordine, tu un buono da 10 € per il prossimo. <a class="link" href="porta-un-amico.html">Come funziona</a></li>`}
   </ul>
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
@@ -482,7 +493,7 @@ ${foto}
     <a class="indietro" href="${({ polo: 'polo', felpa: 'felpe', pantaloni: 'pantaloni', accessori: 'accessori' })[p.tipo]}.html">← ${({ polo: 'Polo', felpa: 'Felpe', pantaloni: 'Pantaloni', accessori: 'Accessori' })[p.tipo]}</a>
     <h1>${esc(p.nome)}</h1>
     <p class="colore">${esc(p.colore)}</p>
-    <p class="prezzo">${euro(p.prezzo)}</p>
+    <p class="prezzo">${VETRINA ? '<span class="prezzo-etichetta">Prezzo al lancio</span> ' : ''}${euro(p.prezzo)}</p>
   </div>
   <div class="galleria" data-n="${p.foto.length}">
 ${galleria}
@@ -490,7 +501,7 @@ ${galleria}
   <div class="prodotto-acquisto">
     <p class="prodotto-testo"><strong>${esc(p.frase)}</strong> ${esc(p.testo)}</p>
 ${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> In foto: taglia M, su manichino.</p>
-`}    <fieldset class="taglie">
+`}${VETRINA ? dropScheda(p, acc) : `    <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
 ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
@@ -508,7 +519,7 @@ ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.j
     </div>
 `}    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
     <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
-${acc ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>\n'}    <div class="azioni-scheda">
+${acc ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>\n'}`}    <div class="azioni-scheda">
       <button class="btn btn-contorno-nero" type="button" data-cuore="${p.id}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva</span></button>
       <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
     </div>
@@ -536,11 +547,11 @@ ${acc || p.tipo === 'pantaloni' ? '' : `    <details>
       </table>
       <p class="piccolo">Misure del capo steso, di esempio.</p>
     </details>
-`}    <details>
+`}${VETRINA ? '' : `    <details>
       <summary>Spedizione e resi</summary>
       <p>Spedizione in Italia in 2–4 giorni lavorativi, gratuita sopra i 150 €. Reso entro 14 giorni dalla consegna, per qualsiasi motivo. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
-  </div>
+`}  </div>
 </div>
 ${recensioni(p)}
 
@@ -731,7 +742,7 @@ const ICONE = {
 };
 const domanda = (q, a) => `      <details><summary>${q}</summary><p>${a}</p></details>`;
 function aiuto() {
-  const temi = [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
+  const temi = VETRINA ? [['spedizioni', 'Il drop'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']] : [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
   const corpo = `
 <section class="aiuto-testa" aria-labelledby="aiuto-titolo">
   <h1 id="aiuto-titolo" class="titolo">Come possiamo<br>aiutarti?</h1>
@@ -741,7 +752,11 @@ ${temi.map(([id, t]) => `    <a href="#${id}">${ICONE[id]}<span>${t}</span></a>`
 </section>
 
 <div class="aiuto">
-  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
+${VETRINA ? `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
+    <div class="aiuto-tema-testa"><h2 id="t-sped">Il drop apre presto</h2><p>Spedizioni, resi e pagamenti li trovi qui il giorno dell’apertura. Iscriviti e te lo diciamo per primi, con il 10% sul primo ordine.</p></div>
+    <a class="btn btn-nero" href="index.html#iscriviti">Iscriviti al drop</a>
+  </section>
+` : `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
     <div class="aiuto-tema-testa"><h2 id="t-sped">Ordini e spedizioni</h2><p>Tutto quello che succede dal pagamento alla porta di casa.</p></div>
     <div class="domande">
 ${domanda('Dov’è il mio ordine?', 'Appena il pacco parte ricevi un’email con il numero di tracciamento: da lì segui la consegna passo per passo.')}
@@ -760,7 +775,7 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
     </div>
   </section>
 
-  <section class="aiuto-tema" id="taglie" aria-labelledby="t-taglie">
+`}  <section class="aiuto-tema" id="taglie" aria-labelledby="t-taglie">
     <div class="aiuto-tema-testa"><h2 id="t-taglie">Guida alle taglie</h2><p>Misure del capo steso, in centimetri. Confrontale con un capo tuo che ti sta bene.</p>
       <figure class="misure-disegno" aria-label="Come prendere le misure">
         <svg viewBox="0 0 220 200" role="img" aria-label="Disegno di una maglia: il torace si misura da ascella ad ascella, la lunghezza dalla spalla all’orlo">
@@ -868,7 +883,7 @@ function storia() {
 <section class="bn-fine" aria-labelledby="bn-motto" data-entra>
   <svg class="bn-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
   <h2 id="bn-motto">Fly with<br>your mind.</h2>
-  <a class="btn btn-bianco" href="shop.html">Acquista il drop</a>
+  <a class="btn btn-bianco" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'}</a>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
 }
@@ -1049,15 +1064,17 @@ function account() {
   return pagina({ titolo: 'Il mio account — MARO', descrizione: 'Il tuo account MARO: codici sconto, ordini e link per invitare un amico.', corpo, file: 'account.html' });
 }
 
-fs.writeFileSync(path.join(ROOT, 'account.html'), account());
-fs.writeFileSync(path.join(ROOT, 'porta-un-amico.html'), portaUnAmico());
-fs.writeFileSync(path.join(ROOT, 'ordine-confermato.html'), ordineConfermato());
+if (!VETRINA) {
+  fs.writeFileSync(path.join(ROOT, 'account.html'), account());
+  fs.writeFileSync(path.join(ROOT, 'porta-un-amico.html'), portaUnAmico());
+  fs.writeFileSync(path.join(ROOT, 'ordine-confermato.html'), ordineConfermato());
+}
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), categoriaPagina(cat));
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
 fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
-fs.writeFileSync(path.join(ROOT, 'carta-regalo.html'), cartaRegalo());
+if (!VETRINA) fs.writeFileSync(path.join(ROOT, 'carta-regalo.html'), cartaRegalo());
 // la 404 di GitHub Pages può comparire a qualsiasi indirizzo: tutti i link partono dalla cartella del sito
 fs.writeFileSync(path.join(ROOT, '404.html'), nonTrovata().replace('<head>', '<head>\n<base href="/MaroBrand/">'));
 for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));

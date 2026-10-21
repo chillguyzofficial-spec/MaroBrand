@@ -5,6 +5,9 @@ const path = require('path'), fs = require('fs'), http = require('http');
 const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
 const { avvia } = require('./motore-finto');
 const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
+// vetrina (21/10): senza borsa nella testata il negozio è spento e queste prove non hanno senso; tornano quando VETRINA = false
+if (!fs.readFileSync(require('path').join(ROOT, 'index.html'), 'utf8').includes('data-apri-borsa')) { console.log('Prove password: saltate, il sito è in vetrina (negozio spento)'); process.exit(0); }
+
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png' };
 const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); if (u.endsWith('/')) u += 'index.html'; const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8997);
 const B = 'http://localhost:8997/', PORTA_MOTORE = 8998;

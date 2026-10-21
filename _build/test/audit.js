@@ -17,7 +17,9 @@ const DISP = [['PC', { viewport: { width: 1440, height: 900 } }], ['iPhone 13', 
   const m = await avvia(8978, B.slice(0, -1));
   const reg = await fetch(m.url + '/api/registrati', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nome: 'Francesco', email: 'f@esempio.it', password: 'Prova2026x', privacy: true }) }).then((r) => r.json());
   const b = await chromium.launch({ channel: 'msedge' });
-  for (const collegato of [false, true]) for (const [nome, opz] of DISP) {
+  // vetrina (21/10): niente account né borsa → solo da ospite
+  const VETRINA = !fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').includes('data-apri-borsa');
+  for (const collegato of VETRINA ? [false] : [false, true]) for (const [nome, opz] of DISP) {
     const etich = nome + (collegato ? ' collegato' : ' ospite');
     const ctx = await b.newContext(opz);
     await ctx.addInitScript(([u, tk]) => {
@@ -50,7 +52,7 @@ const DISP = [['PC', { viewport: { width: 1440, height: 900 } }], ['iPhone 13', 
         return {
           lato: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1 ? document.documentElement.scrollWidth : 0,
           rotte, senzaAlt, doppi, ancore, vuoti,
-          testata: collegato ? !!(a && a.querySelector('.acc-iniziale')) : !!(a && a.querySelector('svg')),
+          testata: collegato ? !!(a && a.querySelector('.acc-iniziale')) : (!a || !!a.querySelector('svg')),
           bloccata: getComputedStyle(document.documentElement).overflow === 'hidden',
           link: [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')).filter((h) => /^[a-z0-9-]+\.html/.test(h)).map((h) => h.split(/[?#]/)[0]),
         };
@@ -80,7 +82,7 @@ const DISP = [['PC', { viewport: { width: 1440, height: 900 } }], ['iPhone 13', 
       }
     }
     // borsa con un capo, sullo schermo più basso: il pulsante di pagamento si raggiunge e l'avviso di prova c'è
-    if (nome === 'iPhone SE' || nome === 'PC') {
+    if (!VETRINA && (nome === 'iPhone SE' || nome === 'PC')) {
       await pg.goto(B + 'polo-linee.html'); await pg.waitForTimeout(400);
       await pg.evaluate(() => { const i = [...document.querySelectorAll('input[name=taglia]')].find((x) => !x.disabled); if (i) i.closest('label').click(); });
       await pg.evaluate(() => document.querySelector('[data-aggiungi]').click());

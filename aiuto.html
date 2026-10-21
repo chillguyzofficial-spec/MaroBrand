@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=78">
-<script defer src="assets/js/maro.js?v=78"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=80">
+<script defer src="assets/js/maro.js?v=80"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body>
@@ -36,18 +36,18 @@
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
 <a class="salta" href="#contenuto">Vai al contenuto</a>
-<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>
+
 
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1778 1103" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
-    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
+    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a></div>
   </nav>
   <div class="azioni">
-    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
+
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
+
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
@@ -56,8 +56,7 @@
 <section class="aiuto-testa" aria-labelledby="aiuto-titolo">
   <h1 id="aiuto-titolo" class="titolo">Come possiamo<br>aiutarti?</h1>
   <nav class="aiuto-temi" aria-label="Argomenti">
-    <a href="#spedizioni"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 12h26v22H4zM30 20h8l6 7v7H30z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="12" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/><circle cx="36" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/></svg><span>Ordini e spedizioni</span></a>
-    <a href="#resi"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 16H32a10 10 0 0 1 0 20H12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M20 8l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Resi e rimborsi</span></a>
+    <a href="#spedizioni"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 12h26v22H4zM30 20h8l6 7v7H30z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="12" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/><circle cx="36" cy="36" r="4" fill="#fff" stroke="currentColor" stroke-width="2.4"/></svg><span>Il drop</span></a>
     <a href="#taglie"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="16" width="40" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 16v6M20 16v9M28 16v6M36 16v9" stroke="currentColor" stroke-width="2.4"/></svg><span>Guida alle taglie</span></a>
     <a href="#contatti"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 10h36v24H20l-10 8v-8H6z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 20h20M14 26h12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg><span>Contatti</span></a>
   </nav>
@@ -65,24 +64,9 @@
 
 <div class="aiuto">
   <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
-    <div class="aiuto-tema-testa"><h2 id="t-sped">Ordini e spedizioni</h2><p>Tutto quello che succede dal pagamento alla porta di casa.</p></div>
-    <div class="domande">
-      <details><summary>Dov’è il mio ordine?</summary><p>Appena il pacco parte ricevi un’email con il numero di tracciamento: da lì segui la consegna passo per passo.</p></details>
-      <details><summary>Quanto ci mette ad arrivare?</summary><p>In Italia 2–4 giorni lavorativi. Gli ordini fatti entro le 13 partono il giorno stesso.</p></details>
-      <details><summary>Quanto costa la spedizione?</summary><p>In Italia costa 5,90 € ed è gratuita per ordini sopra i 150 €. Il costo è sempre mostrato nella borsa, prima di pagare.</p></details>
-      <details><summary>Come posso pagare?</summary><p>Carta di credito o di debito, PayPal e Apple Pay. Il pagamento è protetto e non vediamo mai i dati della tua carta.</p></details>
-    </div>
+    <div class="aiuto-tema-testa"><h2 id="t-sped">Il drop apre presto</h2><p>Spedizioni, resi e pagamenti li trovi qui il giorno dell’apertura. Iscriviti e te lo diciamo per primi, con il 10% sul primo ordine.</p></div>
+    <a class="btn btn-nero" href="index.html#iscriviti">Iscriviti al drop</a>
   </section>
-
-  <section class="aiuto-tema" id="resi" aria-labelledby="t-resi">
-    <div class="aiuto-tema-testa"><h2 id="t-resi">Resi e rimborsi</h2><p>Hai 14 giorni dalla consegna per cambiare idea.</p></div>
-    <div class="domande">
-      <details><summary>Come faccio un reso?</summary><p>Scrivici con il numero d’ordine: ti mandiamo l’etichetta e le istruzioni. Il capo deve essere integro e con il cartellino. La spedizione del reso è a carico tuo: 5,90 €, scalati dal rimborso.</p></details>
-      <details><summary>Posso cambiare taglia?</summary><p>Sì: fai il reso del capo e ordina la taglia giusta. Se è esaurita, nella scheda del capo tocca la taglia e lascia la tua email: ti avvisiamo appena torna.</p></details>
-      <details><summary>Quando ricevo il rimborso?</summary><p>Entro 14 giorni da quando il capo ci arriva, sullo stesso metodo che hai usato per pagare.</p></details>
-    </div>
-  </section>
-
   <section class="aiuto-tema" id="taglie" aria-labelledby="t-taglie">
     <div class="aiuto-tema-testa"><h2 id="t-taglie">Guida alle taglie</h2><p>Misure del capo steso, in centimetri. Confrontale con un capo tuo che ti sta bene.</p>
       <figure class="misure-disegno" aria-label="Come prendere le misure">
@@ -126,8 +110,8 @@
       <p>Streetwear da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Il drop</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -154,7 +138,7 @@
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
     <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
-    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
+    <p>Conservalo: vale una volta sola, sul primo ordine, quando apre il drop. Ti scriviamo prima dell’apertura.</p>
     <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>

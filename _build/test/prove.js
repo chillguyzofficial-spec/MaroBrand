@@ -15,6 +15,8 @@ const srv = http.createServer((q, r) => {
   r.writeHead(200, { 'content-type': type, 'content-length': size, 'accept-ranges': 'bytes' }); fs.createReadStream(f).pipe(r);
 }).listen(8990);
 const BASE = 'http://localhost:8990/';
+// vetrina (21/10): senza borsa nella testata il sito non vende; le prove del negozio si saltano
+const VETRINA = !fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').includes('data-apri-borsa');
 const PAGINE = fs.readdirSync(ROOT).filter(f => f.endsWith('.html') && f !== '404.html'); // la 404 usa <base href="/MaroBrand/">: si prova online
 let ok = 0, ko = 0;
 const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ ' + nome); } };
@@ -154,9 +156,13 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.isVisible('[data-tabella-di="polo"]') && !(await p.isVisible('[data-tabella-di="felpe"]')), 'aiuto: tabella polo visibile');
   await p.tap('[data-tabella="felpe"]');
   prova(await p.isVisible('[data-tabella-di="felpe"]') && !(await p.isVisible('[data-tabella-di="polo"]')), 'aiuto: tabella felpe dopo il tocco');
+  if (!VETRINA) {
   await p.tap('#spedizioni details:first-of-type summary');
   prova(await p.evaluate(() => document.querySelector('#spedizioni details').open), 'aiuto: domanda si apre');
+  }
 
+
+  if (!VETRINA) {
   // aggiunta rapida dalla griglia
   await p.goto(BASE + 'shop.html', { waitUntil: 'load' });
   await p.tap('.catalogo .scheda-cella:nth-child(2) .rapido-apri');
@@ -165,6 +171,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(!(await p.evaluate(() => document.getElementById('borsa').hidden)) && /Polo Tricolore/.test(await p.textContent('#borsa-righe')), 'rapido: Polo Tricolore M in borsa');
   await p.tap('.borsa-testa button');
   await p.evaluate(() => localStorage.removeItem('maro-borsa-1'));
+
+  }
   // zoom
   await p.goto(BASE + 'polo-linee.html', { waitUntil: 'load' });
   await p.tap('.vetrina', { position: { x: 150, y: 200 } });
@@ -203,6 +211,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   // conto alla rovescia
   await p.goto(BASE + 'index.html', { waitUntil: 'load' }); await p.waitForTimeout(1200);
   prova(await p.evaluate(() => /^[0-9]+$/.test(document.querySelector('[data-u="g"]').textContent) && /^[0-9][0-9]$/.test(document.querySelector('[data-u="s"]').textContent)), 'conto alla rovescia acceso');
+  if (!VETRINA) {
   // trova la tua taglia + taglia esaurita
   await p.goto(BASE + 'felpa-verticale.html', { waitUntil: 'load' });
   await p.tap('.trova-apri');
@@ -233,6 +242,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   prova(await p.evaluate(() => document.querySelector('.borsa-num').textContent) === '2', 'contatore borsa 2');
   await p.goto(BASE + 'index.html');
   prova(await p.evaluate(() => document.querySelector('.borsa-num').textContent) === '2', 'borsa ricordata cambiando pagina');
+
+  }
   await ctx.close();
 
   // 2b. popup 10% (contesto pulito)
@@ -252,11 +263,15 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     await q.fill('#email-popup', 'luca@esempio.it'); await q.tap('.popup-form .btn');
     prova(await q.waitForSelector('.popup-codice', { state: 'visible', timeout: 5000 }).then(() => true, () => false), 'popup: iscrizione mostra il codice');
     await q.tap('[data-popup-ok]');
+  if (!VETRINA) {
     await q.goto(BASE + 'polo-linee.html'); await q.tap('.taglie label:nth-child(2)'); await q.tap('[data-aggiungi]');
     prova(/7,50/.test(await q.textContent('.sconto')), 'popup: sconto 10% applicato in borsa');
+  }
+
     await c.close();
   }
 
+  if (!VETRINA) {
   // 2a. zona d'acquisto: nessun elemento sopra un altro (pulsante, consegna, Salva/Condividi), testo di consegna più lungo possibile
   for (const w of [320, 375, 390, 768, 1024, 1440]) {
     const c = await b.newContext({ viewport: { width: w, height: 900 } }); const q = await c.newPage();
@@ -267,6 +282,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
       prova(r.cTop >= r.a && r.z >= r.cBot, pg + ' @' + w + ': consegna tra il pulsante e Salva/Condividi, senza sovrapporsi ' + JSON.stringify(r));
     }
     await c.close();
+  }
+
   }
   // (Tiratura limitata tolta dalla home il 19/10: le prove girano solo se la sezione torna)
   if (fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8').includes('data-giostra')) {
@@ -300,6 +317,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     const ov = await q.evaluate(() => getComputedStyle(document.querySelector('.tir-binario')).overflowY);
     prova(ov === 'hidden', 'telefono: la fila non scorre in verticale (' + ov + ')'); await c.close(); }
   }
+  if (!VETRINA) {
   // 2b. data di consegna: orario limite 13, weekend, festivi (1/11, 8/12), Pasquetta, cambio di mese
   for (const [quando, atteso] of [
     ['2026-10-13T10:00:00', 'Se ordini entro 3 h, arriva tra giovedì 15 e lunedì 19 ottobre.'],
@@ -371,6 +389,43 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
       prova(r.scorre && r.dentro, 'carta @' + w + ': scorre con la pagina e testi dentro ' + JSON.stringify(r));
       await c2.close();
     }
+    await c.close();
+  }
+
+
+  }
+  // 2v. VETRINA: niente negozio in vista, «Iscriviti al drop» sulle schede, nessun testo ripetuto
+  if (VETRINA) {
+    const c = await b.newContext({ ...devices['iPhone 13'] });
+    await c.addInitScript(() => { try { localStorage.setItem('maro-popup-no', String(Date.now())); localStorage.setItem('maro-popup', String(Date.now())); } catch (e) {} });
+    const q = await c.newPage(); const err = []; q.on('pageerror', (e) => err.push(e.message));
+    for (const pg of PAGINE) {
+      await q.goto(BASE + pg, { waitUntil: 'load' });
+      const r = await q.evaluate(() => {
+        const vis = (e) => !!e && getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0;
+        const testo = document.body.innerText;
+        // un grassetto dentro un paragrafo è lo stesso testo, non un doppione: si contano solo i blocchi più esterni
+        const blocchi = [...document.querySelectorAll('main p, main li, main h1, main h2, main h3, main strong')].filter(vis).filter((e) => !(e.parentElement && e.parentElement.closest('main p, main li, main h1, main h2, main h3'))).map((e) => e.textContent.replace(/[\s.·,:]+/g, ' ').trim().toLowerCase()).filter((t) => t.length > 3);
+        const doppi = blocchi.filter((t, i) => blocchi.slice(i + 1, i + 4).includes(t));
+        return { borsa: vis(document.querySelector('[data-apri-borsa]')) || vis(document.querySelector('.acc-apri')), negozio: /Aggiungi alla borsa|Vai al pagamento|Il mio account|Porta un amico|Carta regalo|Negozio di prova/i.test(testo), doppi: [...new Set(doppi)] };
+      });
+      prova(!r.borsa && !r.negozio, 'vetrina ' + pg + ': niente borsa, account, carta regalo, pagamento');
+      prova(!r.doppi.length, 'vetrina ' + pg + ': nessun testo ripetuto di seguito ' + r.doppi.join(' | '));
+    }
+    for (const pg of ['polo-linee.html', 'felpa-firma.html', 'cargo-firma.html', 'cappellino-ali.html']) {
+      await q.goto(BASE + pg, { waitUntil: 'load' });
+      const r = await q.evaluate(() => ({ unica: (document.querySelector('.prodotto-acquisto').innerText.match(/Taglia unica/g) || []).length, lancio: !!document.querySelector('.prezzo-etichetta'), taglie: (document.querySelector('.taglie-vetrina') || {}).textContent || '' }));
+      prova(r.lancio && (pg.includes('ali') ? r.unica === 1 && !r.taglie : /Taglie: X?S ·/.test(r.taglie)), 'vetrina ' + pg + ': prezzo al lancio, taglie scritte una volta sola');
+      const sopra = await q.evaluate(() => { const d = document.querySelector('.drop-scheda').getBoundingClientRect(), a = document.querySelector('.azioni-scheda').getBoundingClientRect(); return a.top >= d.bottom - 1; });
+      prova(sopra, 'vetrina ' + pg + ': il riquadro del drop non copre Salva e Condividi');
+      await q.tap('[data-apri-popup]'); await q.waitForTimeout(500);
+      prova(await q.isVisible('#popup') && await q.evaluate(() => document.activeElement && document.activeElement.id === 'email-popup'), 'vetrina ' + pg + ': «Iscriviti al drop» apre l’iscrizione col campo email pronto');
+      await q.tap('.popup-no'); await q.waitForTimeout(350);
+    }
+    await q.fill('#email-popup', 'sara@esempio.it').catch(() => {});
+    await q.tap('[data-apri-popup]'); await q.waitForTimeout(400); await q.fill('#email-popup', 'sara@esempio.it'); await q.tap('.popup-form .btn');
+    prova(await q.waitForSelector('.popup-codice', { state: 'visible', timeout: 5000 }).then(() => true, () => false) && /quando apre il drop/.test(await q.textContent('[data-passo="2"]')), 'vetrina: iscrizione dal drop → codice personale, «vale quando apre il drop»');
+    prova(!err.length, 'vetrina: nessun errore JS ' + err.join(' | '));
     await c.close();
   }
 

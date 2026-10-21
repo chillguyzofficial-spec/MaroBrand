@@ -1469,3 +1469,11 @@ a.acc-link { display: inline-flex; align-items: center; }
    il JS toglie la classe appena sa la verità (dentro o fuori) */
 .ha-token [data-conto-fuori] { display: none; }
 .ha-token [data-conto-dentro][hidden] { display: block; }
+
+/* vetrina (21/10): niente vendita online. Prezzo «al lancio», taglie in chiaro, iscrizione al drop al posto della borsa */
+.prezzo-etichetta { display: block; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #555; margin-bottom: 2px; }
+.taglie-vetrina { margin: 4px 0 0; font-size: 15px; }
+.drop-scheda { display: grid; gap: 10px; margin: 6px 0 4px; padding: 18px; background: #f4f3ef; border-radius: 14px; }
+.drop-scheda p { margin: 0; font-size: 15px; line-height: 1.5; }
+.drop-scheda .drop-occhiello { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.drop-scheda + .azioni-scheda { margin-top: 4px; } /* in vetrina sotto il riquadro del drop: niente margine negativo, che lo copriva */

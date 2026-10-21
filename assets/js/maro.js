@@ -307,8 +307,9 @@
   }
   function disegna() {
     var n = conta(), num = $('.borsa-num'), btn = $('[data-apri-borsa]');
-    num.textContent = n; num.hidden = !n;
-    btn.setAttribute('aria-label', 'Borsa, ' + n + (n === 1 ? ' articolo' : ' articoli'));
+    // in vetrina (21/10) la testata non ha la borsa: niente contatore da aggiornare
+    if (num) { num.textContent = n; num.hidden = !n; }
+    if (btn) btn.setAttribute('aria-label', 'Borsa, ' + n + (n === 1 ? ' articolo' : ' articoli'));
     var box = $('#borsa-righe'), fondo = $('#borsa-fondo');
     if (!righe.length) {
       box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 è ancora disponibile, ma non tutte le taglie.</p>';
@@ -510,7 +511,7 @@
       });
     }
 
-    btnAgg.addEventListener('click', function () {
+    if (btnAgg) btnAgg.addEventListener('click', function () { // in vetrina (21/10) non c'è «Aggiungi alla borsa»
       var scelta = $('input[name="taglia"]:checked', prod);
       if (!scelta) { fs.classList.add('manca'); err.hidden = false; $('input[name="taglia"]', prod).focus(); return; }
       var id = prod.getAttribute('data-id'), t = scelta.value;
@@ -605,6 +606,13 @@
     };
     // appena si entra nell'abbigliamento (scelta di Francesco/Omar 19/10): il tempo di vedere la pagina, poi il popup
     if (puo) setTimeout(mostra, 900);
+    // vetrina (21/10): «Iscriviti al drop» sulle schede apre l'iscrizione su richiesta, anche a chi l'aveva chiusa
+    $$('[data-apri-popup]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        puo = false; pop.hidden = false;
+        requestAnimationFrame(function () { pop.classList.add('visibile'); var i = $('#email-popup', pop); if (i && !$('[data-passo="1"]', pop).hidden) i.focus(); });
+      });
+    });
     $$('[data-popup-no]', pop).forEach(function (b) { b.addEventListener('click', function () { chiudiPop(true); }); });
     $('[data-popup-ok]', pop).addEventListener('click', function () { chiudiPop(false); });
     $('.popup-form', pop).addEventListener('submit', function (e) {
