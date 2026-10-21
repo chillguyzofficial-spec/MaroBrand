@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '91'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '92'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -921,7 +921,7 @@ function storia() {
     <h1 id="bn-titolo">In campo<br>dal 2020.</h1>
     <div class="bn-intro">
       <img class="bn-firma" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="">
-      <p class="bn-lead"><span class="sr">MARO </span><strong>Nasce nel 2020 da Omar:</strong> il nome è il suo, con le lettere in un altro ordine. Polo, felpe e pantaloni con il taglio dello sport, tennis e padel prima di tutto, e la cura di un capo da portare anche dopo la partita.</p>
+      <p class="bn-lead"><strong><span class="sr">MARO: </span>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il fischio finale.</p>
     </div>
   </div>
   <div class="bn-ponte">
