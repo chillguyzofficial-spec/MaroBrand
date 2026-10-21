@@ -1177,11 +1177,14 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .bm-passo { position: relative; display: grid; justify-items: center; text-align: center; }
 .bm-passo > :not(.bm-firma-fondo) { position: relative; z-index: 1; }
 /* firma di fondo: larga quanto lo spazio libero accanto al quadrato del disegno (mai sotto il disegno, mai fuori schermo) */
-.bm-firma-fondo { position: absolute; z-index: 0; top: 50%; width: calc((100% - min(100%, 600px, 60vh)) / 2 - 24px); max-width: 300px; height: auto; transform: translateY(-50%); filter: invert(1); opacity: .1; transition: opacity 1.6s ease; pointer-events: none; }
-.bm-passo:nth-child(odd) .bm-firma-fondo { left: 0; }
-.bm-passo:nth-child(even) .bm-firma-fondo { right: 0; }
+/* 21/10 notte: la firma sta accanto al DISEGNO (dentro la figura), non al blocco disegno + testo: prima il riquadro nero
+   del testo la tagliava in basso. Solo dove c'è spazio ai lati (da 1200 px) */
+.bm-firma-fondo { position: absolute; z-index: 0; top: 50%; height: 80%; width: auto; max-width: none; transform: translateY(-50%); filter: invert(1); opacity: .1; transition: opacity 1.6s ease; pointer-events: none; }
+.bm-passo:nth-child(odd) .bm-firma-fondo { right: calc(100% + 32px); }
+.bm-passo:nth-child(even) .bm-firma-fondo { left: calc(100% + 32px); }
 .bm-passo.entrato .bm-firma-fondo { opacity: .26; }
-.bm-disegno { margin: 0; width: min(100%, 600px, 60vh); }
+@media (max-width: 1199px) { .bm-firma-fondo { display: none; } }
+.bm-disegno { position: relative; margin: 0; width: min(100%, 600px, 60vh); }
 .bm-gira { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 1; padding: 0; border: 0; background: var(--nero); color: inherit; cursor: pointer; }
 /* misura dalla proporzione (--r): il disegno sta intero nel quadrato e lo spazio resta stabile anche prima che la foto carichi */
 .bm-gira img { grid-area: 1 / 1; width: calc(100% * min(1, var(--r))); max-width: 100%; aspect-ratio: var(--r); height: auto; transition: opacity .6s ease; }
@@ -1191,6 +1194,8 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .bm-disegno.foglio .bm-segno { opacity: 0; }
 /* il disegno si "traccia" dall'alto: una tenda nera si ritira verso il basso. Niente clip-path sull'immagine:
    un'immagine lazy tutta ritagliata il browser la considera invisibile e non la carica (bug 21/10) */
+/* il disegno si "traccia" dall'alto quando arrivi: una tenda nera si ritira verso il basso (21/10 notte: tornata questa,
+   Francesco preferisce la comparsa a tempo a quella legata allo scorrimento) */
 .bm-gira::after { content: ''; position: absolute; inset: -1px; background: var(--nero); transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.8s cubic-bezier(.6, .1, .2, 1); pointer-events: none; }
 .bm-passo.in-attesa .bm-gira::after { transform: scaleY(1); }
 /* icona "gira" nell'angolo del disegno: dice che si può toccare, senza ripetere la scritta (Francesco 21/10) */
@@ -1477,3 +1482,15 @@ a.acc-link { display: inline-flex; align-items: center; }
 .drop-scheda p { margin: 0; font-size: 15px; line-height: 1.5; }
 .drop-scheda .drop-occhiello { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .drop-scheda + .azioni-scheda { margin-top: 4px; } /* in vetrina sotto il riquadro del drop: niente margine negativo, che lo copriva */
+
+/* pagina del brand (21/10): video del tennista al posto della foto, a tutta larghezza come prima */
+/* 21/10 notte: a tutta larghezza (Francesco: «meglio com’era prima la grandezza»), con la frase sopra come in home */
+.bn-video { position: relative; margin: 0; background: #2b2d2e; overflow: hidden; height: calc(100svh - var(--testata) - var(--avviso, 0px)); min-height: 460px; }
+.bn-video video, .bn-video canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 58% 50%; }
+.bn-video video { transition: opacity 1s linear; }
+.bn-video [data-video-brand-copia] { opacity: 0; }
+@media (max-width: 767px) { .bn-video { height: 62svh; min-height: 380px; } .bn-video video, .bn-video canvas { object-position: 62% 50%; } }
+/* in basso a sinistra, su tre righe: lì c'è solo il campo, il ragazzo non ci passa mai (in alto copriva la testa) */
+.bn-video-frase { position: absolute; z-index: 3; left: var(--lato); bottom: clamp(20px, 5vh, 56px); margin: 0; font: 400 clamp(30px, 5vw, 88px)/.92 var(--titoli); text-transform: uppercase; color: var(--bianco); text-shadow: 0 2px 30px rgba(0,0,0,.45); pointer-events: none; }
+/* filtro colore selettivo: il canvas copre il video e mostra lo stesso fotogramma con lo sfondo grigio */
+.bn-video canvas { z-index: 2; }

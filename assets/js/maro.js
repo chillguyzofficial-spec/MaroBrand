@@ -760,6 +760,83 @@
   }
 
   var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // video della pagina del brand (21/10): loop senza stacco con due copie che si danno il cambio (dissolvenza di 1 s, come in home)
+  // e colore selettivo. Con «riduci movimento» resta fermo sul fotogramma.
+  var videoBrand = $('[data-video-brand]'), videoCopia = $('[data-video-brand-copia]');
+  if (videoBrand) {
+    if (calma) { videoBrand.removeAttribute('autoplay'); videoBrand.pause(); }
+    else {
+      var SFUMA_B = 1, regia = { attivo: videoBrand, altro: videoCopia, m: 0, inizio: 0 };
+      var parteB = function (v) { if (v && v.paused) v.play().catch(function () {}); };
+      var guardaB = function () {
+        var a = regia.attivo, b = regia.altro;
+        if (!document.hidden && a.duration) {
+          if (!b) { if (a.currentTime >= a.duration - .05) a.currentTime = 0; parteB(a); }
+          else if (!regia.inizio && a.currentTime >= a.duration - SFUMA_B) {
+            // la copia riparte da capo e sale sopra; finita la dissolvenza la prima si ferma e diventa la copia
+            regia.inizio = performance.now(); b.currentTime = 0; parteB(b); b.style.zIndex = 1; b.style.opacity = 1;
+            setTimeout(function () {
+              a.pause(); a.style.transition = 'none'; a.style.zIndex = 0; a.style.opacity = 0; void a.offsetWidth; a.style.transition = '';
+              regia.attivo = b; regia.altro = a; regia.inizio = 0; regia.m = 0;
+            }, SFUMA_B * 1000 + 60);
+          } else if (!regia.inizio) parteB(a);
+          regia.m = regia.inizio ? Math.min(1, (performance.now() - regia.inizio) / (SFUMA_B * 1000)) : 0;
+        }
+        requestAnimationFrame(guardaB);
+      };
+      videoBrand.loop = !videoCopia;
+      parteB(videoBrand); requestAnimationFrame(guardaB);
+      coloreSelettivo(regia);
+    }
+  }
+  /* colore selettivo (21/10 notte, richiesta di Francesco): sfondo in bianco e nero, a colori solo la pallina gialla, la pelle
+     e le righe tricolori. Filtro WebGL sopra i video; durante la dissolvenza del loop disegna anche la copia che subentra.
+     Se WebGL non c'è o il browser blocca la lettura del video (pagina aperta da file://), si vedono i video normali. */
+  function coloreSelettivo(regia) {
+    var c = document.createElement('canvas'), gl;
+    try { gl = c.getContext('webgl', { premultipliedAlpha: false, preserveDrawingBuffer: false }); } catch (e) { gl = null; }
+    if (!gl) return;
+    var vs = 'attribute vec2 p; varying vec2 t; void main(){ t = vec2(p.x * .5 + .5, .5 - p.y * .5); gl_Position = vec4(p, 0., 1.); }';
+    var fsrc = 'precision mediump float; uniform sampler2D img; uniform float alfa; varying vec2 t;' +
+      'vec3 hsv(vec3 c){ vec4 K = vec4(0., -1./3., 2./3., -1.); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));' +
+      ' vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;' +
+      ' return vec3(abs(q.z + (q.w - q.y) / (6. * d + e)), d / (q.x + e), q.x); }' +
+      'void main(){ vec3 c = texture2D(img, t).rgb; vec3 h = hsv(c); float g = dot(c, vec3(.299, .587, .114));' +
+      // pallina: giallo-verde vivo · pelle: arancio caldo, non troppo scura · rosso e verde delle righe: colori pieni
+      ' float palla = smoothstep(.30, .45, h.y) * (1. - smoothstep(.20, .24, abs(h.x - .17))) * step(.25, h.z);' +
+      ' float pelle = smoothstep(.16, .28, h.y) * (1. - smoothstep(.10, .14, h.x)) * smoothstep(.10, .20, h.z);' +
+      ' float rosso = smoothstep(.40, .55, h.y) * (step(.94, h.x) + (1. - step(.03, h.x))) * step(.2, h.z);' +
+      ' float verde = smoothstep(.35, .50, h.y) * (1. - smoothstep(.06, .10, abs(h.x - .40))) * step(.15, h.z);' +
+      ' float k = clamp(max(max(palla, pelle), max(rosso, verde)), 0., 1.);' +
+      ' gl_FragColor = vec4(mix(vec3(g), c, k), alfa); }';
+    var sh = function (tipo, src) { var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+    var a = sh(gl.VERTEX_SHADER, vs), b = sh(gl.FRAGMENT_SHADER, fsrc); if (!a || !b) return;
+    var pr = gl.createProgram(); gl.attachShader(pr, a); gl.attachShader(pr, b); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    var loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    var uAlfa = gl.getUniformLocation(pr, 'alfa');
+    var tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    var pronto = false, fermo = false;
+    var passata = function (v, alfa) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, v); gl.uniform1f(uAlfa, alfa); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
+    var disegna = function () {
+      if (fermo) return;
+      var v = regia.attivo;
+      if (v.readyState >= 2) {
+        if (c.width !== v.videoWidth) { c.width = v.videoWidth; c.height = v.videoHeight; gl.viewport(0, 0, c.width, c.height); }
+        try {
+          passata(v, 1);
+          if (regia.m > 0 && regia.altro && regia.altro.readyState >= 2) passata(regia.altro, regia.m); // la copia che subentra, sempre più visibile
+        } catch (e) { fermo = true; if (c.parentNode) c.parentNode.removeChild(c); return; } // video "di un'altra origine" (file://): restano i video normali
+        if (!pronto) { pronto = true; c.setAttribute('aria-hidden', 'true'); c.setAttribute('data-colore-selettivo', ''); v.parentNode.appendChild(c); }
+      }
+      requestAnimationFrame(disegna);
+    };
+    requestAnimationFrame(disegna);
+  }
 
   /* ---------- Dietro il segno A MANO: la cucitura si trascina (mouse subito; dito solo con gesto orizzontale, il verticale scorre la pagina),
      un clic la porta lì, frecce da tastiera ---------- */

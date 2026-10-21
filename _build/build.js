@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '80'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '85'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -831,15 +831,24 @@ function storia() {
   const passi = MANIFESTO.map((m, i) => `
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
   const corpo = `
 <section class="bn-apertura" aria-labelledby="bn-titolo">
-  <figure>${img('bn-tennis', 'Tennista al servizio tra due colonne di marmo, con la Polo Tricolore MARO nera e le righe verde bianco rosso sulle maniche', { dove: 'brand apertura', lazy: false, sizes: '100vw' })}</figure>
+  <figure class="bn-video">
+    <!-- 21/10: video di Francesco (colore selettivo: ragazzo, racchetta e pallina a colori, sfondo grigio) al posto della foto bn-tennis -->
+    <video autoplay muted playsinline preload="auto" width="864" height="496" poster="${(usa('bn-tennis-locandina', 'brand apertura video'), urlFoto('bn-tennis-locandina'))}" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis grigio" data-video-brand>
+      <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
+    </video>
+    <video muted playsinline preload="auto" width="864" height="496" aria-hidden="true" data-video-brand-copia>
+      <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
+    </video>
+    <p class="bn-video-frase">Immagina.<br>Credi.<br>Agisci.</p>
+  </figure>
   <div class="bn-apertura-testo">
     <p class="occhiello">Il brand</p>
     <h1 id="bn-titolo">In campo<br>dal 2020.</h1>

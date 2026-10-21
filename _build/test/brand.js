@@ -76,7 +76,16 @@ const FERMO = x => x === 'none' || x === 'matrix(1, 0, 0, 1, 0, 0)';
     prova(opBt === '1', nome + ': pulsante finale pieno (' + opBt + ')');
     // foto: caricate, intere (proporzioni originali), mai più alte dell'86% dello schermo nelle voci
     const foto = await pg.$$eval('.bn-apertura figure img, .bm-segno', is => is.map(i => { const r = i.getBoundingClientRect(); return { s: i.src.split('/').pop().split('?')[0], ok: i.complete && i.naturalWidth > 0, nat: i.naturalWidth / i.naturalHeight, vis: r.width / r.height, h: r.height, voce: !!i.closest('.bm-passo') }; }));
-    prova(foto.length === 6, nome + ': 6 foto intere (' + foto.length + ')');
+    prova(foto.length === 5, nome + ': 5 disegni interi (' + foto.length + ')');
+    // apertura (21/10 notte): video del tennista, senza audio, in loop, con fotogramma fisso
+    const vid = await pg.$eval('[data-video-brand]', (v) => ({ muto: v.muted, loop: v.loop || !!document.querySelector('[data-video-brand-copia]'), inline: v.playsInline, poster: /bn-tennis-locandina/.test(v.poster), src: /brand-tennis\.mp4/.test(v.currentSrc || v.querySelector('source').src), w: v.getBoundingClientRect().width, controlli: v.controls })).catch(() => null);
+    prova(vid && vid.muto && (vid.loop || !!document) && vid.inline && vid.poster && vid.src && !vid.controlli, nome + ': video d’apertura muto, in loop, senza comandi, con fotogramma fisso');
+    prova(vid && Math.abs(vid.w - await pg.evaluate(() => document.documentElement.clientWidth)) < 2, nome + ': video a tutta larghezza');
+    // frase sul video (21/10 notte, come «Fly with your mind» in home), dentro il video e leggibile
+    const fr = await pg.$eval('.bn-video-frase', (p) => { const r = p.getBoundingClientRect(), v = p.parentNode.getBoundingClientRect(); return { t: p.textContent, dentro: r.top >= v.top && r.bottom <= v.bottom && r.left >= v.left && r.right <= v.right + 1, colore: getComputedStyle(p).color }; }).catch(() => null);
+    prova(fr && fr.t === 'Immagina.Credi.Agisci.' && fr.dentro && fr.colore === 'rgb(255, 255, 255)', nome + ': «Immagina. Credi. Agisci.» sul video ' + JSON.stringify(fr));
+    // i disegni compaiono con la tenda a tempo all'arrivo (tornata il 21/10 notte): a fine scorrimento tutte ritirate
+    prova(await pg.$$eval('.bm-gira', (gs) => gs.every((g) => getComputedStyle(g, '::after').transform === 'matrix(1, 0, 0, 0, 0, 0)' || getComputedStyle(g, '::after').transform === 'none')), nome + ': a fine pagina ogni disegno è scoperto');
     // la riga passa dietro le scritte: lo sfondo di etichette, invito e testo è nero pieno
     prova(await pg.$$eval('.bm .bn-sport, .bm-testo', es => es.every(e => getComputedStyle(e).backgroundColor === 'rgb(0, 0, 0)')), nome + ': scritte su fondo nero, la riga non le attraversa');
     // firma di fondo: mai sotto il disegno né fuori schermo (su telefono nascosta)

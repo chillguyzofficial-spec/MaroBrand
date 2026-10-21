@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=80">
-<script defer src="assets/js/maro.js?v=80"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=85">
+<script defer src="assets/js/maro.js?v=85"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body>
@@ -54,7 +54,16 @@
 <main id="contenuto">
 
 <section class="bn-apertura" aria-labelledby="bn-titolo">
-  <figure><img src="assets/foto/bn-tennis.webp?v=35d249be" srcset="assets/foto/bn-tennis-640.webp?v=f828e3dc 640w, assets/foto/bn-tennis.webp?v=35d249be 1920w" width="1920" height="1120" alt="Tennista al servizio tra due colonne di marmo, con la Polo Tricolore MARO nera e le righe verde bianco rosso sulle maniche" fetchpriority="high" sizes="100vw"></figure>
+  <figure class="bn-video">
+    <!-- 21/10: video di Francesco (colore selettivo: ragazzo, racchetta e pallina a colori, sfondo grigio) al posto della foto bn-tennis -->
+    <video autoplay muted playsinline preload="auto" width="864" height="496" poster="assets/foto/bn-tennis-locandina.webp?v=ccdec9f5" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis grigio" data-video-brand>
+      <source src="assets/video/brand-tennis.mp4?v=7635bf09" type="video/mp4">
+    </video>
+    <video muted playsinline preload="auto" width="864" height="496" aria-hidden="true" data-video-brand-copia>
+      <source src="assets/video/brand-tennis.mp4?v=7635bf09" type="video/mp4">
+    </video>
+    <p class="bn-video-frase">Immagina.<br>Credi.<br>Agisci.</p>
+  </figure>
   <div class="bn-apertura-testo">
     <p class="occhiello">Il brand</p>
     <h1 id="bn-titolo">In campo<br>dal 2020.</h1>
@@ -74,40 +83,40 @@
   <ol class="bm-passi">
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>01 · La visione</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: 1.1833">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="La visione: guarda il foglio originale"><img src="assets/foto/bm-1.webp?v=db0fba1e" srcset="assets/foto/bm-1-640.webp?v=7b4fbaa6 640w, assets/foto/bm-1.webp?v=db0fba1e 1188w" width="1188" height="1004" alt="Disegno a penna blu di Omar su un quaderno a righe: la M con le ali e i riccioli sotto" class="bm-segno" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><img src="assets/foto/bm-1-foglio.webp?v=83005c56" srcset="assets/foto/bm-1-foglio-640.webp?v=f1e514f8 640w, assets/foto/bm-1-foglio.webp?v=83005c56 1188w" width="1188" height="1004" alt="Il foglio originale: disegno a penna blu di Omar su un quaderno a righe: la M con le ali e i riccioli sotto" class="bm-foglio" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo"><h2 id="bm-titolo">Fly with<br>your mind.</h2><p class="bm-grande">Every goal begins with a vision.</p></div>
     </li>
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>02 · Il nome</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: 0.3957">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="Il nome: guarda il foglio originale"><img src="assets/foto/bm-2.webp?v=d3d5161c" width="554" height="1400" alt="Disegno a penna su carta a quadretti: MARO scritto in verticale, una lettera sotto l’altra, con scie che lo avvolgono" class="bm-segno" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><img src="assets/foto/bm-2-foglio.webp?v=69a8c6e7" width="554" height="1400" alt="Il foglio originale: disegno a penna su carta a quadretti: MARO scritto in verticale, una lettera sotto l’altra, con scie che lo avvolgono" class="bm-foglio" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo"><p>MARO nasce per chi ha un obiettivo da raggiungere e la fiducia necessaria per trasformare un pensiero in realtà.</p></div>
     </li>
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>03 · La misura</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: 1.1281">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="La misura: guarda il foglio originale"><img src="assets/foto/bm-3.webp?v=caf9b845" srcset="assets/foto/bm-3-640.webp?v=9c018a8f 640w, assets/foto/bm-3.webp?v=caf9b845 1400w" width="1400" height="1241" alt="Cartamodello a matita su carta millimetrata con le misure: le due ali e MARO verticale al centro" class="bm-segno" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><img src="assets/foto/bm-3-foglio.webp?v=7ca22a13" srcset="assets/foto/bm-3-foglio-640.webp?v=9c577f07 640w, assets/foto/bm-3-foglio.webp?v=7ca22a13 1400w" width="1400" height="1241" alt="Il foglio originale: cartamodello a matita su carta millimetrata con le misure: le due ali e MARO verticale al centro" class="bm-foglio" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo"><p><i>Fly with your mind</i> significa imparare dal passato, vivere il presente e immaginare il futuro che vogliamo costruire. Significa guardare oltre i propri limiti e credere in una visione, anche quando sembra lontana.</p></div>
     </li>
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>04 · Il lavoro</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: 1.4675">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="Il lavoro: guarda il foglio originale"><img src="assets/foto/bm-4.webp?v=45e6e8e8" srcset="assets/foto/bm-4-640.webp?v=11278b64 640w, assets/foto/bm-4.webp?v=45e6e8e8 1400w" width="1400" height="954" alt="Le due ali disegnate a matita, con le piume tratteggiate, su un foglio bianco" class="bm-segno" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><img src="assets/foto/bm-4-foglio.webp?v=97331554" srcset="assets/foto/bm-4-foglio-640.webp?v=e8407da2 640w, assets/foto/bm-4-foglio.webp?v=97331554 1400w" width="1400" height="954" alt="Il foglio originale: le due ali disegnate a matita, con le piume tratteggiate, su un foglio bianco" class="bm-foglio" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo"><p class="bm-grande">Ma sognare non basta.</p><p>Servono disciplina, sacrificio e la forza di affrontare le difficoltà, facendo anche ciò che è scomodo o faticoso, senza cercare scorciatoie.</p></div>
     </li>
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>05 · Il segno</p>
-      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
       <figure class="bm-disegno" style="--r: 1.4149">
+        <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=0e7bb9c0" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="Il segno: guarda il foglio originale"><img src="assets/foto/bm-5.webp?v=dea990e1" srcset="assets/foto/bm-5-640.webp?v=eb24040b 640w, assets/foto/bm-5.webp?v=dea990e1 1180w" width="1180" height="834" alt="Disegno finale a penna su carta a quadretti: le due ali piumate e MARO in verticale al centro" class="bm-segno" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><img src="assets/foto/bm-5-foglio.webp?v=8080306a" srcset="assets/foto/bm-5-foglio-640.webp?v=e4a0e434 640w, assets/foto/bm-5-foglio.webp?v=8080306a 1180w" width="1180" height="834" alt="Il foglio originale: disegno finale a penna su carta a quadretti: le due ali piumate e MARO in verticale al centro" class="bm-foglio" loading="lazy" decoding="async" sizes="(min-width: 640px) 600px, 100vw"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo"><p>Crediamo nel rispetto di sé stessi e degli altri, nella lealtà, nella fiducia e nella forza della collaborazione.</p><p class="bm-grande">Immagina. Credi. Agisci.</p><p>La tua mente dà forma alla visione. Le tue azioni la trasformano in realtà.</p></div>
