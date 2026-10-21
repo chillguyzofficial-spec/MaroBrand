@@ -752,7 +752,31 @@
       voci.forEach(function (v) { if (v.isIntersecting) { v.target.classList.remove('in-attesa'); v.target.classList.add('entrato'); osservaEntra.unobserve(v.target); } });
     }, { threshold: 0.35 });
     daEntrare.forEach(function (el) { el.classList.add('in-attesa'); osservaEntra.observe(el); });
-  }
+  } else daEntrare.forEach(function (el) { el.classList.add('entrato'); });
+
+  /* ---------- manifesto (21/10): toccando un disegno si vede il foglio vero, toccando di nuovo torna il segno ---------- */
+  var verbo = window.matchMedia && matchMedia('(hover: none)').matches ? 'Tocca' : 'Clicca';
+  $$('[data-verbo]').forEach(function (v) { v.textContent = verbo; });
+  $$('.bm-gira').forEach(function (bt) {
+    var fig = bt.parentNode;
+    bt.addEventListener('click', function () {
+      var foglio = fig.classList.toggle('foglio');
+      bt.setAttribute('aria-pressed', foglio ? 'true' : 'false');
+    });
+  });
+
+  /* ---------- carosello di «Le ali» (21/10): dito/trackpad o frecce, contatore N / totale ---------- */
+  $$('[data-giro]').forEach(function (g) {
+    var bin = $('.ali-binario', g), prec = $('[data-giro-prec]', g), succ = $('[data-giro-succ]', g), n = $('[data-giro-n]', g), tot = bin.children.length, giroG = 0;
+    var qui = function () { return Math.round(bin.scrollLeft / Math.max(1, bin.clientWidth)); };
+    var aggiorna = function () { giroG = 0; var i = qui(); n.textContent = i + 1; prec.disabled = i <= 0; succ.disabled = i >= tot - 1; };
+    var vai = function (d) { bin.scrollTo({ left: (qui() + d) * bin.clientWidth, behavior: calma ? 'auto' : 'smooth' }); };
+    prec.addEventListener('click', function () { vai(-1); });
+    succ.addEventListener('click', function () { vai(1); });
+    bin.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); vai(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); vai(-1); } });
+    bin.addEventListener('scroll', function () { if (!giroG) giroG = requestAnimationFrame(aggiorna); }, { passive: true });
+    aggiorna();
+  });
 
   /* ---------- pagina del brand v4: la linea verticale si disegna mentre scorri, i punti si accendono quando la raggiungi ---------- */
   var filo = $('.bn-filo');

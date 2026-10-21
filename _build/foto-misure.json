@@ -15,10 +15,6 @@
   1400,
   1339
  ],
- "acc-borraccia-copertina": [
-  1400,
-  1331
- ],
  "acc-borraccia-dettaglio": [
   1400,
   1339
@@ -43,9 +39,73 @@
   1400,
   1339
  ],
+ "ali-1": [
+  503,
+  507
+ ],
+ "ali-2": [
+  500,
+  508
+ ],
+ "ali-3": [
+  505,
+  512
+ ],
+ "ali-4": [
+  507,
+  500
+ ],
+ "ali-5": [
+  511,
+  506
+ ],
+ "ali-6": [
+  509,
+  506
+ ],
  "apertura-locandina": [
   1920,
   1080
+ ],
+ "bm-1-foglio": [
+  1188,
+  1004
+ ],
+ "bm-1": [
+  1188,
+  1004
+ ],
+ "bm-2-foglio": [
+  554,
+  1400
+ ],
+ "bm-2": [
+  554,
+  1400
+ ],
+ "bm-3-foglio": [
+  1400,
+  1241
+ ],
+ "bm-3": [
+  1400,
+  1241
+ ],
+ "bm-4-foglio": [
+  1400,
+  954
+ ],
+ "bm-4": [
+  1400,
+  954
+ ],
+ "bm-5-foglio": [
+  1180,
+  834
+ ],
+ "bm-5": [
+  1180,
+  834
  ],
  "bn-ali": [
   1472,
@@ -59,10 +119,6 @@
   1067,
   1600
  ],
- "bn-boxe": [
-  904,
-  1600
- ],
  "bn-corsa": [
   1920,
   1280
@@ -70,26 +126,6 @@
  "bn-tennis": [
   1920,
   1120
- ],
- "brand-ali": [
-  1120,
-  1400
- ],
- "brand-banner": [
-  2048,
-  1152
- ],
- "brand-firma": [
-  1120,
-  1400
- ],
- "brand-stretta": [
-  1076,
-  1345
- ],
- "campagna-due-ragazzi": [
-  1206,
-  1382
  ],
  "cat-accessori": [
   1120,
@@ -105,18 +141,6 @@
  ],
  "cat-polo": [
   1123,
-  1400
- ],
- "categoria-felpe": [
-  1076,
-  1345
- ],
- "categoria-polo": [
-  620,
-  775
- ],
- "cop-cappellino-ali": [
-  1120,
   1400
  ],
  "cop-cargo-firma": [
@@ -135,10 +159,6 @@
   1120,
   1400
  ],
- "cop-polo-jacquard": [
-  1120,
-  1400
- ],
  "cop-polo-linee": [
   1024,
   1280
@@ -146,30 +166,6 @@
  "cop-polo-tricolore": [
   1024,
   1280
- ],
- "copertina-felpa-firma": [
-  788,
-  1400
- ],
- "copertina-felpa-stretta": [
-  788,
-  1400
- ],
- "copertina-felpa-verticale": [
-  788,
-  1400
- ],
- "copertina-polo-jacquard": [
-  788,
-  1400
- ],
- "copertina-polo-linee": [
-  788,
-  1400
- ],
- "copertina-polo-tricolore": [
-  788,
-  1400
  ],
  "felpa-firma-fronte": [
   1120,
@@ -202,10 +198,6 @@
  "felpa-verticale-manichino": [
   1120,
   1400
- ],
- "felpa-verticale-montagna": [
-  690,
-  863
  ],
  "lb-citylife-strada": [
   1120,
@@ -271,10 +263,6 @@
   1123,
   1400
  ],
- "pant-cargo-copertina": [
-  791,
-  1400
- ],
  "pant-cargo-piegato": [
   1123,
   1400
@@ -319,48 +307,8 @@
   1120,
   1400
  ],
- "scena-capi-maro": [
-  1400,
-  1400
- ],
- "scena-citta": [
-  1120,
-  1400
- ],
  "scena-composizione": [
   1400,
-  1400
- ],
- "scena-dolomiti": [
-  2048,
-  1152
- ],
- "scena-orizzonte": [
-  1120,
-  1400
- ],
- "scena-ricamo-mani": [
-  1120,
-  1400
- ],
- "scena-ricamo-vicino": [
-  1120,
-  1400
- ],
- "scena-showroom": [
-  1120,
-  1400
- ],
- "segno-ali": [
-  1400,
-  1400
- ],
- "segno-firma-metro": [
-  767,
-  1209
- ],
- "segno-ricamo-logo": [
-  788,
   1400
  ],
  "segno-scena-1": [
@@ -370,21 +318,5 @@
  "segno-scena-2": [
   2048,
   1152
- ],
- "storia-stretta-di-mano": [
-  1206,
-  1345
- ],
- "tir-jacquard": [
-  1120,
-  1400
- ],
- "tir-tricolore": [
-  1120,
-  1400
- ],
- "tir-verticale": [
-  1120,
-  1400
  ]
 }

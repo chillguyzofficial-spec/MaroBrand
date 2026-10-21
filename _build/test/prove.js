@@ -36,7 +36,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
         const fuori = [];
         const W = document.documentElement.clientWidth;
         document.querySelectorAll('body *').forEach(el => {
-          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario') || el.closest('.avviso-nastro') || el.closest('.fascia-nastro') || el.closest('.tir-binario')) return; // barra e fasce a scorrimento escono apposta, ritagliate // il video esce apposta dentro .apertura (overflow:hidden)
+          if (el.closest('svg') || el.closest('[hidden]') || el.closest('.sr') || el.classList.contains('salta') || el.classList.contains('apertura-video') || el.closest('.vetrina-binario') || el.closest('.lb-binario') || el.closest('.avviso-nastro') || el.closest('.fascia-nastro') || el.closest('.tir-binario') || el.closest('.ali-binario')) return; // barra e fasce a scorrimento escono apposta, ritagliate // il video esce apposta dentro .apertura (overflow:hidden)
           const cs = getComputedStyle(el); if (cs.position === 'fixed' || cs.display === 'none') return;
           // foto che si allargano dentro un riquadro che le ritaglia (apertura e banner del brand): conta il riquadro, non la foto
           if (el.tagName === 'IMG' && getComputedStyle(el.parentElement).overflow === 'hidden') { const f = el.parentElement.getBoundingClientRect(); if (f.left >= -1 && f.right <= W + 1) return; }
