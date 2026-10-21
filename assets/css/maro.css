@@ -1,3 +1,8 @@
+/* caratteri dentro il sito (22/10): niente Google Fonts, così l’IP di chi visita non va a Google (privacy) */
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/anton-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Anton'; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/anton-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/archivo-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Archivo'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/archivo-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* MARO — Drop 001 */
 :root {
   --nero: #000;
@@ -1496,3 +1501,18 @@ a.acc-link { display: inline-flex; align-items: center; }
 .bn-video::after { content: ""; position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgba(0,0,0,.6), transparent 50%); pointer-events: none; }
 /* filtro colore selettivo: il canvas copre il video e mostra lo stesso fotogramma con lo sfondo grigio */
 .bn-video canvas { z-index: 2; }
+
+/* ---------- privacy (22/10): consenso nei moduli d'iscrizione, pagina privacy, link nel piede ---------- */
+.consenso { flex-basis: 100%; display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.45; cursor: pointer; text-align: left; }
+.iscriviti-form .consenso input, .popup-form .consenso input { flex: none; width: 20px; height: 20px; min-height: 0; margin: 1px 0 0; padding: 0; border-radius: 4px; accent-color: var(--nero); cursor: pointer; }
+.iscriviti-form .consenso { color: #bdbdbd; order: 1; }
+.iscriviti-form .btn { order: 2; }
+.iscriviti-form .esito { order: 3; }
+.iscriviti-form .consenso input { accent-color: var(--bianco); }
+.iscriviti-form .consenso .link { color: var(--bianco); }
+.popup-form .consenso { color: var(--testo-2); margin: 4px 0 6px; }
+.legale-data { margin: 16px 0 0; color: var(--testo-2); font-size: 17px; max-width: 34em; }
+.legale { font-size: 17px; line-height: 1.6; max-width: 40em; }
+.legale p { margin: 0 0 14px; }
+.legale ul { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 10px; }
+.piede-basso a[href="privacy.html"] { color: inherit; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }

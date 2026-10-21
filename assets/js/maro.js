@@ -619,6 +619,8 @@
       e.preventDefault();
       var inp = $('input', this), er = $('.popup-errore', pop);
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(inp.value.trim())) { er.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; inp.focus(); return; }
+      var ok = $('[data-consenso]', this); // 22/10: consenso esplicito (GDPR), casella mai spuntata in partenza
+      if (ok && !ok.checked) { er.textContent = 'Spunta la casella per ricevere il codice e le novità.'; ok.focus(); return; }
       er.textContent = '';
       var btn = $('button[type=submit]', this); btn.disabled = true;
       attivaSconto(inp.value).then(function (c) {
@@ -747,14 +749,19 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
         esito.className = 'esito errore'; esito.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; input.focus(); return;
       }
+      var ok = $('[data-consenso]', form);
+      if (ok && !ok.checked) { esito.className = 'esito errore'; esito.textContent = 'Spunta la casella per ricevere il codice e le novità.'; ok.focus(); return; }
       btn.disabled = true; esito.className = 'esito'; esito.textContent = 'Un attimo…';
       attivaSconto(v).then(function (c) {
         btn.disabled = false;
         if (c.errore) { esito.className = 'esito errore'; esito.textContent = c.errore; return; }
+        // vetrina (22/10): niente borsa, il codice si conserva e vale all'apertura del drop
+        var vetrina = !$('[data-apri-borsa]');
         esito.textContent = c.usato ? 'Sei dentro: ti scriviamo prima del prossimo drop. Il codice di benvenuto di questa email è già stato usato.'
-          : c.tipo === 'benvenuto' ? 'Sei dentro: il tuo codice ' + c.codice + ' (10% sul primo ordine, una volta sola) è già nella tua borsa. Ti scriviamo prima del prossimo drop. (Anteprima: nessuna email inviata.)'
+          : vetrina ? 'Sei dentro: il tuo codice è ' + c.codice + ' (10% sul primo ordine, una volta sola). Conservalo: vale quando apre il drop, e ti scriviamo prima dell’apertura.'
+          : c.tipo === 'benvenuto' ? 'Sei dentro: il tuo codice ' + c.codice + ' (10% sul primo ordine, una volta sola) è già nella tua borsa. Ti scriviamo prima del prossimo drop.'
           : 'Sei dentro: ti scriviamo prima del prossimo drop. In borsa hai già un codice attivo (' + c.codice + '): un codice per ordine.';
-        input.value = '';
+        input.value = ''; if (ok) ok.checked = false;
       });
     });
   }

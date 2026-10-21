@@ -17,11 +17,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="assets/img/icona-180.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=89">
-<script defer src="assets/js/maro.js?v=89"></script>
+<link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/maro.css?v=90">
+<script defer src="assets/js/maro.js?v=90"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body data-popup>
@@ -192,6 +191,7 @@
   </div>
   <div class="piede-basso">
     <span>© 2026 MARO · Milano</span>
+    <a href="privacy.html">Privacy</a>
     <span class="nota">Anteprima di presentazione: prezzi, materiali e testi sono di esempio.</span>
     <span class="piede-paese">Italia · EUR €</span>
     <a class="piede-su" href="#contenuto">Torna su ↑</a>
@@ -206,6 +206,7 @@
     <form class="popup-form" novalidate>
       <label for="email-popup" class="sr">La tua email</label>
       <input id="email-popup" type="email" autocomplete="email" placeholder="La tua email" required>
+      <label class="consenso"><input type="checkbox" data-consenso required> <span>Voglio ricevere le novità MARO e il codice del 10%. Ho letto l’<a class="link" href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>.</span></label>
       <button class="btn btn-nero" type="submit">Voglio lo sconto</button>
       <p class="popup-errore" role="alert"></p>
     </form>

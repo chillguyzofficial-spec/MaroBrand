@@ -37,7 +37,7 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     }
     await pg.goto(B + 'polo.html'); await pg.waitForTimeout(1600);
     prova(await popupVisibile(pg), nome + ': popup appena entri nell’abbigliamento (polo.html)');
-    await pg.fill('#email-popup', 'Prova@Esempio.it'); await pg.click('.popup-form button[type=submit]');
+    await pg.fill('#email-popup', 'Prova@Esempio.it'); await pg.check('.popup-form [data-consenso]'); await pg.click('.popup-form button[type=submit]');
     await aspettaTesto(pg, '[data-mio-codice]', /MARO-[A-Z0-9]{6}/);
     const cod = await testo(pg, '[data-mio-codice]');
     prova(/^MARO-[A-HJ-NP-Z2-9]{6}$/.test(cod), nome + ': codice personale dal motore ' + cod);
@@ -155,7 +155,7 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     prova(/Sconto amico AMICO-/.test(rA) && rA.includes('13,00'), nome + ': 10% amico in borsa ' + rA.replace(/\s+/g, ' '));
     // non si sommano: iscrizione in home con il codice amico attivo
     await pg.goto(B + 'index.html#iscriviti'); await pg.waitForTimeout(300);
-    await pg.fill('.iscriviti-form input', 'amico@esempio.it'); await pg.click('.iscriviti-form button[type=submit]');
+    await pg.fill('.iscriviti-form input[type=email]', 'amico@esempio.it'); await pg.check('.iscriviti-form [data-consenso]'); await pg.click('.iscriviti-form button[type=submit]');
     prova(await aspettaTesto(pg, '.iscriviti-form .esito', /un codice per ordine/), nome + ': iscrizione non somma un secondo codice');
     // togli e rimetti il codice dal campo
     await pg.click('[data-apri-borsa]'); await pg.waitForTimeout(200);

@@ -128,8 +128,16 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.fill('#email', 'prova'); await p.tap('.iscriviti-form .btn');
   prova(await p.evaluate(() => document.querySelector('.esito').classList.contains('errore')), 'email sbagliata segnalata');
-  await p.fill('#email', 'mario.rossi@esempio.it'); await p.tap('.iscriviti-form .btn');
+  await p.fill('#email', 'mario.rossi@esempio.it');
+  prova(!(await p.isChecked('.iscriviti-form [data-consenso]')), 'privacy: la casella del consenso parte vuota');
+  await p.tap('.iscriviti-form .btn');
+  prova(await p.evaluate(() => /Spunta la casella/.test(document.querySelector('.esito').textContent)), 'privacy: senza consenso l’iscrizione non parte');
+  await p.check('.iscriviti-form [data-consenso]'); await p.tap('.iscriviti-form .btn');
   prova(await p.waitForFunction(() => /Sei dentro/.test(document.querySelector('.esito').textContent), null, { timeout: 5000 }).then(() => true, () => false), 'email valida accettata (anche con la s)');
+  // privacy (22/10): pagina, link nel piede, niente Google Fonts
+  prova(await p.evaluate(() => !!document.querySelector('.piede-basso a[href="privacy.html"]') && !document.querySelector('link[href*="fonts.googleapis"]')), 'privacy: link nel piede, caratteri senza Google');
+  await p.goto(BASE + 'privacy.html', { waitUntil: 'load' });
+  prova(await p.evaluate(() => document.querySelectorAll('.aiuto-tema').length === 7 && /Garante/.test(document.body.textContent) && document.fonts.check('16px Anton')), 'privacy: 7 sezioni, Garante, caratteri caricati');
   // lookbook a scorrimento (telefono: una foto per volta)
   await p.goto(BASE + 'index.html', { waitUntil: 'load' });
   await p.evaluate(() => document.querySelector('#lookbook').scrollIntoView());
@@ -261,6 +269,8 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
     prova(!(await q.isVisible('#popup')), 'popup: dopo No grazie non ricompare');
     await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForTimeout(1600);
     await q.fill('#email-popup', 'luca@esempio.it'); await q.tap('.popup-form .btn');
+    prova(/Spunta la casella/.test(await q.textContent('.popup-errore')), 'popup: senza consenso non iscrive');
+    await q.check('.popup-form [data-consenso]'); await q.tap('.popup-form .btn');
     prova(await q.waitForSelector('.popup-codice', { state: 'visible', timeout: 5000 }).then(() => true, () => false), 'popup: iscrizione mostra il codice');
     await q.tap('[data-popup-ok]');
   if (!VETRINA) {
@@ -423,7 +433,7 @@ const prova = (cond, nome) => { if (cond) ok++; else { ko++; console.log('  ✗ 
       await q.tap('.popup-no'); await q.waitForTimeout(350);
     }
     await q.fill('#email-popup', 'sara@esempio.it').catch(() => {});
-    await q.tap('[data-apri-popup]'); await q.waitForTimeout(400); await q.fill('#email-popup', 'sara@esempio.it'); await q.tap('.popup-form .btn');
+    await q.tap('[data-apri-popup]'); await q.waitForTimeout(400); await q.fill('#email-popup', 'sara@esempio.it'); await q.check('.popup-form [data-consenso]'); await q.tap('.popup-form .btn');
     prova(await q.waitForSelector('.popup-codice', { state: 'visible', timeout: 5000 }).then(() => true, () => false) && /quando apre il drop/.test(await q.textContent('[data-passo="2"]')), 'vetrina: iscrizione dal drop → codice personale, «vale quando apre il drop»');
     prova(!err.length, 'vetrina: nessun errore JS ' + err.join(' | '));
     await c.close();

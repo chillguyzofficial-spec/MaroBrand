@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '89'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '90'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -105,9 +105,8 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="apple-touch-icon" href="assets/img/icona-180.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
+<link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=${V}">
 <script defer src="assets/js/maro.js?v=${V}"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/\s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
@@ -145,6 +144,7 @@ ${corpo}
   </div>
   <div class="piede-basso">
     <span>© 2026 MARO · Milano</span>
+    <a href="privacy.html">Privacy</a>
     <span class="nota">Anteprima di presentazione: prezzi, materiali e testi sono di esempio.</span>
     <span class="piede-paese">Italia · EUR €</span>
     <a class="piede-su" href="#contenuto">Torna su ↑</a>
@@ -159,6 +159,7 @@ ${corpo}
     <form class="popup-form" novalidate>
       <label for="email-popup" class="sr">La tua email</label>
       <input id="email-popup" type="email" autocomplete="email" placeholder="La tua email" required>
+      ${consenso()}
       <button class="btn btn-nero" type="submit">Voglio lo sconto</button>
       <p class="popup-errore" role="alert"></p>
     </form>
@@ -443,6 +444,7 @@ ${VETRINA ? '' : `    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un l
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
     <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
+    ${consenso()}
     <button class="btn btn-nero" type="submit">Iscriviti</button>
     <p class="esito" role="status" aria-live="polite"></p>
   </form>
@@ -808,6 +810,73 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
   return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Ordini, spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
 }
 
+// ---------- PRIVACY (22/10): informativa art. 13 GDPR scritta da noi (niente iubenda per ora, scelta di Francesco) ----------
+// Due versioni con lo stesso interruttore: VETRINA = solo iscrizione con email; negozio = anche account, ordini, pagamenti.
+// Il testo del NEGOZIO è solo una bozza nostra: quando si vende online servirà un servizio come iubenda o LegalBlink
+// (decisione di Francesco del 22/10), con privacy, cookie e condizioni di vendita.
+// TITOLARE: dati di Omar, da completare (nome e cognome + email di contatto). Finché mancano, la build avvisa.
+const TITOLARE = { nome: '', email: '' };
+const AGGIORNATA = '22 ottobre 2026';
+const consenso = () => `<label class="consenso"><input type="checkbox" data-consenso required> <span>Voglio ricevere le novità MARO e il codice del 10%. Ho letto l’<a class="link" href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>.</span></label>`;
+function privacy() {
+  const nome = TITOLARE.nome || 'Omar [cognome da completare]';
+  const mail = TITOLARE.email ? `<a class="link" href="mailto:${TITOLARE.email}">${TITOLARE.email}</a>` : '[email da completare]';
+  const tema = (id, titolo, testo) => `  <section class="aiuto-tema" id="${id}" aria-labelledby="p-${id}">
+    <div class="aiuto-tema-testa"><h2 id="p-${id}">${titolo}</h2></div>
+    <div class="legale">${testo}</div>
+  </section>`;
+  const temi = [
+    tema('titolare', 'Chi tratta i tuoi dati', `<p>Il titolare del trattamento è <strong>${nome}</strong>, che crea e vende i capi MARO. Per qualunque domanda sui tuoi dati scrivi a ${mail}.</p>`),
+    tema('dati', 'Quali dati', VETRINA
+      ? `<ul><li><strong>La tua email</strong>, se ti iscrivi al drop, con il codice sconto creato per te e il momento in cui ti sei iscritto.</li>
+<li><strong>Dati tecnici</strong>: per bloccare chi prova a iscrivere centinaia di email, il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul>`
+      : `<ul><li><strong>Iscrizione al drop</strong>: la tua email, il codice sconto creato per te e il momento in cui hai dato il consenso.</li>
+<li><strong>Account</strong>: nome, email, password (salvata solo in forma cifrata, nessuno può leggerla) e il momento in cui hai confermato questa informativa.</li>
+<li><strong>Ordini</strong>: capi, taglie, importi, codice sconto usato, nome e indirizzo di consegna, numero di tracciamento del pacco.</li>
+<li><strong>Pagamenti</strong>: li gestisce Stripe. Noi non vediamo mai i dati della tua carta: riceviamo solo un’impronta anonima che serve a riconoscere la stessa carta usata più volte per i codici di benvenuto o di Porta un amico.</li>
+<li><strong>Porta un amico</strong>: il tuo codice di invito e quali ordini sono arrivati con il tuo link.</li>
+<li><strong>Dati tecnici</strong>: per bloccare gli abusi il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul>`),
+    tema('perche', 'Perché e su quale base', VETRINA
+      ? `<ul><li><strong>Mandarti le novità dei drop e il codice del 10%</strong>: solo con il tuo consenso, che dai spuntando la casella (art. 6.1.a GDPR). Puoi ritirarlo quando vuoi.</li>
+<li><strong>Proteggere il sito dagli abusi</strong>: legittimo interesse a tenere il servizio sicuro (art. 6.1.f GDPR).</li></ul>
+<p>Lasciare l’email non è obbligatorio: senza, puoi guardare il sito come prima, ma non ricevi il codice né gli avvisi.</p>`
+      : `<ul><li><strong>Newsletter e codice del 10%</strong>: solo con il tuo consenso (art. 6.1.a GDPR), che puoi ritirare quando vuoi.</li>
+<li><strong>Account, ordini, spedizioni ed email di servizio</strong> (conferma dell’email, ordine ricevuto, pacco partito, nuova password): servono per il contratto di vendita che fai con noi (art. 6.1.b GDPR).</li>
+<li><strong>Conservare le vendite per 10 anni</strong>: lo chiede la legge fiscale (art. 6.1.c GDPR, art. 2220 del Codice civile).</li>
+<li><strong>Prevenire abusi e frodi</strong> su codici e pagamenti: legittimo interesse (art. 6.1.f GDPR).</li></ul>
+<p>Senza nome, email e indirizzo non possiamo spedirti un ordine; la newsletter invece è sempre facoltativa.</p>`),
+    tema('chi', 'Chi li gestisce per noi', `<p>Usiamo questi fornitori, che trattano i dati solo per conto nostro:</p>
+<ul><li><strong>Cloudflare</strong>: il sistema che salva ${VETRINA ? 'le iscrizioni e i codici' : 'account, ordini e codici'}.</li>
+<li><strong>GitHub</strong>: ospita le pagine del sito.</li>
+<li><strong>Resend</strong>: invia le email.</li>${VETRINA ? '' : `
+<li><strong>Stripe</strong>: gestisce i pagamenti, con la sua <a class="link" href="https://stripe.com/it/privacy" target="_blank" rel="noopener">informativa</a>.</li>
+<li><strong>Il corriere</strong> che porta il pacco riceve nome, indirizzo e, se serve, la tua email per gli avvisi di consegna.</li>`}</ul>
+<p>Sono aziende con sede negli Stati Uniti: i dati possono essere trasferiti fuori dall’Unione Europea. Tutte aderiscono all’accordo UE-USA sulla protezione dei dati (Data Privacy Framework), riconosciuto dalla Commissione europea. Non vendiamo né cediamo i tuoi dati a nessuno.</p>`),
+    tema('quanto', 'Per quanto tempo', VETRINA
+      ? `<ul><li><strong>Email e codice</strong>: finché resti iscritto. Se ti cancelli, li eliminiamo entro 30 giorni.</li>
+<li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li></ul>`
+      : `<ul><li><strong>Newsletter</strong>: finché resti iscritto; se ti cancelli, la tua email esce dalla lista subito.</li>
+<li><strong>Account</strong>: finché non lo elimini, cosa che puoi fare da solo nella pagina «Il mio account».</li>
+<li><strong>Ordini</strong>: 10 anni, come chiede la legge, anche se elimini l’account.</li>
+<li><strong>Accesso</strong>: resti collegato al massimo 30 giorni; i link per confermare l’email o cambiare password valgono 24 ore.</li>
+<li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li></ul>`),
+    tema('browser', 'Cookie e memoria del browser', `<p>Il sito <strong>non usa cookie di profilazione, pubblicità o statistiche</strong>, e i caratteri sono caricati dal sito stesso, non da servizi esterni. Usa solo la memoria del tuo browser per far funzionare le pagine: i preferiti, i capi visti di recente, ${VETRINA ? 'il codice ricevuto e se hai già chiuso la finestra del 10%' : 'la borsa, il codice attivo, l’accesso al tuo account e se hai già chiuso la finestra del 10%'}. Restano sul tuo dispositivo e puoi cancellarli dalle impostazioni del browser.</p>`),
+    tema('diritti', 'I tuoi diritti', `<p>In ogni momento puoi chiedere di vedere i tuoi dati, correggerli, cancellarli, limitarne l’uso, opporti o riceverne una copia (art. 15–22 GDPR), e ritirare il consenso senza che questo tocchi quello che è stato fatto prima. Basta scrivere a ${mail}: rispondiamo entro 30 giorni.</p>
+<p>Se pensi che i tuoi dati siano trattati male, puoi fare reclamo al <a class="link" href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
+<p>Non prendiamo decisioni automatiche su di te e non facciamo profilazione. Per iscriverti devi avere almeno 14 anni.</p>`),
+  ];
+  const corpo = `
+<section class="aiuto-testa" aria-labelledby="privacy-titolo">
+  <h1 id="privacy-titolo" class="titolo">Privacy</h1>
+  <p class="legale-data">Come usiamo i tuoi dati, in parole semplici. Ultimo aggiornamento: ${AGGIORNATA}.</p>
+</section>
+
+<div class="aiuto">
+${temi.join('\n\n')}
+</div>`;
+  return pagina({ titolo: 'Privacy — MARO', descrizione: 'Informativa privacy di MARO: quali dati raccogliamo, perché, per quanto tempo e i tuoi diritti.', corpo, file: 'privacy.html' });
+}
+
 // ---------- STORIA v5 (21/10): apertura, manifesto di Omar coi suoi disegni (al posto di «Il segno» con gli sport), Le ali, chiusura ----------
 // Manifesto di Omar (21/10): il suo testo (messaggio WhatsApp) diviso come ha chiesto lui, sotto le foto dei suoi disegni nel suo ordine.
 // Parole sue, non riscritte. L'ultima riga «MARO — FLY WITH YOUR MIND.» diventa la chiusura col logo (MARO mai in orizzontale).
@@ -984,8 +1053,9 @@ function account() {
         <li data-regola="num">Almeno un numero</li>
         <li data-regola="maiu">Almeno una lettera maiuscola</li>
       </ul>
-      <label class="acc-spunta"><input type="checkbox" data-reg-newsletter checked> <span>Voglio i drop in anteprima e il <strong>10% sul primo ordine</strong> (newsletter, ti cancelli quando vuoi).</span></label>
-      <label class="acc-spunta"><input type="checkbox" data-reg-privacy required> <span>Ho letto l’informativa privacy. <em>(obbligatorio)</em></span></label>
+      <!-- 22/10: newsletter NON spuntata in partenza (un consenso già spuntato non vale per il GDPR) -->
+      <label class="acc-spunta"><input type="checkbox" data-reg-newsletter> <span>Voglio i drop in anteprima e il <strong>10% sul primo ordine</strong> (newsletter, ti cancelli quando vuoi).</span></label>
+      <label class="acc-spunta"><input type="checkbox" data-reg-privacy required> <span>Ho letto l’<a class="link" href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>. <em>(obbligatorio)</em></span></label>
       <p class="acc-esito" role="alert" data-reg-esito></p>
       <button type="submit" class="btn btn-nero btn-largo">Crea l’account</button>
     </form>
@@ -1079,6 +1149,8 @@ if (!VETRINA) {
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
 for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), categoriaPagina(cat));
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
+fs.writeFileSync(path.join(ROOT, 'privacy.html'), privacy());
+if (!TITOLARE.nome || !TITOLARE.email) console.warn('⚠ Privacy: mancano nome e/o email del titolare (TITOLARE in build.js)');
 fs.writeFileSync(path.join(ROOT, 'storia.html'), storia());
 fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
 if (!VETRINA) fs.writeFileSync(path.join(ROOT, 'carta-regalo.html'), cartaRegalo());
