@@ -808,7 +808,12 @@
       ' float rosso = smoothstep(.40, .55, h.y) * (step(.94, h.x) + (1. - step(.03, h.x))) * step(.2, h.z);' +
       ' float verde = smoothstep(.35, .50, h.y) * (1. - smoothstep(.06, .10, abs(h.x - .40))) * step(.15, h.z);' +
       ' float k = clamp(max(max(palla, pelle), max(rosso, verde)), 0., 1.);' +
-      ' gl_FragColor = vec4(mix(vec3(g), c, k), alfa); }';
+      // 22/10: polo e pallina più accese, fondo più scuro e contrastato con una vignettatura leggera verso i bordi
+      ' float viva = max(palla, max(rosso, verde));' +
+      ' vec3 colore = mix(c, clamp(mix(vec3(g), c, 1.4) * 1.08, 0., 1.), viva);' +
+      ' float vig = mix(.62, 1., 1. - smoothstep(.30, .95, distance(t, vec2(.58, .5))));' +
+      ' vec3 fondo = vec3(pow(g, 1.2) * .82 * vig);' +
+      ' gl_FragColor = vec4(mix(fondo, colore, k), alfa); }';
     var sh = function (tipo, src) { var s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
     var a = sh(gl.VERTEX_SHADER, vs), b = sh(gl.FRAGMENT_SHADER, fsrc); if (!a || !b) return;
     var pr = gl.createProgram(); gl.attachShader(pr, a); gl.attachShader(pr, b); gl.linkProgram(pr);

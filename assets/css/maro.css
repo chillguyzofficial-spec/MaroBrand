@@ -1491,6 +1491,6 @@ a.acc-link { display: inline-flex; align-items: center; }
 .bn-video [data-video-brand-copia] { opacity: 0; }
 @media (max-width: 767px) { .bn-video { height: 62svh; min-height: 380px; } .bn-video video, .bn-video canvas { object-position: 62% 50%; } }
 /* in basso a sinistra, su tre righe: lì c'è solo il campo, il ragazzo non ci passa mai (in alto copriva la testa) */
-.bn-video-frase { position: absolute; z-index: 3; left: var(--lato); bottom: clamp(20px, 5vh, 56px); margin: 0; font: 400 clamp(30px, 5vw, 88px)/.92 var(--titoli); text-transform: uppercase; color: var(--bianco); text-shadow: 0 2px 30px rgba(0,0,0,.45); pointer-events: none; }
+.bn-video-frase { position: absolute; z-index: 3; left: var(--lato); bottom: clamp(20px, 5vh, 56px); margin: 0; font: 400 clamp(38px, 5vw, 88px)/.92 var(--titoli); text-transform: uppercase; color: var(--bianco); text-shadow: 0 2px 30px rgba(0,0,0,.45); pointer-events: none; }
 /* filtro colore selettivo: il canvas copre il video e mostra lo stesso fotogramma con lo sfondo grigio */
 .bn-video canvas { z-index: 2; }
