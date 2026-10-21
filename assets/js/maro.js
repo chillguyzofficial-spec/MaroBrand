@@ -786,7 +786,7 @@
       };
       videoBrand.loop = !videoCopia;
       parteB(videoBrand); requestAnimationFrame(guardaB);
-      coloreSelettivo(regia);
+      // coloreSelettivo(regia); — spento il 22/10 su richiesta di Francesco: video ai colori naturali (filtro tenuto per riprovarci)
     }
   }
   /* colore selettivo (21/10 notte, richiesta di Francesco): sfondo in bianco e nero, a colori solo la pallina gialla, la pelle
