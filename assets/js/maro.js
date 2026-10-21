@@ -211,6 +211,37 @@
   // codici della dimostrazione (creati nel browser, il motore non li conosce): via, sia attivo sia nell'elenco
   togliK('maro-sconto');
   if (mem.get('maro-motore') !== '1') { togliK('maro-codice'); togliK('maro-emessi'); togliK('maro-usati'); togliK('maro-ordini'); togliK('maro-mio-invito'); togliK('maro-account'); togliK('maro-utente'); mem.set('maro-motore', '1'); }
+  /* ---------- testata: chi è collegato (21/10, come Nike) ----------
+     maro-chi = {nome, email} di chi è dentro, scritto dalla pagina account; su ogni pagina la testata mostra
+     l'iniziale (e su PC «Ciao, Nome»). Una volta per visita si chiede al motore se l'accesso vale ancora. */
+  var chiCollegato = function () { return mem.get('maro-token') ? leggiJ('maro-chi', null) : null; };
+  var testataConto = function () {
+    var c = chiCollegato(), a = $('.acc-apri'), voce = $('.menu .solo-tel[href="account.html"]');
+    var nome = c ? String(c.nome || String(c.email || '').split('@')[0] || '').trim().split(/\s+/)[0].slice(0, 14) : '';
+    document.documentElement.classList.toggle('collegato', !!nome);
+    if (a) {
+      a.textContent = '';
+      if (nome) {
+        var ini = document.createElement('span'); ini.className = 'acc-iniziale'; ini.setAttribute('aria-hidden', 'true'); ini.textContent = nome.charAt(0).toUpperCase();
+        var ciao = document.createElement('span'); ciao.className = 'acc-ciao'; ciao.setAttribute('aria-hidden', 'true'); ciao.textContent = 'Ciao, ' + nome;
+        a.appendChild(ini); a.appendChild(ciao); a.setAttribute('aria-label', 'Il mio account, collegato come ' + nome);
+      } else {
+        a.innerHTML = '<svg viewBox="0 0 24 24"><use href="#i-utente"/></svg>'; a.setAttribute('aria-label', 'Il mio account');
+      }
+    }
+    if (voce) voce.textContent = nome ? 'Ciao, ' + nome + ' · Il mio account' : 'Il mio account';
+  };
+  var ricordaChi = function (d) { if (d) scriviJ('maro-chi', { nome: d.nome || '', email: d.email || '' }); else togliK('maro-chi'); testataConto(); };
+  testataConto();
+  (function () {
+    var tk = mem.get('maro-token'), visto = false;
+    try { visto = sessionStorage.getItem('maro-chi-ok') === '1'; } catch (e) {}
+    if (!tk || visto || $('[data-conto-dentro]')) return; // la pagina account lo chiede già da sola
+    api('/api/io', undefined, tk).then(function (d) {
+      if (d.stato === 401) { togliK('maro-token'); ricordaChi(null); return; }
+      if (d.ok) { ricordaChi(d); try { sessionStorage.setItem('maro-chi-ok', '1'); } catch (e) {} }
+    });
+  })();
   // iscrizione: una email = un codice (stessa email, stesso codice, lo decide il motore); se in borsa c'è già un codice resta quello
   // → Promise di {tipo, codice, pct} | {usato: true} | {errore}
   var attivaSconto = function (email) {
@@ -1078,10 +1109,10 @@
       var npAperta = $('[data-acc-nuova]');
       if (!tk || (npAperta && !npAperta.hidden)) return fuori(); // mentre si sceglie una nuova password si resta su quella schermata
       api('/api/io', undefined, tk).then(function (d) {
-        if (d.stato === 401) { togliK('maro-token'); return fuori(); }
+        if (d.stato === 401) { togliK('maro-token'); ricordaChi(null); return fuori(); }
         contoFuori.hidden = true; dentro.hidden = false;
         if (!d.ok) { mostraAvviso(esc(d.errore)); return; }
-        $('[data-conto-email]').textContent = d.email;
+        $('[data-conto-email]').textContent = d.email; ricordaChi(d);
         $('[data-conto-nome]').textContent = d.nome ? ', ' + d.nome : '';
         if (!d.email_verificata) {
           var l = null; try { l = sessionStorage.getItem('maro-link-conferma'); } catch (e) {}
@@ -1249,7 +1280,7 @@
       });
     });
     $('[data-conto-esci]').addEventListener('click', function () {
-      var tk = tokenConto(); togliK('maro-token'); fuori();
+      var tk = tokenConto(); togliK('maro-token'); ricordaChi(null); fuori();
       if (tk) api('/api/esci', {}, tk);
     });
     var formEl = $('[data-acc-elimina]');
@@ -1263,7 +1294,7 @@
         if (!d.ok) { es.textContent = d.errore; return; }
         $('#el-pw').value = ''; formEl.parentNode.open = false;
         // nel browser restano solo comodità: via anche codice in borsa e link amico di questa persona
-        ['maro-token', 'maro-codice', 'maro-emessi', 'maro-mio-invito', 'maro-iscritto'].forEach(togliK);
+        ['maro-token', 'maro-codice', 'maro-emessi', 'maro-mio-invito', 'maro-iscritto'].forEach(togliK); ricordaChi(null);
         fuori(); $('[data-acc-info]').textContent = 'Account eliminato. Ci dispiace vederti andare: se torni, ti aspettiamo.';
         window.scrollTo(0, 0);
       });
@@ -1297,7 +1328,7 @@
     window.addEventListener('hashchange', usaLinkIndirizzo);
     usaLinkIndirizzo();
     // dal link «nuova password» si sceglie la password anche se su questo dispositivo si era già dentro: quella sessione si chiude
-    if (/^#nuova-password=/.test(location.hash) && tokenConto()) togliK('maro-token');
+    if (/^#nuova-password=/.test(location.hash) && tokenConto()) { togliK('maro-token'); ricordaChi(null); }
     disegnaConto();
     instrada();
   }

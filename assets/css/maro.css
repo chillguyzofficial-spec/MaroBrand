@@ -1455,3 +1455,12 @@ a.acc-link { display: inline-flex; align-items: center; }
 .acc-mostra { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); min-height: 44px; min-width: 76px; padding: 0 12px; border: 0; border-radius: 10px; background: none; font: 600 14px var(--testo); color: var(--nero); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 [data-rec-ancora]:disabled { opacity: .55; cursor: default; }
 .acc-pw input::-ms-reveal, .acc-pw input::-ms-clear { display: none; } /* Edge mette un suo occhio: c'è già «Mostra» */
+
+/* testata: chi è collegato (21/10, come Nike) — iniziale nel cerchio nero; su PC anche «Ciao, Nome» */
+.acc-iniziale { width: 30px; height: 30px; border-radius: 50%; background: var(--nero); color: var(--bianco); display: grid; place-items: center; font: 700 14px/1 var(--testo); flex: none; }
+.collegato .acc-apri { width: auto; min-width: 44px; padding: 0 12px 0 7px; gap: 8px; display: flex; align-items: center; border-radius: 999px; color: var(--nero); text-decoration: none; }
+.acc-ciao { font: 600 14px var(--testo); white-space: nowrap; }
+@media (max-width: 959px) {
+  .collegato .acc-apri { display: flex; justify-content: center; width: 44px; padding: 0; }
+  .acc-ciao { display: none; }
+}

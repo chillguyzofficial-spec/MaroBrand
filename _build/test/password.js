@@ -83,6 +83,23 @@ const testo = (pg, s) => pg.$eval(s, e => e.textContent.trim()).catch(() => '');
     await pg.fill('#acc-email', 'luca@esempio.it'); await pg.fill('#acc-pw', 'Nuova2026x'); await pg.click('#pan-accedi button[type=submit]');
     await pg.waitForSelector('[data-conto-dentro]:not([hidden])', { timeout: 5000 }).catch(() => {});
     prova(await pg.isVisible('[data-conto-dentro]'), nome + ': si entra con la password nuova');
+    // la testata dice chi è collegato anche sulle altre pagine (21/10, come Nike)
+    await pg.waitForTimeout(300);
+    for (const f of ['polo.html', 'index.html']) {
+      await pg.goto(B + f); await pg.waitForTimeout(500);
+      const t = await pg.evaluate(() => { const a = document.querySelector('.acc-apri'), i = a && a.querySelector('.acc-iniziale'), c = a && a.querySelector('.acc-ciao'); const vis = e => !!e && getComputedStyle(e).display !== 'none' && e.getBoundingClientRect().width > 0; return { iniz: i ? i.textContent : '', inizVis: vis(i), ciao: c ? c.textContent : '', ciaoVis: vis(c), label: a ? a.getAttribute('aria-label') : '', voce: (document.querySelector('.menu .solo-tel[href="account.html"]') || {}).textContent, lato: document.documentElement.scrollWidth <= document.documentElement.clientWidth, alto: a ? a.getBoundingClientRect().height : 0 }; });
+      prova(t.iniz === 'L' && t.inizVis, nome + ': ' + f + ' iniziale «L» in testata');
+      prova(opz.viewport.width >= 960 ? (t.ciao === 'Ciao, Luca' && t.ciaoVis) : !t.ciaoVis, nome + ': ' + f + (opz.viewport.width >= 960 ? ' «Ciao, Luca» su PC' : ' solo l’iniziale su telefono'));
+      prova(t.label === 'Il mio account, collegato come Luca' && t.voce === 'Ciao, Luca · Il mio account', nome + ': ' + f + ' etichetta e voce del menu');
+      prova(t.lato && t.alto >= 44, nome + ': ' + f + ' testata senza scorrimento laterale, tocco da 44 px');
+    }
+    await pg.goto(B + 'account.html'); await pg.waitForSelector('[data-conto-dentro]:not([hidden])', { timeout: 5000 }).catch(() => {});
+    await pg.click('[data-conto-esci]'); await pg.waitForTimeout(300);
+    await pg.goto(B + 'polo.html'); await pg.waitForTimeout(400);
+    prova(await pg.evaluate(() => !document.querySelector('.acc-apri .acc-iniziale') && document.querySelector('.acc-apri').getAttribute('aria-label') === 'Il mio account' && !document.documentElement.classList.contains('collegato')), nome + ': dopo «Esci» torna l’icona normale');
+    // di nuovo dentro per le prove che seguono
+    await pg.goto(B + 'account.html'); await pg.fill('#acc-email', 'luca@esempio.it'); await pg.fill('#acc-pw', 'Nuova2026x'); await pg.click('#pan-accedi button[type=submit]');
+    await pg.waitForSelector('[data-conto-dentro]:not([hidden])', { timeout: 5000 }).catch(() => {});
     prova(await pg.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), nome + ': nessuno scorrimento laterale');
     const tocchi = await pg.goto(B + 'account.html#password-dimenticata').then(() => pg.waitForTimeout(300)).then(() => pg.$$eval('[data-acc-vista]:not([hidden]) a, [data-acc-vista]:not([hidden]) button', es => es.filter(e => e.offsetParent).map(e => Math.round(e.getBoundingClientRect().height))));
     prova(tocchi.every(h => h >= 44), nome + ': pulsanti e link da almeno 44 px (' + tocchi.join(',') + ')');
