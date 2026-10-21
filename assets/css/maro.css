@@ -1140,6 +1140,19 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 
 .bn-ali { display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: clamp(28px, 5vw, 80px); background: var(--bianco); padding: clamp(64px, 8vw, 120px) var(--lato); }
 .bn-ali figure { margin: 0; }
+/* carosello di «Le ali» (21/10): foto quadrate (~500 px: mai più larghe di 520 px per non sgranarle), scorrimento con dito/trackpad + frecce */
+.ali-giro { width: min(100%, 520px); justify-self: center; }
+.ali-binario { list-style: none; margin: 0; padding: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.ali-binario::-webkit-scrollbar { display: none; }
+.ali-binario li { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+.ali-binario img { display: block; width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; }
+.ali-comandi { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.ali-freccia { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--nero); border-radius: 50%; background: var(--bianco); color: var(--nero); cursor: pointer; transition: background .2s, color .2s, opacity .2s; }
+.ali-freccia svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.ali-freccia:hover:not(:disabled) { background: var(--nero); color: var(--bianco); }
+.ali-freccia:disabled { opacity: .3; cursor: default; }
+.ali-conto { margin: 0; min-width: 3.4em; text-align: center; font-size: 14px; font-weight: 700; letter-spacing: .08em; }
+.ali-scorri { margin: 0 0 0 auto; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #555; }
 .bn-ali img { width: 100%; }
 .bn-ali h2 { font: 400 clamp(60px, 9vw, 140px)/.95 var(--titoli); text-transform: uppercase; }
 .bn-ali-testo p:not(.occhiello) { font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; color: #333; margin: 20px 0 28px; max-width: 28em; }
@@ -1154,6 +1167,57 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .bn-fine-logo, .bn-fine h2, .bn-fine p, .bn-fine .btn { transition: opacity .9s ease, transform .9s cubic-bezier(.2, .7, .2, 1); }
 .bn-fine h2 { transition-delay: .2s; } .bn-fine p { transition-delay: .35s; } .bn-fine .btn { transition-delay: .5s; }
 .bn-linea :focus-visible, .bn-fine :focus-visible { outline-color: var(--bianco); }
+
+/* manifesto di Omar (21/10): i suoi disegni nell'ordine voluto, al posto di «Il segno» (Francesco 21/10).
+   Stessa riga verticale e stessi pallini di «Il segno» (.bn-filo, .bn-punto, .bn-sport: il JS li cerca nella sezione).
+   Disegni in negativo (bianco su nero, nessuna cornice: fanno parte del fondo), tutti nello stesso spazio quadrato,
+   si "tracciano" dall'alto quando arrivi; toccandoli si vede il foglio vero. Dietro, la firma verticale grande e tenue. */
+.bm { position: relative; background: var(--nero); color: var(--bianco); padding: clamp(48px, 6vw, 88px) var(--lato) clamp(72px, 10vw, 140px); overflow: hidden; }
+.bm-passi { list-style: none; margin: 0 auto; padding: 0; max-width: 1100px; display: grid; gap: clamp(80px, 11vw, 150px); }
+.bm-passo { position: relative; display: grid; justify-items: center; text-align: center; }
+.bm-passo > :not(.bm-firma-fondo) { position: relative; z-index: 1; }
+/* firma di fondo: larga quanto lo spazio libero accanto al quadrato del disegno (mai sotto il disegno, mai fuori schermo) */
+.bm-firma-fondo { position: absolute; z-index: 0; top: 50%; width: calc((100% - min(100%, 600px, 60vh)) / 2 - 24px); max-width: 300px; height: auto; transform: translateY(-50%); filter: invert(1); opacity: .1; transition: opacity 1.6s ease; pointer-events: none; }
+.bm-passo:nth-child(odd) .bm-firma-fondo { left: 0; }
+.bm-passo:nth-child(even) .bm-firma-fondo { right: 0; }
+.bm-passo.entrato .bm-firma-fondo { opacity: .26; }
+.bm-disegno { margin: 0; width: min(100%, 600px, 60vh); }
+.bm-gira { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 1; padding: 0; border: 0; background: var(--nero); color: inherit; cursor: pointer; }
+/* misura dalla proporzione (--r): il disegno sta intero nel quadrato e lo spazio resta stabile anche prima che la foto carichi */
+.bm-gira img { grid-area: 1 / 1; width: calc(100% * min(1, var(--r))); max-width: 100%; aspect-ratio: var(--r); height: auto; transition: opacity .6s ease; }
+.bm-segno { -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent), linear-gradient(transparent, #000 4%, #000 96%, transparent); mask-composite: intersect; }
+.bm-foglio { opacity: 0; }
+.bm-disegno.foglio .bm-foglio { opacity: 1; }
+.bm-disegno.foglio .bm-segno { opacity: 0; }
+/* il disegno si "traccia" dall'alto: una tenda nera si ritira verso il basso. Niente clip-path sull'immagine:
+   un'immagine lazy tutta ritagliata il browser la considera invisibile e non la carica (bug 21/10) */
+.bm-gira::after { content: ''; position: absolute; inset: -1px; background: var(--nero); transform-origin: 50% 100%; transform: scaleY(0); transition: transform 1.8s cubic-bezier(.6, .1, .2, 1); pointer-events: none; }
+.bm-passo.in-attesa .bm-gira::after { transform: scaleY(1); }
+/* icona "gira" nell'angolo del disegno: dice che si può toccare, senza ripetere la scritta (Francesco 21/10) */
+.bm-gira-icona { position: absolute; z-index: 2; right: 10px; bottom: 10px; width: 36px; height: 36px; display: grid; place-items: center; border: 1px solid rgba(255, 255, 255, .5); border-radius: 50%; background: rgba(0, 0, 0, .6); color: var(--bianco); transition: transform .5s ease, border-color .2s; }
+.bm-gira-icona svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.bm-gira:hover .bm-gira-icona { border-color: var(--bianco); transform: rotate(180deg); }
+.bm-disegno.foglio .bm-gira-icona { transform: rotate(180deg); }
+.bm-testo { background: var(--nero); max-width: 680px; padding: clamp(28px, 4vw, 44px) 12px 4px; }
+.bm-testo h2 { font: 400 clamp(52px, 8vw, 120px)/.95 var(--titoli); text-transform: uppercase; }
+.bm-testo p { font-size: clamp(19px, 1.8vw, 23px); font-weight: 500; line-height: 1.6; color: var(--bianco); margin: 16px 0 0; }
+.bm-testo p:first-child { margin-top: 0; }
+.bm-testo .bm-grande { font: 400 clamp(32px, 3.8vw, 52px)/1.1 var(--titoli); text-transform: uppercase; margin-top: 22px; }
+.bm-testo h2 + .bm-grande { margin-top: 18px; }
+.bm-testo .bm-grande:first-child { margin-top: 0; }
+.bm-passo.in-attesa .bm-testo { opacity: 0; transform: translateY(32px); }
+.bm-testo { transition: opacity .9s ease .5s, transform .9s cubic-bezier(.2, .7, .2, 1) .5s; }
+.bm :focus-visible { outline-color: var(--bianco); outline-offset: 4px; }
+@media (max-width: 767px) { .bm-firma-fondo { display: none; } }
+/* ponte tra apertura e disegni (21/10): frase e invito al centro, poi una riga nera che scende fino al bordo e
+   continua, bianca, nella sezione dei disegni (stessa x della riga: centro pagina) */
+.bn-ponte { display: grid; justify-items: center; text-align: center; padding: clamp(8px, 2vw, 24px) var(--lato) 0; }
+.bn-ponte p { margin: 0; max-width: 34em; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.6; font-weight: 500; color: #222; }
+.bn-ponte .bn-ponte-invito { max-width: none; display: inline-flex; align-items: center; gap: 12px; margin-top: 22px; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--nero); }
+.bn-ponte .bm-gira-icona { position: static; background: var(--nero); color: var(--bianco); border-color: var(--nero); }
+.bn-ponte::after { content: ''; width: 2px; height: clamp(56px, 8vw, 104px); margin-top: 28px; background: var(--nero); }
+.bn-apertura-testo { padding-bottom: clamp(24px, 3vw, 40px); }
+@media (prefers-reduced-motion: reduce) { .bm-gira::after, .bm-gira img, .bm-gira-icona, .bm-testo, .bm-firma-fondo { transition: none; } }
 @media (prefers-reduced-motion: reduce) {
   .bn-filo-luce { transform: none; }
   .bn-punto, .bn-voce figure, .bn-voce-testo, .bn-fine-logo, .bn-fine h2, .bn-fine p, .bn-fine .btn { transition: none; }

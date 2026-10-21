@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '72'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '73'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -787,18 +787,34 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
   return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Ordini, spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
 }
 
-// ---------- STORIA v4 (19/10): stile Nike, una foto per sport, la firma che scende in verticale (MARO mai in orizzontale) ----------
-const SEGNI_SPORT = [
-  { foto: 'bn-corsa', sport: 'Corsa', titolo: 'Sul petto.', testo: 'Ricamata piccola sulla Polo Linee, con tre righe bianche che scendono dalle spalle lungo le maniche.', link: ['polo-linee.html', 'Polo Linee'], alt: 'Ragazzo corre su una pista di atletica davanti al Colosseo al tramonto, con la Polo Linee MARO nera e la firma verticale sul petto' },
-  { foto: 'bn-basket', sport: 'Basket', titolo: 'Lungo la gamba.', testo: 'In grande sul Cargo Firma, dal fianco al ginocchio: si legge anche mentre corri.', link: ['cargo-firma.html', 'Cargo Firma'], alt: 'Ragazzo palleggia in un vicolo con graffiti, con la Polo Jacquard e il Cargo Firma MARO beige, firma verticale lungo la gamba' },
-  { foto: 'bn-allenamento', sport: 'Allenamento', titolo: 'Sulla schiena.', testo: 'Sulla Felpa Verticale la firma va dalle spalle all’orlo, alta quanto la schiena.', link: ['felpa-verticale.html', 'Felpa Verticale'], alt: 'Ragazzo di spalle beve da una borraccia in un parco di allenamento all’aperto, con la Felpa Verticale MARO verde e la firma verticale sulla schiena' },
+// ---------- STORIA v5 (21/10): apertura, manifesto di Omar coi suoi disegni (al posto di «Il segno» con gli sport), Le ali, chiusura ----------
+// Manifesto di Omar (21/10): il suo testo (messaggio WhatsApp) diviso come ha chiesto lui, sotto le foto dei suoi disegni nel suo ordine.
+// Parole sue, non riscritte. L'ultima riga «MARO — FLY WITH YOUR MIND.» diventa la chiusura col logo (MARO mai in orizzontale).
+const MANIFESTO = [
+  { foto: 'bm-1', etichetta: 'La visione', alt: 'Disegno a penna blu di Omar su un quaderno a righe: la M con le ali e i riccioli sotto', testo: `<h2 id="bm-titolo">Fly with<br>your mind.</h2><p class="bm-grande">Every goal begins with a vision.</p>` },
+  { foto: 'bm-2', etichetta: 'Il nome', alt: 'Disegno a penna su carta a quadretti: MARO scritto in verticale, una lettera sotto l’altra, con scie che lo avvolgono', testo: `<p>MARO nasce per chi ha un obiettivo da raggiungere e la fiducia necessaria per trasformare un pensiero in realtà.</p>` },
+  { foto: 'bm-3', etichetta: 'La misura', alt: 'Cartamodello a matita su carta millimetrata con le misure: le due ali e MARO verticale al centro', testo: `<p><i>Fly with your mind</i> significa imparare dal passato, vivere il presente e immaginare il futuro che vogliamo costruire. Significa guardare oltre i propri limiti e credere in una visione, anche quando sembra lontana.</p>` },
+  { foto: 'bm-4', etichetta: 'Il lavoro', alt: 'Le due ali disegnate a matita, con le piume tratteggiate, su un foglio bianco', testo: `<p class="bm-grande">Ma sognare non basta.</p><p>Servono disciplina, sacrificio e la forza di affrontare le difficoltà, facendo anche ciò che è scomodo o faticoso, senza cercare scorciatoie.</p>` },
+  { foto: 'bm-5', etichetta: 'Il segno', alt: 'Disegno finale a penna su carta a quadretti: le due ali piumate e MARO in verticale al centro', testo: `<p>Crediamo nel rispetto di sé stessi e degli altri, nella lealtà, nella fiducia e nella forza della collaborazione.</p><p class="bm-grande">Immagina. Credi. Agisci.</p><p>La tua mente dà forma alla visione. Le tue azioni la trasformano in realtà.</p>` },
+];
+// carosello di «Le ali» (21/10): foto di Francesco, ~500 px (originali più grandi da chiedere)
+const CAROSELLO_ALI = [
+  ['ali-1', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali, tiene una borraccia nera con le ali bianche'],
+  ['ali-2', 'Ragazzo in piedi davanti a un palazzo, con la Polo Linee MARO, pantaloni neri e cappellino'],
+  ['ali-3', 'Dettaglio del petto della Polo Linee: MARO in verticale bianco e le righe sulle spalle'],
+  ['ali-4', 'Dettaglio del cappellino nero con la M con le ali bianca, ricamata sul davanti'],
+  ['ali-5', 'Ragazzo di spalle con la Polo Linee MARO e il cappellino, le ali piccole sotto il colletto'],
+  ['ali-6', 'Ragazzo seduto sui gradini con giacca nera MARO e cappellino con le ali'],
 ];
 function storia() {
-  const voci = SEGNI_SPORT.map((s, i) => `
-    <li class="bn-voce" data-entra>
-      <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(s.sport)}</p>
-      <figure style="--r: ${(MISURE[s.foto][0] / MISURE[s.foto][1]).toFixed(4)}">${img(s.foto, s.alt, { dove: 'brand ' + s.sport.toLowerCase(), sizes: '(min-width: 1240px) 1200px, 100vw' })}</figure>
-      <div class="bn-voce-testo"><h3>${esc(s.titolo)}</h3><p>${esc(s.testo)}</p><a class="btn btn-bianco" href="${s.link[0]}">${esc(s.link[1])}</a></div>
+  const passi = MANIFESTO.map((m, i) => `
+    <li class="bm-passo" data-entra>
+      <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
+      <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
+      <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
+        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
+      </figure>
+      <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
   const corpo = `
 <section class="bn-apertura" aria-labelledby="bn-titolo">
@@ -811,25 +827,34 @@ function storia() {
       <p class="bn-lead">MARO nasce nel 2020 da Omar, e il nome è il suo, con le lettere in un altro ordine. Polo, felpe e pantaloni con il taglio dello sport, tennis e padel prima di tutto, e la cura di un capo da portare anche dopo la partita.</p>
     </div>
   </div>
+  <div class="bn-ponte">
+    <p>Prima di ogni capo c’è un’idea. Qui sotto la vedi prendere forma: i disegni di Omar, uno dopo l’altro, con le sue parole.</p>
+    <p class="bn-ponte-invito"><span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span><span><span data-verbo>Clicca</span> su un disegno per vedere il foglio originale</span></p>
+  </div>
 </section>
 
-<section class="bn-linea" aria-labelledby="bn-segno">
+<section class="bm" aria-labelledby="bm-titolo">
   <div class="bn-filo" aria-hidden="true"><span class="bn-filo-luce"></span></div>
-  <header class="bn-linea-testa">
-    <p class="occhiello">Il segno</p>
-    <h2 id="bn-segno">Si legge<br>dall’alto<br>in basso.</h2>
-    <p>La firma MARO non si scrive in orizzontale: quattro lettere una sotto l’altra, sul petto, lungo la gamba, sulla schiena. È la regola del brand, e vale per ogni capo.</p>
-  </header>
-  <ol class="bn-voci">${voci}
+  <ol class="bm-passi">${passi}
   </ol>
 </section>
 
 <section class="bn-ali" aria-labelledby="bn-simbolo">
-  <figure>${img('bn-ali', 'Ragazzo con la Polo Linee MARO tiene una borraccia nera con le ali bianche, sul cappellino le stesse ali ricamate con MARO in verticale', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
+  <div class="ali-giro" data-giro>
+    <ul class="ali-binario" tabindex="0" aria-label="Foto della campagna: scorri per vederle tutte">${CAROSELLO_ALI.map(([id, alt], i) => `
+      <li>${img(id, alt, { dove: 'brand ali carosello', sizes: '(min-width: 960px) 520px, 100vw' })}</li>`).join('')}
+    </ul>
+    <div class="ali-comandi">
+      <button type="button" class="ali-freccia" data-giro-prec aria-label="Foto precedente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <p class="ali-conto" aria-live="polite"><span data-giro-n>1</span> / ${CAROSELLO_ALI.length}</p>
+      <button type="button" class="ali-freccia" data-giro-succ aria-label="Foto successiva"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      <p class="ali-scorri">Scorri o usa le frecce</p>
+    </div>
+  </div>
   <div class="bn-ali-testo">
-    <p class="occhiello">Il simbolo</p>
+    <p class="occhiello">Dal foglio al capo</p>
     <h2 id="bn-simbolo">Le ali.</h2>
-    <p>Una M che apre le ali, con MARO in verticale al centro. Lo trovi sugli accessori: il cappellino, il berretto e la borraccia.</p>
+    <p>La M con le ali del primo disegno oggi è sul cappellino, sul berretto e sulla borraccia. MARO in verticale, il secondo, scende sul petto della Polo Linee.</p>
     <a class="btn btn-nero" href="accessori.html">Accessori</a>
   </div>
 </section>
@@ -837,7 +862,6 @@ function storia() {
 <section class="bn-fine" aria-labelledby="bn-motto" data-entra>
   <svg class="bn-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
   <h2 id="bn-motto">Fly with<br>your mind.</h2>
-  <p>I piedi in campo, la testa dove decidi tu.</p>
   <a class="btn btn-bianco" href="shop.html">Acquista il drop</a>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });

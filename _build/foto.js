@@ -108,6 +108,17 @@ const LAVORI = [
   { out: 'bn-boxe', src: 'foto-brand-2026-10-19/4-boxe-palestra-jacquard-cargo.webp', max: 1600 },
   { out: 'bn-allenamento', src: 'foto-logo-nuovo-2026-10-19/5-allenamento-felpa-verticale-borraccia.webp', max: 1600 },
   { out: 'bn-ali', src: 'foto-logo-nuovo-2026-10-19/6-cappellino-borraccia-polo-linee.webp', max: 1600 },
+  // manifesto di Omar (21/10, README in disegni-omar-2026-10-21), nel suo ordine. Due versioni per disegno:
+  // bm-N = il segno in negativo (bianco su nero, si fonde col fondo della sezione), bm-N-foglio = la foto del foglio in B/N con grana ("Guarda il foglio")
+  ...[
+    ['1-m-alata.jpeg', [102, 205, 1188, 1004]], // solo il disegno, senza mezza pagina vuota
+    ['2-maro-verticale.jpeg'], ['3-cartamodello-misure.jpeg'], ['4-ali-matita.jpeg'], ['5-versione-finale.jpeg'],
+  ].flatMap(([f, crop], i) => [
+    { out: 'bm-' + (i + 1), src: 'disegni-omar-2026-10-21/' + f, crop, segno: {} },
+    { out: 'bm-' + (i + 1) + '-foglio', src: 'disegni-omar-2026-10-21/' + f, crop, bn: true },
+  ]),
+  // carosello di «Le ali» (21/10, README in foto-ali-carosello-2026-10-21): ~500 px, nessun ritaglio
+  ...['1-cappellino-borraccia', '2-in-piedi-palazzo', '3-firma-petto-dettaglio', '4-cappellino-dettaglio', '5-di-spalle', '6-seduto-scale'].map((n, i) => ({ out: 'ali-' + (i + 1), src: 'foto-ali-carosello-2026-10-21/' + n + '.png', q: 0.9 })),
   // copertine delle schede dal 19/10: foto della campagna sportiva ritagliate in 4:5 sul capo (scelta di Francesco:
   // stessa campagna della pagina del brand, eccezione voluta alla regola delle foto doppie; ritagli diversi, id diversi)
   { out: 'cop-polo-linee', src: 'foto-logo-nuovo-2026-10-19/2-corsa-colosseo-polo-linee.webp', crop: [340, 0, 1024, 1280] },
@@ -168,7 +179,20 @@ const srv = http.createServer((q, r) => {
       const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k);
       const g = c.getContext('2d'); g.imageSmoothingQuality = 'high';
       g.drawImage(el, x, y, w, h, 0, 0, c.width, c.height);
-      if (l.bn || l.out === 'apertura-locandina') {
+      if (l.segno) {
+        // disegno in negativo (manifesto 21/10): tratto bianco su nero pieno. Ogni pixel si confronta con il foglio intorno
+        // (copia molto sfocata): ombre e luce non uniforme del foglio spariscono, resta solo quanto il tratto è più scuro della carta
+        const f2 = document.createElement('canvas'); f2.width = c.width; f2.height = c.height;
+        const g2 = f2.getContext('2d'); g2.filter = 'blur(' + Math.round(Math.max(c.width, c.height) / 40) + 'px)'; g2.drawImage(c, 0, 0);
+        const d = g.getImageData(0, 0, c.width, c.height), px = d.data, fo = g2.getImageData(0, 0, c.width, c.height).data;
+        const L = (a, i) => 0.299 * a[i] + 0.587 * a[i + 1] + 0.114 * a[i + 2];
+        const soglia = l.segno.soglia || 12, guadagno = l.segno.guadagno || 3.2;
+        for (let i = 0; i < px.length; i += 4) {
+          const v = Math.max(0, Math.min(255, (L(fo, i) - L(px, i) - soglia) * guadagno));
+          px[i] = px[i + 1] = px[i + 2] = v;
+        }
+        g.putImageData(d, 0, 0);
+      } else if (l.bn || l.out === 'apertura-locandina') {
         const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
         let s = 12345; const rnd = () => ((s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
         for (let i = 0; i < px.length; i += 4) {
