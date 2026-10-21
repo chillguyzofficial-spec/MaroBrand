@@ -46,7 +46,7 @@ const FERMO = x => x === 'none' || x === 'matrix(1, 0, 0, 1, 0, 0)';
       await pg.evaluate(y => scrollTo(0, y), y); await pg.waitForTimeout(30);
       if (met === null && await pg.evaluate(() => { const s = document.querySelector('.bm').getBoundingClientRect(); return s.top + s.height / 2 < innerHeight * 0.6; })) met = await luce();
     }
-    await pg.waitForTimeout(2200);
+    await pg.waitForTimeout(3000); // testo e firma entrano in ~1,6 s: margine per i telefoni lenti
     prova(met > 0.3 && met < 0.7, nome + ': a metà sezione la riga è a metà (' + (met || 0).toFixed(2) + ')');
     prova(await luce() > 0.99, nome + ': in fondo la riga è tutta disegnata');
     prova(await pg.$$eval('.bm .bn-punto.acceso', p => p.length) === 5, nome + ': 5 pallini accesi in fondo');
