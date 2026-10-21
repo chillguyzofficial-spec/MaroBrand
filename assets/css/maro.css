@@ -1518,3 +1518,24 @@ a.acc-link { display: inline-flex; align-items: center; }
 .legale p { margin: 0 0 14px; }
 .legale ul { margin: 0 0 14px; padding-left: 20px; display: grid; gap: 10px; }
 .piede-basso a[href="privacy.html"] { color: inherit; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; display: inline-flex; align-items: center; }
+
+/* ---------- pagina del brand, apertura (22/10): foto dello stadio a destra del titolo e «fischio finale» sottolineato ---------- */
+.bn-stadio { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 1.4vw, 18px); align-items: start; margin-top: 36px; }
+.bn-stadio-foto { position: relative; margin: 0; overflow: hidden; background: var(--grigio); }
+.bn-stadio-foto:nth-child(2) { margin-top: 18%; }
+.bn-apertura .bn-stadio-foto img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; transition: transform 1.6s cubic-bezier(.2, .7, .2, 1); }
+/* tendina bianca che si ritira dall'alto (non clip-path: bloccherebbe il caricamento lazy, vedi bug-hunt §C) */
+.bn-stadio-foto::after { content: ''; position: absolute; inset: 0; background: var(--bianco); transform: scaleY(0); transform-origin: bottom; transition: transform 1.1s cubic-bezier(.7, 0, .2, 1); }
+.bn-stadio-foto:nth-child(2)::after, .bn-stadio-foto:nth-child(2) img { transition-delay: .25s; }
+.bn-stadio.in-attesa .bn-stadio-foto::after { transform: scaleY(1); transition: none; }
+.bn-stadio.in-attesa .bn-stadio-foto img { transform: scale(1.08); transition: none; }
+@media (min-width: 960px) {
+  .bn-apertura-testo { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(40px, 5vw, 96px); align-items: center; max-width: 1440px; }
+  .bn-stadio { margin-top: 0; }
+}
+.bn-fischio { position: relative; white-space: nowrap; color: var(--nero); font-weight: 500; }
+.bn-fischio svg { position: absolute; left: -3%; bottom: -.5em; width: 106%; height: .6em; overflow: visible; pointer-events: none; }
+.bn-fischio path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset .9s cubic-bezier(.6, 0, .2, 1) .7s; }
+.bn-fischio-rosso { stroke: var(--rosso); stroke-width: 3; }
+.bn-fischio-verde { stroke: var(--verde); stroke-width: 2; transition-delay: 1s !important; }
+.bn-intro.in-attesa .bn-fischio path { stroke-dashoffset: 1; transition: none; }

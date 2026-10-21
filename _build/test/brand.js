@@ -75,8 +75,12 @@ const FERMO = x => x === 'none' || x === 'matrix(1, 0, 0, 1, 0, 0)';
     const opBt = await pg.$eval('.bn-fine .btn', e => getComputedStyle(e).opacity);
     prova(opBt === '1', nome + ': pulsante finale pieno (' + opBt + ')');
     // foto: caricate, intere (proporzioni originali), mai più alte dell'86% dello schermo nelle voci
-    const foto = await pg.$$eval('.bn-apertura figure img, .bm-segno', is => is.map(i => { const r = i.getBoundingClientRect(); return { s: i.src.split('/').pop().split('?')[0], ok: i.complete && i.naturalWidth > 0, nat: i.naturalWidth / i.naturalHeight, vis: r.width / r.height, h: r.height, voce: !!i.closest('.bm-passo') }; }));
+    const foto = await pg.$$eval('.bn-video img, .bm-segno', is => is.map(i => { const r = i.getBoundingClientRect(); return { s: i.src.split('/').pop().split('?')[0], ok: i.complete && i.naturalWidth > 0, nat: i.naturalWidth / i.naturalHeight, vis: r.width / r.height, h: r.height, voce: !!i.closest('.bm-passo') }; }));
     prova(foto.length === 5, nome + ': 5 disegni interi (' + foto.length + ')');
+    // 22/10: foto dello stadio (fronte e retro) caricate, affiancate, e «fischio finale» sottolineato fino in fondo
+    const st = await pg.$$eval('.bn-stadio img', is => is.map(i => { const r = i.getBoundingClientRect(); return { ok: i.complete && i.naturalWidth > 0, x: r.left, w: r.width }; }));
+    prova(st.length === 2 && st.every(s => s.ok && s.w > 100) && st[1].x > st[0].x, nome + ': stadio, due foto affiancate e caricate');
+    prova(await pg.$$eval('.bn-fischio path', ps => ps.length === 2 && ps.every(p => parseFloat(getComputedStyle(p).strokeDashoffset) === 0)), nome + ': fischio finale sottolineato');
     // apertura (21/10 notte): video del tennista, senza audio, in loop, con fotogramma fisso
     const vid = await pg.$eval('[data-video-brand]', (v) => ({ muto: v.muted, loop: v.loop || !!document.querySelector('[data-video-brand-copia]'), inline: v.playsInline, poster: /bn-tennis-locandina/.test(v.poster), src: /brand-tennis\.mp4/.test(v.currentSrc || v.querySelector('source').src), w: v.getBoundingClientRect().width, controlli: v.controls })).catch(() => null);
     prova(vid && vid.muto && (vid.loop || !!document) && vid.inline && vid.poster && vid.src && !vid.controlli, nome + ': video d’apertura muto, in loop, senza comandi, con fotogramma fisso');

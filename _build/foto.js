@@ -142,6 +142,9 @@ const LAVORI = [
   // pagina del brand (21/10): fotogramma fisso del video del tennista (finché il video non parte, e con «riduci movimento»)
   { out: 'bn-tennis-rovescio', src: 'foto-brand-2026-10-21/tennis-rovescio-polo-tricolore.png', max: 1536, q: 0.88 }, // apertura del brand dal 21/10 notte (al posto del video)
   { out: 'bn-tennis-locandina', src: 'video-brand-2026-10-21/tennis-swing-colore-selettivo.mp4', t: 0.1, max: 864, q: 0.9 },
+  // 22/10: collage di Francesco (Polo Tricolore allo stadio) diviso in due scatti per la pagina del brand; giuntura tra x 767 e 768
+  { out: 'brand-stadio-fronte', src: 'foto-polo-tricolore-2026-10-22/collage-stadio-fronte-retro.png', crop: [0, 0, 765, 1024] },
+  { out: 'brand-stadio-retro', src: 'foto-polo-tricolore-2026-10-22/collage-stadio-fronte-retro.png', crop: [770, 0, 766, 1024] },
 ];
 
 const srv = http.createServer((q, r) => {

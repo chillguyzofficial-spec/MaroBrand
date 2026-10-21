@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '92'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '93'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -917,12 +917,19 @@ function storia() {
     <p class="bn-video-frase">Immagina.<br>Credi.<br>Agisci.</p>
   </figure>
   <div class="bn-apertura-testo">
+   <div class="bn-apertura-sx">
     <p class="occhiello">Il brand</p>
     <h1 id="bn-titolo">In campo<br>dal 2020.</h1>
-    <div class="bn-intro">
+    <div class="bn-intro" data-entra>
       <img class="bn-firma" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="">
-      <p class="bn-lead"><strong><span class="sr">MARO: </span>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il fischio finale.</p>
+      <p class="bn-lead"><strong><span class="sr">MARO: </span>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il <span class="bn-fischio">fischio finale<svg viewBox="0 0 200 16" preserveAspectRatio="none" aria-hidden="true"><path class="bn-fischio-rosso" pathLength="1" d="M3 9C38 4 82 3 122 6s58 5 75 1"/><path class="bn-fischio-verde" pathLength="1" d="M14 14C52 10 96 10 134 12s44 2 56-1"/></svg></span>.</p>
     </div>
+   </div>
+   <!-- 22/10: Polo Tricolore allo stadio, fronte e retro (collage di Francesco), nello spazio a destra del titolo -->
+   <div class="bn-stadio" data-entra>
+    <figure class="bn-stadio-foto">${img('brand-stadio-fronte', 'Ragazzo allo stadio con la Polo Tricolore MARO nera: righe verde, bianca e rossa sulle spalle e MARO verticale sul petto', { dove: 'brand stadio fronte', sizes: '(min-width: 960px) 22vw, 50vw' })}</figure>
+    <figure class="bn-stadio-foto">${img('brand-stadio-retro', 'Lo stesso ragazzo di spalle sul prato dello stadio: sulla schiena della polo la M con un’ala rossa e una verde', { dove: 'brand stadio retro', sizes: '(min-width: 960px) 22vw, 50vw' })}</figure>
+   </div>
   </div>
   <div class="bn-ponte">
     <p>Prima di ogni capo c’è un’idea. Qui sotto la vedi prendere forma: i disegni di Omar, uno dopo l’altro, con le sue parole.</p>
