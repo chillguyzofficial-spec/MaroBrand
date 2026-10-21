@@ -88,8 +88,10 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     prova(/non sembra completa/.test(await testo(pg, '[data-acc-esito]')), nome + ': accedi, email vuota rifiutata');
     await pg.fill('#acc-email', 'prova@esempio.it'); await pg.fill('#acc-pw', 'Sbagliata1'); await pg.click('#pan-accedi button[type=submit]');
     prova(await aspettaTesto(pg, '[data-acc-esito]', /non corretti/), nome + ': accedi senza account, messaggio generico');
-    await pg.click('[data-acc-dimenticata]');
-    prova(await aspettaTesto(pg, '[data-acc-info]', /nuova password/), nome + ': password dimenticata');
+    // 21/10: «Password dimenticata?» ha una schermata propria (prove complete in password.js)
+    await pg.click('[data-acc-dimenticata]'); await pg.click('[data-acc-recupero] button[type=submit]');
+    prova(await pg.waitForFunction(() => location.hash === '#email-inviata' && !document.querySelector('[data-acc-vista="inviata"]').hidden, null, { timeout: 5000 }).then(() => true, () => false), nome + ': password dimenticata → «Controlla la tua email»');
+    await pg.click('[data-acc-vista="inviata"] a[href="#accedi"]'); await pg.waitForTimeout(150);
     await pg.click('#tab-registrati'); await pg.waitForTimeout(100);
     prova(await pg.$eval('#pan-registrati', e => !e.hidden) && await pg.$eval('#pan-accedi', e => e.hidden), nome + ': scheda Registrati');
     await pg.fill('#reg-nome', 'Luca'); await pg.fill('#reg-email', 'prova@esempio.it'); await pg.fill('#reg-pw', 'corta');
@@ -186,11 +188,12 @@ const senzaLaterale = pg => pg.evaluate(() => document.documentElement.scrollWid
     prova(await senzaLaterale(pg), nome + ': Porta un amico senza scorrimento laterale');
     // password dimenticata: link → nuova password → dentro, vecchia password non vale più
     await pg.goto(B + 'account.html'); await pg.fill('#acc-email', 'prova@esempio.it'); await pg.click('[data-acc-dimenticata]');
-    await aspettaTesto(pg, '[data-acc-info]', /nuova password/);
-    await pg.click('[data-acc-info] [data-link-prova]');
-    await pg.waitForSelector('#np-pw'); await pg.fill('#np-pw', 'nuova'); await pg.click('[data-acc-nuova] button');
+    await pg.click('[data-acc-recupero] button[type=submit]');
+    await pg.waitForSelector('[data-rec-prova] [data-link-prova]', { timeout: 5000 });
+    await pg.click('[data-rec-prova] [data-link-prova]');
+    await pg.waitForSelector('#np-pw:visible'); await pg.fill('#np-pw', 'nuova'); await pg.click('[data-acc-nuova] button[type=submit]');
     prova(/non va ancora bene/.test(await testo(pg, '[data-acc-nuova] .acc-esito')), nome + ': nuova password debole rifiutata');
-    await pg.fill('#np-pw', 'Nuova2026x'); await pg.click('[data-acc-nuova] button');
+    await pg.fill('#np-pw', 'Nuova2026x'); await pg.click('[data-acc-nuova] button[type=submit]');
     prova(await aspettaTesto(pg, '[data-conto-avviso]', /Password cambiata/) && await pg.$eval('[data-conto-dentro]', e => !e.hidden), nome + ': password cambiata, dentro');
     await pg.click('[data-conto-esci]'); await pg.fill('#acc-email', 'prova@esempio.it'); await pg.fill('#acc-pw', 'Maro2026x'); await pg.click('#pan-accedi button[type=submit]');
     prova(await aspettaTesto(pg, '[data-acc-esito]', /non corretti/), nome + ': la vecchia password non vale più');

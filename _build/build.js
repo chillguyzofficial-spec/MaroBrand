@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '74'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '75'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -934,10 +934,11 @@ function ordineConfermato() {
 function account() {
   const campo = (id, etichetta, tipo, extra = '') => `<div class="acc-campo"><label for="${id}">${etichetta}</label><input id="${id}" type="${tipo}" ${extra}></div>`;
   const corpo = `
-<section class="amico acc" aria-labelledby="conto-titolo">
+<section class="amico acc" aria-label="Il mio account">
   <div data-conto-fuori>
+  <div id="accedi" data-acc-vista="accedi">
     <p class="occhiello">Il mio account</p>
-    <h1 id="conto-titolo">Entra in MARO.</h1>
+    <h1 id="conto-titolo" tabindex="-1">Entra in MARO.</h1>
     <p class="amico-lead">Nel tuo account trovi i codici sconto, quelli che hai già usato, i tuoi ordini e il link per invitare un amico.</p>
     <div class="acc-schede" role="tablist" aria-label="Accedi o registrati">
       <button type="button" role="tab" id="tab-accedi" aria-controls="pan-accedi" aria-selected="true" data-acc-scheda="accedi">Accedi</button>
@@ -948,7 +949,7 @@ function account() {
       ${campo('acc-pw', 'Password', 'password', 'autocomplete="current-password" required')}
       <p class="acc-esito" role="alert" data-acc-esito></p>
       <button type="submit" class="btn btn-nero btn-largo">Accedi</button>
-      <button type="button" class="acc-link" data-acc-dimenticata>Password dimenticata?</button>
+      <a class="acc-link" href="#password-dimenticata" data-acc-dimenticata>Password dimenticata?</a>
       <p class="acc-info" data-acc-info role="status"></p>
     </form>
     <form class="acc-pannello" id="pan-registrati" role="tabpanel" aria-labelledby="tab-registrati" data-acc-registrati hidden novalidate>
@@ -965,7 +966,48 @@ function account() {
       <p class="acc-esito" role="alert" data-reg-esito></p>
       <button type="submit" class="btn btn-nero btn-largo">Crea l’account</button>
     </form>
-    <p class="ordine-prova">Anteprima: negozio in prova, nessun pagamento vero.</p>
+  </div>
+  <!-- password dimenticata (21/10, come i grandi negozi): schermata propria → «controlla la tua email» → nuova password dal link -->
+  <form class="acc-vista" id="password-dimenticata" data-acc-vista="recupero" data-acc-recupero hidden novalidate>
+    <a class="acc-indietro" href="#accedi">← Torna all’accesso</a>
+    <p class="occhiello">Il mio account</p>
+    <h1 tabindex="-1">Hai dimenticato la password?</h1>
+    <p class="amico-lead">Scrivi l’email del tuo account: ti mandiamo un link per sceglierne una nuova.</p>
+    <div class="acc-pannello">
+      ${campo('rec-email', 'Email', 'email', 'autocomplete="email" required')}
+      <p class="acc-esito" role="alert" data-rec-esito></p>
+      <button type="submit" class="btn btn-nero btn-largo">Inviami il link</button>
+    </div>
+  </form>
+  <div class="acc-vista" id="email-inviata" data-acc-vista="inviata" hidden>
+    <p class="occhiello">Il mio account</p>
+    <h1 tabindex="-1">Controlla la tua email.</h1>
+    <p class="amico-lead">Se esiste un account per <strong data-rec-dove></strong>, ti abbiamo mandato un link per scegliere una nuova password. Il link vale 24 ore.</p>
+    <div class="acc-pannello">
+      <p class="acc-sotto">Non la trovi? Guarda in Spam o in Promozioni. Arriva da MARO, con oggetto «MARO · scegli una nuova password».</p>
+      <p class="acc-info" role="status" data-rec-prova></p>
+      <button type="button" class="btn btn-contorno-nero btn-largo" data-rec-ancora disabled>Invia di nuovo</button>
+      <a class="acc-link" href="#password-dimenticata" data-rec-altra>Usa un’altra email</a>
+      <a class="acc-link" href="#accedi">Torna all’accesso</a>
+    </div>
+  </div>
+  <form class="acc-vista" id="nuova-password" data-acc-vista="nuova" data-acc-nuova hidden novalidate>
+    <p class="occhiello">Il mio account</p>
+    <h1 tabindex="-1">Scegli una nuova password.</h1>
+    <p class="amico-lead">Dopo il salvataggio entri subito nel tuo account; gli accessi dagli altri dispositivi si chiudono, per sicurezza.</p>
+    <div class="acc-pannello">
+      <div class="acc-campo"><label for="np-pw">Nuova password</label><div class="acc-pw"><input id="np-pw" type="password" autocomplete="new-password" required aria-describedby="np-regole"><button type="button" class="acc-mostra" data-acc-mostra="np-pw" aria-pressed="false">Mostra</button></div></div>
+      <ul class="acc-regole" id="np-regole" data-pw-regole-nuova>
+        <li data-regola="lung">Almeno 8 caratteri</li>
+        <li data-regola="num">Almeno un numero</li>
+        <li data-regola="maiu">Almeno una lettera maiuscola</li>
+      </ul>
+      <p class="acc-esito" role="alert" data-np-esito></p>
+      <button type="submit" class="btn btn-nero btn-largo">Salva la password</button>
+      <a class="btn btn-contorno-nero btn-largo" href="#password-dimenticata" data-np-nuovo hidden>Chiedi un nuovo link</a>
+    </div>
+  </form>
+  <p class="ordine-prova">Anteprima: negozio in prova, nessun pagamento vero.</p>
   </div>
   <div data-conto-dentro hidden>
     <p class="occhiello">Il mio account</p>

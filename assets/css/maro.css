@@ -1443,3 +1443,15 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .prova-fascia strong { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 .prova-borsa { background: #fff6c2; border-left: 3px solid #e0b800; color: #000; font-size: 13px; line-height: 1.45; padding: 8px 10px; margin: 0 0 12px; }
 @media (max-width: 520px) { .prova-fascia span { display: none; } }
+
+/* password dimenticata (21/10): schermate proprie, «Torna all'accesso» in alto, Mostra nel campo password */
+a.acc-link { display: inline-flex; align-items: center; }
+.acc-indietro { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: 8px; font: 600 15px var(--testo); color: var(--nero); text-decoration: none; }
+.acc-indietro:hover { text-decoration: underline; text-underline-offset: 3px; }
+.acc-vista h1:focus { outline: 0; }
+.acc-vista .amico-lead strong { word-break: break-all; }
+.acc-pw { position: relative; }
+.acc-pw input { width: 100%; padding-right: 96px; }
+.acc-mostra { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); min-height: 44px; min-width: 76px; padding: 0 12px; border: 0; border-radius: 10px; background: none; font: 600 14px var(--testo); color: var(--nero); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+[data-rec-ancora]:disabled { opacity: .55; cursor: default; }
+.acc-pw input::-ms-reveal, .acc-pw input::-ms-clear { display: none; } /* Edge mette un suo occhio: c'è già «Mostra» */

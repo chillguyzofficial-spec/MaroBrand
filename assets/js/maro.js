@@ -1075,7 +1075,8 @@
     });
     var disegnaConto = function () {
       var tk = tokenConto();
-      if (!tk || $('[data-acc-nuova]')) return fuori(); // mentre si sceglie una nuova password si resta su quel modulo
+      var npAperta = $('[data-acc-nuova]');
+      if (!tk || (npAperta && !npAperta.hidden)) return fuori(); // mentre si sceglie una nuova password si resta su quella schermata
       api('/api/io', undefined, tk).then(function (d) {
         if (d.stato === 401) { togliK('maro-token'); return fuori(); }
         contoFuori.hidden = true; dentro.hidden = false;
@@ -1131,18 +1132,96 @@
         $('#acc-pw').value = ''; entra(d.token);
       });
     });
-    $('[data-acc-dimenticata]').addEventListener('click', function () {
-      var email = $('#acc-email').value.trim(), info = $('[data-acc-info]');
-      if (!EMAIL_OK.test(email)) { $('[data-acc-esito]').textContent = 'Scrivi prima la tua email, poi tocca «Password dimenticata?».'; $('#acc-email').focus(); return; }
-      $('[data-acc-esito]').textContent = '';
-      api('/api/password-dimenticata', { email: email }).then(function (d) {
-        if (!d.ok) { info.textContent = d.errore; return; }
-        info.innerHTML = linkProva('Se esiste un account con questa email, ti abbiamo mandato un link per scegliere una nuova password.', d.anteprima_link);
+    // ---- password dimenticata (21/10): schermate proprie come nei grandi negozi, guidate dall'indirizzo (#…) così «Indietro» funziona ----
+    // #password-dimenticata → email · #email-inviata → «controlla la tua email» · #nuova-password=TOKEN (dal link) → nuova password
+    var viste = $$('[data-acc-vista]'), formRec = $('[data-acc-recupero]'), formNp = $('[data-acc-nuova]');
+    var vista = function (nome) {
+      viste.forEach(function (v) { v.hidden = v.getAttribute('data-acc-vista') !== nome; });
+      window.scrollTo(0, 0); requestAnimationFrame(function () { window.scrollTo(0, 0); }); // dopo lo scorrimento automatico del browser verso #…
+      var h = $('[data-acc-vista="' + nome + '"] h1'); if (h && nome !== 'accedi') h.focus({ preventScroll: true });
+    };
+    var emailRec = '', tokenNuova = '', attesa = 0;
+    var contoAllaRovescia = function () {
+      var b = $('[data-rec-ancora]'), s = 60; clearInterval(attesa); b.disabled = true;
+      var scrivi = function () { b.textContent = s > 0 ? 'Invia di nuovo tra ' + s + ' s' : 'Invia di nuovo'; b.disabled = s > 0; };
+      scrivi(); attesa = setInterval(function () { s--; scrivi(); if (s <= 0) clearInterval(attesa); }, 1000);
+    };
+    var chiediLink = function (email) {
+      return api('/api/password-dimenticata', { email: email }).then(function (d) {
+        if (d.ok) $('[data-rec-prova]').innerHTML = d.anteprima_link ? linkProva('', d.anteprima_link) : '';
+        return d;
+      });
+    };
+    formRec.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var es = $('[data-rec-esito]'), email = $('#rec-email').value.trim().toLowerCase();
+      if (!EMAIL_OK.test(email)) { es.textContent = 'Questa email non sembra completa: controlla la @ e il punto.'; $('#rec-email').focus(); return; }
+      occupato(formRec, true); es.textContent = '';
+      chiediLink(email).then(function (d) {
+        occupato(formRec, false);
+        if (!d.ok) { es.textContent = d.errore; return; }
+        emailRec = email; $('[data-rec-dove]').textContent = email; contoAllaRovescia();
+        location.hash = 'email-inviata';
       });
     });
+    $('[data-rec-ancora]').addEventListener('click', function () {
+      var b = this; b.disabled = true;
+      chiediLink(emailRec).then(function (d) { if (d.ok) { contoAllaRovescia(); avvisa('Link inviato di nuovo a ' + emailRec + '.'); } else { b.disabled = false; avvisa(d.errore); } });
+    });
+    $$('[data-acc-mostra]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var i = $('#' + b.getAttribute('data-acc-mostra')), vedi = i.type === 'password';
+        i.type = vedi ? 'text' : 'password'; b.textContent = vedi ? 'Nascondi' : 'Mostra'; b.setAttribute('aria-pressed', vedi ? 'true' : 'false');
+      });
+    });
+    var pwN = $('#np-pw');
+    pwN.addEventListener('input', function () {
+      $$('[data-pw-regole-nuova] [data-regola]').forEach(function (li) { li.classList.toggle('ok', regolePw[li.getAttribute('data-regola')](pwN.value)); });
+    });
+    formNp.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var es = $('[data-np-esito]'), pw = pwN.value;
+      if (!Object.keys(regolePw).every(function (k) { return regolePw[k](pw); })) { pwN.dispatchEvent(new Event('input')); es.textContent = 'La password non va ancora bene: guarda i punti sotto il campo.'; pwN.focus(); return; }
+      occupato(formNp, true); es.textContent = '';
+      api('/api/conferma', { token: tokenNuova, password: pw }).then(function (d) {
+        occupato(formNp, false);
+        if (!d.ok) {
+          es.textContent = d.errore;
+          // link scaduto o già usato (410): non un vicolo cieco, si chiede un link nuovo
+          if (d.stato === 410) { es.textContent = 'Questo link è scaduto o è già stato usato.'; $('[data-np-nuovo]').hidden = false; $('button[type=submit]', formNp).hidden = true; }
+          return;
+        }
+        pwN.value = ''; tokenNuova = '';
+        try { history.replaceState(null, '', location.pathname); } catch (x) {}
+        vista('accedi');
+        if (avvisoConto) avvisoConto.dataset.fisso = '1';
+        mostraAvviso('Password cambiata. Per sicurezza abbiamo chiuso gli accessi dagli altri dispositivi.');
+        entra(d.token);
+      });
+    });
+    var instrada = function () {
+      var h = location.hash, m = /^#nuova-password=([A-Za-z0-9_-]{20,})$/.exec(h);
+      if (m) {
+        tokenNuova = m[1];
+        try { history.replaceState(null, '', location.pathname + '#nuova-password'); } catch (x) {} // il token esce dalla barra dell'indirizzo
+        h = '#nuova-password';
+      }
+      if (h === '#nuova-password' && tokenNuova) {
+        fuori(); $('[data-np-nuovo]').hidden = true; $('button[type=submit]', formNp).hidden = false; $('[data-np-esito]').textContent = '';
+        vista('nuova'); pwN.focus(); return;
+      }
+      if (h === '#password-dimenticata') {
+        var gia = $('#acc-email').value.trim(); if (gia && !$('#rec-email').value) $('#rec-email').value = gia;
+        $('[data-rec-esito]').textContent = ''; vista('recupero'); $('#rec-email').focus(); return;
+      }
+      if (h === '#email-inviata' && emailRec) { vista('inviata'); return; }
+      vista('accedi');
+      if (h === '#accedi' || h === '#email-inviata' || h === '#nuova-password') { try { history.replaceState(null, '', location.pathname); } catch (x) {} $('#acc-email').focus(); }
+    };
+    window.addEventListener('hashchange', instrada);
     var pwR = $('#reg-pw');
     pwR.addEventListener('input', function () {
-      $$('[data-regola]').forEach(function (li) { li.classList.toggle('ok', regolePw[li.getAttribute('data-regola')](pwR.value)); });
+      $$('[data-pw-regole] [data-regola]').forEach(function (li) { li.classList.toggle('ok', regolePw[li.getAttribute('data-regola')](pwR.value)); });
     });
     formR.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -1198,12 +1277,12 @@
         if (window.MARO_ridisegna) window.MARO_ridisegna(); disegnaConto(); avvisa('Codice ' + c.codice + ' attivo nella tua borsa.');
       }
     });
-    // link dalle email: #conferma=… (conferma l'indirizzo) · #nuova-password=… (scegli la password)
+    // link dalle email: #conferma=… (conferma l'indirizzo). #nuova-password=… lo gestisce instrada() (schermata propria)
     var puliscIndirizzo = function () { try { history.replaceState(null, '', location.pathname); } catch (e) {} };
     var usaLinkIndirizzo = function () {
-    var mLink = /#(conferma|nuova-password)=([A-Za-z0-9_-]{20,})/.exec(location.hash);
+    var mLink = /#(conferma)=([A-Za-z0-9_-]{20,})/.exec(location.hash);
     if (!mLink) return;
-    if (mLink[1] === 'conferma') {
+    {
       puliscIndirizzo();
       api('/api/conferma', { token: mLink[2] }).then(function (d) {
         try { sessionStorage.removeItem('maro-link-conferma'); } catch (e) {}
@@ -1212,36 +1291,15 @@
         if (!tokenConto()) { $('[data-acc-info]').textContent = d.ok ? 'Email confermata: accedi per vedere codici e ordini.' : d.errore; }
         disegnaConto();
       });
-    } else {
-      puliscIndirizzo();
-      var vecchio = $('[data-acc-nuova]'); if (vecchio) vecchio.remove();
-      var np = document.createElement('form');
-      np.className = 'acc-pannello'; np.noValidate = true; np.setAttribute('data-acc-nuova', '');
-      np.innerHTML = '<h2>Scegli una nuova password</h2><div class="acc-campo"><label for="np-pw">Nuova password</label><input id="np-pw" type="password" autocomplete="new-password" required></div>' +
-        '<p class="acc-sotto">Almeno 8 caratteri, un numero e una lettera maiuscola.</p><p class="acc-esito" role="alert"></p><button type="submit" class="btn btn-nero btn-largo">Salva la password</button>';
-      formA.parentNode.insertBefore(np, formA);
-      fuori(); formA.hidden = true; formR.hidden = true; schede.forEach(function (s) { s.parentNode.hidden = true; });
-      np.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var pw = $('#np-pw').value, es = $('.acc-esito', np);
-        if (!Object.keys(regolePw).every(function (k) { return regolePw[k](pw); })) { es.textContent = 'La password non va ancora bene: almeno 8 caratteri, un numero e una maiuscola.'; $('#np-pw').focus(); return; }
-        occupato(np, true);
-        api('/api/conferma', { token: mLink[2], password: pw }).then(function (d) {
-          occupato(np, false);
-          if (!d.ok) { es.textContent = d.errore; return; }
-          np.remove(); schede.forEach(function (s) { s.parentNode.hidden = false; }); vaiScheda('accedi');
-          if (avvisoConto) avvisoConto.dataset.fisso = '1';
-          mostraAvviso('Password cambiata. Per sicurezza abbiamo chiuso gli accessi dagli altri dispositivi.');
-          entra(d.token);
-        });
-      });
-      $('#np-pw').focus();
     }
     };
     // il link si usa all'apertura della pagina e anche se si apre mentre si è già qui (cambia solo il #)
     window.addEventListener('hashchange', usaLinkIndirizzo);
     usaLinkIndirizzo();
+    // dal link «nuova password» si sceglie la password anche se su questo dispositivo si era già dentro: quella sessione si chiude
+    if (/^#nuova-password=/.test(location.hash) && tokenConto()) togliK('maro-token');
     disegnaConto();
+    instrada();
   }
 
   /* ---------- conferma d'ordine: il motore dice numero, totale e link amico (la conferma di Stripe arriva in pochi secondi) ---------- */
