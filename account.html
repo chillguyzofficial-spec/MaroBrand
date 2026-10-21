@@ -20,8 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=73">
-<script defer src="assets/js/maro.js?v=73"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=74">
+<script defer src="assets/js/maro.js?v=74"></script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -35,6 +35,7 @@
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
 <a class="salta" href="#contenuto">Vai al contenuto</a>
+<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>
 
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1778 1103" aria-hidden="true"><use href="#logo-maro"/></svg></a>
@@ -82,13 +83,13 @@
       <p class="acc-esito" role="alert" data-reg-esito></p>
       <button type="submit" class="btn btn-nero btn-largo">Crea l’account</button>
     </form>
-    <p class="ordine-prova">Anteprima: gli account di prova restano in questo browser. Nel negozio vero sono custoditi sul server.</p>
+    <p class="ordine-prova">Anteprima: negozio in prova, nessun pagamento vero.</p>
   </div>
   <div data-conto-dentro hidden>
     <p class="occhiello">Il mio account</p>
     <h1>Ciao<span data-conto-nome></span>.</h1>
     <p class="acc-chi"><span data-conto-email></span> · <button type="button" class="acc-esci" data-conto-esci>Esci</button></p>
-    <p class="ordine-prova">Anteprima: account di prova, i dati sono quelli salvati in questo browser.</p>
+    <p class="acc-info acc-avviso" role="status" data-conto-avviso hidden></p>
     <div class="acc-blocco">
       <h2>I tuoi codici</h2>
       <p class="acc-sotto">Ogni codice vale una volta sola. Diventa «usato» solo quando completi un ordine: finché resta qui, è tuo.</p>
@@ -110,6 +111,18 @@
     <p class="invito-esito" role="status"></p>
   </div>
       <div class="amico-senza" data-invito-senza><p>Il tuo link arriva con il primo ordine.</p><a class="btn btn-nero" href="shop.html">Guarda i capi</a></div>
+    </div>
+    <div class="acc-blocco">
+      <h2>Elimina l’account</h2>
+      <p class="acc-sotto">Cancelliamo nome, email, password e i codici non ancora usati, e non ricevi più la newsletter. Gli ordini già fatti restano registrati, perché per legge le vendite si conservano 10 anni.</p>
+      <details class="acc-elimina">
+        <summary>Voglio eliminare l’account</summary>
+        <form data-acc-elimina novalidate>
+          <div class="acc-campo"><label for="el-pw">Per conferma, scrivi la tua password</label><input id="el-pw" type="password" autocomplete="current-password" required></div>
+          <p class="acc-esito" role="alert" data-el-esito></p>
+          <button type="submit" class="btn btn-nero">Elimina per sempre</button>
+        </form>
+      </details>
     </div>
   </div>
 </section>

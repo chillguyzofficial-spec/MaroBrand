@@ -990,6 +990,10 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .lookbook .lb-freccia:hover:not(:disabled) { border-color: var(--nero); }
 .iscriviti { background: var(--nero); color: var(--bianco); }
 .iscriviti .iscriviti-sotto { color: #bdbdbd; }
+.iscriviti-vantaggi { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 12px; max-width: 620px; }
+.iscriviti-vantaggi li { padding-left: 16px; border-left: 2px solid var(--bianco); font-size: 16px; line-height: 1.5; color: #bdbdbd; }
+.iscriviti-vantaggi b { color: var(--bianco); }
+.iscriviti-vantaggi .link { color: var(--bianco); }
 .iscriviti-form input { border-color: #555; background: #111; color: var(--bianco); }
 .iscriviti-form input::placeholder { color: #9a9a9a; }
 .iscriviti-form input:focus { border-color: var(--bianco); }
@@ -1359,9 +1363,9 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .acc-h3 { font-size: 15px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--testo-2); margin: 28px 0 10px; }
 .acc-codici, .acc-ordini { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; max-width: 760px; }
 .acc-codici li, .acc-ordini li { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; padding: 16px 18px; border-radius: 14px; background: var(--grigio); }
-.acc-codici li div, .acc-ordini li div { display: grid; gap: 4px; min-width: 0; }
+.acc-codici li > div, .acc-ordini li > div, .acc-ordine summary > div { display: grid; gap: 4px; min-width: 0; }
 .acc-codici b { font: 700 18px var(--testo); letter-spacing: .08em; }
-.acc-codici span, .acc-ordini span { color: var(--testo-2); font-size: 14px; }
+.acc-codici li > div > span, .acc-ordini li > div > span, .acc-ordine summary > div > span { color: var(--testo-2); font-size: 14px; }
 .acc-codici.usati li { background: none; border: 1.5px dashed var(--grigio-2); }
 .acc-codici.usati b { text-decoration: line-through; color: var(--testo-2); }
 .acc-codici .btn { min-height: 44px; padding: 0 18px; }
@@ -1396,6 +1400,34 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .acc-link { justify-self: start; min-height: 44px; padding: 0; border: 0; background: none; font: 500 15px var(--testo); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; color: var(--nero); }
 .acc-info { margin: 0; font-size: 14px; color: var(--verde); font-weight: 600; line-height: 1.5; }
 .acc-info:empty, .acc-pannello .acc-esito:empty { display: none; }
+/* ordini nell'account: riga apribile con tappe, tracciamento, dettaglio */
+.acc-ordini li.acc-ordine { display: block; padding: 0; }
+.acc-ordine summary { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; padding: 16px 18px; min-height: 44px; cursor: pointer; list-style: none; }
+.acc-ordine summary::-webkit-details-marker { display: none; }
+.acc-ordine summary > div { display: grid; gap: 4px; min-width: 0; flex: 1 1 180px; }
+.acc-ordine summary::after { content: '+'; font: 400 24px/1 var(--testo); width: 24px; text-align: center; }
+.acc-ordine details[open] summary::after { content: '−'; }
+.acc-ordine-dentro { padding: 4px 18px 20px; display: grid; gap: 18px; }
+.acc-tappe { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; counter-reset: tappa; }
+.acc-tappe li { position: relative; padding-top: 14px; border-top: 3px solid var(--grigio-2); display: grid; gap: 2px; font-size: 14px; }
+.acc-tappe li.fatta { border-top-color: var(--nero); }
+.acc-tappe li.attuale b { text-decoration: underline; text-underline-offset: 3px; }
+.acc-tappe li span { color: var(--testo-2); font-size: 13px; }
+.acc-traccia { padding: 14px 16px; border-radius: 12px; background: var(--bianco); display: grid; gap: 10px; }
+.acc-traccia p { margin: 0; }
+.acc-num { font-weight: 700; letter-spacing: .04em; overflow-wrap: anywhere; }
+.acc-traccia-azioni { display: flex; flex-wrap: wrap; gap: 8px; }
+.acc-traccia-azioni .btn { min-height: 44px; padding: 0 18px; }
+.acc-righe { width: 100%; border-collapse: collapse; font-size: 15px; }
+.acc-righe td { padding: 8px 0; border-bottom: 1px solid var(--grigio-2); vertical-align: top; }
+.acc-righe td:last-child { text-align: right; white-space: nowrap; padding-left: 12px; }
+.acc-righe tr.tot td { font-weight: 700; border-bottom: 0; }
+.acc-consegna { margin: 0; font-size: 15px; line-height: 1.6; }
+.acc-elimina summary { display: inline-flex; align-items: center; min-height: 44px; cursor: pointer; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.acc-elimina form { display: grid; gap: 12px; max-width: 420px; margin-top: 12px; }
+@media (max-width: 560px) { .acc-tappe { grid-template-columns: 1fr 1fr; row-gap: 14px; } }
+.acc-avviso { margin: 18px 0 0; padding: 14px 16px; border: 1px solid currentColor; overflow-wrap: anywhere; }
+.acc-info a { color: inherit; }
 .acc-pannello .acc-esito { margin: 0; color: var(--rosso); font-size: 14px; }
 .acc-codici li.acc-vuoto, .acc-ordini li.acc-vuoto { display: block; }
 
@@ -1405,3 +1437,9 @@ summary { padding: 14px 0; gap: 16px; text-wrap: balance; line-height: 1.35; }
 .bn-voce figure img, .bn-voce-testo > * { transition: opacity .9s ease; }
 .bn-voce-testo { background: var(--nero); }
 @media (prefers-reduced-motion: reduce) { .bn-voce figure img, .bn-voce-testo > * { transition: none; } }
+
+/* SOLO ramo motore-collegato (21/10): avviso del negozio di prova. Giallo = avviso, fuori dalla palette apposta */
+.prova-fascia { background: #ffe14d; color: #000; text-align: center; font-size: 13px; line-height: 1.4; padding: 8px var(--lato); }
+.prova-fascia strong { font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.prova-borsa { background: #fff6c2; border-left: 3px solid #e0b800; color: #000; font-size: 13px; line-height: 1.45; padding: 8px 10px; margin: 0 0 12px; }
+@media (max-width: 520px) { .prova-fascia span { display: none; } }

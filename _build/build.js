@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '73'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '74'; // versione di css/js: aumentarla a ogni modifica pubblicata
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -44,6 +44,10 @@ const SEGNO_DUE_SCENE = true; // 19/10 notte: arrivata la scena col telaio nero 
 const SEGNO_A_MANO = true;
 // IN PAUSA dal 19/10 notte: a Omar piace la barra ma non le scritte, le cambierà più avanti → per riaccenderla: true
 const AVVISI_ACCESI = false;
+// SOLO ramo motore-collegato (21/10): versione di prova pubblicata a parte. Fascia gialla su ogni pagina: chi la apre
+// deve sapere che non paga davvero e quale carta usare. Prima del negozio vero: false (e togliere la riga in borsa in maro.js)
+const NEGOZIO_PROVA = true;
+const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
   if (!AVVISI_ACCESI) return '';
   const giro = nascosta => [0, 1].map(() => AVVISI.map(([t, h]) => `<a href="${h}"${nascosta ? ' tabindex="-1"' : ''}>${esc(t)}</a><svg class="avviso-segno" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`).join('')).join('');
@@ -106,6 +110,7 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <body${file === 'index.html' ? ' class="home"' : ''}${conPopup(file) ? ' data-popup' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
+${fasciaProva()}
 ${avviso()}
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>
@@ -419,6 +424,10 @@ ${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.leng
     <div class="conto-cifre" aria-hidden="true"><span><b data-u="g">--</b>giorni</span><span><b data-u="o">--</b>ore</span><span><b data-u="m">--</b>minuti</span><span><b data-u="s">--</b>secondi</span></div>
   </div>
   <p class="iscriviti-sotto">Ti scriviamo il giorno prima dell’uscita, con i capi in anteprima. Una email per drop, niente di più.</p>
+  <ul class="iscriviti-vantaggi">
+    <li><b>10% sul primo ordine.</b> Ti iscrivi e ricevi un codice tuo, già nella borsa: vale una volta, su tutti i capi.</li>
+    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un link personale: chi lo usa ha il 10% sul suo primo ordine, tu un buono da 10 € per il prossimo. <a class="link" href="porta-un-amico.html">Come funziona</a></li>
+  </ul>
   <form class="iscriviti-form" novalidate>
     <label for="email" class="sr">La tua email</label>
     <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
@@ -956,13 +965,13 @@ function account() {
       <p class="acc-esito" role="alert" data-reg-esito></p>
       <button type="submit" class="btn btn-nero btn-largo">Crea l’account</button>
     </form>
-    <p class="ordine-prova">Anteprima: gli account di prova restano in questo browser. Nel negozio vero sono custoditi sul server.</p>
+    <p class="ordine-prova">Anteprima: negozio in prova, nessun pagamento vero.</p>
   </div>
   <div data-conto-dentro hidden>
     <p class="occhiello">Il mio account</p>
     <h1>Ciao<span data-conto-nome></span>.</h1>
     <p class="acc-chi"><span data-conto-email></span> · <button type="button" class="acc-esci" data-conto-esci>Esci</button></p>
-    <p class="ordine-prova">Anteprima: account di prova, i dati sono quelli salvati in questo browser.</p>
+    <p class="acc-info acc-avviso" role="status" data-conto-avviso hidden></p>
     <div class="acc-blocco">
       <h2>I tuoi codici</h2>
       <p class="acc-sotto">Ogni codice vale una volta sola. Diventa «usato» solo quando completi un ordine: finché resta qui, è tuo.</p>
@@ -979,6 +988,18 @@ function account() {
       <p class="acc-sotto">Lui ha il ${AMICO_PCT}% sul primo ordine, tu ${AMICO_BUONO} € sul prossimo. <a class="link" href="porta-un-amico.html">Come funziona</a></p>
       ${blocInvito}
       <div class="amico-senza" data-invito-senza><p>Il tuo link arriva con il primo ordine.</p><a class="btn btn-nero" href="shop.html">Guarda i capi</a></div>
+    </div>
+    <div class="acc-blocco">
+      <h2>Elimina l’account</h2>
+      <p class="acc-sotto">Cancelliamo nome, email, password e i codici non ancora usati, e non ricevi più la newsletter. Gli ordini già fatti restano registrati, perché per legge le vendite si conservano 10 anni.</p>
+      <details class="acc-elimina">
+        <summary>Voglio eliminare l’account</summary>
+        <form data-acc-elimina novalidate>
+          <div class="acc-campo"><label for="el-pw">Per conferma, scrivi la tua password</label><input id="el-pw" type="password" autocomplete="current-password" required></div>
+          <p class="acc-esito" role="alert" data-el-esito></p>
+          <button type="submit" class="btn btn-nero">Elimina per sempre</button>
+        </form>
+      </details>
     </div>
   </div>
 </section>`;
