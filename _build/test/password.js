@@ -93,8 +93,23 @@ const testo = (pg, s) => pg.$eval(s, e => e.textContent.trim()).catch(() => '');
       prova(t.label === 'Il mio account, collegato come Luca' && t.voce === 'Ciao, Luca · Il mio account', nome + ': ' + f + ' etichetta e voce del menu');
       prova(t.lato && t.alto >= 44, nome + ': ' + f + ' testata senza scorrimento laterale, tocco da 44 px');
     }
-    await pg.goto(B + 'account.html'); await pg.waitForSelector('[data-conto-dentro]:not([hidden])', { timeout: 5000 }).catch(() => {});
+    // nessun lampo del modulo d'accesso aprendo l'account da collegato, anche se il motore risponde lento (Francesco, 21/10)
+    await pg.route(m.url + '/api/io', async (r) => { await new Promise((ok) => setTimeout(ok, 1500)); await r.continue(); });
+    const fotogrammi = [];
+    pg.on('domcontentloaded', () => {});
+    await pg.goto(B + 'account.html', { waitUntil: 'commit' });
+    for (let i = 0; i < 12; i++) {
+      fotogrammi.push(await pg.evaluate(() => { const f = document.querySelector('[data-conto-fuori]'), d = document.querySelector('[data-conto-dentro]'), vis = (e) => !!e && getComputedStyle(e).display !== 'none'; return { fuori: vis(f), dentro: vis(d), nome: (document.querySelector('[data-conto-nome]') || {}).textContent || '' }; }).catch(() => null));
+      await pg.waitForTimeout(150);
+    }
+    const visti = fotogrammi.filter(Boolean);
+    prova(visti.length > 5 && visti.every((x) => !x.fuori), nome + ': da collegato il modulo d’accesso non compare mai (' + visti.map((x) => (x.fuori ? 'F' : '-')).join('') + ')');
+    prova(visti.filter((x) => x.dentro).every((x) => x.nome === ', Luca'), nome + ': «Ciao, Luca» subito, prima della risposta del motore');
+    await pg.unroute(m.url + '/api/io');
+    await pg.waitForSelector('[data-conto-dentro]:not([hidden])', { timeout: 5000 }).catch(() => {});
+    prova(!(await pg.$eval('[data-conto-ordini]', (e) => /Caricamento/.test(e.textContent))), nome + ': «Caricamento…» sostituito dai dati veri');
     await pg.click('[data-conto-esci]'); await pg.waitForTimeout(300);
+    prova(await pg.isVisible('#pan-accedi'), nome + ': dopo «Esci» si vede di nuovo il modulo d’accesso');
     await pg.goto(B + 'polo.html'); await pg.waitForTimeout(400);
     prova(await pg.evaluate(() => !document.querySelector('.acc-apri .acc-iniziale') && document.querySelector('.acc-apri').getAttribute('aria-label') === 'Il mio account' && !document.documentElement.classList.contains('collegato')), nome + ': dopo «Esci» torna l’icona normale');
     // di nuovo dentro per le prove che seguono
@@ -104,7 +119,19 @@ const testo = (pg, s) => pg.$eval(s, e => e.textContent.trim()).catch(() => '');
     const tocchi = await pg.goto(B + 'account.html#password-dimenticata').then(() => pg.waitForTimeout(300)).then(() => pg.$$eval('[data-acc-vista]:not([hidden]) a, [data-acc-vista]:not([hidden]) button', es => es.filter(e => e.offsetParent).map(e => Math.round(e.getBoundingClientRect().height))));
     prova(tocchi.every(h => h >= 44), nome + ': pulsanti e link da almeno 44 px (' + tocchi.join(',') + ')');
     prova(!err.length, nome + ': errori JS ' + err.join(' | '));
-    await ctx.close(); await m.chiudi();
+    await ctx.close();
+    // popup del 10%: mai a chi è già iscritto (Francesco, 21/10), anche su un dispositivo "nuovo" dove il browser non ricorda niente
+    const conAccesso = async (email, news) => {
+      const r = await fetch(m.url + '/api/registrati', { method: 'POST', headers: { 'content-type': 'application/json', connection: 'close' }, body: JSON.stringify({ nome: 'Sara', email, password: 'Prova2026x', privacy: true, newsletter: news }) }).then((x) => x.json());
+      const c = await b.newContext(opz);
+      await c.addInitScript(([u, tk]) => { window.MARO_MOTORE = u; try { localStorage.setItem('maro-token', tk); } catch (e) {} }, [m.url, r.token]);
+      const p = await c.newPage(); await p.goto(B + 'polo.html'); await p.waitForTimeout(2200);
+      const vis = await p.$eval('#popup', (x) => !x.hidden && x.classList.contains('visibile'));
+      await c.close(); return vis;
+    };
+    prova(!(await conAccesso('iscritta@esempio.it', true)), nome + ': collegato e iscritto → nessun popup del 10%');
+    prova(await conAccesso('non-iscritta@esempio.it', false), nome + ': collegato ma non iscritto → il popup c’è ancora');
+    await m.chiudi();
   }
   await b.close(); srv.close();
   console.log('Prove password: ' + ok + ' ok, ' + ko + ' fallite');

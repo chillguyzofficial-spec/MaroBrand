@@ -20,8 +20,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="assets/css/maro.css?v=76">
-<script defer src="assets/js/maro.js?v=76"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=77">
+<script defer src="assets/js/maro.js?v=77"></script>
+<script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -44,7 +45,7 @@
     <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
   </nav>
   <div class="azioni">
-    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a>
+    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
     <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
@@ -129,19 +130,19 @@
   </div>
   <div data-conto-dentro hidden>
     <p class="occhiello">Il mio account</p>
-    <h1>Ciao<span data-conto-nome></span>.</h1>
+    <h1>Ciao<span data-conto-nome></span>.</h1><script>if(window.MARO_NOME)document.querySelector('[data-conto-nome]').textContent=', '+window.MARO_NOME;</script>
     <p class="acc-chi"><span data-conto-email></span> · <button type="button" class="acc-esci" data-conto-esci>Esci</button></p>
     <p class="acc-info acc-avviso" role="status" data-conto-avviso hidden></p>
     <div class="acc-blocco">
       <h2>I tuoi codici</h2>
       <p class="acc-sotto">Ogni codice vale una volta sola. Diventa «usato» solo quando completi un ordine: finché resta qui, è tuo.</p>
-      <ul class="acc-codici" data-codici-liberi></ul>
+      <ul class="acc-codici" data-codici-liberi><li class="acc-vuoto">Caricamento…</li></ul>
       <h3 class="acc-h3">Già usati</h3>
-      <ul class="acc-codici usati" data-codici-usati></ul>
+      <ul class="acc-codici usati" data-codici-usati><li class="acc-vuoto">Caricamento…</li></ul>
     </div>
     <div class="acc-blocco">
       <h2>I tuoi ordini</h2>
-      <ul class="acc-ordini" data-conto-ordini></ul>
+      <ul class="acc-ordini" data-conto-ordini><li class="acc-vuoto">Caricamento…</li></ul>
     </div>
     <div class="acc-blocco">
       <h2>Porta un amico</h2>

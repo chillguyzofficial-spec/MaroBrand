@@ -1464,3 +1464,8 @@ a.acc-link { display: inline-flex; align-items: center; }
   .collegato .acc-apri { display: flex; justify-content: center; width: 44px; padding: 0; }
   .acc-ciao { display: none; }
 }
+
+/* 21/10: con l'accesso già fatto la pagina account parte "dentro" (lo script in testa mette .ha-token prima del disegno);
+   il JS toglie la classe appena sa la verità (dentro o fuori) */
+.ha-token [data-conto-fuori] { display: none; }
+.ha-token [data-conto-dentro][hidden] { display: block; }

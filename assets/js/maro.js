@@ -231,11 +231,13 @@
     }
     if (voce) voce.textContent = nome ? 'Ciao, ' + nome + ' · Il mio account' : 'Il mio account';
   };
-  var ricordaChi = function (d) { if (d) scriviJ('maro-chi', { nome: d.nome || '', email: d.email || '' }); else togliK('maro-chi'); testataConto(); };
+  // iscritto = newsletter attiva o un codice di benvenuto (libero o già usato): niente popup del 10% su nessun dispositivo
+  var ricordaChi = function (d) { if (d) scriviJ('maro-chi', { nome: d.nome || '', email: d.email || '', iscritto: !!d.newsletter || (d.codici || []).some(function (c) { return c.tipo === 'benvenuto'; }) }); else togliK('maro-chi'); testataConto(); };
   testataConto();
   (function () {
     var tk = mem.get('maro-token'), visto = false;
     try { visto = sessionStorage.getItem('maro-chi-ok') === '1'; } catch (e) {}
+    var noto = leggiJ('maro-chi', {}); if (noto && noto.iscritto === undefined) visto = false; // dati salvati prima del 21/10 sera: senza «iscritto»
     if (!tk || visto || $('[data-conto-dentro]')) return; // la pagina account lo chiede già da sola
     api('/api/io', undefined, tk).then(function (d) {
       if (d.stato === 401) { togliK('maro-token'); ricordaChi(null); return; }
@@ -583,13 +585,15 @@
   if (pop) {
     var GIORNI7 = 7 * 864e5, no = Number(mem.get('maro-popup-no') || 0);
     // compare solo nell'abbigliamento (body[data-popup]: pagine categoria e schede), se non c'è già un codice e non si è detto "No grazie" negli ultimi 7 giorni
-    var puo = document.body.hasAttribute('data-popup') && !mem.get('maro-iscritto') && !codiceAttivo() && !haOrdinato() && Date.now() - no > GIORNI7;
+    var chiPop = chiCollegato(), giaIscritto = mem.get('maro-iscritto') || (chiPop && chiPop.iscritto) || leggiJ('maro-emessi', []).some(function (c) { return c.tipo === 'benvenuto'; });
+    var puo = document.body.hasAttribute('data-popup') && !giaIscritto && !codiceAttivo() && !haOrdinato() && Date.now() - no > GIORNI7;
     var chiudiPop = function (rifiuto) {
       pop.classList.remove('visibile');
       setTimeout(function () { pop.hidden = true; }, 300);
       if (rifiuto) mem.set('maro-popup-no', String(Date.now()));
     };
     var mostra = function () {
+      var cp = chiCollegato(); if (cp && cp.iscritto) puo = false; // la risposta del motore può arrivare dopo il caricamento
       if (!puo || !pop.hidden) return;
       // mai sopra menu, borsa o zoom aperti: riprova più tardi
       var occupato = !$('#borsa').hidden || ($('#menu') && $('#menu').classList.contains('aperto')) || (zoom && !zoom.hidden);
@@ -1066,7 +1070,7 @@
     };
     var mostraAvviso = function (html) { if (!avvisoConto) return; avvisoConto.innerHTML = html || ''; avvisoConto.hidden = !html; };
     var codiciConto = [];
-    var fuori = function () { contoFuori.hidden = false; dentro.hidden = true; };
+    var fuori = function () { document.documentElement.classList.remove('ha-token'); contoFuori.hidden = false; dentro.hidden = true; };
     // pagina di tracciamento dei corrieri: solo Poste pubblica la pagina dei risultati col numero; per gli altri la pagina
     // ufficiale di ricerca + "Copia numero" (da verificare con un numero vero quando Omar dice quale corriere usa)
     var CORRIERI = {
@@ -1110,7 +1114,7 @@
       if (!tk || (npAperta && !npAperta.hidden)) return fuori(); // mentre si sceglie una nuova password si resta su quella schermata
       api('/api/io', undefined, tk).then(function (d) {
         if (d.stato === 401) { togliK('maro-token'); ricordaChi(null); return fuori(); }
-        contoFuori.hidden = true; dentro.hidden = false;
+        document.documentElement.classList.remove('ha-token'); contoFuori.hidden = true; dentro.hidden = false;
         if (!d.ok) { mostraAvviso(esc(d.errore)); return; }
         $('[data-conto-email]').textContent = d.email; ricordaChi(d);
         $('[data-conto-nome]').textContent = d.nome ? ', ' + d.nome : '';
