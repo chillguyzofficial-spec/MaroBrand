@@ -3,7 +3,7 @@
 // Uso: node _build/test/catalogo.js
 const path = require('path'), fs = require('fs'), http = require('http');
 const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
-const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
+const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
 const srv = http.createServer((q, r) => { const f = path.join(ROOT, decodeURIComponent(q.url.split('?')[0])); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8988);
 let ok = 0, ko = 0; const prova = (c, n) => { if (c) ok++; else { ko++; console.log('  ✗ ' + n); } };

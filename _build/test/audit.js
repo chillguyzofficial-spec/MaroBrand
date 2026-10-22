@@ -4,7 +4,7 @@
 const path = require('path'), fs = require('fs'), http = require('http');
 const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
 const { avvia } = require('./motore-finto');
-const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
+const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };
 // il server locale rimappa /MaroBrand/… : 404.html usa indirizzi assoluti apposta (GitHub la serve da qualunque percorso)
 const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]).replace(/^\/MaroBrand\//, '/'); if (u.endsWith('/')) u += 'index.html'; const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8977);

@@ -1533,9 +1533,6 @@ a.acc-link { display: inline-flex; align-items: center; }
   .bn-apertura-testo { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(40px, 5vw, 96px); align-items: center; max-width: 1440px; }
   .bn-stadio { margin-top: 0; }
 }
-.bn-fischio { position: relative; white-space: nowrap; color: var(--nero); font-weight: 500; }
-.bn-fischio svg { position: absolute; left: -3%; bottom: -.5em; width: 106%; height: .6em; overflow: visible; pointer-events: none; }
-.bn-fischio path { fill: none; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; transition: stroke-dashoffset .9s cubic-bezier(.6, 0, .2, 1) .7s; }
-.bn-fischio-rosso { stroke: var(--rosso); stroke-width: 3; }
-.bn-fischio-verde { stroke: var(--verde); stroke-width: 2; transition-delay: 1s !important; }
-.bn-intro.in-attesa .bn-fischio path { stroke-dashoffset: 1; transition: none; }
+/* 22/10: una linea nera sottile e dritta che si traccia da sinistra (classica, tipo Nike), niente colori né tratto a mano */
+.bn-fischio { white-space: nowrap; color: var(--nero); font-weight: 500; padding-bottom: 3px; background: linear-gradient(currentColor, currentColor) left bottom / 100% 1.5px no-repeat; transition: background-size .9s cubic-bezier(.6, 0, .2, 1) .6s; }
+.bn-intro.in-attesa .bn-fischio { background-size: 0 1.5px; transition: none; }

@@ -6,7 +6,7 @@
 const path = require('path'), fs = require('fs'), http = require('http');
 const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
 const { avvia } = require('./motore-finto');
-const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
+const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 // vetrina (21/10): senza borsa nella testata il negozio è spento e queste prove non hanno senso; tornano quando VETRINA = false
 if (!fs.readFileSync(require('path').join(ROOT, 'index.html'), 'utf8').includes('data-apri-borsa')) { console.log('Prove amico: saltate, il sito è in vetrina (negozio spento)'); process.exit(0); }
 

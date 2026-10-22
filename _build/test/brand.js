@@ -2,7 +2,7 @@
 // Uso: node _build/test/brand.js   (versione del 13/10 con anagramma e zoom: sostituita il 19/10)
 const path = require('path'), fs = require('fs'), http = require('http');
 const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
-const ROOT = 'C:/Users/Claude FK/.claude/projects/MaroBrand';
+const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
 const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8989);
 let ok = 0, ko = 0; const prova = (c, n) => { if (c) ok++; else { ko++; console.log('  ✗ ' + n); } };
@@ -80,7 +80,7 @@ const FERMO = x => x === 'none' || x === 'matrix(1, 0, 0, 1, 0, 0)';
     // 22/10: foto dello stadio (fronte e retro) caricate, affiancate, e «fischio finale» sottolineato fino in fondo
     const st = await pg.$$eval('.bn-stadio img', is => is.map(i => { const r = i.getBoundingClientRect(); return { ok: i.complete && i.naturalWidth > 0, x: r.left, w: r.width }; }));
     prova(st.length === 2 && st.every(s => s.ok && s.w > 100) && st[1].x > st[0].x, nome + ': stadio, due foto affiancate e caricate');
-    prova(await pg.$$eval('.bn-fischio path', ps => ps.length === 2 && ps.every(p => parseFloat(getComputedStyle(p).strokeDashoffset) === 0)), nome + ': fischio finale sottolineato');
+    prova(await pg.$eval('.bn-fischio', e => /^100% 1.5px/.test(getComputedStyle(e).backgroundSize)), nome + ': fischio finale sottolineato fino in fondo');
     // apertura (21/10 notte): video del tennista, senza audio, in loop, con fotogramma fisso
     const vid = await pg.$eval('[data-video-brand]', (v) => ({ muto: v.muted, loop: v.loop || !!document.querySelector('[data-video-brand-copia]'), inline: v.playsInline, poster: /bn-tennis-locandina/.test(v.poster), src: /brand-tennis\.mp4/.test(v.currentSrc || v.querySelector('source').src), w: v.getBoundingClientRect().width, controlli: v.controls })).catch(() => null);
     prova(vid && vid.muto && (vid.loop || !!document) && vid.inline && vid.poster && vid.src && !vid.controlli, nome + ': video d’apertura muto, in loop, senza comandi, con fotogramma fisso');
