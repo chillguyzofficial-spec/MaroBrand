@@ -762,3 +762,6 @@ body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
   .nuovo .n-apertura-testo { top: 12px; bottom: auto; }
   .nuovo .n-apertura::after { background: linear-gradient(180deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 55%) !important; }
 }
+/* popup del 10% (23/10 notte, Francesco): fondo bianco ma colore del testo preso dalla pagina → bianco su bianco nelle pagine nere (abbigliamento). Colore scuro dichiarato */
+.popup { color: var(--nero); }
+.popup .btn-nero, .nuovo.pagina-cat .popup .btn-nero { background: var(--nero); color: #fff; border-color: var(--nero); } /* nelle pagine nere il pulsante del popup diventava beige: sempre nero come nel resto del sito */
