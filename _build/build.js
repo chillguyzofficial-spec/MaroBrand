@@ -3,7 +3,7 @@ const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const CATALOGO = require('./catalogo');
 const MISURE = require('./foto-misure.json');
-const V = '94'; // versione di css/js: aumentarla a ogni modifica pubblicata
+const V = '95'; // versione di riserva; dal 23/10 css e js prendono l'impronta del contenuto (cambia da sola a ogni modifica)
 
 // controllo: ogni foto in un solo punto del sito (le foto dei capi appartengono al loro capo)
 const usate = new Map();
@@ -111,12 +111,12 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=${V}">${NUOVA_HOME ? `
+<link rel="stylesheet" href="assets/css/maro.css?v=${impronta('assets/css/maro.css')}">${NUOVA_HOME ? `
 <link rel="preload" href="assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=${V}">` : ''}
-<script defer src="assets/js/maro.js?v=${V}"></script>
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=${impronta('assets/css/maro-nuovo.css')}">` : ''}
+<script defer src="assets/js/maro.js?v=${impronta('assets/js/maro.js')}"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/\s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="${[file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}>

@@ -749,3 +749,4 @@ body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
 .nuovo .s-passo-testo h2 { font-weight: 600; color: #0d0c0b; }
 .nuovo .s-passo-testo .bm-grande { font-weight: 700; color: #0d0c0b; }
 .nuovo .s-passo-testo i { font-weight: 600; }
+@media (max-width: 1099px) { .nuovo .s-ali-foto { order: 0; } .nuovo .s-ali-testo { padding-bottom: 28px; } } /* 23/10 notte (Francesco): su telefono prima il testo, poi la foto: troppe foto di fila dopo la fila degli sport */
