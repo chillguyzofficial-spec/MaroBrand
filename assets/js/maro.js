@@ -784,7 +784,10 @@
     });
     lbV.addEventListener('pointercancel', function () { lx = null; lbTira = false; lbB.style.transition = ''; lbVai(lbI); });
     lbV.addEventListener('dragstart', function (e) { e.preventDefault(); });
-    window.addEventListener('resize', function () { lbVai(lbI); });
+    // solo se cambia la larghezza: su iPhone la barra di Safari che ricompare tornando su fa scattare «resize» e il ricalcolo
+    // dell'altezza (con transizione) spostava la pagina mentre si scorreva: «si ferma e bugga» (segnalato da Francesco il 22/10)
+    var lbLargo = window.innerWidth;
+    window.addEventListener('resize', function () { if (window.innerWidth === lbLargo) return; lbLargo = window.innerWidth; lbVai(lbI); });
     lbVai(0);
   }
 

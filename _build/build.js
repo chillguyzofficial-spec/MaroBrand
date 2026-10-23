@@ -1413,7 +1413,7 @@ ${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand spor
       <p class="s-ali-firma" aria-hidden="true"><span>Omar</span></p>
     </div>
   </div>
-  <figure class="s-ali-foto">${img('brand-ali-nuova', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali guarda la borraccia nera con le ali', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}<figcaption><span>01</span> Cappellino Ali · Borraccia Ali · Polo Linee</figcaption></figure>
+  <figure class="s-ali-foto">${img('brand-ali-nuova', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali guarda la borraccia nera con le ali', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
 </section>
 
 <section class="s-fine" aria-labelledby="bn-motto">
