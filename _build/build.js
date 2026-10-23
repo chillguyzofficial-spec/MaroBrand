@@ -450,7 +450,7 @@ ${VETRINA ? '' : `<section class="vantaggi" aria-label="Acquistare su MARO">
   </div>
   <div class="lb-vetrina" aria-label="Foto del lookbook">
     <div class="lb-binario">
-${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.length}">${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 32vw, 100vw' })}</figure>`).join('\n')}
+${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.length}"><span class="lb-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola(id) || urlFoto(id)}')"></span>${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 32vw, 100vw' })}</figure>`).join('\n')}
     </div>
   </div>
 </section>
@@ -1231,10 +1231,10 @@ ${temi.join('\n\n')}
 // Parole sue, non riscritte. L'ultima riga «MARO — FLY WITH YOUR MIND.» diventa la chiusura col logo (MARO mai in orizzontale).
 const MANIFESTO = [
   { foto: 'bm-1', etichetta: 'La visione', alt: 'Disegno a penna blu di Omar su un quaderno a righe: la M con le ali e i riccioli sotto', testo: `<h2 id="bm-titolo">Fly with<br>your mind.</h2><p class="bm-grande">Every goal begins with a vision.</p>` },
-  { foto: 'bm-2', etichetta: 'Il nome', alt: 'Disegno a penna su carta a quadretti: MARO scritto in verticale, una lettera sotto l’altra, con scie che lo avvolgono', testo: `<p>MARO nasce per chi ha un obiettivo da raggiungere e la fiducia necessaria per trasformare un pensiero in realtà.</p>` },
-  { foto: 'bm-3', etichetta: 'La misura', alt: 'Cartamodello a matita su carta millimetrata con le misure: le due ali e MARO verticale al centro', testo: `<p><i>Fly with your mind</i> significa imparare dal passato, vivere il presente e immaginare il futuro che vogliamo costruire. Significa guardare oltre i propri limiti e credere in una visione, anche quando sembra lontana.</p>` },
-  { foto: 'bm-4', etichetta: 'Il lavoro', alt: 'Le due ali disegnate a matita, con le piume tratteggiate, su un foglio bianco', testo: `<p class="bm-grande">Ma sognare non basta.</p><p>Servono disciplina, sacrificio e la forza di affrontare le difficoltà, facendo anche ciò che è scomodo o faticoso, senza cercare scorciatoie.</p>` },
-  { foto: 'bm-5', etichetta: 'Il segno', alt: 'Disegno finale a penna su carta a quadretti: le due ali piumate e MARO in verticale al centro', testo: `<p>Crediamo nel rispetto di sé stessi e degli altri, nella lealtà, nella fiducia e nella forza della collaborazione.</p><p class="bm-grande">Immagina. Credi. Agisci.</p><p>La tua mente dà forma alla visione. Le tue azioni la trasformano in realtà.</p>` },
+  { foto: 'bm-2', etichetta: 'Il nome', alt: 'Disegno a penna su carta a quadretti: MARO scritto in verticale, una lettera sotto l’altra, con scie che lo avvolgono', testo: `<p>MARO nasce per chi ha <strong>un obiettivo da raggiungere</strong> e la fiducia necessaria per <strong>trasformare un pensiero in realtà</strong>.</p>` },
+  { foto: 'bm-3', etichetta: 'La misura', alt: 'Cartamodello a matita su carta millimetrata con le misure: le due ali e MARO verticale al centro', testo: `<p><i>Fly with your mind</i> significa <strong>imparare dal passato, vivere il presente e immaginare il futuro</strong> che vogliamo costruire. Significa guardare oltre i propri limiti e <strong>credere in una visione</strong>, anche quando sembra lontana.</p>` },
+  { foto: 'bm-4', etichetta: 'Il lavoro', alt: 'Le due ali disegnate a matita, con le piume tratteggiate, su un foglio bianco', testo: `<p class="bm-grande">Ma sognare non basta.</p><p>Servono <strong>disciplina, sacrificio</strong> e la forza di affrontare le difficoltà, facendo anche ciò che è scomodo o faticoso, <strong>senza cercare scorciatoie</strong>.</p>` },
+  { foto: 'bm-5', etichetta: 'Il segno', alt: 'Disegno finale a penna su carta a quadretti: le due ali piumate e MARO in verticale al centro', testo: `<p>Crediamo nel <strong>rispetto</strong> di sé stessi e degli altri, nella <strong>lealtà</strong>, nella <strong>fiducia</strong> e nella forza della <strong>collaborazione</strong>.</p><p class="bm-grande">Immagina. Credi. Agisci.</p><p>La tua mente dà forma alla visione. <strong>Le tue azioni la trasformano in realtà.</strong></p>` },
 ];
 // carosello di «Le ali» (21/10): foto di Francesco, ~500 px (originali più grandi da chiedere)
 const CAROSELLO_ALI = [

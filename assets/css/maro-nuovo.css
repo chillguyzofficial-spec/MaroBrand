@@ -725,3 +725,27 @@ body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
 .nuovo .s-apertura h1 { font: 400 clamp(60px, 8.4vw, 140px)/.9 var(--titoli); font-style: normal; letter-spacing: .005em; text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 6px 30px rgba(0,0,0,.5); }
 @media (max-width: 599px) { .nuovo .s-apertura h1 { font-size: clamp(50px, 15vw, 72px); } }
 @media (max-width: 599px) { .nuovo .s-apertura-testo { position: relative; z-index: 2; } } /* solo telefono, dove il testo va sotto la foto: il titolo sta sopra la sfumatura; su PC resta sopra la foto (errore 23/10) */
+
+/* ---------- 23/10 notte (Francesco, da telefono) ----------
+   apertura: sul telefono il video 16:9 intero (prima alto quanto lo schermo, quindi allargato e tagliato ai lati),
+   «Fly with your mind» sopra, in basso a sinistra; vale per tutti gli schermi verticali (telefono e tablet) */
+@media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
+  .nuovo .n-apertura { height: auto; aspect-ratio: 16 / 9; min-height: 0; max-height: none; }
+  .nuovo .n-apertura .apertura-video { height: 100%; object-position: 50% 50%; }
+  .nuovo .n-apertura::after { background: linear-gradient(0deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 60%) !important; }
+  .nuovo .n-apertura-testo { top: auto; bottom: 14px; }
+  .nuovo .n-apertura h1 { font-size: clamp(30px, 10.5vw, 46px); line-height: .92; }
+}
+/* lookbook: tutte le foto nello stesso riquadro 4:5, intere, con la stessa foto sfocata dietro (come la galleria dei capi) */
+.nuovo .n-lookbook .lb-binario figure { position: relative; overflow: hidden; aspect-ratio: 4 / 5; width: auto; background: #111; }
+.nuovo .lb-sfondo { position: absolute; inset: -40px; background: center / cover no-repeat; filter: blur(26px) brightness(.7); }
+.nuovo .n-lookbook .lb-binario img { position: relative; width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 1099px) { .nuovo .n-lookbook .lb-binario figure { width: auto; height: clamp(300px, 52vw, 480px); } }
+@media (max-width: 599px) { .nuovo .n-lookbook .lb-binario figure { width: 100%; height: auto; } }
+/* manifesto di Omar (23/10 notte, Francesco: «un pelino più calcate, le più importanti in grassetto»): testo più scuro e spesso,
+   passaggi chiave in grassetto (stesse parole di Omar), titoli in corsivo più pieni */
+.nuovo .s-passo-testo p { font-weight: 450; color: #24221e; }
+.nuovo .s-passo-testo strong { font-weight: 600; color: #0d0c0b; }
+.nuovo .s-passo-testo h2 { font-weight: 600; color: #0d0c0b; }
+.nuovo .s-passo-testo .bm-grande { font-weight: 700; color: #0d0c0b; }
+.nuovo .s-passo-testo i { font-weight: 600; }
