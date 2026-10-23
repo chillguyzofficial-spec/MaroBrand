@@ -430,6 +430,41 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { chiudi(); chiudiMenu && menu && chiudiMenu(); } });
   }
 
+  /* ---------- touchpad e rotella in orizzontale (23/10, Francesco: «anche a scorrimento, non solo col pulsante»):
+     sui caroselli a scatti un gesto orizzontale = una foto; quello verticale resta alla pagina ---------- */
+  function rotellaOrizzontale(el, passo) {
+    var somma = 0, fermo = false;
+    el.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      if (fermo) return;
+      somma += e.deltaX;
+      if (Math.abs(somma) < 40) return;
+      passo(somma > 0 ? 1 : -1); somma = 0; fermo = true;
+      setTimeout(function () { fermo = false; }, 450);
+    }, { passive: false });
+  }
+
+  /* ---------- file che scorrono da sole (sport, disegni, ali, tiratura, schede): dito e touchpad le muove già il
+     browser, col mouse si trascinano qui; un piccolo spostamento resta un clic ---------- */
+  $$('.s-fila, .s-passi, .ali-binario, .tir-binario').forEach(function (f) {
+    var x0 = null, s0 = 0, mosso = false;
+    f.addEventListener('pointerdown', function (e) { if (e.pointerType !== 'mouse' || e.button !== 0 || f.scrollWidth <= f.clientWidth) return; x0 = e.clientX; s0 = f.scrollLeft; mosso = false; });
+    window.addEventListener('pointermove', function (e) {
+      if (x0 === null) return;
+      var dx = e.clientX - x0;
+      if (!mosso && Math.abs(dx) > 6) { mosso = true; f.style.scrollSnapType = 'none'; f.style.cursor = 'grabbing'; }
+      if (mosso) { f.scrollLeft = s0 - dx; e.preventDefault(); }
+    });
+    window.addEventListener('pointerup', function () {
+      if (x0 === null) return;
+      x0 = null; f.style.cursor = '';
+      if (mosso) { f.style.scrollSnapType = ''; setTimeout(function () { mosso = false; }, 0); }
+    });
+    f.addEventListener('click', function (e) { if (mosso) { e.preventDefault(); e.stopPropagation(); } }, true);
+    f.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  });
+
   /* ---------- scheda prodotto: vetrina a scorrimento (frecce, miniature, dito) ---------- */
   $$('.vetrina').forEach(function (v) {
     var binario = $('.vetrina-binario', v), figure = $$('figure', v), n = figure.length, i = 0;
@@ -444,6 +479,7 @@
     }
     $$('[data-vai]', v).forEach(function (b) { b.addEventListener('click', function () { vai(i + Number(b.getAttribute('data-vai'))); }); });
     mini.forEach(function (b) { b.addEventListener('click', function () { vai(Number(b.getAttribute('data-foto'))); }); });
+    rotellaOrizzontale(v, function (d) { vai(i + d); });
     var x0 = null, y0 = 0;
     v.addEventListener('pointerdown', function (e) { if (e.target.closest('button')) return; x0 = e.clientX; y0 = e.clientY; });
     v.addEventListener('pointerup', function (e) {
@@ -722,10 +758,32 @@
       lbFrecce[0].disabled = lbI === 0; lbFrecce[1].disabled = lbI === max;
     };
     lbFrecce.forEach(function (b) { b.addEventListener('click', function () { lbVai(lbI + Number(b.getAttribute('data-lb'))); }); });
-    var lx = null, ly = 0;
-    lbV.addEventListener('pointerdown', function (e) { lx = e.clientX; ly = e.clientY; });
-    lbV.addEventListener('pointerup', function (e) { if (lx === null) return; var dx = e.clientX - lx, dy = e.clientY - ly; lx = null; if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) lbVai(lbI + (dx < 0 ? 1 : -1)); });
-    lbV.addEventListener('pointercancel', function () { lx = null; });
+    rotellaOrizzontale(lbV, function (d) { lbVai(lbI + d); });
+    // trascinamento (dito o mouse): il binario segue il gesto, poi si ferma sulla foto più vicina nella direzione
+    var lx = null, ly = 0, lbBase = 0, lbTira = false;
+    lbV.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('button')) return;
+      lx = e.clientX; ly = e.clientY; lbTira = false;
+      lbBase = lbF[0].offsetLeft - lbF[lbI].offsetLeft;
+    });
+    lbV.addEventListener('pointermove', function (e) {
+      if (lx === null) return;
+      var dx = e.clientX - lx, dy = e.clientY - ly;
+      if (!lbTira && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { lbTira = true; lbB.style.transition = 'none'; try { lbV.setPointerCapture(e.pointerId); } catch (er) {} }
+      if (lbTira) lbB.style.transform = 'translateX(' + (lbBase + dx * (lbI === 0 && dx > 0 || lbI === ultima() && dx < 0 ? .3 : 1)) + 'px)';
+    });
+    lbV.addEventListener('pointerup', function (e) {
+      if (lx === null) return;
+      var dx = e.clientX - lx, dy = e.clientY - ly; lx = null; lbB.style.transition = '';
+      if (lbTira && Math.abs(dx) > 40) {
+        // quante foto ha attraversato il gesto (almeno una)
+        var w = lbF[lbI].offsetWidth || 1, salto = Math.max(1, Math.round(Math.abs(dx) / w));
+        lbVai(lbI + (dx < 0 ? salto : -salto));
+      } else lbVai(lbI);
+      lbTira = false;
+    });
+    lbV.addEventListener('pointercancel', function () { lx = null; lbTira = false; lbB.style.transition = ''; lbVai(lbI); });
+    lbV.addEventListener('dragstart', function (e) { e.preventDefault(); });
     window.addEventListener('resize', function () { lbVai(lbI); });
     lbVai(0);
   }

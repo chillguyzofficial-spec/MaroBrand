@@ -1,0 +1,727 @@
+/* MARO — prova 23/10: grafica di ChatGPT (art director). Si carica dopo maro.css e vale solo con NUOVA_HOME = true in build.js.
+   Tutto su nero con righe sottili, titoli con grazie (Playfair Display), scritte piccole maiuscole spaziate (Jost),
+   pulsanti rettangolari con la freccia. Foto intere: dove la grafica tagliava, qui la foto prende la sua proporzione. */
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/playfair-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Playfair Display'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/playfair-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+/* corsivo (23/10): solo per «Fly with your mind» */
+@font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 400 900; font-display: swap; src: url(../fonts/playfair-italic-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Playfair Display'; font-style: italic; font-weight: 400 900; font-display: swap; src: url(../fonts/playfair-italic-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: 'Jost'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(../fonts/jost-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Jost'; font-style: normal; font-weight: 300 600; font-display: swap; src: url(../fonts/jost-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+:root {
+  --n-nero: #050505;
+  --n-fondo: #0b0b0b;
+  --n-riga: rgba(255,255,255,.14);
+  --n-testo: #ece9e3;
+  --n-muto: #b4afa6; /* 9:1 sul nero */
+  --n-grazie: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --n-lineare: 'Jost', 'Futura', 'Century Gothic', Arial, sans-serif;
+}
+body.nuovo { font-family: var(--n-lineare); font-variant-numeric: lining-nums; }
+body.home.nuovo { background: var(--n-nero); color: var(--n-testo); }
+.nuovo :focus-visible { outline-color: currentColor; }
+
+/* scritte piccole spaziate e pulsanti */
+.n-occhiello, .n-etichetta { font: 500 13px/1.4 var(--n-lineare); letter-spacing: .28em; text-transform: uppercase; margin: 0; }
+.n-btn { display: inline-flex; align-items: center; gap: 14px; min-height: 46px; padding: 0 22px; border: 1px solid currentColor; background: none; color: inherit; font: 500 12px/1 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; transition: background-color .2s, color .2s, border-color .2s; }
+.n-btn:hover { background: var(--n-testo); color: var(--n-nero); border-color: var(--n-testo); }
+.n-btn-pieno { background: var(--n-testo); color: var(--n-nero); border-color: var(--n-testo); }
+.n-btn-pieno:hover { background: transparent; color: var(--n-testo); }
+.n-freccia { width: 22px; height: 12px; flex: none; transition: transform .2s; }
+.n-btn:hover .n-freccia, .n-carta:hover .n-freccia { transform: translateX(4px); }
+.n-btn svg:not(.n-freccia) { width: 18px; height: 18px; }
+
+/* ---------- testata (tutte le pagine): nera, menu maiuscolo spaziato, logo M con le ali bianco ---------- */
+.nuovo .testata { background: var(--n-nero); color: var(--n-testo); border-bottom: 1px solid var(--n-riga); }
+.nuovo .menu { font: 500 12.5px/1 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; gap: clamp(22px, 3vw, 44px); }
+.nuovo .menu a { padding: 10px 0; border-bottom: 1px solid transparent; color: #cfcac2; transition: color .2s, border-color .2s; }
+.nuovo .menu a:hover, .nuovo .menu a[aria-current="page"] { color: var(--n-testo); border-color: var(--n-testo); }
+.nuovo .azioni a, .nuovo .azioni button { color: var(--n-testo); }
+.nuovo .pref-apri:hover, .nuovo .borsa-apri:hover { background: #1c1c1c; }
+.nuovo .menu-apri { border: 1px solid var(--n-testo); border-radius: 0; font: 500 12px/1 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; }
+@media (max-width: 959px) {
+  .nuovo .menu.aperto { background: var(--n-nero); border-top-color: var(--n-riga); }
+  .nuovo .menu.aperto a { font: 400 30px/1.2 var(--n-grazie); letter-spacing: .04em; color: var(--n-testo); border-bottom: 1px solid var(--n-riga); padding: 16px 0; }
+}
+
+/* ---------- apertura: video a tutta larghezza, testo a sinistra, coordinate e valori ai lati ---------- */
+.n-apertura { color: var(--n-testo); }
+.n-apertura::after { background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 45%), linear-gradient(90deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 55%); }
+/* solo «Fly with your mind», in alto (Omar, 19/10): niente altro sopra il video */
+.n-apertura-testo { position: absolute; z-index: 3; left: var(--lato); right: var(--lato); top: clamp(36px, 8vh, 88px); }
+/* titolo calcato (Francesco 23/10): peso pieno, bianco puro, ombra stretta + alone largo che lo stacca dal video senza scurirlo */
+.n-apertura h1 { font: italic 700 clamp(56px, 7.6vw, 120px)/.98 var(--n-grazie); text-transform: uppercase; letter-spacing: .01em; margin: 0; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.55), 0 4px 28px rgba(0,0,0,.6), 0 0 80px rgba(0,0,0,.45); }
+.n-apertura .n-sotto { font: 400 clamp(16px, 1.3vw, 19px)/1.55 var(--n-lineare); margin: 0 0 30px; max-width: none; text-shadow: none; }
+.n-coordinate, .n-valori { position: absolute; z-index: 3; bottom: clamp(24px, 5vh, 48px); margin: 0; font: 500 12px/1.9 var(--n-lineare); letter-spacing: .24em; text-transform: uppercase; color: #d8d4cc; }
+.n-coordinate { left: var(--lato); }
+/* maro.css ingrandisce ogni p dell'apertura (.apertura p): qui le scritte piccole restano piccole */
+.n-apertura .n-occhiello { font: 500 13px/1.4 var(--n-lineare); letter-spacing: .28em; margin: 0; max-width: none; text-shadow: none; }
+.n-apertura .n-coordinate, .n-apertura .n-valori { font: 500 12px/1.9 var(--n-lineare); letter-spacing: .24em; max-width: none; text-shadow: none; }
+.n-valori { right: var(--lato); text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+.n-valori-riga { width: 1px; height: clamp(60px, 14vh, 130px); background: rgba(255,255,255,.55); margin: 0 6px 22px 0; }
+
+/* ---------- fascia sotto il video: frase a sinistra, due pulsanti a destra ---------- */
+.n-intro { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 32px; padding: clamp(26px, 3vw, 40px) var(--lato); background: var(--n-nero); border-top: 1px solid var(--n-riga); }
+.n-intro p { margin: 0; font: 400 clamp(20px, 2vw, 28px)/1.3 var(--n-grazie); color: var(--n-testo); }
+.n-intro-pulsanti { display: flex; flex-wrap: wrap; gap: 12px; color: var(--n-testo); }
+
+/* ---------- Drop 002: titolo e conto alla rovescia, foto del tennis al centro sfumata, pulsante a destra ---------- */
+.n-drop { position: relative; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: clamp(20px, 3vw, 48px); padding: 0 var(--lato); background: var(--n-nero); border-top: 1px solid var(--n-riga); border-bottom: 1px solid var(--n-riga); overflow: hidden; }
+.n-drop-foto { grid-column: 2; grid-row: 1; margin: 0; height: clamp(220px, 22vw, 320px); -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22%, #000 78%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 22%, #000 78%, transparent 100%); }
+.n-drop-foto img { height: 100%; width: auto; max-width: none; }
+.n-drop-testo { grid-column: 1; grid-row: 1; margin: 0; padding: 32px 0; }
+.n-drop-titolo { font: 400 clamp(30px, 3vw, 44px)/1 var(--n-grazie); letter-spacing: .2em; text-transform: uppercase; }
+.n-drop .n-drop-data { margin: 14px 0 26px; font: 500 13px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; color: var(--n-testo); }
+.n-conto { display: flex; gap: clamp(24px, 3vw, 48px); }
+.n-drop .n-conto span { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--n-muto); font: 500 12px/1 var(--n-lineare); letter-spacing: .22em; text-transform: uppercase; }
+.n-drop .n-conto b { font: 400 clamp(30px, 3vw, 42px)/1 var(--n-grazie); color: var(--n-testo); margin-bottom: 10px; font-variant-numeric: lining-nums tabular-nums; }
+.n-drop-btn { grid-column: 3; grid-row: 1; justify-self: end; color: var(--n-testo); }
+
+/* ---------- testata delle sezioni: etichetta a sinistra, frase a destra ---------- */
+.n-testa { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 22px; }
+.n-etichetta-dx { font-size: 12px; color: var(--n-muto); }
+
+/* ---------- la collezione: quattro carte 4:5, foto intere ---------- */
+.n-collezione { padding: clamp(36px, 4vw, 56px) var(--lato) clamp(40px, 5vw, 64px); }
+.n-coll-griglia { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.n-carta { position: relative; display: block; overflow: hidden; background: #111; }
+.n-carta img { width: 100%; height: auto; transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.n-carta:hover img { transform: scale(1.04); }
+.n-carta::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(0deg, rgba(0,0,0,.78), rgba(0,0,0,0)); pointer-events: none; }
+.n-carta-testo { position: absolute; z-index: 1; left: 18px; right: 18px; bottom: 18px; display: grid; gap: 10px; }
+.n-carta-nome { font: 400 clamp(22px, 1.9vw, 28px)/1 var(--n-grazie); text-transform: uppercase; letter-spacing: .03em; }
+.n-carta-vai { display: inline-flex; align-items: center; gap: 12px; font: 500 12px/1 var(--n-lineare); letter-spacing: .22em; text-transform: uppercase; color: #ddd8d0; }
+
+/* ---------- due pannelli: Milano (foto in bianco e nero) e Più di un logo ---------- */
+.n-doppio { display: grid; grid-template-columns: 11fr 9fr; border-top: 1px solid var(--n-riga); border-bottom: 1px solid var(--n-riga); }
+.n-pannello { position: relative; display: grid; background: var(--n-fondo); }
+.n-pannello h2 { font: 400 clamp(30px, 2.9vw, 44px)/1.12 var(--n-grazie); text-transform: uppercase; letter-spacing: .02em; }
+.n-pannello p { font: 400 16px/1.65 var(--n-lineare); color: #d4cfc7; margin: 20px 0 30px; max-width: 30em; }
+.n-pannello-testo { padding: clamp(32px, 4vw, 60px) clamp(24px, 3.4vw, 52px); align-self: center; }
+/* Milano: testo a sinistra, foto 4:5 intera a destra */
+.n-milano { grid-template-columns: 1fr auto; border-right: 1px solid var(--n-riga); }
+.n-milano img { grid-column: 2; grid-row: 1; height: clamp(440px, 40vw, 620px); width: auto; max-width: none; filter: grayscale(1) contrast(1.08) brightness(.9); }
+.n-milano .n-pannello-testo { grid-column: 1; grid-row: 1; }
+/* Più di un logo: foto 16:9 intera in alto, testo sotto */
+.n-logo { grid-template-rows: auto 1fr; }
+.n-logo img { width: 100%; height: auto; }
+
+/* ---------- lookbook: stessa altezza, larghezza naturale, frecce rotonde ai lati ---------- */
+.nuovo .n-lookbook { background: var(--n-nero); color: var(--n-testo); padding: clamp(36px, 4vw, 56px) var(--lato) clamp(40px, 5vw, 64px); }
+.n-lookbook .lb-vetrina { position: relative; }
+.n-lookbook .lb-binario { gap: 10px; }
+.n-lookbook .lb-binario figure { height: clamp(260px, 26vw, 400px); }
+.n-lb-freccia { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); z-index: 2; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,.7); background: rgba(0,0,0,.45); color: var(--n-testo); display: grid; place-items: center; transition: opacity .2s, background-color .2s; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.n-lb-freccia:hover:not(:disabled) { background: rgba(0,0,0,.75); }
+.n-lb-freccia:disabled { opacity: 0; pointer-events: none; }
+.n-lb-prima { right: auto; left: 14px; }
+.n-lb-prima .n-freccia { transform: scaleX(-1); }
+.n-lb-sotto { margin: 16px 0 0; font: 500 12px/1 var(--n-lineare); letter-spacing: .22em; text-transform: uppercase; color: var(--n-muto); }
+.nuovo .n-lookbook .lb-conta { color: var(--n-testo); font: inherit; margin: 0; }
+
+/* ---------- iscrizione: centrata, foto del ricamo spenta sullo sfondo ---------- */
+.nuovo .n-iscriviti { position: relative; display: grid; place-items: center; text-align: center; padding: clamp(56px, 7vw, 96px) var(--lato); background: var(--n-nero); color: var(--n-testo); border-top: 1px solid var(--n-riga); overflow: hidden; }
+.nuovo .n-iscriviti { grid-template-columns: minmax(0, 1fr); }
+.n-iscriviti-sfondo { position: absolute; inset: 0; }
+.n-iscriviti-sfondo img { width: 100%; height: 100%; object-fit: cover; opacity: .28; filter: grayscale(.6); }
+.n-iscriviti-sfondo::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(5,5,5,.35), rgba(5,5,5,.9) 75%); }
+.n-iscriviti-testo { position: relative; max-width: 640px; }
+.n-iscriviti h2 { font: 400 clamp(26px, 2.6vw, 36px)/1.2 var(--n-grazie); letter-spacing: .1em; text-transform: uppercase; }
+.n-iscriviti-testo > p { font: 400 15.5px/1.6 var(--n-lineare); color: #d4cfc7; margin: 14px auto 28px; max-width: 34em; }
+.nuovo .n-form { justify-content: center; margin: 0 auto; gap: 12px; }
+.nuovo .n-form input[type="email"] { flex: 1 1 300px; min-height: 50px; border-radius: 0; border: 1px solid rgba(255,255,255,.55); background: rgba(0,0,0,.45); color: var(--n-testo); font: 400 15px var(--n-lineare); padding: 0 18px; }
+.nuovo .n-form input[type="email"]:focus { border-color: var(--n-testo); }
+.nuovo .n-form .n-btn { min-height: 50px; }
+.nuovo .n-form .consenso { color: var(--n-muto); font-family: var(--n-lineare); margin-top: 4px; justify-content: center; }
+.nuovo .n-form .consenso .link { color: var(--n-testo); }
+.nuovo .n-form .esito { text-align: center; color: var(--n-testo); }
+
+/* ---------- piede (tutte le pagine): nero con la riga sopra ---------- */
+.nuovo .piede { background: var(--n-nero); color: var(--n-testo); border-top: 1px solid var(--n-riga); font-family: var(--n-lineare); }
+.nuovo .piede h2 { color: var(--n-muto); font: 500 12px/1 var(--n-lineare); letter-spacing: .26em; }
+.nuovo .piede nav a, .nuovo .piede p, .nuovo .piede-alto > div:last-child p { color: #d4cfc7; font-weight: 400; }
+.nuovo .piede nav a:hover { color: var(--n-testo); }
+.nuovo .piede-marchio p { color: var(--n-testo); font: 400 20px/1.45 var(--n-grazie); }
+.nuovo .piede-basso, .nuovo .piede-paese { color: var(--n-muto); border-top-color: var(--n-riga); }
+.nuovo .piede-su { color: var(--n-testo); }
+
+/* ---------- tablet ---------- */
+@media (max-width: 1099px) {
+  .n-drop { grid-template-columns: 1fr auto; }
+  .n-drop-foto { display: none; }
+  .n-drop-btn { grid-column: 2; }
+  .n-coll-griglia { grid-template-columns: repeat(2, 1fr); }
+  .n-doppio { grid-template-columns: 1fr; }
+  .n-milano { border-right: 0; border-bottom: 1px solid var(--n-riga); }
+  .n-milano img { height: auto; width: min(46vw, 520px); }
+  .n-logo { grid-template-columns: 1fr 1fr; grid-template-rows: none; align-items: center; }
+}
+
+/* ---------- telefono: video a tutto schermo col testo in basso, blocchi uno sotto l'altro, foto intere ---------- */
+@media (max-width: 599px) {
+  .n-apertura { height: calc(100svh - var(--testata)); min-height: 560px; max-height: 860px; padding-top: 0; }
+  .n-apertura .apertura-video { height: 100%; object-position: 66% 50%; }
+  .n-apertura::after { inset: 0 !important; height: auto !important; background: linear-gradient(180deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,0) 38%, rgba(0,0,0,0) 80%, rgba(0,0,0,.5) 100%) !important; }
+  .n-apertura-testo { top: 28px; }
+  .n-apertura h1 { font-size: clamp(42px, 12.5vw, 60px); }
+  .n-intro-pulsanti, .n-intro-pulsanti .n-btn { flex: 1 1 100%; justify-content: center; }
+  .n-apertura .n-sotto { font-size: 15.5px; margin-bottom: 22px; }
+  .n-apertura .n-occhiello { font-size: 12px; letter-spacing: .24em; }
+  .n-apertura .n-coordinate { bottom: 24px; letter-spacing: .2em; line-height: 1.7; }
+  .n-valori { display: none; }
+  .n-drop { grid-template-columns: 1fr; gap: 0; padding-bottom: 28px; }
+  .n-drop-testo { padding-bottom: 22px; }
+  .n-drop-btn { grid-column: 1; grid-row: 2; justify-self: stretch; justify-content: center; }
+  .n-conto { gap: 0; justify-content: space-between; }
+  .n-testa { flex-direction: column; gap: 6px; }
+  .n-coll-griglia { gap: 8px; }
+  .n-carta-testo { left: 12px; right: 12px; bottom: 12px; gap: 8px; }
+  .n-carta-nome { font-size: 19px; }
+  .n-carta-vai { font-size: 12px; letter-spacing: .16em; }
+  .n-milano, .n-logo { grid-template-columns: 1fr; }
+  .n-milano img { grid-row: 1; grid-column: 1; width: 100%; height: auto; }
+  .n-milano .n-pannello-testo { grid-row: 2; grid-column: 1; }
+  .n-logo img { grid-row: 1; }
+  .n-pannello-testo { padding: 28px var(--lato) 40px; }
+  .n-lookbook .lb-binario figure { height: auto; }
+  .n-lb-freccia { width: 46px; height: 46px; right: 8px; }
+  .n-lb-prima { left: 8px; }
+  .nuovo .n-form .n-btn { flex: 1 1 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .n-carta img, .n-freccia { transition: none; } }
+
+/* numeri sempre dritti: la scorciatoia «font:» rimette i numeri all'antica di Playfair (il «2020» sembrava «2o2o») */
+.nuovo h1, .nuovo h2, .nuovo h3, .nuovo p, .nuovo span, .nuovo a, .nuovo button { font-variant-numeric: lining-nums; }
+.nuovo .n-conto b { font-variant-numeric: lining-nums tabular-nums; }
+
+/* Drop 002 subito sopra l'iscrizione (23/10): una riga sola tra le due */
+.nuovo .n-drop + .n-iscriviti { border-top: 0; }
+
+/* seconda foto al passaggio del mouse (23/10): le foto nuove sono quadrate come la copertina, riempiono il riquadro come lei (niente bande grigie) */
+.nuovo .scheda-cella:not([data-tipo="accessori"]) .scheda-foto-2 { object-fit: cover !important; }
+
+/* schede quadrate (23/10, Francesco: «occhio a non tagliare il modello»): le foto nuove dei capi sono 1:1 e si vedono intere;
+   quelle più alte (Polo Tricolore) restano agganciate in alto, la testa non si taglia mai */
+.nuovo .scheda-foto { aspect-ratio: 1 / 1; }
+.nuovo .scheda-foto img { object-position: 50% 0; }
+
+/* =====================================================================================================================
+   PAGINA DEL BRAND (prova 23/10): schema di ChatGPT. Nero con righe sottili, un blocco chiaro «carta» per i disegni di Omar.
+   ===================================================================================================================== */
+.s-riga { display: block; width: 64px; height: 1px; background: currentColor; opacity: .6; margin: 26px 0; }
+.s-apertura, .s-campo, .s-motto, .s-galleria, .s-ali, .s-fine { background: var(--n-nero); color: var(--n-testo); }
+.s-apertura h1, .s-campo h2, .s-ali h2, .s-fine h2, .s-motto-frase, .s-idea h2 { font-family: var(--n-grazie); font-weight: 400; }
+
+/* apertura: la foto intera (16:9) e il testo a sinistra sopra il cielo */
+.s-apertura { position: relative; overflow: hidden; }
+.s-apertura-foto { width: 100%; height: auto; }
+.s-apertura::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 38%, rgba(0,0,0,0) 58%); pointer-events: none; }
+.s-apertura-testo { position: absolute; z-index: 1; left: var(--lato); top: 50%; transform: translateY(-50%); max-width: 460px; }
+.s-apertura h1 { font: italic 700 clamp(48px, 6.4vw, 104px)/1 var(--n-grazie); text-transform: uppercase; margin: 16px 0 0; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,.5), 0 4px 28px rgba(0,0,0,.5); }
+.s-apertura-testo > p:not(.n-occhiello) { font: 400 17px/1.6 var(--n-lineare); margin: 0 0 30px; text-shadow: 0 1px 12px rgba(0,0,0,.7); }
+
+/* In campo dal 2020: testo a sinistra, le due foto dello stadio intere a destra */
+.s-campo { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: clamp(28px, 4vw, 64px); padding: clamp(48px, 6vw, 88px) var(--lato); border-top: 1px solid var(--n-riga); }
+.s-campo h2 { font-size: clamp(38px, 4.2vw, 64px); line-height: 1.05; margin: 16px 0 26px; }
+.s-campo-testo > p:last-child { font: 400 17px/1.75 var(--n-lineare); color: #d4cfc7; max-width: 34em; margin: 0; }
+.s-campo-testo strong { color: var(--n-testo); font-weight: 500; }
+.s-campo-foto { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.s-campo-foto figure { margin: 0; }
+.s-campo-foto img { width: 100%; height: auto; }
+
+/* Prima di ogni capo c'è un'idea: fondo carta, cinque colonne (numero, nome, disegno, parole di Omar) */
+.nuovo .s-idea { background: #ebe5d9; color: #1c1a17; padding: clamp(48px, 6vw, 88px) var(--lato); overflow: visible; }
+.s-idea-testa { text-align: center; max-width: 760px; margin: 0 auto clamp(32px, 4vw, 52px); }
+.s-idea h2 { font-size: clamp(30px, 3vw, 44px); line-height: 1.15; }
+.s-idea-testa > p { font: 400 17px/1.6 var(--n-lineare); color: #3d3a35; margin: 12px 0 0; }
+.s-idea .s-idea-invito { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 15px; }
+.s-idea-invito .bm-gira-icona { position: static; background: #1c1a17; border-color: #1c1a17; }
+.nuovo .s-passi { list-style: none; margin: 0 auto; padding: 0; max-width: 1500px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 24px); align-items: start; }
+.nuovo .s-passo { display: block; text-align: left; }
+.s-passo-num { margin: 0; font: 400 clamp(26px, 2.2vw, 34px)/1 var(--n-grazie); }
+.s-passo-nome { margin: 6px 0 16px; font: 400 clamp(20px, 1.7vw, 26px)/1.2 var(--n-grazie); }
+.nuovo .s-disegno { width: 100%; }
+.nuovo .s-disegno .bm-gira { box-shadow: 0 10px 30px rgba(40, 30, 15, .18); }
+.nuovo .s-passo-testo { background: none; max-width: none; padding: 18px 0 0; }
+.nuovo .s-passo-testo h2 { font: 400 clamp(22px, 1.9vw, 28px)/1.15 var(--n-grazie); text-transform: none; color: #1c1a17; }
+.nuovo .s-passo-testo p { font: 400 15.5px/1.65 var(--n-lineare); color: #3d3a35; margin: 12px 0 0; }
+.nuovo .s-passo-testo p:first-child { margin-top: 0; }
+.nuovo .s-passo-testo .bm-grande { font: italic 500 clamp(18px, 1.5vw, 22px)/1.3 var(--n-grazie); text-transform: none; color: #1c1a17; margin-top: 14px; }
+.nuovo .s-passo-testo h2 + .bm-grande { margin-top: 10px; }
+
+/* Immagina. Credi. Agisci.: il video del tennis in una fascia larga, la frase a destra */
+.s-motto { position: relative; height: clamp(340px, 40vw, 620px); overflow: hidden; border-top: 1px solid var(--n-riga); }
+.s-motto video { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 30% 50%; }
+.s-motto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(270deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.3) 45%, rgba(0,0,0,0) 70%); pointer-events: none; }
+.s-motto-frase { position: absolute; z-index: 1; right: clamp(24px, 8vw, 140px); top: 50%; transform: translateY(-50%); margin: 0; text-align: center; font-size: clamp(34px, 4.2vw, 64px); line-height: 1.12; text-shadow: 0 2px 24px rgba(0,0,0,.5); }
+.s-motto-frase .s-riga { margin: 26px auto 0; }
+
+/* sei foto della campagna, quadrate e intere */
+.s-galleria { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 6px 0; }
+.s-galleria figure { margin: 0; }
+.s-galleria img { width: 100%; height: auto; }
+
+/* Dal foglio al capo · Le ali */
+.s-ali { display: grid; grid-template-columns: 1fr auto; align-items: center; border-top: 1px solid var(--n-riga); }
+.s-ali-testo { padding: clamp(40px, 5vw, 72px) var(--lato); }
+.s-ali h2 { font-size: clamp(36px, 4vw, 60px); line-height: 1.08; }
+.s-ali .s-ali-nome { font: italic 400 22px/1.2 var(--n-grazie); margin: 0 0 14px; }
+.s-ali-testo > p:not(.s-ali-nome) { font: 400 16px/1.7 var(--n-lineare); color: #d4cfc7; max-width: 30em; margin: 0 0 28px; }
+.s-ali-foto { margin: 0; }
+.s-ali-foto img { width: 100%; height: auto; }
+/* 23/10 sera: foto verticale (2:3) → alta quanto lo schermo sotto la testata, sempre intera, il testo prende il resto */
+/* 23/10 sera, 2° giro (Francesco: «non ci siamo», foto schiacciata sul bordo e testo perso nel nero): testo e foto
+   composti al centro, vicini, la foto intera e con aria sopra e sotto; il testo in basso, allineato al piede della foto */
+@media (min-width: 1100px) {
+  .nuovo .s-ali { grid-template-columns: minmax(0, 560px) auto; justify-content: center; align-items: end; gap: clamp(56px, 7vw, 120px); padding: clamp(40px, 5vw, 72px) var(--lato); }
+  .nuovo .s-ali-testo { padding: 0 0 clamp(8px, 2vw, 32px); }
+  .nuovo .s-ali h2 { font-size: clamp(48px, 5vw, 80px); line-height: 1.02; }
+  .nuovo .s-ali-foto img { width: auto; height: min(calc(100svh - 200px), 820px); max-width: none; aspect-ratio: 1024 / 1536; }
+}
+
+/* chiusura: tennis a sinistra, motto e drop a destra */
+.s-fine { display: grid; grid-template-columns: 2fr 3fr; align-items: center; border-top: 1px solid var(--n-riga); }
+.s-fine-foto { margin: 0; }
+.s-fine-foto img { width: 100%; height: auto; }
+.s-fine-testo { padding: clamp(40px, 5vw, 72px) var(--lato); text-align: center; display: grid; justify-items: center; }
+.s-fine-logo { width: 96px; height: auto; aspect-ratio: 1778 / 1103; color: var(--n-testo); margin-bottom: 22px; }
+.s-fine h2 { font-size: clamp(32px, 3.4vw, 52px); line-height: 1.1; margin: 0 0 30px; }
+
+/* tablet: i disegni diventano una fila che scorre col dito (una colonna e mezza in vista) */
+@media (max-width: 1099px) {
+  .s-campo, .s-ali, .s-fine { grid-template-columns: 1fr; }
+  .s-campo-foto { max-width: 640px; }
+  .s-ali-foto { order: -1; }
+  .nuovo .s-passi { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 18px; padding-bottom: 14px; margin: 0 calc(-1 * var(--lato)); padding-inline: var(--lato); scroll-padding-inline: var(--lato); }
+  .nuovo .s-passo { flex: 0 0 min(72vw, 360px); scroll-snap-align: start; }
+  .s-galleria { grid-template-columns: repeat(3, 1fr); }
+}
+/* telefono: la foto d'apertura intera in alto, il testo sotto su nero */
+@media (max-width: 599px) {
+  .s-apertura::after { display: none; }
+  .s-apertura-testo { position: static; transform: none; padding: 28px var(--lato) 40px; max-width: none; }
+  .s-apertura h1 { font-size: clamp(40px, 12vw, 56px); }
+  .s-motto { height: 420px; }
+  .s-motto::after { background: linear-gradient(0deg, rgba(0,0,0,.75) 0%, rgba(0,0,0,.2) 60%); }
+  .s-motto-frase { left: var(--lato); right: var(--lato); top: auto; bottom: 36px; transform: none; }
+  .nuovo .s-passo { flex-basis: 82vw; }
+}
+.s-scorri { display: none; margin: 14px 0 0; font: 500 12px/1 var(--n-lineare); letter-spacing: .22em; text-transform: uppercase; color: #5a554d; }
+@media (max-width: 1099px) { .s-scorri { display: block; } }
+.nuovo .s-passo > * { text-align: left; justify-self: stretch; }
+/* In campo dal 2020 (23/10): due foto alte di misure diverse → stessa altezza, ognuna intera */
+.s-campo-foto { display: flex; gap: 10px; justify-content: flex-end; }
+.s-campo-foto figure { flex: 1 1 0; }
+.s-campo-foto img { width: 100%; height: auto; } /* larghezza in proporzione (flex-grow = larghezza/altezza): stessa altezza, niente tagli */
+
+/* =====================================================================================================================
+   PAGINE DEI CAPI (prova 23/10): schema di ChatGPT (_grafica-chatgpt/abbigliamento-2026-10-23/a04.png)
+   fascia con foto e titolo, barra con le categorie a pillola, schede con la foto sopra e il riquadro chiaro sotto
+   ===================================================================================================================== */
+body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
+.nuovo .catalogo { padding-top: 0; }
+.c-apertura { position: relative; margin: 0 calc(-1 * var(--lato)); height: clamp(300px, 34vw, 520px); overflow: hidden; background: #111; }
+.c-apertura-foto { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 75% 22%; }
+.c-apertura::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,.45) 40%, rgba(0,0,0,0) 70%); pointer-events: none; }
+.c-apertura-testo { position: absolute; z-index: 1; left: var(--lato); right: var(--lato); bottom: clamp(28px, 4vw, 56px); }
+.c-apertura .s-riga { margin: 14px 0 18px; width: 36px; }
+.c-apertura h1 { font: 400 clamp(46px, 6vw, 92px)/1 var(--n-grazie); color: #fff; text-shadow: 0 2px 24px rgba(0,0,0,.4); }
+.c-conta { margin: 16px 0 0; font: 500 13px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; }
+.c-conta span { letter-spacing: .1em; }
+.c-valori { margin: 26px 0 0; font: 500 12px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; color: #d8d4cc; }
+.c-valori span { margin: 0 1.6em; }
+
+/* barra: categorie a pillola, filtri e ordina */
+.nuovo .c-barra { padding: 20px 0; margin-bottom: 18px; border-bottom: 1px solid var(--n-riga); gap: 14px 20px; }
+.c-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.c-chips a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 20px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; font: 400 15px/1 var(--n-lineare); color: var(--n-testo); transition: background-color .2s, border-color .2s; }
+.c-chips a:hover { border-color: var(--n-testo); }
+.c-chips a[aria-current="page"] { background: #ece6da; border-color: #ece6da; color: #111; }
+.nuovo .cat-btn { min-height: 44px; padding: 0 20px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; color: var(--n-testo); font: 400 15px var(--n-lineare); }
+.nuovo .cat-ordina { font: 400 15px var(--n-lineare); color: var(--n-muto); }
+.nuovo .cat-ordina select { color: var(--n-testo); font: 500 15px var(--n-lineare); }
+.nuovo .cat-ordina select option { background: #111; color: var(--n-testo); }
+
+/* filtri (colonna a sinistra su PC, foglio dal basso sul telefono): su nero */
+.nuovo .cat-lista { display: none; }
+.nuovo .filtro { border-bottom-color: var(--n-riga); }
+.nuovo .filtro summary { font: 500 16px var(--n-lineare); color: var(--n-testo); }
+.nuovo .filtro-taglie button { background: none; border: 1px solid rgba(255,255,255,.3); border-radius: 0; color: var(--n-testo); font: 500 14px var(--n-lineare); }
+.nuovo .filtro-taglie button[aria-pressed="true"] { background: #ece6da; border-color: #ece6da; color: #111; }
+.nuovo .filtro-nota { color: var(--n-muto); }
+.nuovo .filtro-voce input, .nuovo .filtro-colore input { accent-color: #ece6da; }
+.nuovo .cat-pillola { background: #1c1c1c; color: var(--n-testo); }
+.nuovo .cat-pillola:hover { background: #2a2a2a; }
+.nuovo .cat-pillola-tutti { color: var(--n-testo); }
+.nuovo.pagina-cat .btn-nero { background: #ece6da; color: #111; }
+.nuovo.pagina-cat .btn-contorno-nero { border-color: var(--n-testo); color: var(--n-testo); background: none; }
+@media (max-width: 959px) {
+  .nuovo .catalogo:not(.filtri-chiusi) .cat-filtri, .nuovo .cat-foglio-testa, .nuovo .cat-foglio-fondo { background: #0d0d0d; color: var(--n-testo); }
+  .nuovo .cat-foglio-testa, .nuovo .cat-foglio-fondo { border-color: var(--n-riga); }
+  .nuovo .cat-foglio-testa button { color: var(--n-testo); }
+}
+
+/* schede: foto quadrata con «Drop 001» e il cuore sopra, riquadro chiaro sotto con nome, colore, prezzo e freccia */
+.pagina-cat .griglia { gap: 12px; }
+.pagina-cat .scheda { position: relative; container-type: inline-size; background: #f3efe8; height: 100%; }
+.pagina-cat .scheda-cella { background: #f3efe8; }
+.pagina-cat .scheda-testo { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; padding: 16px 18px 18px; color: #1c1a17; }
+.pagina-cat .scheda-etichetta { position: absolute; z-index: 2; top: 12px; left: 12px; margin: 0; padding: 6px 12px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; background: rgba(0,0,0,.5); color: #fff; font: 400 13px/1 var(--n-lineare); }
+.pagina-cat .scheda h3 { grid-column: 1; grid-row: 1; font: 400 clamp(19px, 1.6vw, 24px)/1.2 var(--n-grazie); color: #1c1a17; }
+.pagina-cat .pallini { grid-column: 2; grid-row: 1; align-self: center; margin: 0; }
+.pagina-cat .pallini i { width: 16px; height: 16px; border-color: rgba(0,0,0,.25); }
+.pagina-cat .scheda p { grid-column: 1; font: 400 15px/1.45 var(--n-lineare); color: #5a554d; margin-top: 4px; }
+.pagina-cat .scheda .prezzo { grid-row: 3; font: 400 clamp(19px, 1.6vw, 24px)/1 var(--n-grazie); color: #1c1a17; margin-top: 14px; }
+.pagina-cat .scheda-testo::after { content: '\2192'; grid-column: 2; grid-row: 3; align-self: end; font: 400 22px/1 var(--n-lineare); color: #1c1a17; transition: transform .2s; }
+.pagina-cat .scheda:hover .scheda-testo::after { transform: translateX(4px); }
+.pagina-cat .cuore { background: rgba(0,0,0,.35); color: #fff; border: 1px solid rgba(255,255,255,.6); }
+/* telefono: i due pallini delle foto in basso al centro della foto (la foto quadrata e alta quanto la scheda e larga) */
+@media (hover: none) {
+  .pagina-cat .scheda-punti { left: 50%; top: calc(100cqw - 26px); transform: translateX(-50%); }
+}
+@media (max-width: 599px) {
+  .c-apertura { height: 300px; }
+  .c-apertura-foto { object-position: 68% 20%; }
+  .c-valori span { margin: 0 .9em; }
+  .c-chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(-1 * var(--lato)); padding: 0 var(--lato); scrollbar-width: none; width: calc(100% + 2 * var(--lato)); }
+  .c-chips::-webkit-scrollbar { display: none; }
+  .c-chips a { flex: none; }
+  .pagina-cat .griglia { gap: 8px; }
+  .pagina-cat .scheda-testo { padding: 12px 12px 14px; }
+  .pagina-cat .scheda p { font-size: 13px; }
+  .pagina-cat .scheda-etichetta { top: 8px; left: 8px; font-size: 12px; padding: 5px 9px; }
+}
+
+/* fila dei sei sport (23/10, Francesco: «non sono tagliate bene»): foto di altezze diverse → su PC stessa altezza, ognuna intera
+   (larghezza in proporzione); sul telefono tre per riga, riquadri quadrati agganciati in alto */
+.s-galleria { display: flex; gap: 6px; }
+.s-galleria figure { flex-basis: 0; min-width: 0; }
+@media (max-width: 1099px) {
+  .s-galleria { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .s-galleria img { aspect-ratio: 1; object-fit: cover; object-position: 50% 0; }
+}
+
+/* fascia Abbigliamento (23/10, Francesco: «non tagliamo la scritta MARO in verticale»): la fascia prende la proporzione della foto
+   (16:9, intera); solo se diventerebbe più alta dell'88% dello schermo si ferma e la foto resta agganciata in basso, dove c'è la firma */
+.c-apertura { height: auto; aspect-ratio: 1672 / 941; max-height: 88svh; min-height: 300px; }
+.c-apertura-foto { object-position: 70% 88%; }
+@media (max-width: 599px) { .c-apertura { aspect-ratio: auto; height: 320px; } .c-apertura-foto { object-position: 68% 50%; } }
+/* telefono: foto intera in alto (16:9), testo sotto su nero: il titolo non copre più la firma MARO sul petto */
+@media (max-width: 599px) {
+  .c-apertura { height: auto; aspect-ratio: auto; min-height: 0; max-height: none; overflow: visible; background: none; }
+  .c-apertura-foto { position: static; height: auto; aspect-ratio: 1672 / 941; object-position: 50% 50%; }
+  .c-apertura::after { display: none; }
+  .c-apertura-testo { position: static; padding: 22px var(--lato) 6px; }
+  .c-valori { margin-top: 18px; }
+}
+/* correzione (23/10, Francesco «occhio»: banda nera a destra sugli schermi larghi): aspect-ratio + max-height restringeva anche
+   la larghezza. Ora larghezza piena e altezza = proporzione della foto, al massimo 88% dello schermo; se si ferma, la foto resta
+   agganciata quasi in alto: da 1440 a 2560 px si vedono sempre la testa e tutta la firma MARO, si perde solo il fondo */
+@media (min-width: 600px) {
+  .c-apertura { aspect-ratio: auto; max-height: none; height: min(calc((100vw) * 941 / 1672), 88svh); }
+  .c-apertura-foto { object-position: 70% 6%; }
+}
+
+/* disegni di Omar «disegnati sul sito» (23/10, Francesco: niente quadrati): il segno bianco su nero viene invertito (tratto nero
+   su bianco) e fuso con la carta (multiply: il bianco sparisce, resta solo l'inchiostro). Il foglio originale, toccando, resta la foto vera */
+.nuovo .s-disegno .bm-gira { background: none; box-shadow: none; }
+.nuovo .s-disegno .bm-gira::after { content: none; }
+/* dal 23/10 sera: versione «inchiostro» dei disegni (fondo trasparente, preparata con sharp), niente fusione col fondo */
+.nuovo .s-disegno .bm-segno { -webkit-mask-image: none; mask-image: none; }
+.nuovo .s-disegno .bm-foglio { box-shadow: 0 10px 30px rgba(40, 30, 15, .2); }
+.nuovo .s-disegno .bm-gira-icona { background: #1c1a17; border-color: #1c1a17; }
+/* entrata: il disegno si traccia da sinistra a destra quando la colonna arriva sullo schermo */
+.nuovo .s-passo .bm-segno { clip-path: inset(0 0 0 0); transition: clip-path 1.8s cubic-bezier(.6, .1, .2, 1), opacity .6s ease; }
+.nuovo .s-passo.in-attesa .bm-segno { clip-path: inset(0 100% 0 0); }
+@media (prefers-reduced-motion: reduce) { .nuovo .s-passo .bm-segno { transition: none; } }
+/* la regola vecchia «.bm-passo > * { position: relative; z-index: 1 }» isolava ogni colonna: la fusione con la carta non avveniva
+   (restava il rettangolo bianco). Senza z-index il disegno si fonde con il fondo della sezione */
+.nuovo .s-passo > *, .nuovo .s-disegno, .nuovo .s-disegno .bm-gira { z-index: auto; isolation: auto; }
+
+/* 23/10 sera (Francesco: «il nero mi piaceva»): i disegni restano bianchi su nero, ma senza quadrati. La sezione prende lo stesso nero
+   pieno del fondo dei disegni (#000), così il bordo sparisce e il segno sembra tracciato sulla pagina. Toccando: il foglio originale */
+.nuovo .s-idea { background: #000; color: var(--n-testo); }
+.nuovo .s-idea-testa > p, .nuovo .s-passo-testo p { color: #cfcac2; }
+.nuovo .s-passo-testo h2, .nuovo .s-passo-testo .bm-grande { color: var(--n-testo); }
+.nuovo .s-idea-invito .bm-gira-icona, .nuovo .s-disegno .bm-gira-icona { background: rgba(0,0,0,.6); border-color: rgba(255,255,255,.5); color: #fff; }
+.nuovo .s-scorri { color: var(--n-muto); }
+.nuovo .s-disegno .bm-segno { -webkit-mask-image: none; mask-image: none; }
+.nuovo .s-disegno .bm-foglio { box-shadow: none; }
+
+/* fila dei sei sport a scorrimento: foto grandi intere, frecce ai lati come nel lookbook */
+.nuovo .s-galleria { position: relative; display: block; padding: 0; }
+.s-fila { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.s-fila::-webkit-scrollbar { display: none; }
+.s-fila figure { flex: none; margin: 0; scroll-snap-align: start; }
+.nuovo .s-fila img { height: clamp(300px, 34vw, 520px); width: auto; max-width: none; aspect-ratio: auto; object-fit: initial; }
+.s-galleria .n-lb-freccia { top: calc(clamp(300px, 34vw, 520px) / 2); }
+.s-fila-sotto { padding: 0 var(--lato) 18px; }
+@media (max-width: 599px) { .nuovo .s-fila img { height: 300px; } .s-galleria .n-lb-freccia { top: 150px; } }
+
+/* chiusura stretta senza foto */
+.nuovo .s-fine { display: block; padding: clamp(40px, 5vw, 64px) var(--lato); }
+.nuovo .s-fine-testo { padding: 0; }
+.nuovo .s-fine-logo { width: 72px; margin-bottom: 16px; }
+.nuovo .s-fine h2 { font-size: clamp(28px, 2.8vw, 40px); margin-bottom: 22px; }
+
+/* 23/10 notte (Francesco: «lo sfondo bianco era ok… lascia il contrasto dei disegni nero originale»): di nuovo fondo carta, testi scuri;
+   ogni disegno nel suo nero originale ma nella SUA proporzione (niente riquadro che lo rendeva quadrato), alto al massimo 340 px */
+.nuovo .s-idea { background: #ebe5d9; color: #1c1a17; }
+.nuovo .s-idea-testa > p, .nuovo .s-passo-testo p { color: #3d3a35; }
+.nuovo .s-passo-testo h2, .nuovo .s-passo-testo .bm-grande { color: #1c1a17; }
+.nuovo .s-scorri { color: #5a554d; }
+.nuovo .s-idea-invito .bm-gira-icona { background: #1c1a17; border-color: #1c1a17; }
+.nuovo .s-disegno .bm-gira { display: inline-grid; width: auto; max-width: 100%; aspect-ratio: auto; background: none; box-shadow: none; }
+.nuovo .s-disegno .bm-gira img { width: auto; max-width: 100%; height: auto; max-height: 340px; aspect-ratio: var(--r); box-shadow: 0 10px 28px rgba(40, 30, 15, .22); }
+.nuovo .s-disegno .bm-foglio { box-shadow: 0 10px 28px rgba(40, 30, 15, .22); }
+/* spazio uguale per i cinque disegni (centrati): i testi delle colonne partono tutti alla stessa altezza */
+.nuovo .s-disegno { height: 340px; display: flex; align-items: center; }
+/* posizioni (Francesco: «occhio alle posizioni»): ogni disegno al centro di uno spazio uguale (300 px), in orizzontale e in verticale;
+   numeri, nomi e testi delle cinque colonne restano sulla stessa riga */
+.nuovo .s-disegno { height: 300px; justify-content: center; align-items: center; }
+.nuovo .s-disegno .bm-gira img { max-height: 300px; }
+
+/* ---------- SCHEDA PRODOTTO (23/10 sera, grafica ChatGPT _grafica-chatgpt/scheda-2026-10-23/) ----------
+   fondo carta chiaro, galleria grande a sinistra (modello poi manichino, foto intere), titolo in Playfair, taglie in riquadri
+   solo da vedere (vetrina: niente carrello finché non c'è il motore), lucchetto nel riquadro del drop, quattro punti con icone */
+.nuovo main:has(> .prodotto) { background: #f6f5f2; }
+.nuovo .prodotto { padding-top: 24px; padding-bottom: 40px; }
+@media (min-width: 960px) { .nuovo .prodotto { grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr); gap: 0 clamp(32px, 5vw, 80px); } }
+.nuovo .galleria { justify-self: stretch; width: min(100%, calc(100svh - 120px)); }
+.nuovo .vetrina { aspect-ratio: 1 / 1; background: #e9e6e0; }
+.nuovo .vetrina-freccia { width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #111; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
+.nuovo .vetrina-conta { background: rgba(10,10,10,.75); color: #fff; border-radius: 999px; padding: 3px 12px; }
+.nuovo .miniature button { aspect-ratio: 1 / 1; background: #e9e6e0; border-radius: 2px; }
+.nuovo .miniature button[aria-current="true"] { border-color: #111; }
+.nuovo .briciole { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font: 400 13px/1.4 var(--n-lineare); color: #6b675f; margin: 0 0 18px; }
+.nuovo .briciole a { color: #2b2925; text-decoration: none; }
+.nuovo .briciole a:hover { text-decoration: underline; }
+.nuovo .briciole .indietro { margin: 0; font: inherit; }
+.nuovo .prodotto h1 { font: 600 clamp(34px, 3.4vw, 52px)/1.02 var(--n-grazie); text-transform: uppercase; letter-spacing: -.01em; }
+.nuovo .prodotto .colore { font: 400 16px/1.4 var(--n-lineare); color: #5f5b53; }
+.nuovo .prodotto .prezzo { font: 500 26px/1.2 var(--n-grazie); margin-top: 12px; }
+.nuovo .prodotto .prezzo-etichetta { display: block; font: 500 11px/1.4 var(--n-lineare); letter-spacing: .14em; text-transform: uppercase; color: #6b675f; margin-bottom: 2px; }
+.nuovo .voto { display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; color: #2b2925; text-decoration: none; font: 400 14px/1 var(--n-lineare); }
+.nuovo .voto .stelle { font-size: 17px; }
+.nuovo .voto small { font-size: 13px; color: #6b675f; }
+.nuovo .voto:hover small { text-decoration: underline; }
+.nuovo .prodotto-testo { font: 400 16px/1.65 var(--n-lineare); color: #2b2925; padding-bottom: 24px; border-bottom: 1px solid #dcd8d0; }
+.nuovo .prodotto-testo strong { font-weight: 500; }
+.nuovo .vestibilita { font: 400 14px/1.5 var(--n-lineare); color: #5f5b53; }
+.nuovo .taglie-vetrina { margin: 18px 0 16px; }
+.nuovo .taglie-vetrina-testa { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.nuovo .taglie-vetrina-testa p { margin: 0; font: 500 14px/1 var(--n-lineare); }
+.nuovo .taglie-vetrina-testa .link { font: 400 13px/1 var(--n-lineare); }
+.nuovo .taglie-vetrina ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(52px, 1fr)); gap: 8px; }
+.nuovo .taglie-vetrina li { display: grid; place-items: center; height: 44px; border: 1px solid #cfcac1; background: #fff; border-radius: 3px; font: 400 14px/1 var(--n-lineare); }
+.nuovo .drop-scheda { background: #ecebe6; border-radius: 6px; padding: 20px 22px; gap: 8px; }
+.nuovo .drop-scheda .drop-occhiello { display: flex; align-items: center; gap: 10px; font: 500 12px/1 var(--n-lineare); letter-spacing: .18em; }
+.nuovo .drop-scheda .drop-occhiello svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.nuovo .drop-scheda p:not(.drop-occhiello) { font: 400 14px/1.55 var(--n-lineare); color: #5f5b53; padding-left: 26px; }
+.nuovo .drop-scheda .btn { justify-self: end; width: auto; min-width: 150px; border-radius: 8px; margin: 6px 0 0; }
+.nuovo .azioni-scheda .btn { border-radius: 8px; }
+.nuovo .prodotto-acquisto details summary { font-family: var(--n-lineare); }
+
+.nuovo .punti-scheda { list-style: none; margin: 0 var(--lato); padding: 26px 0 34px; border-top: 1px solid #dcd8d0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 32px; }
+.nuovo .punti-scheda li { display: flex; gap: 16px; align-items: center; }
+.nuovo .punti-scheda svg { flex: none; width: 34px; height: 34px; fill: none; stroke: #111; stroke-width: 1.2; stroke-linejoin: round; stroke-linecap: round; }
+.nuovo .punti-scheda p { margin: 0; font: 400 13px/1.45 var(--n-lineare); color: #5f5b53; }
+.nuovo .punti-scheda strong { display: block; font-weight: 500; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #111; margin-bottom: 3px; }
+
+.nuovo .recensioni { max-width: none; background: #efede8; padding-top: 8px; }
+.nuovo .rec-testa { border-top: 0; }
+.nuovo .rec-testa h2, .nuovo .completa .titolo, .nuovo .visti h2 { font: 600 clamp(30px, 3vw, 44px)/1 var(--n-grazie); text-transform: uppercase; }
+.nuovo .rec-media { font: 500 64px/1 var(--n-grazie); }
+.nuovo .rec-lista li { background: #fff; border-radius: 4px; padding: 22px; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.nuovo .rec-lista p { font: 400 15px/1.55 var(--n-lineare); }
+.nuovo .rec-chi { display: flex; align-items: center; gap: 10px; margin-top: 16px !important; font-size: 13px !important; color: #5f5b53; }
+.nuovo .rec-avatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #1b1a18; color: #fff; font: 500 13px/1 var(--n-lineare); flex: none; }
+.nuovo .completa { background: #f6f5f2; padding-top: clamp(40px, 5vw, 64px); }
+
+@media (max-width: 959px) {
+  .nuovo .galleria { width: 100%; }
+  .nuovo .punti-scheda { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 599px) {
+  .nuovo .punti-scheda { grid-template-columns: 1fr; gap: 16px; }
+  .nuovo .drop-scheda .btn { justify-self: stretch; }
+  .nuovo .drop-scheda p:not(.drop-occhiello) { padding-left: 0; }
+}
+
+/* ---------- HOME · Milano e Più di un logo (23/10 sera, grafica ChatGPT _grafica-chatgpt/home-milano-logo.png) ----------
+   fascia larga: foto intera a destra che sfuma nel nero, testo sopra a sinistra; sotto: ricamo a sinistra, testo e due dettagli a destra */
+.n-brand2 { background: var(--n-nero); color: var(--n-testo); }
+.n-brand2 h2 { font: 400 clamp(34px, 3.6vw, 58px)/1.06 var(--n-grazie); text-transform: uppercase; margin: 0; }
+.n-brand2 .n-occhiello { display: flex; flex-direction: column; gap: 18px; margin-bottom: 26px; }
+.n-brand2 .n-occhiello::after { content: ''; width: 52px; height: 1px; background: currentColor; opacity: .7; }
+.n-brand2 h2 + p { font: 400 17px/1.6 var(--n-lineare); color: #d4cfc7; max-width: 26em; margin: 22px 0 32px; }
+.n-milano2 { position: relative; display: grid; grid-template-columns: 1fr; min-height: 0; overflow: hidden; border-bottom: 1px solid var(--n-riga); }
+.n-milano2-foto { grid-area: 1 / 1; justify-self: end; width: min(76%, 1500px); margin: 0; position: relative; }
+.n-milano2-foto img { display: block; width: 100%; height: auto; }
+.n-milano2-foto::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 55%; background: linear-gradient(90deg, var(--n-nero) 0%, rgba(5,5,5,.75) 35%, rgba(5,5,5,0) 100%); pointer-events: none; }
+.n-milano2-testo { grid-area: 1 / 1; align-self: center; position: relative; z-index: 1; padding: clamp(40px, 5vw, 80px) var(--lato); max-width: 640px; }
+.n-milano2-testo h2 { text-shadow: 0 2px 24px rgba(0,0,0,.6); }
+.n-logo2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(170px, 230px); align-items: center; gap: 0 clamp(28px, 3.4vw, 56px); padding-right: var(--lato); }
+.n-logo2-foto { margin: 0; }
+.n-logo2-foto img { display: block; width: 100%; height: auto; } /* intera, mai ritagliata */
+.n-logo2-testo { padding: 28px 0; }
+.n-logo2-testo h2 + p { font-size: 16px; }
+.n-logo2-dettagli { display: grid; gap: 14px; padding: 28px 0; }
+.n-logo2-dettagli figure { margin: 0; border: 1px solid rgba(255,255,255,.35); }
+.n-logo2-dettagli img { display: block; width: 100%; height: auto; }
+@media (max-width: 1099px) {
+  .n-logo2 { grid-template-columns: 1fr 1fr; padding: 0 var(--lato) clamp(36px, 5vw, 56px); gap: 24px; }
+  .n-logo2-foto { grid-column: 1 / -1; margin: 0 calc(-1 * var(--lato)); }
+  .n-logo2-testo { padding: 8px 0 0; }
+  .n-logo2-dettagli { padding: 8px 0 0; }
+}
+@media (max-width: 699px) {
+  .n-milano2 { grid-template-columns: 1fr; }
+  .n-milano2-foto { grid-area: 1 / 1; width: 100%; }
+  .n-milano2-foto::before { inset: auto 0 0 0; width: auto; height: 45%; background: linear-gradient(0deg, var(--n-nero), rgba(5,5,5,0)); }
+  .n-milano2-testo { grid-area: 2 / 1; padding: 8px var(--lato) 44px; max-width: none; }
+  .n-logo2 { grid-template-columns: 1fr; }
+  .n-logo2-dettagli { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- Dal foglio al capo, 3° giro (23/10 sera): occhiello col simbolo, testo in più, dove trovi il segno, firma di Omar,
+   cornice sottile sfalsata dietro la foto e didascalia. Firma: Mrs Saint Delafield (OFL), in locale come gli altri caratteri */
+@font-face { font-family: 'Firma MARO'; font-style: normal; font-weight: 400; font-display: swap; src: url(../fonts/firma-latin.woff2) format("woff2"); }
+.s-ali-occhiello { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; font: 500 12px/1 var(--n-lineare); letter-spacing: .28em; text-transform: uppercase; color: var(--n-muto); }
+.s-ali-occhiello svg { width: 34px; height: auto; aspect-ratio: 1778 / 1103; color: var(--n-testo); }
+.s-ali-testo > p:not(.s-ali-nome):not(.s-ali-occhiello) + p { margin-top: -12px; }
+.s-ali-testo > p:not(.s-ali-nome):not(.s-ali-occhiello):last-of-type { margin-bottom: 36px; } /* 23/10: tolto «Dove lo trovi» (Francesco), il testo scende sul pulsante e sulla firma */
+.s-ali-fondo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; max-width: 30em; }
+.s-ali-firma { margin: 0 !important; display: grid; justify-items: end; color: var(--n-testo) !important; }
+.s-ali-firma span { font: 400 clamp(52px, 4.6vw, 72px)/.9 'Firma MARO', cursive; transform: rotate(-6deg); margin-right: 8px; }
+.s-ali-firma small { font: 400 11px/1.2 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; color: var(--n-muto); margin-top: 6px; }
+.s-ali-foto { position: relative; }
+.s-ali-foto figcaption { display: flex; gap: 12px; align-items: baseline; margin-top: 14px; font: 400 12px/1.4 var(--n-lineare); letter-spacing: .14em; text-transform: uppercase; color: var(--n-muto); }
+.s-ali-foto figcaption span { font: italic 400 15px/1 var(--n-grazie); letter-spacing: 0; color: var(--n-testo); }
+@media (min-width: 1100px) {
+  .nuovo .s-ali { grid-template-columns: minmax(0, 600px) auto; align-items: center; }
+  .nuovo .s-ali-testo { padding: 0; }
+  .s-ali-foto::before { content: ''; position: absolute; inset: -18px -18px 46px 18px; border: 1px solid rgba(236,233,227,.28); pointer-events: none; }
+  .s-ali-foto img { position: relative; }
+}
+@media (max-width: 1099px) {
+  .s-ali-foto figcaption { padding: 0 var(--lato); }
+}
+@media (max-width: 480px) {
+  .s-ali-firma { justify-items: start; }
+}
+
+/* ---------- 23/10 sera, piccolezze (Francesco) ----------
+   1. «Fly with your mind» stile Nike: Anton (già nel sito), dritto, stretto e pesante, al posto del corsivo Playfair */
+.nuovo .n-apertura h1 { font: 400 clamp(64px, 9vw, 150px)/.9 var(--titoli); font-style: normal; letter-spacing: .005em; text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 6px 30px rgba(0,0,0,.5); }
+@media (max-width: 599px) { .nuovo .n-apertura h1 { font-size: clamp(52px, 16vw, 76px); } }
+/* 2. riquadro del drop più compatto: pulsante allineato al testo, niente vuoto sotto */
+.nuovo .drop-scheda { padding: 18px 22px 22px; gap: 6px; }
+.nuovo .drop-scheda .btn { justify-self: start; margin: 10px 0 0 26px; min-height: 44px; padding: 0 22px; font-size: 14px; }
+@media (max-width: 599px) { .nuovo .drop-scheda .btn { justify-self: stretch; margin-left: 0; } }
+/* 3. galleria: miniature in colonna a sinistra (tutta nello schermo del portatile) e, dietro ogni foto, la stessa foto
+   sfocata al posto delle bande grigie: la foto resta intera, il riquadro è pieno */
+.nuovo .vetrina figure { position: relative; overflow: hidden; }
+.nuovo .vetrina-sfondo { position: absolute; inset: -40px; background: center / cover no-repeat; filter: blur(28px) saturate(.9) brightness(.92); }
+.nuovo .vetrina img { position: relative; }
+.nuovo .miniature button { position: relative; }
+.nuovo .miniature img { object-fit: cover; }
+@media (min-width: 960px) {
+  .nuovo .galleria { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 12px; width: min(100%, calc(100svh - 110px + 88px)); align-items: start; }
+  .nuovo .galleria .vetrina { grid-column: 2; grid-row: 1; }
+  .nuovo .galleria .miniature { grid-column: 1; grid-row: 1; grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* 4. recensioni (23/10 sera): barre per stelle (cliccabili), filtri per stelle e taglia, sei per volta con «Mostra altre» */
+.nuovo .rec-sintesi { grid-template-columns: auto minmax(220px, 340px) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); }
+.nuovo .rec-barre { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.nuovo .rec-barre button { display: grid; grid-template-columns: 34px 1fr 26px; align-items: center; gap: 10px; width: 100%; padding: 3px 0; border: 0; background: none; font: 400 13px/1 var(--n-lineare); color: #2b2925; cursor: pointer; }
+.nuovo .rec-barre button:disabled { opacity: .45; cursor: default; }
+.nuovo .rec-barre i { display: block; height: 6px; background: #dcd8d0; border-radius: 3px; overflow: hidden; }
+.nuovo .rec-barre b { display: block; height: 100%; background: #111; border-radius: 3px; }
+.nuovo .rec-barre button:not(:disabled):hover span:first-child { text-decoration: underline; }
+.nuovo .rec-barre span:last-child { text-align: right; color: #6b675f; }
+.nuovo .rec-filtri { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 20px; }
+.nuovo .rec-filtri button { min-height: 38px; padding: 0 16px; border: 1px solid #cfcac1; border-radius: 999px; background: #fff; font: 400 13px/1 var(--n-lineare); color: #2b2925; cursor: pointer; }
+.nuovo .rec-filtri button[aria-pressed="true"] { background: #111; border-color: #111; color: #fff; }
+.nuovo .rec-filtri-sep { width: 1px; height: 22px; background: #cfcac1; margin: 0 6px; }
+.nuovo .rec-lista li[hidden] { display: none; }
+.nuovo .rec-vuoto { margin: 12px 0 0; font: 400 15px/1.5 var(--n-lineare); color: #5f5b53; }
+.nuovo .rec-altre { margin: 26px auto 0; display: flex; color: #111; }
+.nuovo .rec-altre:hover { background: #111; color: #fff; }
+.nuovo .rec-altre[hidden] { display: none; }
+@media (max-width: 959px) { .nuovo .rec-sintesi { grid-template-columns: 1fr; } }
+
+/* 5. firma di Omar nel footer (23/10 sera): piccola e sobria, sotto il motto; stesso carattere della pagina del brand */
+.nuovo .piede .piede-firma { display: flex; flex-direction: column; align-items: flex-start; margin: 18px 0 0; }
+.nuovo .piede-firma span { display: block; font: 400 46px/.9 'Firma MARO', cursive; transform: rotate(-5deg); transform-origin: left center; color: var(--n-testo); }
+.nuovo .piede-firma small { display: block; font: 400 10px/1.2 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; color: var(--n-muto); margin-top: 8px; }
+
+/* ---------- AIUTO (23/10 sera, grafica ChatGPT _grafica-chatgpt/aiuto-2026-10-23/grafica-aiuto.png) ----------
+   apertura scura con foto che sfuma, tre schede con foto e curva, guida taglie col disegno, contatti con l'insegna */
+.nuovo main:has(.aiuto-testa2) { background: #f6f5f2; }
+.nuovo .aiuto-testa2 { position: relative; display: grid; padding: 0; background: var(--n-nero); color: #fff; overflow: hidden; }
+.aiuto-testa-foto { grid-area: 1 / 1; justify-self: end; width: min(72%, 1400px); margin: 0; position: relative; }
+.aiuto-testa-foto img { display: block; width: 100%; height: auto; }
+.aiuto-testa-foto::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 60%; background: linear-gradient(90deg, var(--n-nero), rgba(5,5,5,.6) 40%, rgba(5,5,5,0)); z-index: 1; }
+.aiuto-testa-testo { grid-area: 1 / 1; align-self: center; position: relative; z-index: 2; padding: clamp(40px, 5vw, 80px) var(--lato); max-width: 620px; }
+.aiuto-testa-testo .n-occhiello { margin-bottom: 22px; color: #d4cfc7; }
+.aiuto-testa2 h1 { font: 400 clamp(44px, 5vw, 78px)/1.02 var(--n-grazie); text-transform: uppercase; margin: 0 0 22px; color: #fff; }
+.aiuto-testa-testo > p:last-child { font: 400 18px/1.55 var(--n-lineare); color: #e4e0d8; margin: 0; max-width: 24em; }
+
+.aiuto-temi2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding: 22px var(--lato) clamp(40px, 5vw, 64px); border-bottom: 1px solid #dcd8d0; }
+.aiuto-temi2 a { display: flex; flex-direction: column; background: #ecebe6; border-radius: 4px; overflow: hidden; color: #111; text-decoration: none; box-shadow: 0 1px 2px rgba(0,0,0,.04); transition: box-shadow .2s, transform .2s; }
+.aiuto-temi2 a:hover { box-shadow: 0 10px 30px rgba(0,0,0,.1); }
+.aiuto-tema-foto { display: block; position: relative; }
+.aiuto-tema-foto img { display: block; width: 100%; height: auto; }
+.aiuto-tema-foto::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 34%; background: #ecebe6; clip-path: path('M0 60 C 120 60, 140 0, 260 0 L 2000 0 L 2000 200 L 0 200 Z'); clip-path: polygon(0 55%, 18% 55%, 30% 30%, 40% 8%, 50% 0, 100% 0, 100% 100%, 0 100%); }
+.aiuto-tema-corpo { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding: 4px 24px 26px; margin-top: -26px; }
+.aiuto-tema-corpo svg { grid-column: 1 / -1; width: 32px; height: 32px; color: #111; }
+.aiuto-tema-corpo strong { grid-column: 1 / -1; font: 400 clamp(22px, 1.8vw, 28px)/1.1 var(--n-grazie); text-transform: uppercase; margin-top: 8px; }
+.aiuto-tema-corpo > span { font: 400 14px/1.55 var(--n-lineare); color: #5f5b53; align-self: end; }
+.aiuto-tema-corpo i { align-self: end; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #111; border-radius: 50%; font-style: normal; }
+.aiuto-tema-corpo i svg { width: 16px; height: 16px; grid-column: auto; }
+.aiuto-temi2 a:hover i { background: #111; color: #fff; }
+
+.nuovo .aiuto-tema { border-bottom-color: #dcd8d0; }
+.nuovo .aiuto-tema-testa .n-occhiello { color: #6b675f; margin-bottom: 14px; }
+.nuovo .aiuto-tema-testa h2 { font: 400 clamp(36px, 3.6vw, 56px)/1.02 var(--n-grazie); text-transform: uppercase; margin-bottom: 18px; }
+.nuovo .aiuto-tema-testa > p:not(.n-occhiello) { font: 400 16px/1.6 var(--n-lineare); color: #5f5b53; }
+.nuovo .misure-disegno figcaption { font-family: var(--n-lineare); }
+.nuovo .taglie-schede button { min-height: 40px; padding: 0 22px; border-radius: 999px; border: 1px solid #cfcac1; background: #fff; font: 400 14px/1 var(--n-lineare); color: #2b2925; }
+.nuovo .taglie-schede button[aria-pressed="true"] { background: #111; border-color: #111; color: #fff; }
+.nuovo .aiuto .guida { background: #fff; border-radius: 4px; overflow: hidden; font: 400 15px/1.4 var(--n-lineare); box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.nuovo .aiuto .guida th { background: #ecebe6; font-weight: 500; }
+.nuovo .aiuto .guida th, .nuovo .aiuto .guida td { padding: 14px 18px; border-bottom-color: #e6e2da; }
+.nuovo .taglie-consiglio { display: flex; gap: 12px; align-items: flex-start; margin-top: 18px; padding: 16px 18px; background: #ecebe6; border-radius: 4px; font: 400 14px/1.6 var(--n-lineare); color: #3d3a35; }
+.nuovo .taglie-consiglio svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; margin-top: 2px; }
+
+.nuovo .aiuto-contatti2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: stretch; padding-bottom: 0; margin: 0 calc(-1 * var(--lato)) calc(-1 * clamp(48px, 7vw, 96px)); padding-left: var(--lato); gap: clamp(28px, 4vw, 64px); }
+.nuovo .aiuto-contatti2 .aiuto-tema-testa { align-self: center; padding: clamp(36px, 4vw, 56px) 0; }
+.contatti-canali { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.contatti-canali li { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border: 1px solid #cfcac1; border-radius: 6px; background: #fff; font: 500 14px/1 var(--n-lineare); color: #2b2925; }
+.contatti-canali li:first-child { background: #111; border-color: #111; color: #fff; }
+.contatti-canali svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+.contatti-canali small { font: 400 11px/1 var(--n-lineare); letter-spacing: .08em; text-transform: uppercase; opacity: .65; }
+.contatti-foto { position: relative; margin: 0; }
+.contatti-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; }
+.contatti-foto figcaption { position: absolute; right: clamp(16px, 3vw, 40px); bottom: clamp(16px, 3vw, 40px); display: flex; gap: 14px; align-items: flex-start; padding: 16px 20px; background: rgba(10,10,10,.82); border-radius: 6px; color: #fff; font: 400 13px/1.5 var(--n-lineare); }
+.contatti-foto figcaption svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.5; flex: none; margin-top: 2px; }
+.contatti-foto figcaption strong { display: block; font-weight: 600; letter-spacing: .08em; }
+@media (max-width: 959px) {
+  .aiuto-testa-foto { width: 100%; }
+  .aiuto-testa-foto::before { inset: auto 0 0 0; width: auto; height: 55%; background: linear-gradient(0deg, var(--n-nero), rgba(5,5,5,0)); }
+  .aiuto-testa-testo { grid-area: 2 / 1; padding-top: 0; max-width: none; }
+  .nuovo .aiuto-contatti2 { grid-template-columns: 1fr; padding-right: var(--lato); }
+  .contatti-foto { margin: 0 calc(-1 * var(--lato)); }
+  .contatti-foto img { height: auto; }
+}
+.nuovo #spedizioni > .btn { align-self: center; justify-self: start; min-height: 50px; padding: 0 30px; border-radius: 8px; }
+.nuovo .aiuto-contatti2 .contatti-foto { align-self: center; }
+.nuovo .contatti-foto img { height: auto; object-fit: initial; } /* intera, mai ritagliata */
+@media (max-width: 959px) { .contatti-foto figcaption { position: static; border-radius: 0; background: #111; padding: 16px var(--lato); } } /* sul telefono copriva le ali dell'insegna */
+/* 23/10 sera: anche «La nostra storia» (apertura del brand) in Anton dritto, come «Fly with your mind» in home */
+.nuovo .s-apertura h1 { font: 400 clamp(60px, 8.4vw, 140px)/.9 var(--titoli); font-style: normal; letter-spacing: .005em; text-shadow: 0 2px 4px rgba(0,0,0,.45), 0 6px 30px rgba(0,0,0,.5); }
+@media (max-width: 599px) { .nuovo .s-apertura h1 { font-size: clamp(50px, 15vw, 72px); } }
+@media (max-width: 599px) { .nuovo .s-apertura-testo { position: relative; z-index: 2; } } /* solo telefono, dove il testo va sotto la foto: il titolo sta sopra la sfumatura; su PC resta sopra la foto (errore 23/10) */

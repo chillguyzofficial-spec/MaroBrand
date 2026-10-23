@@ -2,9 +2,11 @@
 const TAGLIE_POLO = ['S', 'M', 'L', 'XL', 'XXL'];
 const TAGLIE_FELPA = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+// 23/10 (prova): copertine e seconde foto (ai2-*, davanti / retro al passaggio del mouse) dalle foto di ChatGPT; ai-* dalle tavole a griglia
+// 23/10 (prova): locandine nuove (ai-*) dalle tavole di ChatGPT, l'art director dello studio
 module.exports = [
   {
-    id: 'polo-linee', esaurite: ['XXL'], copertina: ['pal-polo-linee', 'Ragazzo in un palazzo con colonne di marmo con la Polo Linee MARO nera, righe bianche sulle maniche e firma verticale sul petto'], seconda: 'cop-polo-linee', tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
+    id: 'polo-linee', esaurite: ['XXL'], copertina: ['ai2-polo-linee-fronte', 'Ragazzo con la Polo Linee MARO nera, righe bianche sulle maniche e firma verticale sul petto, davanti a un palazzo di pietra'], seconda: 'ai2-polo-linee-retro', tipo: 'polo', nome: 'Polo Linee', colore: 'Nero, righe bianche sulle maniche',
     prezzo: 75, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-linee-fronte', 'Polo Linee nera su manichino, fronte, firma MARO sul petto'], ['polo-linee-retro', 'Polo Linee nera, retro con le ali e la scritta Fly with your mind'], ['polo-linee-lato', 'Polo Linee nera, fronte con le righe bianche sulle maniche'], ['polo-linee-tre-quarti', 'Polo Linee nera vista di tre quarti']],
     frase: 'La prima polo MARO, e la più facile da portare.',
@@ -14,7 +16,7 @@ module.exports = [
     descrizione: 'Polo Linee MARO: piqué di cotone nero, tre linee bianche sulle maniche, firma ricamata sul petto e ali sulla schiena. Drop 001, 75 €.',
   },
   {
-    id: 'polo-tricolore', esaurite: ['XL'], copertina: ['pal-polo-tricolore', 'Ragazzo in un palazzo con colonne di marmo con la Polo Tricolore MARO nera, righe verde bianco rosso sulle maniche'], seconda: 'cop-polo-tricolore', tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
+    id: 'polo-tricolore', esaurite: ['XL'], copertina: ['ai2-polo-tricolore-fronte', 'Ragazzo con la Polo Tricolore MARO nera e maniche verde bianco rosso, davanti al Duomo di Milano'], seconda: 'ai2-polo-tricolore-retro', tipo: 'polo', nome: 'Polo Tricolore', colore: 'Nero, maniche verde bianco rosso',
     prezzo: 80, pallini: ['#000'], taglie: TAGLIE_POLO,
     foto: [['polo-tricolore-fronte', 'Polo Tricolore nera su manichino, fronte, maniche verde bianco rosso'], ['polo-tricolore-retro', 'Polo Tricolore nera, retro con le ali rosse e verdi'], ['polo-tricolore-lato', 'Polo Tricolore nera, fronte con la firma MARO'], ['polo-tricolore-dettaglio', 'Dettaglio del nastro tricolore sulla manica e della scritta MARO']],
     frase: 'L’unica del drop con il colore addosso.',
@@ -24,7 +26,7 @@ module.exports = [
     descrizione: 'Polo Tricolore MARO: piqué di cotone nero, maniche a fasce rosso, bianco e verde, ali colorate sulla schiena. Drop 001, 80 €.',
   },
   {
-    id: 'polo-jacquard', copertina: ['pal-polo-jacquard', 'Ragazzo sotto un porticato di marmo con la Polo Jacquard MARO beige'], seconda: 'cop-cargo-firma' /* 19/10 notte: il pugile era tatuato; Francesco: stessa foto del Cargo, è un completo */, tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
+    id: 'polo-jacquard', copertina: ['ai2-polo-jacquard-fronte', 'Ragazzo con la Polo Jacquard MARO grigio perla davanti a un muro chiaro con ombre di luce'], seconda: 'ai2-polo-jacquard-retro' /* 19/10 notte: il pugile era tatuato; Francesco: stessa foto del Cargo, è un completo */, tipo: 'polo', nome: 'Polo Jacquard', colore: 'Grigio perla, collo tortora',
     prezzo: 95, pallini: ['#d9d6cf'], taglie: TAGLIE_POLO,
     foto: [['polo-jacquard-manichino', 'Polo Jacquard grigio perla su manichino, firma MARO tono su tono sul petto'], ['polo-jacquard-tre-quarti', 'Polo Jacquard vista di tre quarti']],
     frase: 'Per chi preferisce i dettagli che si scoprono da vicino.',
@@ -34,7 +36,7 @@ module.exports = [
     descrizione: 'Polo Jacquard MARO: maglia jacquard a colonne verticali, collo color tortora, firma ricamata tono su tono. Drop 001, 95 €.',
   },
   {
-    id: 'felpa-stretta', esaurite: ['XS'], copertina: ['pal-felpa-stretta', 'Ragazzo di spalle in un palazzo con colonne di marmo con la Felpa Stretta di mano MARO grigia, stretta di mano stampata sul retro'], seconda: 'cop-felpa-stretta', tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
+    id: 'felpa-stretta', esaurite: ['XS'], copertina: ['ai2-felpa-stretta-fronte', 'Ragazzo con la Felpa Stretta di mano MARO grigio melange davanti a un muro chiaro con ombre di luce'], seconda: 'ai2-felpa-stretta-retro', tipo: 'felpa', nome: 'Felpa Stretta di mano', colore: 'Grigio melange, stampa sul retro',
     prezzo: 120, pallini: ['#b9b9b9'], taglie: TAGLIE_FELPA,
     foto: [['felpa-stretta-retro', 'Felpa grigia su manichino, retro con la grande stampa della stretta di mano'], ['felpa-stretta-tre-quarti', 'Felpa grigia vista di tre quarti dal retro'], ['felpa-stretta-fronte', 'Felpa grigia, fronte pulito con cappuccio e tasca']],
     frase: 'Il segno del rispetto, in grande sulla schiena.',
@@ -44,7 +46,7 @@ module.exports = [
     descrizione: 'Felpa Stretta di mano MARO: cotone garzato grigio melange, cappuccio, stretta di mano stampata in grande sulla schiena. Drop 001, 120 €.',
   },
   {
-    id: 'felpa-firma', esaurite: ['S'], copertina: ['pal-felpa-firma', 'Ragazzo di spalle in un palazzo con colonne di marmo con la Felpa Firma MARO blu, scritta MARO sul retro'], seconda: 'cop-felpa-firma', tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
+    id: 'felpa-firma', esaurite: ['S'], copertina: ['ai2-felpa-firma-fronte', 'Ragazzo con la Felpa Firma MARO blu notte e cappellino, firma piccola sul petto, davanti a un muro chiaro'], seconda: 'ai2-felpa-firma-retro', tipo: 'felpa', nome: 'Felpa Firma', colore: 'Blu notte, firma MARO sul retro',
     prezzo: 130, pallini: ['#1c2440'], taglie: TAGLIE_FELPA,
     foto: [['felpa-firma-retro', 'Felpa blu notte su manichino, retro con la firma MARO e le onde tricolore'], ['felpa-firma-tre-quarti', 'Felpa blu notte vista di tre quarti'], ['felpa-firma-fronte', 'Felpa blu notte, fronte con la firma MARO piccola sul petto']],
     frase: 'Blu notte, come Milano dopo le dieci.',
@@ -54,10 +56,10 @@ module.exports = [
     descrizione: 'Felpa Firma MARO: blu notte, scritta MARO con onde verdi, bianche e rosse sulla schiena, firma piccola sul petto. Drop 001, 130 €.',
   },
   {
-    id: 'felpa-verticale', esaurite: ['M'], copertina: ['pal-felpa-verticale', 'Ragazzo di spalle sotto un porticato di marmo con la Felpa Verticale MARO verde, firma verticale sulla schiena'], seconda: 'cop-felpa-verticale',
+    id: 'felpa-verticale', esaurite: ['M'], copertina: ['ai2-felpa-verticale-fronte', 'Ragazzo con la Felpa Verticale MARO verde bottiglia davanti a un muro chiaro con ombre di luce'], seconda: 'ai2-felpa-verticale-retro',
     tipo: 'felpa', nome: 'Felpa Verticale', colore: 'Verde bottiglia, firma MARO verticale sul retro',
     prezzo: 110, pallini: ['#1f3a2c'], taglie: TAGLIE_FELPA,
-    foto: [['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino trasparente in un palazzo di marmo, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia vista davanti in un palazzo di marmo, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
+    foto: [['ai-felpa-verticale-retro', 'Ragazzo di spalle sotto un porticato con la Felpa Verticale MARO verde, firma MARO verticale sulla schiena'], ['felpa-verticale-manichino', 'Felpa verde bottiglia su manichino trasparente in un palazzo di marmo, retro con la firma MARO verticale'], ['felpa-verticale-fronte', 'Felpa verde bottiglia vista davanti in un palazzo di marmo, fronte pulito con cappuccio e tasca']], // foto scura in montagna tolta il 19/10 (Francesco: "non c'entra niente")
     frase: 'Verde bottiglia, con una firma che scende dall’alto in basso.',
     testo: 'La firma MARO verticale, con le sue fiamme, corre lungo tutta la schiena, dalle spalle all’orlo. Il davanti è completamente libero. Taglio comodo, cappuccio e tasca a marsupio: va con i jeans, con la tuta e sotto una giacca.',
     dettagli: ['Firma MARO verticale dalle spalle all’orlo', 'Davanti senza grafiche', 'Cappuccio con coulisse', 'Tasca a marsupio', 'Polsini e fondo a costine'],
@@ -66,7 +68,7 @@ module.exports = [
   },
   // pantaloni di prova (19/10): foto da Francesco, prezzo, taglie e testi di esempio
   {
-    id: 'cargo-firma', copertina: ['pal-cargo-firma', 'Ragazzo in un palazzo con colonne di marmo con il Cargo Firma MARO beige, firma verticale lungo la gamba'], seconda: 'cop-cargo-firma',
+    id: 'cargo-firma', copertina: ['ai-lb-cargo-napoli', 'Ragazzo con il Cargo Firma MARO beige, t-shirt bianca e sneakers, appoggiato a un muro sopra il golfo di Napoli'], seconda: 'ai2-cargo-firma-retro',
     tipo: 'pantaloni', nome: 'Cargo Firma', colore: 'Beige sabbia, firma MARO verticale sulla gamba',
     prezzo: 95, pallini: ['#d8cbb3'], taglie: ['S', 'M', 'L', 'XL', 'XXL'],
     foto: [['pant-cargo-piegato', 'Pantaloni cargo MARO beige piegati, firma verticale sulla gamba'], ['pant-cargo-appeso', 'Pantaloni cargo MARO beige appesi a una gruccia di legno']],

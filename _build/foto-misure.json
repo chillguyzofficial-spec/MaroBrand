@@ -1,338 +1,137 @@
-{
- "acc-berretto-copertina": [
-  1400,
-  1331
- ],
- "acc-berretto-dettaglio": [
-  1400,
-  1339
- ],
- "acc-berretto-fronte": [
-  1400,
-  1339
- ],
- "acc-berretto-lato": [
-  1400,
-  1339
- ],
- "acc-borraccia-dettaglio": [
-  1400,
-  1339
- ],
- "acc-borraccia-dritta": [
-  1400,
-  1339
- ],
- "acc-borraccia-inclinata": [
-  1400,
-  1339
- ],
- "acc-cappellino-copertina": [
-  1400,
-  1339
- ],
- "acc-cappellino-dettaglio": [
-  1400,
-  1339
- ],
- "acc-cappellino-tre-quarti": [
-  1400,
-  1339
- ],
- "ali-1": [
-  503,
-  507
- ],
- "ali-2": [
-  500,
-  508
- ],
- "ali-3": [
-  505,
-  512
- ],
- "ali-4": [
-  507,
-  500
- ],
- "ali-5": [
-  511,
-  506
- ],
- "ali-6": [
-  509,
-  506
- ],
- "apertura-locandina": [
-  1920,
-  1080
- ],
- "bm-1-foglio": [
-  1188,
-  1004
- ],
- "bm-1": [
-  1188,
-  1004
- ],
- "bm-2-foglio": [
-  554,
-  1400
- ],
- "bm-2": [
-  554,
-  1400
- ],
- "bm-3-foglio": [
-  1400,
-  1241
- ],
- "bm-3": [
-  1400,
-  1241
- ],
- "bm-4-foglio": [
-  1400,
-  954
- ],
- "bm-4": [
-  1400,
-  954
- ],
- "bm-5-foglio": [
-  1180,
-  834
- ],
- "bm-5": [
-  1180,
-  834
- ],
- "bn-ali": [
-  1472,
-  1408
- ],
- "bn-allenamento": [
-  1067,
-  1600
- ],
- "bn-basket": [
-  1067,
-  1600
- ],
- "bn-corsa": [
-  1920,
-  1280
- ],
- "bn-tennis-locandina": [
-  864,
-  496
- ],
- "bn-tennis-rovescio": [
-  1536,
-  1024
- ],
- "bn-tennis": [
-  1920,
-  1120
- ],
- "brand-stadio-fronte": [
-  765,
-  1024
- ],
- "brand-stadio-retro": [
-  766,
-  1024
- ],
- "cat-accessori": [
-  1120,
-  1400
- ],
- "cat-felpe": [
-  1123,
-  1400
- ],
- "cat-pantaloni": [
-  1123,
-  1400
- ],
- "cat-polo": [
-  1123,
-  1400
- ],
- "cop-cargo-firma": [
-  1120,
-  1400
- ],
- "cop-felpa-firma": [
-  1120,
-  1400
- ],
- "cop-felpa-stretta": [
-  1120,
-  1400
- ],
- "cop-felpa-verticale": [
-  1120,
-  1400
- ],
- "cop-polo-linee": [
-  1024,
-  1280
- ],
- "cop-polo-tricolore": [
-  1024,
-  1280
- ],
- "felpa-firma-fronte": [
-  1120,
-  1400
- ],
- "felpa-firma-retro": [
-  1120,
-  1400
- ],
- "felpa-firma-tre-quarti": [
-  1120,
-  1400
- ],
- "felpa-stretta-fronte": [
-  1120,
-  1400
- ],
- "felpa-stretta-retro": [
-  1120,
-  1400
- ],
- "felpa-stretta-tre-quarti": [
-  1120,
-  1400
- ],
- "felpa-verticale-fronte": [
-  1120,
-  1400
- ],
- "felpa-verticale-manichino": [
-  1120,
-  1400
- ],
- "lb-citylife-strada": [
-  1120,
-  1400
- ],
- "lb-citylife-tramonto": [
-  1120,
-  1400
- ],
- "lb-duomo-coppia": [
-  1120,
-  1400
- ],
- "lb-galleria-sera": [
-  1120,
-  1400
- ],
- "lb-galleria": [
-  1120,
-  1400
- ],
- "lb-muro-duomo": [
-  1120,
-  1400
- ],
- "lb-panchina": [
-  1120,
-  1400
- ],
- "lb-pista": [
-  1120,
-  1400
- ],
- "pal-cargo-firma": [
-  1120,
-  1400
- ],
- "pal-felpa-firma": [
-  1120,
-  1400
- ],
- "pal-felpa-stretta": [
-  1120,
-  1400
- ],
- "pal-felpa-verticale": [
-  1120,
-  1400
- ],
- "pal-polo-jacquard": [
-  1120,
-  1400
- ],
- "pal-polo-linee": [
-  1120,
-  1400
- ],
- "pal-polo-tricolore": [
-  1120,
-  1400
- ],
- "pant-cargo-appeso": [
-  1123,
-  1400
- ],
- "pant-cargo-piegato": [
-  1123,
-  1400
- ],
- "polo-jacquard-manichino": [
-  1120,
-  1400
- ],
- "polo-jacquard-tre-quarti": [
-  1120,
-  1400
- ],
- "polo-linee-fronte": [
-  1120,
-  1400
- ],
- "polo-linee-lato": [
-  1120,
-  1400
- ],
- "polo-linee-retro": [
-  1120,
-  1400
- ],
- "polo-linee-tre-quarti": [
-  1120,
-  1400
- ],
- "polo-tricolore-dettaglio": [
-  1400,
-  1400
- ],
- "polo-tricolore-fronte": [
-  1120,
-  1400
- ],
- "polo-tricolore-lato": [
-  1120,
-  1400
- ],
- "polo-tricolore-retro": [
-  1120,
-  1400
- ],
- "scena-composizione": [
-  1400,
-  1400
- ],
- "segno-scena-1": [
-  2048,
-  1152
- ],
- "segno-scena-2": [
-  2048,
-  1152
- ]
-}
+{"acc-berretto-copertina":[1400,1331],
+"acc-berretto-dettaglio":[1400,1339],
+"acc-berretto-fronte":[1400,1339],
+"acc-berretto-lato":[1400,1339],
+"acc-borraccia-dettaglio":[1400,1339],
+"acc-borraccia-dritta":[1400,1339],
+"acc-borraccia-inclinata":[1400,1339],
+"acc-cappellino-copertina":[1400,1339],
+"acc-cappellino-dettaglio":[1400,1339],
+"acc-cappellino-tre-quarti":[1400,1339],
+"ali-1":[503,507],
+"ali-2":[500,508],
+"ali-3":[505,512],
+"ali-4":[507,500],
+"ali-5":[511,506],
+"ali-6":[509,506],
+"apertura-locandina":[1920,1080],
+"bm-1-foglio":[1188,1004],
+"bm-1":[1188,1004],
+"bm-2-foglio":[554,1400],
+"bm-2":[554,1400],
+"bm-3-foglio":[1400,1241],
+"bm-3":[1400,1241],
+"bm-4-foglio":[1400,954],
+"bm-4":[1400,954],
+"bm-5-foglio":[1180,834],
+"bm-5":[1180,834],
+"bn-ali":[1472,1408],
+"brand-ali-nuova":[1024,1536],
+"aiuto-apertura":[1600,900],
+"aiuto-drop":[1600,900],
+"aiuto-taglie":[1600,901],
+"aiuto-scrivania":[1600,900],
+"aiuto-insegna":[1600,900],
+"home-dettaglio-ali":[354,321],
+"home-dettaglio-tricolore":[410,333],
+"brand-felpa-basket":[428,575],
+"brand-felpa-calcio":[382,511],
+"brand-felpa-firenze":[333,575],
+"bn-allenamento":[1067,1600],
+"bn-basket":[1067,1600],
+"bn-corsa":[1920,1280],
+"bn-tennis-locandina":[864,496],
+"bn-tennis-rovescio":[1536,1024],
+"bn-tennis":[1920,1120],
+"brand-stadio-fronte":[765,1024],
+"brand-stadio-retro":[766,1024],
+"cat-accessori":[1120,1400],
+"cat-felpe":[1123,1400],
+"cat-pantaloni":[1123,1400],
+"cat-polo":[1123,1400],
+"cop-cargo-firma":[1120,1400],
+"cop-felpa-firma":[1120,1400],
+"cop-felpa-stretta":[1120,1400],
+"cop-felpa-verticale":[1120,1400],
+"cop-polo-linee":[1024,1280],
+"cop-polo-tricolore":[1024,1280],
+"felpa-firma-fronte":[1120,1400],
+"felpa-firma-retro":[1120,1400],
+"felpa-firma-tre-quarti":[1120,1400],
+"felpa-stretta-fronte":[1120,1400],
+"felpa-stretta-retro":[1120,1400],
+"felpa-stretta-tre-quarti":[1120,1400],
+"felpa-verticale-fronte":[1120,1400],
+"felpa-verticale-manichino":[1120,1400],
+"lb-citylife-strada":[1120,1400],
+"lb-citylife-tramonto":[1120,1400],
+"lb-duomo-coppia":[1120,1400],
+"lb-galleria-sera":[1120,1400],
+"lb-galleria":[1120,1400],
+"lb-muro-duomo":[1120,1400],
+"lb-panchina":[1120,1400],
+"lb-pista":[1120,1400],
+"pal-cargo-firma":[1120,1400],
+"pal-felpa-firma":[1120,1400],
+"pal-felpa-stretta":[1120,1400],
+"pal-felpa-verticale":[1120,1400],
+"pal-polo-jacquard":[1120,1400],
+"pal-polo-linee":[1120,1400],
+"pal-polo-tricolore":[1120,1400],
+"pant-cargo-appeso":[1123,1400],
+"pant-cargo-piegato":[1123,1400],
+"polo-jacquard-manichino":[1120,1400],
+"polo-jacquard-tre-quarti":[1120,1400],
+"polo-linee-fronte":[1120,1400],
+"polo-linee-lato":[1120,1400],
+"polo-linee-retro":[1120,1400],
+"polo-linee-tre-quarti":[1120,1400],
+"polo-tricolore-dettaglio":[1400,1400],
+"polo-tricolore-fronte":[1120,1400],
+"polo-tricolore-lato":[1120,1400],
+"polo-tricolore-retro":[1120,1400],
+"scena-composizione":[1400,1400],
+"segno-scena-1":[2048,1152],
+"segno-scena-2":[2048,1152],
+"ai-polo-tricolore-muro":[1018,1530],
+"ai-polo-linee-muro":[611,870],
+"ai-felpa-verticale-portico":[761,1018],
+"ai-felpa-verticale-retro":[413,507],
+"ai-felpa-firma-retro":[235,389],
+"ai-felpa-stretta-retro":[267,389],
+"ai-cargo-firma-fronte":[252,492],
+"ai-lb-galleria":[1666,935],
+"ai-lb-tennis":[630,480],
+"ai-lb-corsa":[376,504],
+"ai-lb-berretto":[377,407],
+"ai-lb-duomo-retro":[531,480],
+"ai-lb-basket":[376,505],
+"ai-lb-gradoni":[598,639],
+"ai-lb-cargo-napoli":[626,695],
+"ai-lb-padel":[376,505],
+"ai-lb-cappellino":[354,407],
+"ai-lb-portico":[413,503],
+"ai-lb-duomo-polo":[764,480],
+"ai2-polo-linee-fronte":[1254,1254],
+"ai2-polo-linee-retro":[1254,1254],
+"ai2-polo-tricolore-fronte":[564,869],
+"ai2-polo-tricolore-retro":[443,486],
+"ai2-polo-jacquard-fronte":[1254,1254],
+"ai2-polo-jacquard-retro":[1254,1254],
+"ai2-felpa-stretta-fronte":[1254,1254],
+"ai2-felpa-stretta-retro":[1254,1254],
+"ai2-felpa-firma-fronte":[1254,1254],
+"ai2-felpa-firma-retro":[1254,1254],
+"ai2-felpa-verticale-fronte":[1254,1254],
+"ai2-felpa-verticale-retro":[1254,1254],
+"ai2-cargo-firma-retro":[1254,1254],
+"brand-napoli":[1672,941],
+"brand-sport-1":[507,489],
+"brand-sport-2":[507,504],
+"brand-sport-3":[507,517],
+"brand-sport-4":[501,489],
+"brand-sport-5":[501,504],
+"brand-sport-6":[501,517],
+"cat-apertura-polo":[1672,941],
+"cat-movimento-calcio":[941,1672],
+"cat-movimento-basket":[941,1672]}

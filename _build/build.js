@@ -50,6 +50,8 @@ const AVVISI_ACCESI = false;
 // Niente borsa, pagamento, account, Porta un amico, carta regalo; sulle schede «Iscriviti al drop».
 // Il negozio completo è nel ramo negozio-completo: per riaccenderlo qui basta VETRINA = false.
 const VETRINA = true;
+// PROVA 23/10: home e testata/piede con la grafica di ChatGPT (false = home di prima, identica al sito online)
+const NUOVA_HOME = true;
 const NEGOZIO_PROVA = !VETRINA;
 const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
@@ -86,6 +88,8 @@ ${LOGO_SIMBOLO.replace('id="logo-maro"', 'id="maro-simbolo"')}
 const conPopup = f => CATEGORIE.some(c => c.file === f) || CATALOGO.some(p => p.id + '.html' === f);
 
 function pagina({ titolo, descrizione, corpo, file }) {
+  // i commenti <!-- --> nei modelli sono note di lavoro (nomi, richieste, fonti): restano nel generatore, mai nelle pagine online
+  corpo = corpo.replace(/[ \t]*<!--[\s\S]*?-->\r?\n?/g, '');
   return `<!doctype html>
 <html lang="it">
 <head>
@@ -107,11 +111,15 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=${V}">
+<link rel="stylesheet" href="assets/css/maro.css?v=${V}">${NUOVA_HOME ? `
+<link rel="preload" href="assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=${V}">` : ''}
 <script defer src="assets/js/maro.js?v=${V}"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/\s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
-<body${file === 'index.html' ? ' class="home"' : ''}${conPopup(file) ? ' data-popup' : ''}>
+<body class="${[file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${fasciaProva()}
@@ -119,8 +127,9 @@ ${avviso()}
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
-    <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
-    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a>'}</div>
+${NUOVA_HOME ? `    <div class="menu-sx"><a href="index.html"${file === 'index.html' ? ' aria-current="page"' : ''}>Home</a><a href="shop.html"${CATEGORIE.some(c => c.file === file) ? ' aria-current="page"' : ''}>Collezione</a><a href="index.html#drop">Drop 002</a></div>
+    <div class="menu-dx"><a href="storia.html"${file === 'storia.html' ? ' aria-current="page"' : ''}>Il brand</a><a href="index.html#lookbook">Lookbook</a>` : `    <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
+    <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a>`}${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a>'}</div>
   </nav>
   <div class="azioni">
 ${VETRINA ? '' : `    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>`}
@@ -135,8 +144,8 @@ ${corpo}
 <footer class="piede">
   <div class="piede-alto">
     <div class="piede-marchio">
-      <p>Streetwear da Milano.<br>Fly with your mind.</p>
-    </div>
+      <p>${NUOVA_HOME ? 'Sport ed eleganza da Milano.' : 'Streetwear da Milano.'}<br>Fly with your mind.</p>
+${NUOVA_HOME ? '      <p class="piede-firma" aria-hidden="true"><span>Omar</span></p>\n' : ''}    </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a>'}<a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2>${VETRINA ? '<a href="aiuto.html#spedizioni">Il drop</a>' : '<a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a>'}<a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
@@ -192,8 +201,13 @@ ${VETRINA ? '    <p>Conservalo: vale una volta sola, sul primo ordine, quando ap
 }
 
 // vetrina (21/10): al posto dell'acquisto, le taglie in chiaro e l'iscrizione al drop (apre il popup del 10%)
-const dropScheda = (p, acc) => `${acc ? '' : '    <p class="taglie-vetrina"><strong>Taglie: ' + p.taglie.join(' · ') + '</strong></p>\n'}    <div class="drop-scheda">
-      <p class="drop-occhiello">Il drop apre presto</p>
+// 23/10 sera (grafica ChatGPT): taglie in riquadri, solo da vedere (niente scelta finché non si vende), lucchetto nel riquadro del drop
+const dropScheda = (p, acc, guida) => `${acc ? '' : `    <div class="taglie-vetrina">
+      <div class="taglie-vetrina-testa"><p>Taglie al lancio</p>${guida ? '<a class="link" href="#guida-taglie" onclick="var d=document.getElementById(\'guida-taglie\');if(d)d.open=true">Guida alle taglie</a>' : ''}</div>
+      <ul aria-label="Taglie al lancio: ${p.taglie.join(', ')}">${p.taglie.map(t => `<li>${t}</li>`).join('')}</ul>
+    </div>
+`}    <div class="drop-scheda">
+      <p class="drop-occhiello"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Il drop apre presto</p>
       <p>Iscriviti: ti scriviamo prima dell’apertura, con l’accesso anticipato e un codice del 10% sul primo ordine.</p>
       <button class="btn btn-nero btn-largo" type="button" data-apri-popup>Iscriviti al drop</button>
     </div>
@@ -273,14 +287,25 @@ function categoriaPagina(cat) {
   const vuota = !capi.length;
   const corpo = `
 <section class="catalogo${vuota ? ' catalogo-vuoto' : ''}" data-catalogo aria-labelledby="cat-titolo">
-  <div class="cat-testa">
-    <h1 id="cat-titolo">${cat.nome}${vuota ? '' : ` <span data-cat-conta>(${capi.length})</span>`}</h1>
+${NUOVA_HOME ? `  <div class="c-apertura">
+    ${img('cat-apertura-polo', 'Ragazzo con la Polo Linee MARO nera, righe bianche sulle maniche e firma verticale sul petto, tra le colonne di un palazzo al tramonto', { cls: 'c-apertura-foto', lazy: false, dove: 'categorie apertura', sizes: '100vw' })}
+    <div class="c-apertura-testo">
+      <p class="n-occhiello">MARO</p><span class="s-riga" aria-hidden="true"></span>
+      <h1 id="cat-titolo">${cat.tipo === 'accessori' ? 'Accessori' : 'Abbigliamento'}</h1>
+      <p class="c-conta">${cat.tipo === 'accessori' ? 'Tutti gli accessori' : cat.nome}${vuota ? '' : ` <span data-cat-conta>(${capi.length})</span>`}</p>
+      <p class="c-valori" aria-hidden="true">Stile <span>Movimento</span> Identità</p>
+    </div>
+  </div>
+  <div class="cat-testa c-barra">
+    <nav class="c-chips" aria-label="Categorie" data-resta>${CATEGORIE.map(c => `<a href="${c.file}"${c.file === cat.file ? ' aria-current="page"' : ''}>${c.file === 'shop.html' ? 'Tutti' : c.nome}</a>`).join('')}</nav>` : `  <div class="cat-testa">
+    <h1 id="cat-titolo">${cat.nome}${vuota ? '' : ` <span data-cat-conta>(${capi.length})</span>`}</h1>`}
 ${vuota ? '' : `    <div class="cat-comandi">
       <button type="button" class="cat-btn" data-filtri-mostra aria-expanded="true" aria-controls="cat-filtri"><span data-filtri-scritta>Nascondi filtri</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></button>
       <label class="cat-ordina">Ordina per <select data-ordina><option value="evidenza">In evidenza</option><option value="prezzo-su">Prezzo: dal più basso</option><option value="prezzo-giu">Prezzo: dal più alto</option></select></label>
     </div>`}
   </div>
-  <div class="cat-corpo">
+${NUOVA_HOME ? `  <script>/* 23/10 (Francesco): cambiando categoria con le pillole la pagina non torna in cima: la barra resta alla stessa altezza dello schermo */(function(){var n=document.querySelector('[data-resta]');if(!n)return;try{var y=sessionStorage.getItem('maro-barra');if(y!==null){sessionStorage.removeItem('maro-barra');var va=function(){var b=n.parentNode;scrollTo(0,Math.max(0,b.getBoundingClientRect().top+scrollY-Number(y)));};document.addEventListener('DOMContentLoaded',va);}}catch(e){}n.addEventListener('click',function(e){if(e.target.closest('a'))try{sessionStorage.setItem('maro-barra',String(n.parentNode.getBoundingClientRect().top));}catch(x){}});})();</script>
+` : ''}  <div class="cat-corpo">
     <aside class="cat-filtri" id="cat-filtri" aria-label="Filtri">
 ${vuota ? '' : `      <div class="cat-foglio-testa"><h2>Filtri</h2><button type="button" data-filtri-chiudi aria-label="Chiudi i filtri"><svg viewBox="0 0 24 24"><use href="#i-chiudi"/></svg></button></div>`}
       <nav class="cat-lista" aria-label="Categorie">${menuCat}</nav>
@@ -355,6 +380,7 @@ function home() {
     ['lb-muro-duomo', 'Felpa blu MARO di spalle contro un muro antico vicino al Duomo'],
     ['lb-pista', 'Ragazza con felpa verde MARO cammina sulla pista ciclabile al tramonto'],
   ];
+  if (NUOVA_HOME) return homeNuova();
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
@@ -454,6 +480,130 @@ ${VETRINA ? '' : `    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un l
   return pagina({ titolo: 'MARO — Fly with your mind · Drop 001', descrizione: 'MARO, streetwear da Milano. Drop 001: tre polo e tre felpe con il segno delle ali, ricamate e stampate. Spedizione gratuita sopra i 150 €.', corpo, file: 'index.html' });
 }
 
+// ---------- HOME NUOVA (prova 23/10): grafica di ChatGPT, art director dello studio (_grafica-chatgpt/home-chatgpt.png) ----------
+// tutto su nero, titoli con grazie (Playfair Display), scritte piccole spaziate (Jost), pulsanti rettangolari con la freccia.
+// Logo: la M con le ali di Omar (nella grafica c'era MARO in orizzontale, che Omar non vuole)
+const FRECCIA = '<svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+function homeNuova() {
+  const COLLEZIONE = [
+    ['cat-polo', 'Polo', 'polo.html', 'Polo jacquard beige MARO appesa su una terrazza, dietro il Duomo di Milano'],
+    ['cat-felpe', 'Felpe', 'felpe.html', 'Felpa verde MARO con la scritta verticale sulla schiena, dietro il Duomo di Firenze'],
+    ['cat-pantaloni', 'Pantaloni', 'pantaloni.html', 'Pantaloni cargo beige MARO appesi su una terrazza, dietro il golfo di Napoli e il Vesuvio'],
+    ['cat-accessori', 'Accessori', 'accessori.html', 'Cappellino nero MARO con le ali ricamate, dietro il Canal Grande di Venezia'],
+  ];
+  // lookbook (23/10): scene nuove dalle tavole di ChatGPT, sport (tennis, padel, corsa, basket) alternato a Milano; ogni foto intera
+  const lb = [
+    ['ai-lb-tennis', 'Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano'],
+    ['lb-galleria', 'Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo'], // 23/10 sera: scambiata con ai-lb-galleria (orizzontale, ora nella fascia Milano)
+    ['ai-lb-corsa', 'Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare'],
+    ['ai-lb-duomo-retro', 'Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano'],
+    ['ai-lb-padel', 'Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel'],
+    ['ai-lb-berretto', 'Ragazzo sistema il berretto nero MARO con le ali ricamate'],
+    ['ai-lb-basket', 'Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto'],
+    ['ai-lb-gradoni', 'Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio'],
+    ['ai-lb-duomo-polo', 'Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto'],
+    ['ai-lb-cappellino', 'Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso'],
+    ['ai-lb-portico', 'Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo'],
+  ];
+  const corpo = `
+<section class="apertura n-apertura" aria-labelledby="n-titolo">
+  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
+    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+  </video>
+  <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
+    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+  </video>
+  <div class="n-apertura-testo">
+    <h1 id="n-titolo">Fly with<br>your mind</h1>
+  </div>
+</section>
+
+<section class="n-intro" aria-label="Il drop e il brand">
+  <p>Abbigliamento sportivo ed elegante, nato a Milano nel 2020.</p>
+  <div class="n-intro-pulsanti">
+    <a class="n-btn n-btn-pieno" href="shop.html">Scopri il drop ${FRECCIA}</a>
+    <a class="n-btn" href="storia.html">Il brand ${FRECCIA}</a>
+  </div>
+</section>
+
+
+<section class="n-collezione" aria-labelledby="n-coll-titolo">
+  <div class="n-testa"><h2 id="n-coll-titolo" class="n-etichetta">La collezione</h2><p class="n-etichetta n-etichetta-dx">Vivi il tuo sport</p></div>
+  <div class="n-coll-griglia">
+${COLLEZIONE.map(([id, nome, link, alt]) => `    <a class="n-carta" href="${link}">
+      ${img(id, alt, { dove: 'home collezione', sizes: '(min-width: 960px) 24vw, 50vw' })}
+      <span class="n-carta-testo"><span class="n-carta-nome">${nome}</span><span class="n-carta-vai">Scopri ${FRECCIA}</span></span>
+    </a>`).join('\n')}
+  </div>
+</section>
+
+<!-- 23/10 sera (grafica ChatGPT _grafica-chatgpt/home-milano-logo.png; Francesco: la versione a due pannelli era confusa):
+     sopra la fascia larga di Milano con la foto che sfuma nel nero, sotto il ricamo e «Più di un logo» con due dettagli.
+     Le foto della grafica non si usano: sotto le ali c'è scritto «MARG» -->
+<section class="n-brand2" aria-label="Il brand">
+  <article class="n-milano2">
+    <figure class="n-milano2-foto">${img('ai-lb-galleria', 'Ragazzo di spalle con la felpa MARO nella Galleria Vittorio Emanuele al tramonto, in fondo il Duomo', { dove: 'home milano', sizes: '(min-width: 960px) 75vw, 100vw' })}</figure>
+    <div class="n-milano2-testo">
+      <p class="n-occhiello">Milano</p>
+      <h2>Milano<br>è la nostra energia</h2>
+      <p>Sport, stile e mentalità si incontrano in un brand nato a Milano, per chi vede lo sport come un modo di pensare.</p>
+      <a class="n-btn" href="#lookbook">Milano in foto ${FRECCIA}</a>
+    </div>
+  </article>
+  <article class="n-logo2">
+    <figure class="n-logo2-foto">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
+    <div class="n-logo2-testo">
+      <p class="n-occhiello">Più di un logo</p>
+      <h2>Un segno<br>che unisce</h2>
+      <p>La M con le ali di Omar: un segno che unisce sport, libertà e identità. MARO è una mentalità, non solo abbigliamento.</p>
+      <a class="n-btn" href="storia.html#bn-simbolo">Il significato delle ali ${FRECCIA}</a>
+    </div>
+    <div class="n-logo2-dettagli">
+      <figure>${img('home-dettaglio-ali', 'Le ali MARO ricamate in bianco su una maglia nera a coste, da vicino', { dove: 'home logo dettaglio', sizes: '260px' })}</figure>
+      <figure>${img('home-dettaglio-tricolore', 'Le ali rosse e verdi ricamate sulla schiena della Polo Tricolore, con le righe verde, bianco e rosso sulla spalla', { dove: 'home logo dettaglio', sizes: '260px' })}</figure>
+    </div>
+  </article>
+</section>
+
+<section class="n-lookbook lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
+  <div class="n-testa"><h2 id="lookbook-titolo" class="n-etichetta">Lookbook</h2><p class="n-etichetta n-etichetta-dx">Stile in movimento</p></div>
+  <div class="lb-vetrina" aria-label="Foto del lookbook">
+    <div class="lb-binario">
+${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.length}">${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 20vw, 80vw' })}</figure>`).join('\n')}
+    </div>
+    <button class="n-lb-freccia n-lb-prima" type="button" data-lb="-1" aria-label="Foto precedenti">${FRECCIA}</button>
+    <button class="n-lb-freccia" type="button" data-lb="1" aria-label="Foto successive">${FRECCIA}</button>
+  </div>
+  <p class="n-lb-sotto"><span class="lb-conta" aria-live="polite"></span> · Scorri o trascina</p>
+</section>
+
+<section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">
+  <figure class="n-drop-foto" aria-hidden="true">${img('bn-tennis-rovescio', '', { dove: 'home drop', sizes: '(min-width: 960px) 60vw, 100vw' })}</figure>
+  <div class="n-drop-testo conto" data-drop="2026-11-14T18:00:00+01:00" aria-label="Drop 002: sabato 14 novembre 2026, ore 18">
+    <h2 id="n-drop-titolo" class="n-drop-titolo">Drop 002</h2>
+    <p class="n-drop-data conto-titolo">14 novembre 2026 · ore 18</p>
+    <div class="n-conto conto-cifre" aria-hidden="true"><span><b data-u="g">--</b>giorni</span><span><b data-u="o">--</b>ore</span><span><b data-u="m">--</b>minuti</span><span><b data-u="s">--</b>secondi</span></div>
+  </div>
+  <a class="n-btn n-drop-btn" href="#iscriviti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Resta aggiornato</a>
+</section>
+
+<section class="n-iscriviti iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
+  <div class="n-iscriviti-sfondo" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home iscrizione', sizes: '100vw' })}</div>
+  <div class="n-iscriviti-testo">
+    <h2 id="iscriviti-titolo">Entra nel mondo MARO</h2>
+    <p>Iscriviti: ti scriviamo il giorno prima di ogni drop, con i capi in anteprima e un codice del 10% sul primo ordine. Una email per drop, niente di più.</p>
+    <form class="iscriviti-form n-form" novalidate>
+      <label for="email" class="sr">La tua email</label>
+      <input id="email" name="email" type="email" autocomplete="email" placeholder="La tua email" required>
+      <button class="n-btn n-btn-pieno" type="submit">Iscriviti ${FRECCIA}</button>
+      ${consenso()}
+      <p class="esito" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>`;
+  return pagina({ titolo: 'MARO — Fly with your mind · Drop 002', descrizione: 'MARO, abbigliamento sportivo ed elegante nato a Milano nel 2020. Polo, felpe e accessori con la M con le ali. Drop 002 il 14 novembre.', corpo, file: 'index.html' });
+}
+
 // ---------- SCHEDA PRODOTTO ----------
 // composizione obbligatoria per legge anche online (Reg. UE 1007/2011): valori DI ESEMPIO finché Omar non li conferma
 const CURA = {
@@ -465,24 +615,57 @@ const CURA = {
   borraccia: [['Materiale', 'acciaio inox, finitura opaca'], ['Pulizia', 'a mano, niente lavastoviglie']],
   felpa: [['Composizione', '80% cotone, 20% poliestere, garzato all’interno, circa 380 g/m²'], ['Lavaggio', 'a 30 °C al rovescio, niente asciugatrice'], ['Stiro', 'mai sulla stampa']],
 };
+// fascia dei quattro punti sotto la scheda (23/10 sera, grafica ChatGPT): tessuto, vestibilità, look, dettaglio.
+// Solo dati già scritti altrove (CURA, vestibilità della scheda, dettagli del capo), niente promesse nuove
+const PUNTI_TESSUTO = {
+  polo: ['Piqué di cotone', '100% cotone, circa 220 g/m²'], jacquard: ['Cotone jacquard', '100% cotone, motivo tessuto'],
+  felpa: ['Cotone garzato', '80% cotone, circa 380 g/m²'], pantaloni: ['Tela di cotone', '100% cotone'],
+  cappellino: ['Cotone e rete', 'Davanti in cotone, retro in rete'], berretto: ['Maglia a coste', 'In acrilico, morbida'], borraccia: ['Acciaio inox', 'Finitura opaca'],
+};
+const ICONE_PUNTI = [
+  '<path d="M12 21v-7M12 14c-3 0-5-2-5-4.5S9 5 12 3c3 2 5 4 5 6.5S15 14 12 14z"/><path d="M12 14c-2-1.5-2.5-3.5-2-5.5M12 14c2-1.5 2.5-3.5 2-5.5"/>',
+  '<path d="M12 6a2 2 0 1 1 2-2M12 6v2l9 7H3l9-7"/>',
+  '<path d="M12 12c-2-3-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1 6-4zm0 0c2 3 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1-6 4z"/>',
+  '<path d="M6 4h12l3 5-9 11L3 9z"/><path d="M3 9h18M9 4l3 16M15 4l-3 16"/>',
+];
+function puntiScheda(p) {
+  const acc = p.tipo === 'accessori';
+  const voci = [
+    PUNTI_TESSUTO[p.cura],
+    acc ? ['Le ali di Omar', 'La M con le ali del primo disegno'] : p.tipo === 'felpa' ? ['Vestibilità comoda', 'Spalla leggermente scesa'] : p.tipo === 'pantaloni' ? ['Gamba dritta', 'Prendi la tua taglia abituale'] : ['Vestibilità regolare', 'Prendi la tua taglia abituale'],
+    ['Look versatile', 'Per ogni occasione'],
+    acc ? ['Facile da curare', CURA[p.cura][1][1].replace(/^./, c => c.toUpperCase())] : ['Dettagli curati', p.dettagli[0]],
+  ];
+  return `<ul class="punti-scheda" aria-label="In breve">
+${voci.map(([t, s], i) => `  <li><svg viewBox="0 0 24 24" aria-hidden="true">${ICONE_PUNTI[i]}</svg><p><strong>${esc(t)}</strong>${esc(s)}</p></li>`).join('\n')}
+</ul>`;
+}
 function prodotto(p) {
   if (!p.frase || !CURA[p.cura] || !p.descrizione) throw new Error(p.id + ': mancano frase, cura o descrizione');
   const altri = CATALOGO.filter(x => x.id !== p.id && x.tipo !== p.tipo).slice(0, 2)
     .concat(CATALOGO.filter(x => x.id !== p.id && x.tipo === p.tipo).slice(0, 1));
   const acc = p.tipo === 'accessori';
   if (p.foto.length > 4) throw new Error(p.id + ': massimo 4 foto per scheda (stessa struttura per tutti)');
-  const n = p.foto.length;
+  // 23/10 sera (grafica ChatGPT): la galleria parte dal modello (copertina e retro dello shop, mostrate di nuovo apposta),
+  // poi il manichino; sempre al massimo 4 e almeno un manichino quando c'è
+  const modello = [p.copertina, p.seconda && [p.seconda, `${p.nome} indossata, vista di spalle`]].filter(f => f && MISURE[f[0]]).map(f => [...f, true]);
+  const lista = modello.concat(p.foto.map(f => [...f, false])).filter((f, i, a) => a.findIndex(g => g[0] === f[0]) === i).slice(0, modello.length ? 4 : p.foto.length);
+  if (modello.length && p.foto.length && !lista.some(f => !f[2])) lista[lista.length - 1] = [...p.foto[0], false];
+  const n = lista.length;
   // vetrina a scorrimento: una foto per volta, stesso riquadro 4:5 per tutti i prodotti
-  const foto = p.foto.map(([id, alt], i) =>
-    `        <figure aria-label="Foto ${i + 1} di ${n}"${i ? ' aria-hidden="true"' : ''}>${img(id, alt, { dove: 'scheda ' + p.id, lazy: false, sizes: '(min-width: 960px) 46vw, 100vw' })}</figure>`).join('\n');
+  const foto = lista.map(([id, alt, rip], i) =>
+    `        <figure aria-label="Foto ${i + 1} di ${n}"${i ? ' aria-hidden="true"' : ''}><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola(id) || urlFoto(id)}')"></span>${img(id, alt, { dove: 'scheda ' + p.id, ripeti: rip, lazy: false, sizes: '(min-width: 960px) 46vw, 100vw' })}</figure>`).join('\n');
   const comandi = n < 2 ? '' : `
       <button class="vetrina-freccia prec" type="button" aria-label="Foto precedente" data-vai="-1">‹</button>
       <button class="vetrina-freccia succ" type="button" aria-label="Foto successiva" data-vai="1">›</button>
       <span class="vetrina-conta" aria-live="polite">1 / ${n}</span>`;
   const miniature = n < 2 ? '' : `
     <div class="miniature" role="group" aria-label="Scegli la foto">
-${p.foto.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="${urlPiccola(id) || urlFoto(id)}" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
+${lista.map(([id, alt], i) => `      <button type="button" data-foto="${i}" aria-label="Foto ${i + 1}: ${esc(alt)}"${i ? '' : ' aria-current="true"'}><img src="${urlPiccola(id) || urlFoto(id)}" alt="" width="80" height="100" loading="lazy" decoding="async"></button>`).join('\n')}
     </div>`;
+  const cat = ({ polo: ['polo', 'Polo'], felpa: ['felpe', 'Felpe'], pantaloni: ['pantaloni', 'Pantaloni'], accessori: ['accessori', 'Accessori'] })[p.tipo];
+  const rec = RECENSIONI[p.id];
+  const voto = rec ? rec.reduce((a, r) => a + r[1], 0) / rec.length : 0;
   const galleria = `    <div class="vetrina" aria-label="Foto di ${esc(p.nome)}">
       <span class="vetrina-zoom" aria-hidden="true">Tocca per ingrandire</span>
       <div class="vetrina-binario">
@@ -492,18 +675,19 @@ ${foto}
   const corpo = `
 <div class="prodotto" data-id="${p.id}" data-tipo="${p.tipo}">
   <div class="prodotto-intro">
-    <a class="indietro" href="${({ polo: 'polo', felpa: 'felpe', pantaloni: 'pantaloni', accessori: 'accessori' })[p.tipo]}.html">← ${({ polo: 'Polo', felpa: 'Felpe', pantaloni: 'Pantaloni', accessori: 'Accessori' })[p.tipo]}</a>
+    <nav class="briciole" aria-label="Sei qui"><a href="index.html">Home</a><span aria-hidden="true">›</span><a class="indietro" href="${cat[0]}.html">${cat[1]}</a><span aria-hidden="true">›</span><span aria-current="page">${esc(p.nome)}</span></nav>
     <h1>${esc(p.nome)}</h1>
     <p class="colore">${esc(p.colore)}</p>
     <p class="prezzo">${VETRINA ? '<span class="prezzo-etichetta">Prezzo al lancio</span> ' : ''}${euro(p.prezzo)}</p>
+${rec ? `    <a class="voto" href="#rec-titolo"><span class="stelle" aria-hidden="true">${'★'.repeat(Math.round(voto))}<i>${'★'.repeat(5 - Math.round(voto))}</i></span><span>${voto.toFixed(1).replace('.', ',')} <small>(${rec.length} recensioni)</small></span></a>\n` : ''}
   </div>
-  <div class="galleria" data-n="${p.foto.length}">
+  <div class="galleria" data-n="${n}">
 ${galleria}
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo"><strong>${esc(p.frase)}</strong> ${esc(p.testo)}</p>
-${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> In foto: taglia M, su manichino.</p>
-`}${VETRINA ? dropScheda(p, acc) : `    <fieldset class="taglie">
+${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> Sul manichino: taglia M.</p>
+`}${VETRINA ? dropScheda(p, acc, !acc && p.tipo !== 'pantaloni') : `    <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
 ${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
@@ -541,7 +725,7 @@ ${acc ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a 
       <ul>${CURA[p.cura].map(([k, v]) => `<li><strong>${k}:</strong> ${esc(v)}</li>`).join('')}</ul>
       <p class="piccolo">Dati di esempio, da confermare con l’etichetta del capo.</p>
     </details>
-${acc || p.tipo === 'pantaloni' ? '' : `    <details>
+${acc || p.tipo === 'pantaloni' ? '' : `    <details id="guida-taglie">
       <summary>Guida alle taglie</summary>
       <table class="guida">
         <thead><tr><th>Taglia</th><th>Torace (cm)</th><th>Lunghezza (cm)</th></tr></thead>
@@ -555,6 +739,7 @@ ${acc || p.tipo === 'pantaloni' ? '' : `    <details>
     </details>
 `}  </div>
 </div>
+${puntiScheda(p)}
 ${recensioni(p)}
 
 <section class="completa" aria-labelledby="completa-titolo">
@@ -623,28 +808,175 @@ const RECENSIONI = {
     ['Amina K.', 4, 'S', 'grande', 'La M era esaurita e ho preso la S: abbondante lo stesso. La prossima la prendo al drop, prima che finisca.'],
   ],
 };
+// 23/10 sera (Francesco: «molte di più per ogni capo, realistiche, con filtro»): altre recensioni DI ESEMPIO, voti da 2 a 5,
+// difetti veri (taglia, colore, lavaggi), sempre sui dettagli del catalogo. Accessori e Cargo: prima non ne avevano.
+// Per gli accessori la taglia è 'Unica' e «come veste» resta vuoto. Sul sito vero: solo recensioni di clienti verificati.
+const RECENSIONI_ALTRE = {
+  'polo-linee': [
+    ['Gianluca F.', 5, 'L', 'giusta', 'Le linee sulle maniche sono cucite dritte, niente pieghe. Ne ho viste di simili a prezzi doppi.'],
+    ['Omar S.', 4, 'M', 'giusta', 'Bella e semplice. Il colletto dopo tre lavaggi tiene ancora, vediamo tra qualche mese.'],
+    ['Valentina R.', 5, 'M', 'grande', 'Presa per me, larga come piace a me. Con i jeans chiari è perfetta.'],
+    ['Pietro A.', 3, 'XL', 'grande', 'Il tessuto è buono ma la XL è davvero abbondante, sembra una XXL. Avrei dovuto prendere la L.'],
+    ['Mattia C.', 5, 'S', 'giusta', 'Sono magro e di solito le polo mi stanno a sacco, questa no. Spalle giuste.'],
+    ['Ibrahim D.', 5, 'L', 'giusta', 'La firma sul petto vista da vicino è fatta bene, il filo è fitto. Contento.'],
+    ['Francesca P.', 4, 'S', 'giusta', 'Regalo per mio fratello, gli è piaciuta molto. Il pacco però è arrivato un giorno dopo.'],
+    ['Alessio M.', 5, 'M', 'giusta', 'Uso da ufficio e da campo da padel il sabato. Regge entrambe le cose.'],
+    ['Rayan K.', 2, 'M', 'piccola', 'A me tira sul petto e sulle braccia, per il mio fisico è stretta. La qualità c’è, il taglio non fa per me.'],
+  ],
+  'polo-tricolore': [
+    ['Stefano L.', 5, 'L', 'giusta', 'Messa per la partita dell’Italia, tutti a chiedermi dove l’ho presa.'],
+    ['Nicolò B.', 4, 'M', 'giusta', 'Molto bella. Dopo il primo lavaggio il rosso è rimasto acceso, lavata a 30 al rovescio come scritto.'],
+    ['Aisha M.', 5, 'S', 'giusta', 'La S mi sta come una polo da donna, non troppo lunga. Il verde e il rosso sono eleganti, non da stadio.'],
+    ['Lorenzo T.', 4, 'XL', 'giusta', 'Va bene di taglia. Una stella in meno perché le fasce sulle maniche le avrei volute un filo più sottili.'],
+    ['Marco G.', 5, 'M', 'giusta', 'Le ali dietro sono il pezzo più bello, si vedono quando sei di spalle al tavolo.'],
+    ['Hicham A.', 5, 'L', 'giusta', 'Comprata insieme alla Polo Linee. Questa la metto quando voglio farmi notare.'],
+    ['Giorgia S.', 3, 'M', 'grande', 'Bella, ma su di me la M è larga in vita. La terrò per l’estate, larga va bene lo stesso.'],
+    ['Daniele F.', 5, 'XXL', 'giusta', 'Finalmente una XXL che non sembra una tenda. Ricamo pulito.'],
+    ['Cristian V.', 4, 'L', 'giusta', 'Bella polo. La scritta sopra l’orlo è piccola, da lontano non si legge, ma forse è giusto così.'],
+  ],
+  'polo-jacquard': [
+    ['Edoardo C.', 5, 'L', 'giusta', 'Il motivo a colonne dal vivo ha profondità, la luce cambia muovendosi. Non è la solita polo.'],
+    ['Leila B.', 5, 'S', 'giusta', 'Il grigio perla con il collo tortora è delicato. La metto con i pantaloni di lino.'],
+    ['Paolo R.', 4, 'XL', 'giusta', 'Elegante. Un po’ calda per luglio, per il resto ottima.'],
+    ['Mohamed E.', 5, 'M', 'giusta', 'Indossata a una cena di lavoro sotto la giacca, ha fatto la sua figura.'],
+    ['Sara V.', 4, 'S', 'piccola', 'Mi piace tantissimo, ma la S è aderente sui fianchi. Prendete una taglia in più se la volete morbida.'],
+    ['Filippo N.', 5, 'L', 'giusta', 'Dopo un mese di lavaggi a 30 il motivo è identico, come nuova.'],
+    ['Riccardo B.', 3, 'M', 'giusta', 'Bella, ma il prezzo è alto rispetto alle altre polo. La qualità c’è, va detto.'],
+    ['Kevin O.', 5, 'XL', 'giusta', 'Firma tono su tono: la vedi solo se ti avvicini. Proprio quello che volevo.'],
+    ['Marta D.', 4, 'M', 'giusta', 'Presa per mio padre, dice che è la polo più bella che ha. Stirarla è un po’ noioso.'],
+  ],
+  'felpa-stretta': [
+    ['Luca B.', 5, 'L', 'grande', 'La stampa sulla schiena è grande e precisa, i bordi sono netti. Felpa calda.'],
+    ['Nour H.', 4, 'M', 'grande', 'Molto comoda. Il cappuccio è grande, per me anche troppo, ma la uso sempre.'],
+    ['Gabriele S.', 5, 'XL', 'grande', 'Presa larga apposta. Il grigio melange è quello vero, non tendente all’azzurro.'],
+    ['Chiara L.', 5, 'S', 'giusta', 'Davanti pulita, dietro il messaggio: la indosso anche al lavoro senza problemi.'],
+    ['Antonio M.', 3, 'L', 'grande', 'Bella stampa, ma dopo qualche lavaggio sono uscite un po’ di palline sui fianchi.'],
+    ['Yassine R.', 5, 'M', 'grande', 'Il significato della stretta di mano mi ha convinto prima ancora della felpa. Poi la felpa è anche bella.'],
+    ['Elisa F.', 4, 'S', 'grande', 'Morbida dentro, garzata come si deve. La S su di me è oversize, a me va bene.'],
+    ['Tommaso G.', 5, 'XXL', 'giusta', 'Ho le spalle larghe e finalmente una felpa che non tira. Polsini che tengono.'],
+    ['Simone P.', 4, 'M', 'grande', 'Ottima. Una stella in meno perché la tasca a marsupio è un po’ bassa per i miei gusti.'],
+  ],
+  'felpa-firma': [
+    ['Diego A.', 5, 'L', 'grande', 'Le onde verde, bianco e rosso intorno a MARO si notano anche da lontano. Blu bellissimo.'],
+    ['Ilaria N.', 5, 'S', 'grande', 'La porto sopra i leggings per andare in palestra, comoda e calda.'],
+    ['Karim B.', 4, 'M', 'grande', 'Bella e pesante. Il blu dal vivo è più scuro che nelle foto, quasi nero di sera.'],
+    ['Federica M.', 5, 'M', 'grande', 'Regalata al mio ragazzo, ora la mette sempre. Gliela rubo.'],
+    ['Andrea V.', 3, 'XL', 'grande', 'Bella, ma la XL è lunga di busto, mi arriva sotto il sedere. Pesante, quindi in casa fa caldo.'],
+    ['Samuele R.', 5, 'L', 'giusta', 'Firma piccola davanti, grande dietro: si capisce che è pensata. Cuciture pulite.'],
+    ['Zakaria E.', 5, 'M', 'grande', 'Presa dopo averla vista nel lookbook. Uguale alle foto, nessuna sorpresa.'],
+    ['Beatrice L.', 4, 'S', 'grande', 'Molto bella. La coulisse del cappuccio è corta, come dice qualcun altro: piccolo difetto.'],
+    ['Michele C.', 5, 'XXL', 'giusta', 'Taglia giusta per chi è grosso, non sembra un sacco. Il blu è elegante.'],
+  ],
+  'felpa-verticale': [
+    ['Leonardo P.', 5, 'L', 'grande', 'La scritta che scende lungo la schiena è il dettaglio che la fa sembrare un capo da passerella.'],
+    ['Imane S.', 5, 'S', 'grande', 'Il verde bottiglia è stupendo con i jeans chiari. La porto tutta la settimana.'],
+    ['Giacomo R.', 4, 'M', 'grande', 'Ottima, calda. Il verde è più scuro che in foto, ma più elegante così.'],
+    ['Alessandra T.', 5, 'M', 'grande', 'Morbida e spessa. Dopo cinque lavaggi la grafica è come il primo giorno.'],
+    ['Bilal C.', 5, 'XL', 'grande', 'Davanti niente, dietro tutto. Quando ti giri la gente legge MARO, ed è proprio quello che volevo.'],
+    ['Matteo L.', 3, 'L', 'grande', 'Bella ma molto larga, con la L sembro un po’ perso dentro. Prendete una taglia in meno.'],
+    ['Noemi V.', 4, 'S', 'grande', 'Bellissima, ma sulle donne è proprio oversize. A me piace così, ma meglio saperlo.'],
+    ['Riccardo D.', 5, 'M', 'giusta', 'Cappuccio largo che non si affloscia. Si vede la cura nelle cuciture.'],
+    ['Adam F.', 4, 'L', 'grande', 'Bella felpa. Avrei voluto un po’ più di stampa anche davanti, ma è una scelta.'],
+  ],
+  'cargo-firma': [
+    ['Lorenzo M.', 5, 'L', 'giusta', 'Beige sabbia bellissimo, la firma sulla gamba si vede ma non urla. Tasche capienti.'],
+    ['Youssef A.', 4, 'M', 'giusta', 'Gamba dritta come piace a me. Un po’ lunghi, li ho fatti accorciare di due centimetri.'],
+    ['Chiara B.', 5, 'S', 'grande', 'Presi per me, li porto larghi con una cintura. Con la Felpa Verticale stanno benissimo.'],
+    ['Davide R.', 4, 'L', 'giusta', 'Tela robusta. Il beige si sporca facilmente, ma si lava bene.'],
+    ['Hassan T.', 5, 'XL', 'giusta', 'Finalmente un cargo che non sembra da cantiere. Elegante con le sneakers bianche.'],
+    ['Giulia F.', 3, 'M', 'grande', 'Belli, ma per me troppo larghi in vita: senza cintura non stanno su.'],
+    ['Marco P.', 5, 'XXL', 'giusta', 'Taglia giusta anche per chi ha le gambe grosse. Le tasche laterali non gonfiano.'],
+    ['Amir K.', 4, 'L', 'giusta', 'Ottimi. Avrei voluto una tasca con la zip per il telefono.'],
+    ['Federico S.', 5, 'M', 'giusta', 'La firma che scende lungo il fianco è il dettaglio che li fa riconoscere. Comodi tutto il giorno.'],
+    ['Sofia R.', 4, 'S', 'giusta', 'Mi piacciono molto, la S mi sta bene di vita ma un po’ lunga di gamba.'],
+    ['Nicola G.', 2, 'L', 'piccola', 'La L mi stringe sulle cosce, devo cambiarli. Il tessuto però è buono.'],
+    ['Elias M.', 5, 'L', 'giusta', 'Stile pulito, colore caldo. Ho già chiesto se arriva anche il nero.'],
+  ],
+  'cappellino-ali': [
+    ['Tommaso R.', 5, 'Unica', '', 'Le ali ricamate sono in rilievo, si sentono al tatto. Rete dietro che fa respirare d’estate.'],
+    ['Malik S.', 5, 'Unica', '', 'Visiera curva come piace a me, chiusura dietro che si regola facile.'],
+    ['Elena G.', 4, 'Unica', '', 'Bello, regolato al minimo mi sta un po’ largo, ho la testa piccola.'],
+    ['Andrea L.', 5, 'Unica', '', 'Preso per il padel, ora lo porto ovunque. Il bianco del ricamo sul nero risalta.'],
+    ['Karim O.', 4, 'Unica', '', 'Ottimo cappellino. La visiera all’inizio è un po’ rigida, poi si ammorbidisce.'],
+    ['Giada P.', 5, 'Unica', '', 'Regalato al mio ragazzo insieme alla borraccia, stessa grafica, bellissimo set.'],
+    ['Simone B.', 3, 'Unica', '', 'Carino, ma la rete dietro per me è un po’ troppo da camionista. Le ali però sono stupende.'],
+    ['Riccardo L.', 5, 'Unica', '', 'Ricamo pulito, nessun filo che esce. Si vede che è fatto con cura.'],
+    ['Omar B.', 5, 'Unica', '', 'Le ali sul davanti sono il motivo per cui l’ho preso. Leggero e comodo.'],
+    ['Sara C.', 4, 'Unica', '', 'Bello. Lavato a mano come scritto, nessun problema.'],
+  ],
+  'berretto-ali': [
+    ['Luca V.', 5, 'Unica', '', 'Caldo e morbido, il logo sul risvolto è ricamato bene. Perfetto per l’inverno a Milano.'],
+    ['Hamza N.', 4, 'Unica', '', 'Bello, le coste sono belle spesse. Pizzica un pochino sulla fronte i primi giorni.'],
+    ['Martina F.', 5, 'Unica', '', 'Risvolto largo che si può portare alto o basso. Sta bene anche a chi ha i capelli lunghi.'],
+    ['Diego S.', 5, 'Unica', '', 'Il nero è un nero vero, non si scolorisce. Il ricamo bianco risalta.'],
+    ['Yasmine A.', 4, 'Unica', '', 'Carino e caldo. Avrei preferito un risvolto un po’ più basso.'],
+    ['Paolo F.', 5, 'Unica', '', 'Preso insieme alla Felpa Verticale, stanno benissimo insieme.'],
+    ['Giorgio T.', 3, 'Unica', '', 'Bello, ma per me un po’ corto: sulle orecchie arriva appena.'],
+    ['Nadia R.', 5, 'Unica', '', 'Lavato a mano e asciugato in piano, è rimasto in forma.'],
+    ['Matteo S.', 4, 'Unica', '', 'Buona qualità per il prezzo. Il logo è piccolo, ma elegante.'],
+  ],
+  'borraccia-ali': [
+    ['Alessio R.', 5, 'Unica', '', 'Acciaio solido, finitura opaca che non trattiene le impronte. Le ali bianche sono belle.'],
+    ['Sami K.', 4, 'Unica', '', 'Bella e robusta. Il tappo a vite chiude bene, nessuna perdita nello zaino.'],
+    ['Federica L.', 5, 'Unica', '', 'La porto in palestra tutti i giorni, la gente me la chiede.'],
+    ['Marco D.', 5, 'Unica', '', 'Regalo per un amico che gioca a basket, gli è piaciuta tantissimo.'],
+    ['Imran H.', 3, 'Unica', '', 'Bella, ma l’apertura è stretta per mettere il ghiaccio. Lavarla a mano è un po’ scomodo.'],
+    ['Chiara T.', 5, 'Unica', '', 'Dopo una caduta sul cemento, solo un piccolo segno. Le ali sono ancora perfette.'],
+    ['Lorenzo B.', 4, 'Unica', '', 'Ottima. Avrei voluto anche un tappo con il beccuccio per quando corro.'],
+    ['Aya M.', 5, 'Unica', '', 'Nero opaco con le ali bianche: semplice e bellissima, sta bene sulla scrivania.'],
+    ['Davide C.', 5, 'Unica', '', 'Presa insieme al cappellino, set perfetto per il padel.'],
+    ['Pietro N.', 4, 'Unica', '', 'Buona, solida. Si sente il peso dell’acciaio, ma è il prezzo della robustezza.'],
+  ],
+};
+// le nuove si alternano alle prime sei, così le prime che si vedono non sono tutte uguali per tono e voto
+for (const [id, nuove] of Object.entries(RECENSIONI_ALTRE)) {
+  const prime = RECENSIONI[id] || [], tutte = [];
+  for (let i = 0; i < Math.max(prime.length, nuove.length); i++) { if (nuove[i]) tutte.push(nuove[i]); if (prime[i]) tutte.push(prime[i]); }
+  RECENSIONI[id] = tutte;
+}
 function recensioni(p) {
   const scelte = RECENSIONI[p.id];
-  if (!scelte && (p.tipo === 'accessori' || p.tipo === 'pantaloni')) return ''; // accessori di prova: niente recensioni inventate
   if (!scelte || scelte.length < 5) throw new Error('Recensioni mancanti per ' + p.id + ' (servono almeno 5)');
-  const media = (scelte.reduce((a, r) => a + r[1], 0) / scelte.length).toFixed(1).replace('.', ',');
-  const fit = { piccola: 0, giusta: 0, grande: 0 }; scelte.forEach(r => fit[r[3]]++);
+  const n = scelte.length, somma = scelte.reduce((a, r) => a + r[1], 0);
+  const media = (somma / n).toFixed(1).replace('.', ',');
+  const conFit = scelte.filter(r => r[3]);
+  const fit = { piccola: 0, giusta: 0, grande: 0 }; conFit.forEach(r => fit[r[3]]++);
+  const perStelle = [5, 4, 3, 2, 1].map(s => [s, scelte.filter(r => r[1] === s).length]);
+  const taglie = TAGLIE_ORDINE.filter(t => t !== 'Unica' && scelte.some(r => r[2] === t));
   const stelle = n => '<span class="stelle" aria-label="' + n + ' stelle su 5">' + '★'.repeat(n) + '<i>' + '★'.repeat(5 - n) + '</i></span>';
+  const MOSTRA = 6;
   return `
-<section class="recensioni" aria-labelledby="rec-titolo">
+<section class="recensioni" aria-labelledby="rec-titolo" data-rec>
   <div class="rec-testa">
     <h2 id="rec-titolo">Recensioni</h2>
     <p class="rec-esempio">Recensioni di esempio · sito dimostrativo</p>
   </div>
   <div class="rec-sintesi">
-    <div><p class="rec-media">${media}</p>${stelle(Math.round(scelte.reduce((a, r) => a + r[1], 0) / scelte.length))}<p class="piccolo">${scelte.length} recensioni</p></div>
-    <div class="rec-fit"><p>Come veste</p>
-      <div class="fit-barra"><span>Piccola</span><span>Giusta</span><span>Grande</span><i style="left:${Math.round(((fit.giusta * 50) + (fit.grande * 100)) / scelte.length)}%"></i></div>
+    <div><p class="rec-media">${media}</p>${stelle(Math.round(somma / n))}<p class="piccolo">${n} recensioni</p></div>
+    <ul class="rec-barre" aria-label="Recensioni per numero di stelle">
+${perStelle.map(([s, c]) => `      <li><button type="button" data-rec-stelle="${s}"${c ? '' : ' disabled'} aria-label="Mostra le recensioni da ${s} stelle (${c})"><span>${s} ★</span><i><b style="width:${Math.round(100 * c / n)}%"></b></i><span>${c}</span></button></li>`).join('\n')}
+    </ul>
+${conFit.length ? `    <div class="rec-fit"><p>Come veste</p>
+      <div class="fit-barra"><span>Piccola</span><span>Giusta</span><span>Grande</span><i style="left:${Math.round(((fit.giusta * 50) + (fit.grande * 100)) / conFit.length)}%"></i></div>
     </div>
-  </div>
+` : ''}  </div>
+  <div class="rec-filtri" role="group" aria-label="Filtra le recensioni">
+    <button type="button" data-rec-stelle="tutte" aria-pressed="true">Tutte (${n})</button>
+${perStelle.filter(([, c]) => c).map(([s, c]) => `    <button type="button" data-rec-stelle="${s}" aria-pressed="false">${s} stelle (${c})</button>`).join('\n')}
+${taglie.length ? `    <span class="rec-filtri-sep" aria-hidden="true"></span>
+${taglie.map(t => `    <button type="button" data-rec-taglia="${t}" aria-pressed="false">Taglia ${t}</button>`).join('\n')}
+` : ''}  </div>
   <ul class="rec-lista">
-${scelte.map(r => `    <li><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[4])}</p><p class="piccolo">${esc(r[0])} · taglia ${r[2]} · veste ${r[3]}</p></li>`).join('\n')}
+${scelte.map((r, i) => `    <li data-stelle="${r[1]}" data-taglia="${r[2]}"${i >= MOSTRA ? ' hidden' : ''}><div class="rec-riga">${stelle(r[1])}<span class="verificato">Acquisto verificato</span></div><p>${esc(r[4])}</p><p class="piccolo rec-chi"><span class="rec-avatar" aria-hidden="true">${esc(r[0][0])}</span>${esc(r[0])}${r[2] !== 'Unica' ? ' · taglia ' + r[2] : ''}${r[3] ? ' · veste ' + r[3] : ''}</p></li>`).join('\n')}
   </ul>
+  <p class="rec-vuoto" hidden>Nessuna recensione con questi filtri.</p>
+  <button class="n-btn rec-altre" type="button" data-rec-altre${n > MOSTRA ? '' : ' hidden'}>Mostra altre recensioni</button>
+  <script>/* recensioni (23/10): filtro per stelle e per taglia, sei per volta con «Mostra altre» */(function(){var s=document.currentScript.parentNode,li=[].slice.call(s.querySelectorAll('.rec-lista li')),altre=s.querySelector('[data-rec-altre]'),vuoto=s.querySelector('.rec-vuoto'),st='tutte',tg=null,quante=${MOSTRA};
+function mostra(){var ok=li.filter(function(x){return (st==='tutte'||x.dataset.stelle===st)&&(!tg||x.dataset.taglia===tg);});li.forEach(function(x){x.hidden=true;});ok.slice(0,quante).forEach(function(x){x.hidden=false;});altre.hidden=ok.length<=quante;vuoto.hidden=ok.length>0;
+s.querySelectorAll('.rec-filtri [data-rec-stelle]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.recStelle===st));});s.querySelectorAll('[data-rec-taglia]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.recTaglia===tg));});}
+s.querySelectorAll('[data-rec-stelle]').forEach(function(b){b.addEventListener('click',function(){st=b.dataset.recStelle;quante=${MOSTRA};mostra();});});
+s.querySelectorAll('[data-rec-taglia]').forEach(function(b){b.addEventListener('click',function(){tg=tg===b.dataset.recTaglia?null:b.dataset.recTaglia;quante=${MOSTRA};mostra();});});
+altre.addEventListener('click',function(){quante+=${MOSTRA};mostra();});})();</script>
 </section>`;
 }
 
@@ -745,13 +1077,22 @@ const ICONE = {
 const domanda = (q, a) => `      <details><summary>${q}</summary><p>${a}</p></details>`;
 function aiuto() {
   const temi = VETRINA ? [['spedizioni', 'Il drop'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']] : [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
+  // 23/10 sera (grafica ChatGPT _grafica-chatgpt/aiuto-2026-10-23/): apertura con foto, tre schede con foto e freccia,
+  // taglie col disegno a sinistra, contatti con l'insegna. I contatti veri di Omar non ci sono ancora: pulsanti «in arrivo»
+  const FOTO_TEMI = { spedizioni: ['aiuto-drop', 'Scatola nera MARO con le ali sul coperchio, su un banco di marmo in Galleria'], taglie: ['aiuto-taglie', 'Polo nera MARO stesa con il metro da sarta e il cartamodello'], contatti: ['aiuto-scrivania', 'Scrivania di marmo con il portatile e il cappellino MARO, dietro il Duomo di Milano'] };
+  const SOTTO_TEMI = { spedizioni: VETRINA ? 'Spedizioni, resi e pagamenti: tutto quello che serve sapere sul drop.' : 'Dal pagamento alla porta di casa.', resi: '14 giorni per cambiare idea.', taglie: 'Trova la misura giusta con la nostra guida.', contatti: 'Scrivici per qualsiasi domanda.' };
   const corpo = `
-<section class="aiuto-testa" aria-labelledby="aiuto-titolo">
-  <h1 id="aiuto-titolo" class="titolo">Come possiamo<br>aiutarti?</h1>
-  <nav class="aiuto-temi" aria-label="Argomenti">
-${temi.map(([id, t]) => `    <a href="#${id}">${ICONE[id]}<span>${t}</span></a>`).join('\n')}
-  </nav>
+<section class="aiuto-testa aiuto-testa2" aria-labelledby="aiuto-titolo">
+  <figure class="aiuto-testa-foto">${img('aiuto-apertura', 'Ragazzo di spalle con la felpa nera e le ali MARO nella Galleria Vittorio Emanuele, in fondo il Duomo', { dove: 'aiuto apertura', lazy: false, sizes: '100vw' })}</figure>
+  <div class="aiuto-testa-testo">
+    <p class="n-occhiello">Supporto MARO</p>
+    <h1 id="aiuto-titolo">Come possiamo<br>aiutarti?</h1>
+    <p>Tutto quello che ti serve sapere su drop, taglie e contatti.</p>
+  </div>
 </section>
+<nav class="aiuto-temi2" aria-label="Argomenti">
+${temi.map(([id, t]) => `  <a href="#${id}">${FOTO_TEMI[id] ? `<span class="aiuto-tema-foto">${img(FOTO_TEMI[id][0], FOTO_TEMI[id][1], { dove: 'aiuto ' + id, sizes: '(min-width: 960px) 32vw, 100vw' })}</span>` : ''}<span class="aiuto-tema-corpo">${ICONE[id]}<strong>${t}</strong><span>${SOTTO_TEMI[id]}</span><i aria-hidden="true">${FRECCIA}</i></span></a>`).join('\n')}
+</nav>
 
 <div class="aiuto">
 ${VETRINA ? `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
@@ -778,7 +1119,7 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
   </section>
 
 `}  <section class="aiuto-tema" id="taglie" aria-labelledby="t-taglie">
-    <div class="aiuto-tema-testa"><h2 id="t-taglie">Guida alle taglie</h2><p>Misure del capo steso, in centimetri. Confrontale con un capo tuo che ti sta bene.</p>
+    <div class="aiuto-tema-testa"><p class="n-occhiello">Guida alle taglie</p><h2 id="t-taglie">Trova<br>la tua taglia</h2><p>Misura il capo steso su una superficie piana e confronta le misure con la tabella. Le misure sono in centimetri.</p>
       <figure class="misure-disegno" aria-label="Come prendere le misure">
         <svg viewBox="0 0 220 200" role="img" aria-label="Disegno di una maglia: il torace si misura da ascella ad ascella, la lunghezza dalla spalla all’orlo">
           <path d="M70 20 L40 32 L10 90 L34 100 L52 66 L52 186 L168 186 L168 66 L186 100 L210 90 L180 32 L150 20 Q110 44 70 20Z" fill="#f5f5f5" stroke="#000" stroke-width="2.5" stroke-linejoin="round"/>
@@ -795,16 +1136,24 @@ ${domanda('Quando ricevo il rimborso?', 'Entro 14 giorni da quando il capo ci ar
       </div>
       <div data-tabella-di="polo">${tabellaTaglie(['S', 'M', 'L', 'XL', 'XXL'], 1)}</div>
       <div data-tabella-di="felpe" hidden>${tabellaTaglie(['XS', 'S', 'M', 'L', 'XL', 'XXL'], 0)}</div>
-      <p class="piccolo">Tra due taglie? Polo: scegli la più grande se la vuoi comoda. Felpe: sono già ampie, scegli la più piccola.</p>
+      <p class="piccolo taglie-consiglio"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span><strong>Tra due taglie?</strong> Polo: scegli la più grande se la vuoi comoda. Felpe: sono già ampie, scegli la più piccola.</span></p>
     </div>
   </section>
 
-  <section class="aiuto-tema" id="contatti" aria-labelledby="t-contatti">
-    <div class="aiuto-tema-testa"><h2 id="t-contatti">Contatti</h2><p>Non hai trovato la risposta? Scrivici.</p></div>
-    <div class="contatto">
-      <p><strong>Email, WhatsApp e Instagram</strong> arriveranno con l’apertura del negozio.</p>
-      <p class="piccolo">Rispondiamo dal lunedì al venerdì, entro un giorno lavorativo.</p>
+  <section class="aiuto-tema aiuto-contatti2" id="contatti" aria-labelledby="t-contatti">
+    <div class="aiuto-tema-testa">
+      <p class="n-occhiello">Contatti</p>
+      <h2 id="t-contatti">Siamo qui<br>per te</h2>
+      <p>Email, WhatsApp e Instagram arrivano con l’apertura del negozio. Rispondiamo dal lunedì al venerdì, entro un giorno lavorativo.</p>
+      <ul class="contatti-canali" aria-label="Canali di contatto, in arrivo">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3.5 6l8.5 7 8.5-7"/></svg>Email<small>in arrivo</small></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/></svg>WhatsApp<small>in arrivo</small></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><circle cx="16.8" cy="7.2" r=".6"/></svg>Instagram<small>in arrivo</small></li>
+      </ul>
     </div>
+    <figure class="contatti-foto">${img('aiuto-insegna', 'Insegna nera con le ali MARO appesa a un palazzo di Milano, sullo sfondo il Duomo', { dove: 'aiuto contatti', sizes: '(min-width: 960px) 50vw, 100vw' })}
+      <figcaption><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span><strong>MARO</strong>Milano, Italia<br>Sport, stile e mentalità.</span></figcaption>
+    </figure>
   </section>
 </div>`;
   return pagina({ titolo: 'Aiuto — MARO', descrizione: 'Ordini, spedizioni, resi, guida alle taglie e contatti di MARO.', corpo, file: 'aiuto.html' });
@@ -897,6 +1246,7 @@ const CAROSELLO_ALI = [
   ['ali-6', 'Ragazzo seduto sui gradini con giacca nera MARO e cappellino con le ali'],
 ];
 function storia() {
+  if (NUOVA_HOME) return storiaNuova();
   const passi = MANIFESTO.map((m, i) => `
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
@@ -967,6 +1317,111 @@ function storia() {
   <svg class="bn-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
   <h2 id="bn-motto">Fly with<br>your mind.</h2>
   <a class="btn btn-bianco" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'}</a>
+</section>`;
+  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
+}
+
+// ---------- STORIA NUOVA (prova 23/10): schema di ChatGPT (_grafica-chatgpt/brand-2026-10-23/schema-pagina-brand.png) ----------
+// Stessi testi della pagina di prima; i disegni di Omar restano con le SUE parole (MANIFESTO), cambia solo l'impaginazione:
+// cinque colonne su fondo carta come nello schema, e toccando il disegno si vede ancora il foglio originale.
+// sei sport con la Polo Linee e il cappellino (23/10, griglia di ChatGPT): al posto delle foto ali-1…6, che ripetevano la foto di «Le ali»
+const SPORT_BRAND = [
+  // 23/10 sera (Francesco: «un misto, non tutte polo nere»): polo e felpa verde alternate; tolte sport-1, -3, -4
+  ['brand-sport-2', 'Ragazzo con la Polo Linee MARO seduto sui gradini con la racchetta da tennis'],
+  ['brand-felpa-basket', 'Ragazzo con la felpa verde MARO palleggia su un campo da basket al tramonto'],
+  ['brand-sport-5', 'Ragazzo con la Polo Linee MARO e un asciugamano al collo tiene la borraccia nera con le ali'],
+  ['brand-felpa-calcio', 'Ragazzo con la felpa verde MARO cammina sul campo da calcio, pallone vicino ai piedi'],
+  ['brand-sport-6', 'Ragazzo con la Polo Linee MARO e il cappellino in bicicletta davanti alle colonne'],
+  ['brand-felpa-firenze', 'Ragazzo con la felpa verde MARO allaccia le scarpe sopra Firenze, il Duomo dietro'],
+];
+function storiaNuova() {
+  const giro = '<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span>';
+  const passi = MANIFESTO.map((m, i) => `
+    <li class="bm-passo s-passo" data-entra>
+      <p class="s-passo-num">${String(i + 1).padStart(2, '0')}</p>
+      <h3 class="s-passo-nome">${esc(m.etichetta)}.</h3>
+      <figure class="bm-disegno s-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
+        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 960px) 18vw, 90vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 960px) 18vw, 90vw' })}${giro}</button>
+      </figure>
+      <div class="bm-testo s-passo-testo">${m.testo}</div>
+    </li>`).join('');
+  const corpo = `
+<section class="s-apertura" aria-labelledby="s-titolo">
+  ${img('brand-napoli', 'Ragazzo con la Polo Linee MARO nera e il Cargo Firma beige seduto su un muretto sopra Napoli al tramonto, dietro il Vesuvio', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}
+  <div class="s-apertura-testo">
+    <p class="n-occhiello">Il brand</p>
+    <h1 id="s-titolo">La nostra<br>storia</h1>
+    <span class="s-riga" aria-hidden="true"></span>
+    <p>Abbigliamento sportivo ed elegante per il tennis, il padel e ogni giorno, con la firma verticale e le ali di Omar.</p>
+    <a class="n-btn" href="#s-campo">Scopri di più ${FRECCIA}</a>
+  </div>
+</section>
+
+<section class="s-campo" id="s-campo" aria-labelledby="bn-titolo">
+  <div class="s-campo-testo">
+    <p class="n-occhiello">Il brand</p>
+    <h2 id="bn-titolo">In campo<br>dal 2020.</h2>
+    <p><strong>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il fischio finale.</p>
+  </div>
+  <div class="s-campo-foto">
+    <!-- 23/10: due sport in azione con il modello nuovo (Francesco: via tennis e corsa del set vecchio) -->
+    <figure>${img('cat-movimento-calcio', 'Ragazzo con la Polo Tricolore MARO calcia un pallone su una terrazza di Roma al tramonto, dietro San Pietro', { dove: 'brand campo', sizes: '(min-width: 960px) 24vw, 50vw' })}</figure>
+    <figure>${img('cat-movimento-basket', 'Ragazzo con la Polo Tricolore MARO schiaccia a canestro su un campo all’aperto a Roma al tramonto', { dove: 'brand campo', sizes: '(min-width: 960px) 24vw, 50vw' })}</figure>
+  </div>
+</section>
+
+<section class="s-idea bm" aria-labelledby="s-idea-titolo">
+  <div class="s-idea-testa">
+    <h2 id="s-idea-titolo">Prima di ogni capo c’è un’idea.</h2>
+    <p>Qui sotto la vedi prendere forma: i disegni di Omar, uno dopo l’altro, con le sue parole.</p>
+    <p class="s-idea-invito">${giro}<span><span data-verbo>Clicca</span> su un disegno per vedere il foglio originale</span></p>
+  </div>
+  <ol class="s-passi">${passi}
+  </ol>
+  <p class="s-scorri" aria-hidden="true">Scorri per vedere tutti i disegni →</p>
+</section>
+
+<section class="s-motto" aria-label="Immagina. Credi. Agisci.">
+  <video autoplay loop muted playsinline preload="auto" width="864" height="496" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${(usa('bn-tennis-locandina', 'brand apertura video'), urlFoto('bn-tennis-locandina'))}" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis" data-video-brand>
+    <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
+  </video>
+  <p class="s-motto-frase">Immagina.<br>Credi. Agisci.<span class="s-riga" aria-hidden="true"></span></p>
+</section>
+
+<section class="s-galleria" aria-label="Foto della campagna">
+  <div class="s-fila" tabindex="0" aria-label="Sei sport con la Polo Linee e la felpa verde: scorri per vederli tutti">
+${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand sport', sizes: '(min-width: 960px) 30vw, 80vw' })}</figure>`).join('\n')}
+  </div>
+  <button class="n-lb-freccia n-lb-prima" type="button" data-fila-vai="-1" aria-label="Foto precedenti">${FRECCIA}</button>
+  <button class="n-lb-freccia" type="button" data-fila-vai="1" aria-label="Foto successive">${FRECCIA}</button>
+  <p class="n-lb-sotto s-fila-sotto">Scorri o trascina</p>
+  <script>/* fila a scorrimento (23/10): le frecce spostano di una foto, spente agli estremi */(function(){var s=document.currentScript.parentNode,f=s.querySelector('.s-fila'),b=s.querySelectorAll('[data-fila-vai]');var passo=function(){var x=f.querySelector('figure');return x?x.getBoundingClientRect().width+8:300;};var agg=function(){b[0].disabled=f.scrollLeft<4;b[1].disabled=f.scrollLeft>f.scrollWidth-f.clientWidth-4;};b.forEach(function(x){x.addEventListener('click',function(){f.scrollBy({left:Number(x.getAttribute('data-fila-vai'))*passo(),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});});});f.addEventListener('scroll',agg,{passive:true});addEventListener('resize',agg);addEventListener('load',agg);agg();})();</script>
+</section>
+
+<section class="s-ali" id="bn-simbolo" aria-labelledby="bn-ali-nome">
+  <!-- 23/10 sera, 3° giro (Francesco: «più bella, qualche dettaglio e testo in più, una firma di Omar»):
+       solo fatti già scritti nel sito (disegni di Omar, dettagli dei capi); firma in carattere calligrafico, in locale -->
+  <div class="s-ali-testo">
+    <p class="s-ali-occhiello"><svg viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>Il segno</p>
+    <h2>Dal foglio<br>al capo.</h2>
+    <span class="s-riga" aria-hidden="true"></span>
+    <p class="s-ali-nome" id="bn-ali-nome">Le ali.</p>
+    <p>La M con le ali del primo disegno oggi è sul cappellino, sul berretto e sulla borraccia. MARO in verticale, il secondo, scende sul petto della Polo Linee.</p>
+    <p>Ogni segno MARO nasce a mano, su un foglio di Omar, e passa sul capo con le stesse linee del disegno. Il tratto resta il suo: è così che riconosci MARO anche senza leggere il nome.</p>
+    <div class="s-ali-fondo">
+      <a class="n-btn" href="accessori.html">Accessori ${FRECCIA}</a>
+      <p class="s-ali-firma" aria-hidden="true"><span>Omar</span></p>
+    </div>
+  </div>
+  <figure class="s-ali-foto">${img('brand-ali-nuova', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali guarda la borraccia nera con le ali', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}<figcaption><span>01</span> Cappellino Ali · Borraccia Ali · Polo Linee</figcaption></figure>
+</section>
+
+<section class="s-fine" aria-labelledby="bn-motto">
+  <div class="s-fine-testo">
+    <svg class="s-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
+    <h2 id="bn-motto">Fly with your mind.</h2>
+    <a class="n-btn" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'} ${FRECCIA}</a>
+  </div>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
 }
