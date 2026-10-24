@@ -370,6 +370,7 @@ ${TIR.map((t, k) => { const p = cap(t.capo); return `      <li${k === 0 ? ' clas
 
 // ---------- HOME ----------
 function home() {
+  // terzo campo (24/10, Francesco): il capo indossato nella foto, il banner porta alla sua scheda
   const lb = [
     ['lb-galleria', 'Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo'],
     ['lb-citylife-tramonto', 'Felpa verde MARO di spalle davanti ai grattacieli di CityLife al tramonto'],
@@ -493,17 +494,17 @@ function homeNuova() {
   ];
   // lookbook (23/10): scene nuove dalle tavole di ChatGPT, sport (tennis, padel, corsa, basket) alternato a Milano; ogni foto intera
   const lb = [
-    ['ai-lb-tennis', 'Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano'],
-    ['lb-galleria', 'Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo'], // 23/10 sera: scambiata con ai-lb-galleria (orizzontale, ora nella fascia Milano)
-    ['ai-lb-corsa', 'Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare'],
-    ['ai-lb-duomo-retro', 'Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano'],
-    ['ai-lb-padel', 'Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel'],
-    ['ai-lb-berretto', 'Ragazzo sistema il berretto nero MARO con le ali ricamate'],
-    ['ai-lb-basket', 'Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto'],
-    ['ai-lb-gradoni', 'Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio'],
-    ['ai-lb-duomo-polo', 'Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto'],
-    ['ai-lb-cappellino', 'Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso'],
-    ['ai-lb-portico', 'Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo'],
+    // 24/10: ai-lb-tennis spostata nella fascia «Lo sport» finché non arriva la foto nuova
+    ['lb-galleria', 'Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo', 'felpa-firma'], // 23/10 sera: scambiata con ai-lb-galleria (orizzontale, ora nella fascia Milano)
+    ['ai-lb-corsa', 'Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare', 'felpa-verticale'],
+    ['ai-lb-duomo-retro', 'Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano', 'polo-linee'],
+    ['ai-lb-padel', 'Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel', 'felpa-verticale'],
+    ['ai-lb-berretto', 'Ragazzo sistema il berretto nero MARO con le ali ricamate', 'berretto-ali'],
+    ['ai-lb-basket', 'Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto', 'felpa-verticale'],
+    ['ai-lb-gradoni', 'Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio', 'felpa-verticale'],
+    ['ai-lb-duomo-polo', 'Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto', 'polo-linee'],
+    ['ai-lb-cappellino', 'Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso', 'cappellino-ali'],
+    ['ai-lb-portico', 'Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo', 'felpa-verticale'],
   ];
   const corpo = `
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
@@ -540,16 +541,31 @@ ${COLLEZIONE.map(([id, nome, link, alt]) => `    <a class="n-carta" href="${link
 <!-- 23/10 sera (grafica ChatGPT _grafica-chatgpt/home-milano-logo.png; Francesco: la versione a due pannelli era confusa):
      sopra la fascia larga di Milano con la foto che sfuma nel nero, sotto il ricamo e «Più di un logo» con due dettagli.
      Le foto della grafica non si usano: sotto le ali c'è scritto «MARG» -->
-<section class="n-brand2" aria-label="Il brand">
+<!-- 24/10 (Francesco): al posto di «Milano è la nostra energia» una fascia dedicata allo sport, stesso messaggio (lo sport come mentalità);
+     per ora la foto del tennista presa dal lookbook (la corsa al Colosseo non è piaciuta); foto nuova chiesta a ChatGPT -->
+<section class="n-brand2 n-sport" aria-label="Lo sport">
   <article class="n-milano2">
-    <figure class="n-milano2-foto">${img('ai-lb-galleria', 'Ragazzo di spalle con la felpa MARO nella Galleria Vittorio Emanuele al tramonto, in fondo il Duomo', { dove: 'home milano', sizes: '(min-width: 960px) 75vw, 100vw' })}</figure>
+    <figure class="n-milano2-foto">${img('ai-lb-tennis', 'Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano', { dove: 'home sport', sizes: '(min-width: 960px) 75vw, 100vw' })}</figure>
     <div class="n-milano2-testo">
-      <p class="n-occhiello">Milano</p>
-      <h2>Milano<br>è la nostra energia</h2>
-      <p>Sport, stile e mentalità si incontrano in un brand nato a Milano, per chi vede lo sport come un modo di pensare.</p>
-      <a class="n-btn" href="#lookbook">Milano in foto ${FRECCIA}</a>
+      <p class="n-occhiello">Lo sport</p>
+      <h2>Lo sport<br>è un modo di pensare</h2>
+      <p>Sport, stile e mentalità nello stesso capo: MARO nasce a Milano nel 2020 per chi porta la stessa determinazione in campo e fuori.</p>
+      <a class="n-btn" href="#lookbook">Guarda il lookbook ${FRECCIA}</a>
     </div>
   </article>
+</section>
+
+<section class="n-lookbook lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
+  <div class="n-testa"><h2 id="lookbook-titolo" class="n-etichetta">Lookbook</h2><p class="n-etichetta n-etichetta-dx">Stile in movimento</p></div>
+  <!-- 24/10 (Francesco): banner che scorre da solo, foto intere alla stessa altezza; seconda copia identica per il giro senza stacco -->
+  <div class="n-nastro" aria-label="Foto del lookbook">
+    <div class="n-nastro-binario">
+${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria-hidden="true"' : ''}><a href="${capo}.html"${copia ? ' tabindex="-1"' : ` aria-label="${esc(alt)}: vedi ${esc(CATALOGO.find(p => p.id === capo).nome)}"`}>${img(id, copia ? '' : alt, { dove: 'home lookbook', ripeti: !!copia, sizes: '(min-width: 960px) 22vw, 60vw' })}</a></figure>`).join('\n')).join('\n')}
+    </div>
+  </div>
+</section>
+
+<section class="n-brand2" aria-label="Il segno">
   <article class="n-logo2">
     <figure class="n-logo2-foto">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
     <div class="n-logo2-testo">
@@ -563,18 +579,6 @@ ${COLLEZIONE.map(([id, nome, link, alt]) => `    <a class="n-carta" href="${link
       <figure>${img('home-dettaglio-tricolore', 'Le ali rosse e verdi ricamate sulla schiena della Polo Tricolore, con le righe verde, bianco e rosso sulla spalla', { dove: 'home logo dettaglio', sizes: '260px' })}</figure>
     </div>
   </article>
-</section>
-
-<section class="n-lookbook lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
-  <div class="n-testa"><h2 id="lookbook-titolo" class="n-etichetta">Lookbook</h2><p class="n-etichetta n-etichetta-dx">Stile in movimento</p></div>
-  <div class="lb-vetrina" aria-label="Foto del lookbook">
-    <div class="lb-binario">
-${lb.map(([id, alt], i) => `      <figure aria-label="Foto ${i + 1} di ${lb.length}">${img(id, alt, { dove: 'home lookbook', sizes: '(min-width: 960px) 20vw, 80vw' })}</figure>`).join('\n')}
-    </div>
-    <button class="n-lb-freccia n-lb-prima" type="button" data-lb="-1" aria-label="Foto precedenti">${FRECCIA}</button>
-    <button class="n-lb-freccia" type="button" data-lb="1" aria-label="Foto successive">${FRECCIA}</button>
-  </div>
-  <p class="n-lb-sotto"><span class="lb-conta" aria-live="polite"></span> · Scorri o trascina</p>
 </section>
 
 <section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">

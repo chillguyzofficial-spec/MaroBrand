@@ -591,7 +591,7 @@
     var zChiudi = function () { if (zoom.hidden) return; zoom.hidden = true; zArea.classList.remove('dentro'); blocca(false); if (zDa) zDa.focus({ preventScroll: true }); };
     window.MARO_zoom = function (img) {
       zDa = document.activeElement;
-      zImg.src = img.currentSrc || img.src; zImg.alt = img.alt;
+      zImg.src = img.src || img.currentSrc; zImg.alt = img.alt; // 24/10: sempre la foto grande (currentSrc poteva essere la 640, sgranata una volta ingrandita)
       zArea.classList.remove('dentro'); zoom.hidden = false; blocca(true);
       $('.zoom-chiudi', zoom).focus();
     };

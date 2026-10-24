@@ -23,8 +23,8 @@
 <link rel="preload" href="assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=396fca57">
-<script defer src="assets/js/maro.js?v=281ee6dc"></script>
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=56c328a8">
+<script defer src="assets/js/maro.js?v=9f753688"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="home nuovo">
@@ -99,16 +99,47 @@
   </div>
 </section>
 
-<section class="n-brand2" aria-label="Il brand">
+<section class="n-brand2 n-sport" aria-label="Lo sport">
   <article class="n-milano2">
-    <figure class="n-milano2-foto"><img src="assets/foto/ai-lb-galleria.webp?v=c35d9e67" srcset="assets/foto/ai-lb-galleria-640.webp?v=cf7e4521 640w, assets/foto/ai-lb-galleria.webp?v=c35d9e67 1666w" width="1666" height="935" alt="Ragazzo di spalle con la felpa MARO nella Galleria Vittorio Emanuele al tramonto, in fondo il Duomo" loading="lazy" decoding="async" sizes="(min-width: 960px) 75vw, 100vw"></figure>
+    <figure class="n-milano2-foto"><img src="assets/foto/ai-lb-tennis.webp?v=6a6e74c2" width="630" height="480" alt="Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano" loading="lazy" decoding="async" sizes="(min-width: 960px) 75vw, 100vw"></figure>
     <div class="n-milano2-testo">
-      <p class="n-occhiello">Milano</p>
-      <h2>Milano<br>è la nostra energia</h2>
-      <p>Sport, stile e mentalità si incontrano in un brand nato a Milano, per chi vede lo sport come un modo di pensare.</p>
-      <a class="n-btn" href="#lookbook">Milano in foto <svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
+      <p class="n-occhiello">Lo sport</p>
+      <h2>Lo sport<br>è un modo di pensare</h2>
+      <p>Sport, stile e mentalità nello stesso capo: MARO nasce a Milano nel 2020 per chi porta la stessa determinazione in campo e fuori.</p>
+      <a class="n-btn" href="#lookbook">Guarda il lookbook <svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
     </div>
   </article>
+</section>
+
+<section class="n-lookbook lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
+  <div class="n-testa"><h2 id="lookbook-titolo" class="n-etichetta">Lookbook</h2><p class="n-etichetta n-etichetta-dx">Stile in movimento</p></div>
+  <div class="n-nastro" aria-label="Foto del lookbook">
+    <div class="n-nastro-binario">
+      <figure><a href="felpa-firma.html" aria-label="Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo: vedi Felpa Firma"><img src="assets/foto/lb-galleria.webp?v=2d8ea065" srcset="assets/foto/lb-galleria-640.webp?v=8f33ef0c 640w, assets/foto/lb-galleria.webp?v=2d8ea065 1120w" width="1120" height="1400" alt="Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="felpa-verticale.html" aria-label="Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare: vedi Felpa Verticale"><img src="assets/foto/ai-lb-corsa.webp?v=4fd7d6b7" width="376" height="504" alt="Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="polo-linee.html" aria-label="Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano: vedi Polo Linee"><img src="assets/foto/ai-lb-duomo-retro.webp?v=8e83e79c" width="531" height="480" alt="Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="felpa-verticale.html" aria-label="Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel: vedi Felpa Verticale"><img src="assets/foto/ai-lb-padel.webp?v=8778e65a" width="376" height="505" alt="Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="berretto-ali.html" aria-label="Ragazzo sistema il berretto nero MARO con le ali ricamate: vedi Berretto Ali"><img src="assets/foto/ai-lb-berretto.webp?v=f05b5bc5" width="377" height="407" alt="Ragazzo sistema il berretto nero MARO con le ali ricamate" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="felpa-verticale.html" aria-label="Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto: vedi Felpa Verticale"><img src="assets/foto/ai-lb-basket.webp?v=6bc6661d" width="376" height="505" alt="Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="felpa-verticale.html" aria-label="Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio: vedi Felpa Verticale"><img src="assets/foto/ai-lb-gradoni.webp?v=6a517442" width="598" height="639" alt="Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="polo-linee.html" aria-label="Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto: vedi Polo Linee"><img src="assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5" srcset="assets/foto/ai-lb-duomo-polo-640.webp?v=561a7080 640w, assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5 764w" width="764" height="480" alt="Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="cappellino-ali.html" aria-label="Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso: vedi Cappellino Ali"><img src="assets/foto/ai-lb-cappellino.webp?v=d53cc679" width="354" height="407" alt="Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure><a href="felpa-verticale.html" aria-label="Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo: vedi Felpa Verticale"><img src="assets/foto/ai-lb-portico.webp?v=e32b058d" width="413" height="503" alt="Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-firma.html" tabindex="-1"><img src="assets/foto/lb-galleria.webp?v=2d8ea065" srcset="assets/foto/lb-galleria-640.webp?v=8f33ef0c 640w, assets/foto/lb-galleria.webp?v=2d8ea065 1120w" width="1120" height="1400" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-verticale.html" tabindex="-1"><img src="assets/foto/ai-lb-corsa.webp?v=4fd7d6b7" width="376" height="504" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="polo-linee.html" tabindex="-1"><img src="assets/foto/ai-lb-duomo-retro.webp?v=8e83e79c" width="531" height="480" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-verticale.html" tabindex="-1"><img src="assets/foto/ai-lb-padel.webp?v=8778e65a" width="376" height="505" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="berretto-ali.html" tabindex="-1"><img src="assets/foto/ai-lb-berretto.webp?v=f05b5bc5" width="377" height="407" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-verticale.html" tabindex="-1"><img src="assets/foto/ai-lb-basket.webp?v=6bc6661d" width="376" height="505" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-verticale.html" tabindex="-1"><img src="assets/foto/ai-lb-gradoni.webp?v=6a517442" width="598" height="639" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="polo-linee.html" tabindex="-1"><img src="assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5" srcset="assets/foto/ai-lb-duomo-polo-640.webp?v=561a7080 640w, assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5 764w" width="764" height="480" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="cappellino-ali.html" tabindex="-1"><img src="assets/foto/ai-lb-cappellino.webp?v=d53cc679" width="354" height="407" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+      <figure aria-hidden="true"><a href="felpa-verticale.html" tabindex="-1"><img src="assets/foto/ai-lb-portico.webp?v=e32b058d" width="413" height="503" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 22vw, 60vw"></a></figure>
+    </div>
+  </div>
+</section>
+
+<section class="n-brand2" aria-label="Il segno">
   <article class="n-logo2">
     <figure class="n-logo2-foto"><img src="assets/foto/segno-scena-1.webp?v=f2dd295b" srcset="assets/foto/segno-scena-1-640.webp?v=4c5ba0ea 640w, assets/foto/segno-scena-1.webp?v=f2dd295b 2048w" width="2048" height="1152" alt="Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada" loading="lazy" decoding="async" sizes="(min-width: 960px) 50vw, 100vw"></figure>
     <div class="n-logo2-testo">
@@ -122,28 +153,6 @@
       <figure><img src="assets/foto/home-dettaglio-tricolore.webp?v=59b310ab" width="410" height="333" alt="Le ali rosse e verdi ricamate sulla schiena della Polo Tricolore, con le righe verde, bianco e rosso sulla spalla" loading="lazy" decoding="async" sizes="260px"></figure>
     </div>
   </article>
-</section>
-
-<section class="n-lookbook lookbook" id="lookbook" aria-labelledby="lookbook-titolo">
-  <div class="n-testa"><h2 id="lookbook-titolo" class="n-etichetta">Lookbook</h2><p class="n-etichetta n-etichetta-dx">Stile in movimento</p></div>
-  <div class="lb-vetrina" aria-label="Foto del lookbook">
-    <div class="lb-binario">
-      <figure aria-label="Foto 1 di 11"><img src="assets/foto/ai-lb-tennis.webp?v=6a6e74c2" width="630" height="480" alt="Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 2 di 11"><img src="assets/foto/lb-galleria.webp?v=2d8ea065" srcset="assets/foto/lb-galleria-640.webp?v=8f33ef0c 640w, assets/foto/lb-galleria.webp?v=2d8ea065 1120w" width="1120" height="1400" alt="Ragazzo con felpa blu MARO di spalle nella Galleria Vittorio Emanuele, sullo sfondo il Duomo" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 3 di 11"><img src="assets/foto/ai-lb-corsa.webp?v=4fd7d6b7" width="376" height="504" alt="Ragazzo con la felpa verde MARO corre lungo un viale vicino al mare" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 4 di 11"><img src="assets/foto/ai-lb-duomo-retro.webp?v=8e83e79c" width="531" height="480" alt="Ragazzo di spalle con la Polo Linee MARO, le ali ricamate sulla schiena, davanti al Duomo di Milano" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 5 di 11"><img src="assets/foto/ai-lb-padel.webp?v=8778e65a" width="376" height="505" alt="Ragazzo con la felpa verde MARO seduto a bordo campo con la racchetta da padel" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 6 di 11"><img src="assets/foto/ai-lb-berretto.webp?v=f05b5bc5" width="377" height="407" alt="Ragazzo sistema il berretto nero MARO con le ali ricamate" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 7 di 11"><img src="assets/foto/ai-lb-basket.webp?v=6bc6661d" width="376" height="505" alt="Ragazzo di spalle con la felpa verde MARO e la firma verticale, pallone da basket sotto il braccio, su un campo all’aperto" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 8 di 11"><img src="assets/foto/ai-lb-gradoni.webp?v=6a517442" width="598" height="639" alt="Ragazzo con la felpa verde MARO seduto sui gradoni di uno stadio" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 9 di 11"><img src="assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5" srcset="assets/foto/ai-lb-duomo-polo-640.webp?v=561a7080 640w, assets/foto/ai-lb-duomo-polo.webp?v=f7b469d5 764w" width="764" height="480" alt="Ragazzo con la Polo Linee MARO davanti al Duomo di Milano al tramonto" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 10 di 11"><img src="assets/foto/ai-lb-cappellino.webp?v=d53cc679" width="354" height="407" alt="Ragazzo con il cappellino nero MARO con le ali e la felpa verde, sguardo basso" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-      <figure aria-label="Foto 11 di 11"><img src="assets/foto/ai-lb-portico.webp?v=e32b058d" width="413" height="503" alt="Ragazzo con la felpa verde MARO seduto sotto un porticato di marmo" loading="lazy" decoding="async" sizes="(min-width: 960px) 20vw, 80vw"></figure>
-    </div>
-    <button class="n-lb-freccia n-lb-prima" type="button" data-lb="-1" aria-label="Foto precedenti"><svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
-    <button class="n-lb-freccia" type="button" data-lb="1" aria-label="Foto successive"><svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
-  </div>
-  <p class="n-lb-sotto"><span class="lb-conta" aria-live="polite"></span> · Scorri o trascina</p>
 </section>
 
 <section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">
