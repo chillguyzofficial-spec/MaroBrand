@@ -828,6 +828,57 @@
   }
 
   var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- lookbook a rullino (25/10, Francesco): scorre da solo; chi lo tocca, lo trascina o lo scorre col touchpad
+     lo porta dove vuole; lasciato, riparte da lì dopo un attimo. Due copie identiche del binario: arrivati a metà si torna
+     indietro di una copia senza che si veda. Senza JS (o con «riduci movimento») resta l'animazione CSS di prima. ---------- */
+  var nastro = $('.n-nastro');
+  if (nastro && !calma) {
+    var binN = $('.n-nastro-binario', nastro), copia = $('figure[aria-hidden]', binN);
+    nastro.classList.add('rullino');
+    var meta = 0, posN = 0, ultimoN = -1e9, toccoN = false, prima = 0, trascina = null, spostato = false;
+    var misura = function () { meta = copia ? copia.offsetLeft - binN.firstElementChild.offsetLeft : binN.scrollWidth / 2; };
+    var giraN = function () { // tiene la posizione dentro la prima copia, in tutte e due le direzioni
+      if (meta < 10) return;
+      if (nastro.scrollLeft >= meta) nastro.scrollLeft -= meta;
+      else if (nastro.scrollLeft < 1) nastro.scrollLeft += meta;
+    };
+    misura(); addEventListener('resize', misura); addEventListener('load', misura);
+    var passoN = function (t) {
+      var dt = Math.min(50, t - (prima || t)); prima = t;
+      var vel = meta / (innerWidth < 600 ? 55 : 70) / 1000; // stesso giro di prima: 70 s (55 s sul telefono)
+      if (!toccoN && performance.now() - ultimoN > 1200 && meta > 10) {
+        posN += vel * dt; if (posN >= meta) posN -= meta;
+        nastro.scrollLeft = posN;
+      } else posN = nastro.scrollLeft;
+      requestAnimationFrame(passoN);
+    };
+    requestAnimationFrame(passoN);
+    // se lo scorrimento non è il nostro (dito, touchpad, rotella orizzontale, inerzia), il rullino aspetta
+    nastro.addEventListener('scroll', function () {
+      if (Math.abs(nastro.scrollLeft - posN) > 2) ultimoN = performance.now();
+      giraN();
+    }, { passive: true });
+    nastro.addEventListener('touchstart', function () { toccoN = true; }, { passive: true });
+    var lasciaN = function () { toccoN = false; ultimoN = performance.now(); };
+    nastro.addEventListener('touchend', lasciaN); nastro.addEventListener('touchcancel', lasciaN);
+    nastro.addEventListener('wheel', function () { ultimoN = performance.now(); }, { passive: true });
+    // col mouse si trascina; un trascinamento non apre la scheda del capo
+    nastro.addEventListener('pointerdown', function (e) {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      trascina = { x: e.clientX, s: nastro.scrollLeft }; spostato = false; toccoN = true;
+    });
+    addEventListener('pointermove', function (e) {
+      if (!trascina) return;
+      var d = e.clientX - trascina.x;
+      if (Math.abs(d) > 5) { spostato = true; nastro.classList.add('tira'); }
+      if (spostato) { nastro.scrollLeft = trascina.s - d; if (nastro.scrollLeft >= meta || nastro.scrollLeft < 1) { giraN(); trascina = { x: e.clientX, s: nastro.scrollLeft }; } posN = nastro.scrollLeft; }
+    });
+    addEventListener('pointerup', function () { if (!trascina) return; trascina = null; nastro.classList.remove('tira'); lasciaN(); });
+    nastro.addEventListener('click', function (e) { if (spostato) { e.preventDefault(); e.stopPropagation(); spostato = false; } }, true);
+    nastro.addEventListener('dragstart', function (e) { e.preventDefault(); });
+  }
+
   // video della pagina del brand (21/10): loop senza stacco con due copie che si danno il cambio (dissolvenza di 1 s, come in home)
   // e colore selettivo. Con «riduci movimento» resta fermo sul fotogramma.
   var videoBrand = $('[data-video-brand]'), videoCopia = $('[data-video-brand-copia]');

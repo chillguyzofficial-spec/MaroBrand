@@ -562,27 +562,25 @@ body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
 .n-milano2-foto::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 55%; background: linear-gradient(90deg, var(--n-nero) 0%, rgba(5,5,5,.75) 35%, rgba(5,5,5,0) 100%); pointer-events: none; }
 .n-milano2-testo { grid-area: 1 / 1; align-self: center; position: relative; z-index: 1; padding: clamp(40px, 5vw, 80px) var(--lato); max-width: 640px; }
 .n-milano2-testo h2 { text-shadow: 0 2px 24px rgba(0,0,0,.6); }
-.n-logo2 { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(170px, 230px); align-items: center; gap: 0 clamp(28px, 3.4vw, 56px); padding-right: var(--lato); }
+.n-logo2 { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: center; gap: 0 clamp(28px, 3.4vw, 56px); padding-right: var(--lato); }
 .n-logo2-foto { margin: 0; }
 .n-logo2-foto img { display: block; width: 100%; height: auto; } /* intera, mai ritagliata */
 .n-logo2-testo { padding: 28px 0; }
-.n-logo2-testo h2 + p { font-size: 16px; }
-.n-logo2-dettagli { display: grid; gap: 14px; padding: 28px 0; }
-.n-logo2-dettagli figure { margin: 0; border: 1px solid rgba(255,255,255,.35); }
-.n-logo2-dettagli img { display: block; width: 100%; height: auto; }
+/* 25/10 (Omar): foto piccola accanto al titolo, frase «MARO è una mentalità» in evidenza */
+.n-logo2-titolo { display: flex; align-items: center; gap: clamp(16px, 2vw, 28px); }
+.n-logo2-piccola { flex: 0 0 auto; width: clamp(88px, 8vw, 132px); margin: 0; }
+.n-logo2-piccola img { display: block; width: 100%; height: auto; }
+.n-logo2-testo .n-logo2-frase { margin: 22px 0 0; max-width: 18em; font: 400 clamp(22px, 2vw, 30px)/1.25 var(--n-grazie); }
 @media (max-width: 1099px) {
-  .n-logo2 { grid-template-columns: 1fr 1fr; padding: 0 var(--lato) clamp(36px, 5vw, 56px); gap: 24px; }
+  .n-logo2 { grid-template-columns: 1fr; padding: 0 var(--lato) clamp(36px, 5vw, 56px); gap: 24px; }
   .n-logo2-foto { grid-column: 1 / -1; margin: 0 calc(-1 * var(--lato)); }
   .n-logo2-testo { padding: 8px 0 0; }
-  .n-logo2-dettagli { padding: 8px 0 0; }
 }
 @media (max-width: 699px) {
   .n-milano2 { grid-template-columns: 1fr; }
   .n-milano2-foto { grid-area: 1 / 1; width: 100%; }
   .n-milano2-foto::before { inset: auto 0 0 0; width: auto; height: 45%; background: linear-gradient(0deg, var(--n-nero), rgba(5,5,5,0)); }
   .n-milano2-testo { grid-area: 2 / 1; padding: 8px var(--lato) 44px; max-width: none; }
-  .n-logo2 { grid-template-columns: 1fr; }
-  .n-logo2-dettagli { grid-template-columns: 1fr 1fr; }
 }
 
 /* ---------- Dal foglio al capo, 3° giro (23/10 sera): occhiello col simbolo, testo in più, dove trovi il segno, firma di Omar,
@@ -810,3 +808,9 @@ body.nuovo.pagina-cat { background: var(--n-nero); color: var(--n-testo); }
    max-height in percentuale non vale dentro la riga flessibile → foto che riempie l'area e si vede intera, poi tocco = ingrandisci */
 .zoom-area { position: relative; min-height: 0; }
 .zoom-area img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain; }
+/* rullino (25/10): col JS il binario non è più un'animazione CSS, lo fa scorrere maro.js e si può prendere in mano */
+.n-nastro.rullino { overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; cursor: grab; }
+.n-nastro.rullino::-webkit-scrollbar { display: none; }
+.n-nastro.rullino .n-nastro-binario { animation: none; }
+.n-nastro.rullino.tira { cursor: grabbing; }
+.n-nastro.rullino.tira a { pointer-events: none; }

@@ -1,0 +1,160 @@
+/* MARO — fondo bianco (25/10, richiesta di Omar: «sfondo bianco, che dà luce al sito»; riferimento Nike).
+   Si carica dopo maro-nuovo.css solo con BIANCO = true in build.js (body.bianco). I colori della grafica nuova passano
+   da variabili: qui si invertono, poi si correggono i grigi chiari scritti a mano e i punti in cui il testo sta SOPRA
+   una foto o un video (lì resta bianco). Il manifesto di Omar (.bm) resta nero apposta: i disegni sono in negativo. */
+body.bianco {
+  --b-fondo: #f8f7f4; /* bianco morbido (Francesco 25/10): caldo, vicino al #f6f5f2 della fascia Lo sport */
+  --n-nero: var(--b-fondo);
+  --n-fondo: #efede8;
+  --n-riga: rgba(0,0,0,.12);
+  --n-testo: #111;
+  --n-muto: #5c5a56; /* 6,8:1 sul bianco */
+}
+body.home.bianco, body.bianco.pagina-cat, body.bianco { background: var(--b-fondo); color: #111; }
+
+/* testata e menu */
+.bianco .menu a { color: #6b6964; }
+.bianco .pref-apri:hover, .bianco .borsa-apri:hover { background: #f0f0f0; }
+
+/* testo sopra foto e video: resta bianco */
+.bianco .n-apertura, .bianco .n-carta-testo, .bianco .s-motto-frase, .bianco .aiuto-testa2, .bianco .c-apertura-testo { color: #fff; }
+.bianco .n-carta-vai { color: #eee; }
+.bianco .n-lb-freccia { color: #fff; }
+@media (min-width: 700px) { .bianco .s-apertura-testo { color: #fff; } }
+
+/* grigi chiari pensati per il nero → grigi scuri */
+.bianco .n-pannello p, .bianco .s-campo-testo > p:last-child, .bianco .s-ali-testo > p:not(.s-ali-nome), .bianco .n-brand2 h2 + p { color: #45433f; }
+
+/* iscrizione: chiara, il ricamo appena accennato sul fondo */
+.bianco .n-iscriviti { background: #efede8; }
+.bianco .n-iscriviti-sfondo img { opacity: .16; filter: grayscale(1); }
+.bianco .n-iscriviti-sfondo::after { background: radial-gradient(ellipse at center, rgba(239,237,232,.55), rgba(239,237,232,.92) 75%); }
+.bianco .n-iscriviti-testo > p { color: #45433f; }
+.bianco .n-form input[type="email"] { border-color: #8a8781; background: #fbfaf8; }
+
+/* piede */
+.bianco .piede nav a, .bianco .piede p, .bianco .piede-alto > div:last-child p { color: #45433f; }
+.bianco .piede nav a:hover { color: #111; }
+
+/* categorie: pillole, filtri e schede su bianco */
+.bianco .c-chips a { border-color: rgba(0,0,0,.25); }
+.bianco .c-chips a[aria-current="page"], .bianco .filtro-taglie button[aria-pressed="true"] { background: #111; border-color: #111; color: #fff; }
+.bianco .cat-btn { border-color: rgba(0,0,0,.35); }
+.bianco .cat-ordina select option { background: #fff; }
+.bianco .filtro-taglie button { border-color: rgba(0,0,0,.25); }
+.bianco .filtro-voce input, .bianco .filtro-colore input { accent-color: #111; }
+.bianco .cat-pillola { background: #f0f0f0; }
+.bianco .cat-pillola:hover { background: #e4e4e4; }
+.bianco.pagina-cat .btn-nero { background: #111; color: #fff; }
+@media (max-width: 959px) {
+  .bianco .catalogo:not(.filtri-chiusi) .cat-filtri, .bianco .cat-foglio-testa, .bianco .cat-foglio-fondo { background: var(--b-fondo); }
+}
+.bianco.pagina-cat .scheda, .bianco.pagina-cat .scheda-cella, .bianco .scheda-foto { background: #efede8; }
+
+/* scheda prodotto e aiuto: bianco invece del crema */
+.bianco main:has(> .prodotto), .bianco main:has(.aiuto-testa2), .bianco .completa { background: var(--b-fondo); }
+.bianco .vetrina, .bianco .miniature button, .bianco .riga img, .bianco .visto img { background: #efede8; }
+.bianco .recensioni { background: #efede8; }
+
+/* pagina del brand: il ponte verso il manifesto con un titolo vero (prima era nell'apertura del 21/10) */
+.s-ponte { padding-top: clamp(48px, 6vw, 88px); }
+.s-ponte .s-ponte-titolo { margin: 0 0 14px; font: 400 clamp(30px, 3vw, 44px)/1.15 var(--n-grazie); color: #111; }
+
+/* Aiuto: la foto sfuma nel bianco, quindi il testo dell'apertura diventa scuro */
+.bianco .aiuto-testa2 { color: #111; }
+.bianco .aiuto-testa2 h1 { color: #111; }
+.bianco .aiuto-testa-testo .n-occhiello { color: #5c5a56; }
+.bianco .aiuto-testa-testo > p:last-child { color: #45433f; }
+.bianco .aiuto-testa-foto::before { background: linear-gradient(90deg, #f8f7f4, rgba(248,247,244,.6) 40%, rgba(248,247,244,0)); }
+@media (max-width: 959px) { .bianco .aiuto-testa-foto::before { background: linear-gradient(0deg, #f8f7f4, rgba(248,247,244,0)); } }
+.bianco .aiuto-temi2 a, .bianco .aiuto-tema-foto::after, .bianco .aiuto .guida th, .bianco .taglie-consiglio { background: #efede8; }
+
+/* fascia sotto il video (Francesco 25/10, «come Nike»): frase e sotto i due pulsanti a pillola, senza frecce */
+.bianco .n-intro { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 26px; padding: clamp(40px, 4.5vw, 64px) var(--lato) clamp(24px, 2.5vw, 36px); border-top: 0; }
+.bianco .n-intro p { font-size: clamp(24px, 2.4vw, 34px); max-width: 22em; }
+.bianco .n-intro-pulsanti { gap: 12px; justify-content: center; }
+.bianco .n-intro .n-btn { min-height: 50px; padding: 0 28px; border-radius: 999px; font: 500 17px/1 var(--n-lineare); letter-spacing: 0; text-transform: none; transition: background-color .2s, border-color .2s, color .2s; }
+.bianco .n-intro .n-freccia { display: none; }
+.bianco .n-intro .n-btn-pieno { background: #111; border-color: #111; color: #fff; }
+.bianco .n-intro .n-btn-pieno:hover { background: #3a3a3a; border-color: #3a3a3a; color: #fff; }
+.bianco .n-intro .n-btn:not(.n-btn-pieno) { border-color: #c9c9c9; }
+.bianco .n-intro .n-btn:not(.n-btn-pieno):hover { background: transparent; color: #111; border-color: #111; }
+@media (max-width: 699px) { .bianco .n-intro-pulsanti, .bianco .n-intro-pulsanti .n-btn { flex: 0 0 auto; } }
+
+/* la collezione (Francesco 25/10): due per riga invece di quattro, foto più grandi */
+.bianco .n-coll-griglia { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.bianco .n-carta-testo { left: clamp(18px, 2.4vw, 32px); bottom: clamp(18px, 2.4vw, 32px); }
+.bianco .n-carta-nome { font-size: clamp(24px, 2.6vw, 40px); }
+.bianco .n-collezione { padding-top: clamp(16px, 2vw, 28px); } /* (Francesco 25/10) meno vuoto tra i pulsanti e la collezione */
+
+/* Un segno che unisce (Francesco 25/10): le due scene del ricamo sovrapposte con la cucitura da trascinare.
+   Le regole di .segno erano per la sezione «Dietro il segno» col testo sopra la foto: qui niente fondo, margine né velo scuro */
+.n-logo2-foto.segno { margin: 0; background: none; color: inherit; overflow: hidden; }
+.n-logo2-foto .segno-scena::after { content: none; }
+.n-logo2-foto .segno-scena img { width: 100%; height: auto; }
+.n-logo2-foto .segno-scena-2 img { height: 100%; object-fit: cover; }
+
+/* foto piccola accanto al titolo: un medaglione tondo come una toppa ricamata, cornice chiara e filo scuro intorno */
+.bianco .n-logo2-piccola { width: clamp(120px, 10.5vw, 168px); background: #0a0a0a; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 4px solid var(--b-fondo); box-shadow: 0 0 0 1px #111, 0 10px 24px rgba(0,0,0,.18); }
+.bianco .n-logo2-piccola img { width: 100%; height: 100%; object-fit: contain; object-position: 50% 58%; transform: scale(1.2); transform-origin: 50% 72%; } /* ali intere: la foto ha il fondo nero come il medaglione */
+
+/* pagina del brand (Francesco 25/10): meno vuoto tra «In campo dal 2020» e «Prima di ogni capo c'è un'idea» */
+.bianco .s-campo { padding-bottom: clamp(28px, 3vw, 44px); }
+.bianco .s-ponte { padding-top: clamp(12px, 1.6vw, 24px); }
+@media (max-width: 1099px) { .n-logo2-foto.segno { margin: 0 calc(-1 * var(--lato)); } } /* telefono e tablet: foto del ricamo bordo a bordo come prima */
+/* medaglione (Francesco 25/10, «il logo viene tagliato, usiamo quello sui cappellini»): il logo vettoriale bianco su tondo nero */
+.bianco .n-logo2-piccola { display: grid; place-items: center; }
+.bianco .n-logo2-piccola svg { width: 66%; height: auto; aspect-ratio: 1778 / 1103; color: #fff; }
+
+/* =====================================================================================================================
+   CARATTERI (Francesco 25/10: «lo stesso font da tutte le parti, a Omar piace quello di Nike»).
+   Nike: titoli in Futura stretto su misura (Nike Futura ND), testi in Helvetica Now (non liberi).
+   Qui gli equivalenti liberi (OFL), in locale: Anton per i titoli (già nel sito), Inter per tutto il resto.
+   ===================================================================================================================== */
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/inter-latin-ext.woff2) format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(../fonts/inter-latin.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+body.bianco {
+  --n-grazie: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* era Playfair */
+  --n-lineare: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* era Jost */
+  --testo: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* era Archivo */
+  --titoli: 'Anton', Impact, 'Arial Narrow', sans-serif;
+  font-family: var(--n-lineare);
+}
+/* titoli: Anton maiuscolo, stretto e pieno come Nike */
+.bianco h1, .bianco h2, .bianco .n-carta-nome, .bianco .s-motto-frase, .bianco .n-drop-titolo {
+  font-family: var(--titoli) !important; font-weight: 400 !important; font-style: normal !important;
+  text-transform: uppercase; letter-spacing: .005em; line-height: .98;
+}
+/* scritte piccole sopra i titoli: maiuscolo leggero, poco spaziato */
+.bianco .n-occhiello, .bianco .n-etichetta { font-family: var(--n-lineare); font-weight: 600; letter-spacing: .08em; font-size: 13px; }
+/* menu: come Nike, parole normali, scure e piene (prima grigio chiaro e maiuscolo spaziato: si leggeva poco) */
+.bianco .menu { font: 500 16px/1 var(--n-lineare); letter-spacing: 0; text-transform: none; }
+.bianco .menu a { color: #111; }
+.bianco .menu a:hover, .bianco .menu a[aria-current="page"] { color: #111; border-color: #111; }
+.bianco .menu-apri { font: 600 14px/1 var(--n-lineare); letter-spacing: .04em; border-radius: 999px; border-color: #111; }
+@media (max-width: 959px) { .bianco .menu.aperto a { font: 500 26px/1.2 var(--n-lineare); letter-spacing: 0; color: #111; } }
+/* pulsanti in tutto il sito: pillole come Nike, parole normali */
+.bianco .n-btn { min-height: 48px; padding: 0 26px; border-radius: 999px; font: 500 16px/1 var(--n-lineare); letter-spacing: 0; text-transform: none; }
+.bianco .n-btn .n-freccia { width: 18px; height: 10px; }
+/* frasi che erano in Playfair: Inter, un filo più leggero e stretto */
+.bianco .n-intro p, .bianco .n-logo2-frase, .bianco .piede-marchio p { font-family: var(--n-lineare) !important; font-weight: 500; letter-spacing: -.01em; }
+.bianco h2.n-etichetta, .bianco .n-etichetta { font-family: var(--n-lineare) !important; font-weight: 600 !important; font-size: 13px; letter-spacing: .08em; line-height: 1.4; }
+/* tutti gli altri pulsanti del sito (schede, popup, aiuto): pillole e Inter, come quelli della home */
+.bianco .btn { border-radius: 999px; font-family: var(--n-lineare); font-weight: 500; letter-spacing: 0; text-transform: none; }
+@media (max-width: 599px) { .bianco .n-intro p { font-size: 22px; line-height: 1.35; text-wrap: balance; } }
+
+/* chiusura della pagina del brand (Francesco 25/10, «questo nero»): fascia nera, logo e scritte bianche, pulsante bianco */
+.bianco .s-fine { background: #000; color: #fff; border-top: 0; }
+.bianco .s-fine-logo { color: #fff; }
+.bianco .s-fine .n-btn { color: #fff; border-color: #fff; }
+.bianco .s-fine .n-btn:hover { background: #fff; color: #000; }
+/* titoletti piccoli (piede, filtri, schede): sono h2/h3 ma non titoli veri, restano in Inter */
+.bianco .piede h2 { font-family: var(--n-lineare) !important; font-weight: 600 !important; font-size: 13px; letter-spacing: .08em; line-height: 1.4; color: #111; }
+
+/* Un segno che unisce (Francesco 25/10, «attaccata al bordo non mi fa impazzire»): la foto del ricamo staccata dal bordo
+   sinistro e dalla fascia del drop sotto, con lo stesso margine del resto della pagina */
+@media (min-width: 1100px) {
+  .bianco .n-logo2 { padding: clamp(28px, 3vw, 48px) var(--lato) clamp(40px, 4.5vw, 72px); }
+  .bianco .n-logo2-foto.segno { border-radius: 4px; }
+}
+@media (max-width: 1099px) { .bianco .n-logo2-foto.segno { margin: 0 0 4px; border-radius: 4px; } }

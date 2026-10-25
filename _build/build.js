@@ -52,6 +52,8 @@ const AVVISI_ACCESI = false;
 const VETRINA = true;
 // PROVA 23/10: home e testata/piede con la grafica di ChatGPT (false = home di prima, identica al sito online)
 const NUOVA_HOME = true;
+// 25/10 (Omar: «sfondo bianco, che dà luce al sito»): fondo bianco stile Nike sopra la grafica nuova (false = tutto nero come prima)
+const BIANCO = true;
 const NEGOZIO_PROVA = !VETRINA;
 const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
@@ -110,16 +112,17 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <link rel="apple-touch-icon" href="assets/img/icona-180.png">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=${impronta('assets/css/maro.css')}">${NUOVA_HOME ? `
+<link rel="preload" href="assets/fonts/${NUOVA_HOME && BIANCO ? 'inter' : 'archivo'}-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/maro.css?v=${impronta('assets/css/maro.css')}">${NUOVA_HOME ? (BIANCO ? '' : `
 <link rel="preload" href="assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=${impronta('assets/css/maro-nuovo.css')}">` : ''}
+<link rel="preload" href="assets/fonts/jost-latin.woff2" as="font" type="font/woff2" crossorigin>`) + `
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=${impronta('assets/css/maro-nuovo.css')}">${BIANCO ? `
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=${impronta('assets/css/maro-bianco.css')}">` : ''}` : ''}
 <script defer src="assets/js/maro.js?v=${impronta('assets/js/maro.js')}"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/\s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
-<body class="${[file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}>
+<body class="${[file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : '', NUOVA_HOME && BIANCO ? 'bianco' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${fasciaProva()}
@@ -145,7 +148,7 @@ ${corpo}
   <div class="piede-alto">
     <div class="piede-marchio">
       <p>${NUOVA_HOME ? 'Sport ed eleganza da Milano.' : 'Streetwear da Milano.'}<br>Fly with your mind.</p>
-${NUOVA_HOME ? '      <p class="piede-firma" aria-hidden="true"><span>Omar</span></p>\n' : ''}    </div>
+    </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a>'}<a href="index.html#iscriviti">Accesso anticipato</a></nav>
     <nav aria-label="Aiuto"><h2>Aiuto</h2>${VETRINA ? '<a href="aiuto.html#spedizioni">Il drop</a>' : '<a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a>'}<a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
@@ -567,16 +570,22 @@ ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria
 
 <section class="n-brand2" aria-label="Il segno">
   <article class="n-logo2">
-    <figure class="n-logo2-foto">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
+    <!-- 25/10 (Francesco): di nuovo le due scene del ricamo sovrapposte, con la cucitura da trascinare (stesso codice di «Dietro il segno») -->
+    <figure class="n-logo2-foto segno a-mano">
+      <div class="segno-scena">
+        ${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 960px) 60vw, 100vw' })}
+        <div class="segno-scena-2" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home logo', sizes: '(min-width: 960px) 60vw, 100vw' })}</div>
+        <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Confronta le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scoprire</span></div>
+      </div>
+    </figure>
+    <!-- 25/10 (Omar): via la frase sulle ali «di Omar», il pulsante e le due foto sotto; una foto piccola accanto al titolo -->
     <div class="n-logo2-testo">
       <p class="n-occhiello">Più di un logo</p>
-      <h2>Un segno<br>che unisce</h2>
-      <p>La M con le ali di Omar: un segno che unisce sport, libertà e identità. MARO è una mentalità, non solo abbigliamento.</p>
-      <a class="n-btn" href="storia.html#bn-simbolo">Il significato delle ali ${FRECCIA}</a>
-    </div>
-    <div class="n-logo2-dettagli">
-      <figure>${img('home-dettaglio-ali', 'Le ali MARO ricamate in bianco su una maglia nera a coste, da vicino', { dove: 'home logo dettaglio', sizes: '260px' })}</figure>
-      <figure>${img('home-dettaglio-tricolore', 'Le ali rosse e verdi ricamate sulla schiena della Polo Tricolore, con le righe verde, bianco e rosso sulla spalla', { dove: 'home logo dettaglio', sizes: '260px' })}</figure>
+      <div class="n-logo2-titolo">
+        <h2>Un segno<br>che unisce</h2>
+        <span class="n-logo2-piccola" aria-hidden="true"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span>
+      </div>
+      <p class="n-logo2-frase">MARO è una mentalità, non solo abbigliamento.</p>
     </div>
   </article>
 </section>
@@ -592,7 +601,7 @@ ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria
 </section>
 
 <section class="n-iscriviti iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
-  <div class="n-iscriviti-sfondo" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home iscrizione', sizes: '100vw' })}</div>
+  <div class="n-iscriviti-sfondo" aria-hidden="true">${img('scena-composizione', '', { dove: 'home iscrizione', sizes: '100vw' })}</div>
   <div class="n-iscriviti-testo">
     <h2 id="iscriviti-titolo">Entra nel mondo MARO</h2>
     <p>Iscriviti: ti scriviamo il giorno prima di ogni drop, con i capi in anteprima e un codice del 10% sul primo ordine. Una email per drop, niente di più.</p>
@@ -636,7 +645,7 @@ function puntiScheda(p) {
   const acc = p.tipo === 'accessori';
   const voci = [
     PUNTI_TESSUTO[p.cura],
-    acc ? ['Le ali di Omar', 'La M con le ali del primo disegno'] : p.tipo === 'felpa' ? ['Vestibilità comoda', 'Spalla leggermente scesa'] : p.tipo === 'pantaloni' ? ['Gamba dritta', 'Prendi la tua taglia abituale'] : ['Vestibilità regolare', 'Prendi la tua taglia abituale'],
+    acc ? ['Le ali MARO', 'La M con le ali del primo disegno'] : p.tipo === 'felpa' ? ['Vestibilità comoda', 'Spalla leggermente scesa'] : p.tipo === 'pantaloni' ? ['Gamba dritta', 'Prendi la tua taglia abituale'] : ['Vestibilità regolare', 'Prendi la tua taglia abituale'],
     ['Look versatile', 'Per ogni occasione'],
     acc ? ['Facile da curare', CURA[p.cura][1][1].replace(/^./, c => c.toUpperCase())] : ['Dettagli curati', p.dettagli[0]],
   ];
@@ -1322,7 +1331,7 @@ function storia() {
   <h2 id="bn-motto">Fly with<br>your mind.</h2>
   <a class="btn btn-bianco" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'}</a>
 </section>`;
-  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
+  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di MARO.', corpo, file: 'storia.html' });
 }
 
 // ---------- STORIA NUOVA (prova 23/10): schema di ChatGPT (_grafica-chatgpt/brand-2026-10-23/schema-pagina-brand.png) ----------
@@ -1340,14 +1349,14 @@ const SPORT_BRAND = [
 ];
 function storiaNuova() {
   const giro = '<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span>';
+  // 25/10 (Omar): di nuovo in verticale come il 21/10, da scorrere verso il basso, senza la firma MARO di fondo accanto ai disegni
   const passi = MANIFESTO.map((m, i) => `
-    <li class="bm-passo s-passo" data-entra>
-      <p class="s-passo-num">${String(i + 1).padStart(2, '0')}</p>
-      <h3 class="s-passo-nome">${esc(m.etichetta)}.</h3>
-      <figure class="bm-disegno s-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
-        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 960px) 18vw, 90vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 960px) 18vw, 90vw' })}${giro}</button>
+    <li class="bm-passo" data-entra>
+      <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
+      <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
+        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${giro}</button>
       </figure>
-      <div class="bm-testo s-passo-testo">${m.testo}</div>
+      <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
   const corpo = `
 <section class="s-apertura" aria-labelledby="s-titolo">
@@ -1356,7 +1365,7 @@ function storiaNuova() {
     <p class="n-occhiello">Il brand</p>
     <h1 id="s-titolo">La nostra<br>storia</h1>
     <span class="s-riga" aria-hidden="true"></span>
-    <p>Abbigliamento sportivo ed elegante per il tennis, il padel e ogni giorno, con la firma verticale e le ali di Omar.</p>
+    <p>Abbigliamento sportivo ed elegante per il tennis, il padel e ogni giorno, con la firma verticale e le ali di MARO.</p>
     <a class="n-btn" href="#s-campo">Scopri di più ${FRECCIA}</a>
   </div>
 </section>
@@ -1374,15 +1383,16 @@ function storiaNuova() {
   </div>
 </section>
 
-<section class="s-idea bm" aria-labelledby="s-idea-titolo">
-  <div class="s-idea-testa">
-    <h2 id="s-idea-titolo">Prima di ogni capo c’è un’idea.</h2>
-    <p>Qui sotto la vedi prendere forma: i disegni di Omar, uno dopo l’altro, con le sue parole.</p>
-    <p class="s-idea-invito">${giro}<span><span data-verbo>Clicca</span> su un disegno per vedere il foglio originale</span></p>
-  </div>
-  <ol class="s-passi">${passi}
+<div class="bn-ponte s-ponte">
+  <h2 class="s-ponte-titolo">Prima di ogni capo c’è un’idea.</h2>
+  <p>Qui sotto la vedi prendere forma: i disegni di Omar, uno dopo l’altro, con le sue parole.</p>
+  <p class="bn-ponte-invito">${giro}<span><span data-verbo>Clicca</span> su un disegno per vedere il foglio originale</span></p>
+</div>
+
+<section class="bm" aria-labelledby="bm-titolo">
+  <div class="bn-filo" aria-hidden="true"><span class="bn-filo-luce"></span></div>
+  <ol class="bm-passi">${passi}
   </ol>
-  <p class="s-scorri" aria-hidden="true">Scorri per vedere tutti i disegni →</p>
 </section>
 
 <section class="s-motto" aria-label="Immagina. Credi. Agisci.">
@@ -1414,7 +1424,6 @@ ${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand spor
     <p>Ogni segno MARO nasce a mano, su un foglio di Omar, e passa sul capo con le stesse linee del disegno. Il tratto resta il suo: è così che riconosci MARO anche senza leggere il nome.</p>
     <div class="s-ali-fondo">
       <a class="n-btn" href="accessori.html">Accessori ${FRECCIA}</a>
-      <p class="s-ali-firma" aria-hidden="true"><span>Omar</span></p>
     </div>
   </div>
   <figure class="s-ali-foto">${img('brand-ali-nuova', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali guarda la borraccia nera con le ali', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
@@ -1427,7 +1436,7 @@ ${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand spor
     <a class="n-btn" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'} ${FRECCIA}</a>
   </div>
 </section>`;
-  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di Omar.', corpo, file: 'storia.html' });
+  return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di MARO.', corpo, file: 'storia.html' });
 }
 
 // ---------- PORTA UN AMICO (19/10, richiesta di Omar alla call del 18/10) ----------
