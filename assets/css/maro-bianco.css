@@ -165,7 +165,7 @@ body.bianco {
 @media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
   .bianco .n-apertura { aspect-ratio: auto; height: calc(100svh - var(--testata)); min-height: 520px; max-height: 900px; }
   .bianco .n-apertura .apertura-video { object-fit: cover; object-position: 64% 50%; }
-  .bianco .n-apertura-testo { top: auto; bottom: clamp(24px, 5svh, 48px); }
+  .bianco .n-apertura-testo { top: clamp(24px, 4svh, 40px); bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
   .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
 }
 
@@ -204,3 +204,76 @@ body.bianco {
   .bianco .n-coll-griglia { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .bianco .n-carta-nome { font-size: 34px; }
 }
+
+/* pagina del brand (Francesco 25/10): un solo blocco d'apertura con UNA foto sfocata come sfondo, elegante;
+   sopra «La nostra storia» grande, il sottotitolo e il testo, bianchi, uguali su PC e telefono */
+.bianco .s-unico { position: relative; display: grid; align-items: center; min-height: min(82svh, 760px); overflow: hidden; background: #111; color: #fff; }
+.bianco .s-unico .s-apertura-foto { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: 60% 50%; } /* nitida (Francesco 25/10: niente sfocatura) */
+.bianco .s-unico::after { background: linear-gradient(90deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.4) 42%, rgba(0,0,0,0) 72%); }
+.bianco .s-unico .s-apertura-testo { position: relative; z-index: 1; left: 0; top: auto; transform: none; max-width: 720px; padding: clamp(56px, 8vw, 110px) var(--lato); color: #fff; }
+.bianco .s-unico .n-occhiello { color: #fff; }
+.bianco .s-unico h1 { font-size: clamp(64px, 9vw, 156px); line-height: .9; margin: 14px 0 0; color: #fff; text-shadow: none; }
+.bianco .s-sottotitolo { margin: 18px 0 22px; font: 400 clamp(26px, 2.6vw, 40px)/1 var(--titoli) !important; text-transform: uppercase; letter-spacing: .01em; color: #fff; }
+.bianco .s-unico .s-apertura-testo > p:not(.n-occhiello) { font-size: clamp(18px, 1.4vw, 20px); line-height: 1.6; font-weight: 450; color: #fff; text-shadow: none; margin: 0; max-width: 34em; }
+.bianco .s-unico strong { font-weight: 650; }
+@media (max-width: 599px) {
+  .bianco .s-unico { min-height: calc(100svh - var(--testata)); align-items: end; }
+  .bianco .s-unico h1, .bianco .s-unico .s-apertura-testo > p:not(.n-occhiello) { color: #fff; }
+  .bianco .s-unico h1 { font-size: 68px; }
+  .bianco .s-unico .s-apertura-testo { padding: 40px var(--lato) 44px; }
+  .bianco .s-unico .s-apertura-testo > p:not(.n-occhiello) { font-size: 19px; }
+}
+.bianco .s-unico + .s-ponte { padding-top: clamp(48px, 6vw, 88px); } /* senza «In campo» in mezzo il ponte stava attaccato all'apertura */
+/* telefono: testo in basso sulla foto nitida → velo scuro dal basso, la parte alta della foto resta pulita */
+@media (max-width: 599px) { .bianco .s-unico::after { background: linear-gradient(0deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,0) 75%); } .bianco .s-unico .s-apertura-foto { object-position: 72% 50%; } }
+/* il velo era spento sotto i 1100 px da una regola di quando il testo stava sotto la foto: qui il testo sta sopra → velo acceso */
+@media (max-width: 1099px) { .bianco .s-unico::after { display: block; background: linear-gradient(0deg, rgba(0,0,0,.85) 0%, rgba(0,0,0,.6) 48%, rgba(0,0,0,.1) 80%, rgba(0,0,0,0) 100%); } }
+
+/* (Francesco 25/10) sulla foto solo «Il brand» e «La nostra storia»; sottotitolo e testo sotto la foto, sul fondo chiaro, scuri e grandi */
+.bianco .s-unico { min-height: min(72svh, 680px); align-items: end; }
+.bianco .s-unico .s-apertura-testo { padding: clamp(40px, 6vw, 80px) var(--lato); }
+.bianco .s-unico::after { display: block; background: linear-gradient(0deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,.2) 40%, rgba(0,0,0,0) 65%), linear-gradient(90deg, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 55%); }
+.bianco .s-sotto { padding: clamp(36px, 4.5vw, 64px) var(--lato) 0; max-width: 980px; }
+.bianco .s-sotto .s-sottotitolo { margin: 0 0 18px; color: #111; text-shadow: none; }
+.bianco .s-sotto p { margin: 0; font: 450 clamp(19px, 1.6vw, 23px)/1.6 var(--n-lineare); color: #1a1a1a; max-width: 38em; }
+.bianco .s-sotto strong { font-weight: 650; color: #111; }
+.bianco .s-sotto + .s-ponte { padding-top: clamp(56px, 7vw, 104px); }
+@media (max-width: 599px) {
+  .bianco .s-unico { min-height: calc(100svh - var(--testata) - 120px); }
+  .bianco .s-unico::after { background: linear-gradient(0deg, rgba(0,0,0,.7) 0%, rgba(0,0,0,.25) 35%, rgba(0,0,0,0) 60%); }
+  .bianco .s-unico .s-apertura-testo { padding: 0 var(--lato) 28px; }
+  .bianco .s-sotto p { font-size: 19px; }
+}
+/* (Francesco 25/10) «In campo dal 2020» legato a «Prima di ogni capo c'è un'idea»: una colonna centrata, senza vuoto in mezzo */
+.bianco .s-sotto { margin: 0 auto; text-align: center; max-width: 860px; padding-bottom: 0; }
+.bianco .s-sotto p { margin: 0 auto; }
+.bianco .s-sotto + .s-ponte { padding-top: clamp(28px, 3vw, 40px); }
+.bianco .s-sotto + .s-ponte .s-ponte-titolo { font-size: clamp(26px, 2.6vw, 40px); }
+
+/* (Francesco 25/10, «occhio a non tagliare il ragazzo») apertura del brand: il riquadro prende la proporzione della foto (1672×941), foto sempre intera */
+.bianco .s-unico { min-height: 0; height: auto; aspect-ratio: 1672 / 941; max-height: none; }
+.bianco .s-unico .s-apertura-foto { inset: 0; width: 100%; height: 100%; object-fit: contain; }
+@media (max-width: 599px) {
+  /* telefono: la foto intera è bassa, il titolo grande va sotto, scuro sul fondo chiaro */
+  .bianco .s-unico { aspect-ratio: auto; display: block; background: none; overflow: visible; }
+  .bianco .s-unico .s-apertura-foto { position: static; display: block; width: 100%; height: auto; aspect-ratio: 1672 / 941; }
+  .bianco .s-unico::after { display: none; }
+  .bianco .s-unico .s-apertura-testo { position: static; padding: 28px var(--lato) 0; color: #111; }
+  .bianco .s-unico .n-occhiello, .bianco .s-unico h1 { color: #111; }
+  .bianco .s-unico h1 { font-size: 64px; }
+  .bianco .s-sotto { padding-top: 28px; }
+}
+/* (Francesco 25/10, «adattalo») mai più alta dello schermo sotto il menu: si stringe in larghezza, resta intera e centrata */
+@media (min-width: 600px) {
+  .bianco .s-unico { width: min(100%, calc((100svh - var(--testata)) * 1672 / 941)); margin: 0 auto; background: none; }
+}
+/* (Francesco 25/10, «occhio»: bande bianche ai lati) fascia a tutta larghezza, alta al massimo quanto lo schermo;
+   la foto nitida e intera al centro, ai lati la stessa foto sfocata e scura (come nella galleria dei prodotti) */
+@media (min-width: 600px) {
+  .bianco .s-unico { width: 100%; margin: 0; aspect-ratio: auto; height: min(calc(100vw * 941 / 1672), calc(100svh - var(--testata) - 24px)); background: #111; }
+  .bianco .s-unico-sfondo { position: absolute; inset: -30px; background-size: cover; background-position: center; filter: blur(22px) brightness(.45); }
+  .bianco .s-unico .s-apertura-foto { position: absolute; z-index: 0; inset: 0; margin: auto; width: auto; height: 100%; aspect-ratio: 1672 / 941; max-width: 100%; object-fit: contain; }
+  .bianco .s-unico::after { z-index: 0; }
+  .bianco .s-unico .s-apertura-testo { position: absolute; left: max(0px, calc((100% - (100svh - var(--testata) - 24px) * 1672 / 941) / 2)); bottom: 0; }
+}
+@media (max-width: 599px) { .bianco .s-unico-sfondo { display: none; } }

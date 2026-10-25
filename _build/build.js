@@ -1359,29 +1359,20 @@ function storiaNuova() {
       <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
   const corpo = `
-<section class="s-apertura" aria-labelledby="s-titolo">
+<!-- 25/10 (Francesco): apertura e «In campo dal 2020» in un solo blocco, una sola foto sfocata come sfondo, titolo grande, sottotitolo, testo corto; tolti «Scopri di più» e le due foto di calcio e basket -->
+<section class="s-apertura s-unico" aria-labelledby="s-titolo">
+  <span class="s-unico-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola('brand-napoli') || urlFoto('brand-napoli')}')"></span>
   ${img('brand-napoli', 'Ragazzo con la Polo Linee MARO nera e il Cargo Firma beige seduto su un muretto sopra Napoli al tramonto, dietro il Vesuvio', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}
   <div class="s-apertura-testo">
     <p class="n-occhiello">Il brand</p>
     <h1 id="s-titolo">La nostra<br>storia</h1>
-    <span class="s-riga" aria-hidden="true"></span>
-    <p>Abbigliamento sportivo ed elegante per il tennis, il padel e ogni giorno, con la firma verticale e le ali di MARO.</p>
-    <a class="n-btn" href="#s-campo">Scopri di più ${FRECCIA}</a>
   </div>
 </section>
-
-<section class="s-campo" id="s-campo" aria-labelledby="bn-titolo">
-  <div class="s-campo-testo">
-    <p class="n-occhiello">Il brand</p>
-    <h2 id="bn-titolo">In campo<br>dal 2020.</h2>
-    <p><strong>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il fischio finale.</p>
-  </div>
-  <div class="s-campo-foto">
-    <!-- 23/10: due sport in azione con il modello nuovo (Francesco: via tennis e corsa del set vecchio) -->
-    <figure>${img('cat-movimento-calcio', 'Ragazzo con la Polo Tricolore MARO calcia un pallone su una terrazza di Roma al tramonto, dietro San Pietro', { dove: 'brand campo', sizes: '(min-width: 960px) 24vw, 50vw' })}</figure>
-    <figure>${img('cat-movimento-basket', 'Ragazzo con la Polo Tricolore MARO schiaccia a canestro su un campo all’aperto a Roma al tramonto', { dove: 'brand campo', sizes: '(min-width: 960px) 24vw, 50vw' })}</figure>
-  </div>
-</section>
+<!-- sotto la foto, sul fondo chiaro (Francesco 25/10: «sotto la foto, non tutto sopra») -->
+<div class="s-sotto">
+  <h2 class="s-sottotitolo">In campo dal 2020</h2>
+  <p><strong>Vestiamo chi vive lo sport con passione.</strong> Polo, felpe e pantaloni comodi nei movimenti ed eleganti a tennis, a padel e ogni giorno: per dare il meglio in campo e restare con te anche dopo il fischio finale.</p>
+</div>
 
 <div class="bn-ponte s-ponte">
   <h2 class="s-ponte-titolo">Prima di ogni capo c’è un’idea.</h2>

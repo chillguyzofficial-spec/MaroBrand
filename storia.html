@@ -21,7 +21,7 @@
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=adca99f0">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=71034f90">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=31c35c08">
 <script defer src="assets/js/maro.js?v=3254a6d6"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
@@ -54,28 +54,18 @@
 </header>
 <main id="contenuto">
 
-<section class="s-apertura" aria-labelledby="s-titolo">
+<section class="s-apertura s-unico" aria-labelledby="s-titolo">
+  <span class="s-unico-sfondo" aria-hidden="true" style="background-image:url('assets/foto/brand-napoli-640.webp?v=ca89ba75')"></span>
   <img src="assets/foto/brand-napoli.webp?v=5491ab5a" srcset="assets/foto/brand-napoli-640.webp?v=ca89ba75 640w, assets/foto/brand-napoli.webp?v=5491ab5a 1672w" width="1672" height="941" alt="Ragazzo con la Polo Linee MARO nera e il Cargo Firma beige seduto su un muretto sopra Napoli al tramonto, dietro il Vesuvio" class="s-apertura-foto" fetchpriority="high" sizes="100vw">
   <div class="s-apertura-testo">
     <p class="n-occhiello">Il brand</p>
     <h1 id="s-titolo">La nostra<br>storia</h1>
-    <span class="s-riga" aria-hidden="true"></span>
-    <p>Abbigliamento sportivo ed elegante per il tennis, il padel e ogni giorno, con la firma verticale e le ali di MARO.</p>
-    <a class="n-btn" href="#s-campo">Scopri di più <svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>
   </div>
 </section>
-
-<section class="s-campo" id="s-campo" aria-labelledby="bn-titolo">
-  <div class="s-campo-testo">
-    <p class="n-occhiello">Il brand</p>
-    <h2 id="bn-titolo">In campo<br>dal 2020.</h2>
-    <p><strong>Il nome di Omar, con le lettere in un altro ordine.</strong> Dal 2020 vestiamo chi vive lo sport con passione, qualunque sia il campo. Polo, felpe e pantaloni dal taglio tecnico, rifiniti con cura in ogni dettaglio, per dare il meglio mentre ti muovi e restare con te anche dopo il fischio finale.</p>
-  </div>
-  <div class="s-campo-foto">
-    <figure><img src="assets/foto/cat-movimento-calcio.webp?v=20aac4da" srcset="assets/foto/cat-movimento-calcio-640.webp?v=35167959 640w, assets/foto/cat-movimento-calcio.webp?v=20aac4da 941w" width="941" height="1672" alt="Ragazzo con la Polo Tricolore MARO calcia un pallone su una terrazza di Roma al tramonto, dietro San Pietro" loading="lazy" decoding="async" sizes="(min-width: 960px) 24vw, 50vw"></figure>
-    <figure><img src="assets/foto/cat-movimento-basket.webp?v=f4009524" srcset="assets/foto/cat-movimento-basket-640.webp?v=aa3d44dc 640w, assets/foto/cat-movimento-basket.webp?v=f4009524 941w" width="941" height="1672" alt="Ragazzo con la Polo Tricolore MARO schiaccia a canestro su un campo all’aperto a Roma al tramonto" loading="lazy" decoding="async" sizes="(min-width: 960px) 24vw, 50vw"></figure>
-  </div>
-</section>
+<div class="s-sotto">
+  <h2 class="s-sottotitolo">In campo dal 2020</h2>
+  <p><strong>Vestiamo chi vive lo sport con passione.</strong> Polo, felpe e pantaloni comodi nei movimenti ed eleganti a tennis, a padel e ogni giorno: per dare il meglio in campo e restare con te anche dopo il fischio finale.</p>
+</div>
 
 <div class="bn-ponte s-ponte">
   <h2 class="s-ponte-titolo">Prima di ogni capo c’è un’idea.</h2>
