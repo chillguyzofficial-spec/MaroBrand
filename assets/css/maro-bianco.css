@@ -158,3 +158,49 @@ body.bianco {
   .bianco .n-logo2-foto.segno { border-radius: 4px; }
 }
 @media (max-width: 1099px) { .bianco .n-logo2-foto.segno { margin: 0 0 4px; border-radius: 4px; } }
+
+/* apertura sul telefono (Francesco 25/10, «il video in loop da cell possiamo metterlo verticale?»): il video riempie lo schermo
+   in verticale, inquadrato sulla colonna con MARO; «Fly with your mind» in basso a sinistra (schizzo di Omar).
+   Provvisorio: quando arriva il video 9:16 si mette quello. */
+@media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
+  .bianco .n-apertura { aspect-ratio: auto; height: calc(100svh - var(--testata)); min-height: 520px; max-height: 900px; }
+  .bianco .n-apertura .apertura-video { object-fit: cover; object-position: 64% 50%; }
+  .bianco .n-apertura-testo { top: auto; bottom: clamp(24px, 5svh, 48px); }
+  .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
+}
+
+/* categorie sul telefono (Francesco 25/10, «da telefono alcune cose non si leggono»): il testo sta SOTTO la foto, sul fondo chiaro → scuro */
+@media (max-width: 599px) {
+  .bianco .c-apertura-testo { color: #111; }
+  .bianco .c-apertura h1 { color: #111; text-shadow: none; }
+  .bianco .c-apertura .n-occhiello, .bianco .c-conta { color: #111; }
+  .bianco .c-valori { color: #5c5a56; }
+}
+
+/* medaglione (Francesco 25/10): logo al centro esatto del cerchio (misurato al pixel);
+   e una planata lenta: sale e scende, si inclina appena, le ali si stringono un filo come in volo */
+.bianco .n-logo2-piccola svg { animation: logo-vola 6s ease-in-out infinite; transform-origin: 50% 60%; }
+@keyframes logo-vola {
+  0%, 100% { transform: translateY(0) rotate(0) scaleX(1); }
+  25% { transform: translateY(-5%) rotate(-2.5deg) scaleX(.95); }
+  50% { transform: translateY(4%) rotate(0) scaleX(1); }
+  75% { transform: translateY(-4%) rotate(2.5deg) scaleX(.95); }
+}
+@media (prefers-reduced-motion: reduce) { .bianco .n-logo2-piccola svg { animation: none; } }
+
+/* pagina del brand sul telefono: il titolo sta sotto la foto, sul fondo chiaro (era bianco su bianco) */
+@media (max-width: 699px) {
+  .bianco .s-apertura h1 { color: #111; text-shadow: none; }
+  .bianco .s-apertura-testo > p:not(.n-occhiello) { text-shadow: none; }
+}
+@media (max-width: 599px) { .bianco .s-apertura-testo { left: 0; } } /* sotto la foto: allineato al logo e al resto della pagina (prima rientrava il doppio) */
+
+/* (Francesco 25/10) logo accanto a «Un segno che unisce»: niente cerchio né movimento, disegnato direttamente sulla pagina, nero */
+.bianco .n-logo2-piccola { width: clamp(110px, 10vw, 160px); aspect-ratio: auto; background: none; border: 0; border-radius: 0; box-shadow: none; overflow: visible; }
+.bianco .n-logo2-piccola svg { width: 100%; color: #111; animation: none; transform: none; }
+
+/* (Francesco 25/10) la collezione sul telefono: una per riga, grande quanto lo schermo (due per riga erano piccole) */
+@media (max-width: 599px) {
+  .bianco .n-coll-griglia { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .bianco .n-carta-nome { font-size: 34px; }
+}
