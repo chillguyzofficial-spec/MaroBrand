@@ -964,14 +964,16 @@
 
   /* ---------- Dietro il segno A MANO: la cucitura si trascina (mouse subito; dito solo con gesto orizzontale, il verticale scorre la pagina),
      un clic la porta lì, frecce da tastiera ---------- */
-  var cucitura = $('.segno.a-mano .segno-cucitura');
+  var cucitura = $('.segno.a-mano .segno-cucitura, .unisce .segno-cucitura'); // anche Un segno che unisce (26/10)
   if (cucitura) {
-    var scenaS = cucitura.parentNode, segnoS = scenaS.closest('.segno');
+    var scenaS = cucitura.parentNode, segnoS = scenaS.closest('.segno, .unisce');
+    // limiti (Un segno che unisce, 26/10: 20–80, così nessuna foto copre tutto e la maniglia resta sullo schermo)
+    var tMin = Number(cucitura.getAttribute('data-min')) || 0, tMax = Number(cucitura.getAttribute('data-max')) || 100;
     var mettiTaglio = function (pct) {
-      pct = Math.max(0, Math.min(100, pct));
+      pct = Math.max(tMin, Math.min(tMax, pct));
       scenaS.style.setProperty('--taglio', pct + '%');
       cucitura.setAttribute('aria-valuenow', String(Math.round(pct)));
-      cucitura.setAttribute('aria-valuetext', pct < 5 ? 'telaio nero' : pct > 95 ? 'Polo Jacquard' : 'metà e metà');
+      cucitura.setAttribute('aria-valuetext', pct <= tMin + 5 ? 'telaio nero' : pct >= tMax - 5 ? 'Polo Jacquard' : 'metà e metà');
     };
     var daPuntatore = function (e) { var r = scenaS.getBoundingClientRect(); mettiTaglio((e.clientX - r.left) / r.width * 100); };
     var tira = null; // {x, y, deciso, id}
@@ -999,7 +1001,7 @@
     scenaS.addEventListener('pointercancel', lascia);
     cucitura.addEventListener('keydown', function (e) {
       var ora = Number(cucitura.getAttribute('aria-valuenow')), passo = e.shiftKey ? 20 : 5;
-      var nuovo = e.key === 'ArrowLeft' ? ora - passo : e.key === 'ArrowRight' ? ora + passo : e.key === 'Home' ? 0 : e.key === 'End' ? 100 : null;
+      var nuovo = e.key === 'ArrowLeft' ? ora - passo : e.key === 'ArrowRight' ? ora + passo : e.key === 'Home' ? tMin : e.key === 'End' ? tMax : null;
       if (nuovo === null) return;
       e.preventDefault(); mettiTaglio(nuovo); segnoS.classList.add('toccato');
     });

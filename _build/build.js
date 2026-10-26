@@ -388,10 +388,10 @@ function home() {
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
     <h1>Fly with<br>your mind</h1>
@@ -512,10 +512,10 @@ function homeNuova() {
   const corpo = `
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <div class="n-apertura-testo">
     <h1 id="n-titolo">Fly with<br>your mind</h1>
@@ -568,26 +568,21 @@ ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria
   </div>
 </section>
 
-<section class="n-brand2" aria-label="Il segno">
-  <article class="n-logo2">
-    <!-- 25/10 (Francesco): di nuovo le due scene del ricamo sovrapposte, con la cucitura da trascinare (stesso codice di «Dietro il segno») -->
-    <figure class="n-logo2-foto segno a-mano">
-      <div class="segno-scena">
-        ${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 960px) 60vw, 100vw' })}
-        <div class="segno-scena-2" aria-hidden="true">${img('segno-scena-2', '', { dove: 'home logo', sizes: '(min-width: 960px) 60vw, 100vw' })}</div>
-        <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Confronta le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scoprire</span></div>
-      </div>
-    </figure>
-    <!-- 25/10 (Omar): via la frase sulle ali «di Omar», il pulsante e le due foto sotto; una foto piccola accanto al titolo -->
-    <div class="n-logo2-testo">
-      <p class="n-occhiello">Più di un logo</p>
-      <div class="n-logo2-titolo">
-        <h2>Un segno<br>che unisce</h2>
-        <span class="n-logo2-piccola" aria-hidden="true"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span>
-      </div>
-      <p class="n-logo2-frase">MARO è una mentalità, non solo abbigliamento.</p>
+<!-- 26/10 (Francesco, layout da immagine): fondo chiaro a tutta larghezza, polo a colori a sinistra, telaio nero in
+     bianco e nero a destra (rettangoli a lati dritti, Francesco 26/10), titolo enorme al centro che passa sopra le foto (dentro le foto una copia bianca velata), riga sottile
+     e maniglia al centro: trascinando, una foto si allarga e l'altra si stringe -->
+<section class="unisce" aria-labelledby="unisce-titolo">
+  <div class="unisce-scena">
+    <figure class="unisce-foto unisce-foto-a">${img('segno-scena-2', 'Mani che ricamano il segno MARO su una polo a righe chiare, tesa nel telaio', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}<div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
+    <figure class="unisce-foto unisce-foto-b">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}<div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
+    <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Allarga una delle due foto del ricamo" aria-valuemin="20" aria-valuemax="80" data-min="20" data-max="80" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Trascina<svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="unisce-testo">
+      <p class="unisce-occhiello">Più di un logo</p>
+      <span class="unisce-logo" aria-hidden="true"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span>
+      <h2 id="unisce-titolo" class="unisce-titolo">Un segno<br>che unisce</h2>
+      <p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p>
     </div>
-  </article>
+  </div>
 </section>
 
 <section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">

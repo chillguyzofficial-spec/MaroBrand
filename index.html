@@ -21,8 +21,8 @@
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=adca99f0">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=7378c757">
-<script defer src="assets/js/maro.js?v=3254a6d6"></script>
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=f135bcaa">
+<script defer src="assets/js/maro.js?v=72d5a86d"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="home nuovo bianco">
@@ -55,11 +55,11 @@
 <main id="contenuto">
 
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
-  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="assets/foto/apertura-locandina.webp?v=78b9dfd9" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="assets/foto/apertura-locandina.webp?v=33667a81" aria-hidden="true" tabindex="-1">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-1.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <div class="n-apertura-testo">
     <h1 id="n-titolo">Fly with<br>your mind</h1>
@@ -137,24 +137,18 @@
   </div>
 </section>
 
-<section class="n-brand2" aria-label="Il segno">
-  <article class="n-logo2">
-    <figure class="n-logo2-foto segno a-mano">
-      <div class="segno-scena">
-        <img src="assets/foto/segno-scena-1.webp?v=f2dd295b" srcset="assets/foto/segno-scena-1-640.webp?v=4c5ba0ea 640w, assets/foto/segno-scena-1.webp?v=f2dd295b 2048w" width="2048" height="1152" alt="Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada" loading="lazy" decoding="async" sizes="(min-width: 960px) 60vw, 100vw">
-        <div class="segno-scena-2" aria-hidden="true"><img src="assets/foto/segno-scena-2.webp?v=d3e8b9c0" srcset="assets/foto/segno-scena-2-640.webp?v=cf6e1d2f 640w, assets/foto/segno-scena-2.webp?v=d3e8b9c0 2048w" width="2048" height="1152" alt="" loading="lazy" decoding="async" sizes="(min-width: 960px) 60vw, 100vw"></div>
-        <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Confronta le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scoprire</span></div>
-      </div>
-    </figure>
-    <div class="n-logo2-testo">
-      <p class="n-occhiello">Più di un logo</p>
-      <div class="n-logo2-titolo">
-        <h2>Un segno<br>che unisce</h2>
-        <span class="n-logo2-piccola" aria-hidden="true"><svg viewBox="0 0 1778 1103"><use href="#logo-maro"/></svg></span>
-      </div>
-      <p class="n-logo2-frase">MARO è una mentalità, non solo abbigliamento.</p>
+<section class="unisce" aria-labelledby="unisce-titolo">
+  <div class="unisce-scena">
+    <figure class="unisce-foto unisce-foto-a"><img src="assets/foto/segno-scena-2.webp?v=d3e8b9c0" srcset="assets/foto/segno-scena-2-640.webp?v=cf6e1d2f 640w, assets/foto/segno-scena-2.webp?v=d3e8b9c0 2048w" width="2048" height="1152" alt="Mani che ricamano il segno MARO su una polo a righe chiare, tesa nel telaio" loading="lazy" decoding="async" sizes="(min-width: 700px) 100vw, 190vw"><div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="0 0 1778 1103"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
+    <figure class="unisce-foto unisce-foto-b"><img src="assets/foto/segno-scena-1.webp?v=f2dd295b" srcset="assets/foto/segno-scena-1-640.webp?v=4c5ba0ea 640w, assets/foto/segno-scena-1.webp?v=f2dd295b 2048w" width="2048" height="1152" alt="Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada" loading="lazy" decoding="async" sizes="(min-width: 700px) 100vw, 190vw"><div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="0 0 1778 1103"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
+    <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Allarga una delle due foto del ricamo" aria-valuemin="20" aria-valuemax="80" data-min="20" data-max="80" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Trascina<svg viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    <div class="unisce-testo">
+      <p class="unisce-occhiello">Più di un logo</p>
+      <span class="unisce-logo" aria-hidden="true"><svg viewBox="0 0 1778 1103"><use href="#logo-maro"/></svg></span>
+      <h2 id="unisce-titolo" class="unisce-titolo">Un segno<br>che unisce</h2>
+      <p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p>
     </div>
-  </article>
+  </div>
 </section>
 
 <section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">
