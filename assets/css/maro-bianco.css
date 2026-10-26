@@ -353,3 +353,15 @@ body.bianco {
 }
 
 /* (26/10) niente più brightness(.86): ora i due video (PC e telefono) hanno già lo stesso tono scuro nel file, scurirli ancora spegneva la scena */
+
+/* foto dei prodotti (Francesco 26/10, «sono tagliate, ci sono due linee sopra e sotto: rendile a schermo intero dentro il loro quadrato»):
+   la foto riempie il quadrato della galleria e le miniature, niente più fasce sfocate. Inquadratura spostata in alto (30%) così
+   testa e collo restano dentro e il taglio va su gambe e fondo; la foto intera resta in «Tocca per ingrandire» */
+.bianco .vetrina img, .bianco .miniature img { object-fit: cover; object-position: 50% 30%; }
+.bianco .vetrina-sfondo { display: none; }
+/* stesso discorso per le schede del negozio, «Visti di recente» e «Completa il look» (Francesco 26/10, «occhio anche qua tagliata»):
+   supera la scelta del 24/10 (foto intera con fasce ai lati); la foto intera resta nella scheda prodotto con «Tocca per ingrandire» */
+.bianco .scheda-foto img, .bianco .scheda-cella:not([data-tipo="accessori"]) .scheda-foto-2, .bianco .riga img, .bianco .visto img { object-fit: cover !important; object-position: 50% 30%; }
+/* due foto che con il 30% perdevano qualcosa: la Polo Tricolore indossata (la cima dei capelli) e il Cargo appeso (l'orlo in fondo) */
+.bianco img[src*="ai2-polo-tricolore-fronte"] { object-position: 50% 4% !important; }
+.bianco img[src*="pant-cargo-appeso"] { object-position: 50% 85% !important; }
