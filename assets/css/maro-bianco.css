@@ -166,9 +166,10 @@ body.bianco {
    Provvisorio: quando arriva il video 9:16 si mette quello. */
 @media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
   /* (Francesco 26/10, «metti solo questa immagine da mobile senza loop»): sul telefono la foto verticale ferma, intera, al posto del video */
-  .bianco .n-apertura { aspect-ratio: 941 / 1560; height: auto; min-height: 0; max-height: none; } /* (26/10) «un pelino più corta»: -7%, il taglio va sul pavimento */
-  .bianco .n-apertura .apertura-video { display: none; }
-  .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .bianco .n-apertura { aspect-ratio: 941 / 1560; height: auto; min-height: 0; max-height: none; isolation: isolate; } /* (26/10) «un pelino più corta»: -7%, il taglio va sul pavimento */
+  /* (Francesco 26/10, dopo) il video verticale in loop come sul PC, sopra la foto: la foto resta sotto come locandina finché il video non parte */
+  .bianco .n-apertura .apertura-video { object-position: 50% 25%; }
+  .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
   .bianco .n-apertura-testo { top: 14px; bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
   .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
 }
@@ -291,74 +292,64 @@ body.bianco {
 }
 
 /* =====================================================================================================================
-   UN SEGNO CHE UNISCE (Francesco 26/10, layout da immagine): fondo chiaro a tutta larghezza, polo a colori strappata a sinistra,
-   telaio nero in bianco e nero strappato a destra, titolo enorme al centro. Il titolo è bianco in «differenza»: sul fondo chiaro
-   diventa nero, sopra le foto le mostra in negativo. Trascinando (--taglio, da maro.js) una foto si allarga e l'altra si stringe;
-   le foto restano ferme (larghe quanto la sezione, 100cqw): si scopre o si copre, come una tenda.
+   UN SEGNO CHE UNISCE (Francesco 26/10, «fai la sezione uguale da telefono e da PC, non voglio due cose diverse»): la versione di
+   prima del restyle, uguale ovunque. Sopra il testo allineato a sinistra con il logo accanto al titolo; sotto la foto intera 16:10
+   con le due scene sovrapposte: polo a sinistra della cucitura tratteggiata, telaio a destra. Trascinando (--taglio, da maro.js)
+   si scopre l'una o l'altra; la pillola «← Trascina →» in basso segue la cucitura restando dentro i bordi.
+   La foto è larga quanto .unisce-scena (niente padding ai lati), così --taglio vale uguale per JS, cucitura e ritaglio.
+   Su PC la sezione sta nei margini della pagina e non supera 1120 px (a tutta larghezza era «troppo grande»); sul telefono bordo a bordo.
    ===================================================================================================================== */
 .unisce { background: var(--b-fondo); overflow: hidden; }
-.unisce-scena { --taglio: 50%; position: relative; isolation: isolate; background: var(--b-fondo); container-type: inline-size; height: clamp(470px, 42vw, 750px); touch-action: pan-y; cursor: ew-resize; -webkit-user-select: none; user-select: none; }
-.unisce-foto { position: absolute; top: 4%; bottom: 4%; margin: 0; overflow: hidden; z-index: 0; }
-.unisce-foto-a { border-radius: 0 4px 4px 0; }
-.unisce-foto-b { border-radius: 4px 0 0 4px; } /* (Francesco 26/10) rettangoli a lati dritti, niente curve */
-.unisce-foto-a { left: 0; width: calc(var(--taglio) * .8); }
-.unisce-foto-b { right: 0; width: calc((100% - var(--taglio)) * .8); }
-.unisce-foto img { position: absolute; top: 0; height: 100%; width: 100cqw; max-width: none; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
-.unisce-foto-a img { left: -27cqw; } /* (Francesco 26/10) il ricamo MARO fuori da sotto il titolo */
-.unisce-foto-b img { right: -36cqw; filter: grayscale(1) contrast(1.08); }
-
-.unisce-testo { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
-.unisce-occhiello { position: absolute; top: clamp(28px, 5%, 64px); left: 50%; transform: translateX(-50%); z-index: -1; margin: 0; font: 600 13px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; color: #111; white-space: nowrap; }
-.unisce-logo { position: relative; z-index: -1; width: clamp(96px, 7.6vw, 144px); margin-bottom: clamp(4px, 1vw, 16px); }
+.unisce-scena { --taglio: 50%; position: relative; display: grid; grid-template-columns: minmax(0, 1fr); width: min(1120px, calc(100% - 2 * var(--lato))); margin: 0 auto; padding: clamp(36px, 6vw, 88px) 0; touch-action: pan-y; cursor: ew-resize; -webkit-user-select: none; user-select: none; }
+.unisce-testo { grid-row: 1; display: grid; grid-template-columns: auto auto; justify-content: start; align-items: center; column-gap: clamp(18px, 2vw, 32px); padding: 0 0 clamp(26px, 3vw, 40px); }
+.unisce-occhiello { grid-column: 1 / -1; margin: 0 0 18px; font: 600 12px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; color: #111; }
+.bianco .unisce-titolo { grid-column: 1; grid-row: 2; margin: 0; font-family: var(--titoli) !important; font-weight: 400; font-size: clamp(44px, 13vw, 104px); line-height: .9; letter-spacing: -.005em; text-transform: uppercase; color: #111; }
+.unisce-logo { grid-column: 2; grid-row: 2; width: clamp(84px, 24vw, 150px); }
 .unisce-logo svg { display: block; width: 100%; height: auto; aspect-ratio: 1778 / 1103; color: #111; }
-.bianco .unisce-titolo { position: relative; z-index: -1; margin: 0; font-family: var(--titoli) !important; font-weight: 400; font-size: clamp(54px, 9vw, 172px); line-height: .9; letter-spacing: -.005em; text-transform: uppercase; color: #111; }
-/* il titolo nero sta sotto le foto; dentro ogni foto (stesso ritaglio strappato) una copia bianca velata nello stesso punto.
-   La copia è larga quanto la sezione (100cqw) e riporta su l'altezza: la foto parte al 4% e occupa il 92% */
-.unisce-copia { position: absolute; top: -4.348%; height: 108.696%; width: 100cqw; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; pointer-events: none; }
-.unisce-foto-a .unisce-copia { left: 0; }
-.unisce-foto-b .unisce-copia { right: 0; }
-/* tutte le scritte (nere sotto le foto) hanno la loro copia bianca dentro le foto: trascinando, nessuna resta nera sopra una foto */
-.unisce-copia .unisce-occhiello, .unisce-copia .unisce-logo, .unisce-copia .unisce-frase, .bianco .unisce-copia .unisce-titolo { z-index: auto; color: rgba(255,255,255,.85); }
-.unisce-copia .unisce-logo svg { color: #fff; filter: drop-shadow(0 1px 6px rgba(0,0,0,.55)); } /* (Francesco 26/10) il logo si perdeva sopra le foto */
-.unisce-copia .unisce-occhiello, .unisce-copia .unisce-frase { color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
-/* (Francesco 26/10, «poco in risalto»): la frase sta subito sotto il titolo, più grande e più piena */
-.unisce-frase { position: relative; z-index: -1; margin: clamp(18px, 2vw, 32px) 0 0; max-width: calc(100% - 2 * var(--lato)); font: 500 clamp(18px, 1.75vw, 30px)/1.3 var(--n-lineare); letter-spacing: -.005em; color: #111; }
+.unisce-frase { grid-column: 1 / -1; margin: clamp(16px, 1.6vw, 24px) 0 0; max-width: 18em; font: 500 clamp(19px, 1.6vw, 26px)/1.3 var(--n-lineare); letter-spacing: -.005em; color: #111; }
+.unisce-foto { position: relative; grid-row: 2; grid-column: 1; margin: 0; overflow: hidden; aspect-ratio: 16 / 10; border-radius: 4px; }
+.unisce-foto img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.unisce-foto-a { z-index: 1; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
 
-/* maniglia per allargare le foto */
-.unisce .segno-cucitura { z-index: auto; }
-.unisce .segno-cucitura::before { content: none; } /* (Francesco 26/10) niente riga verticale: resta solo la maniglia */
-/* (Francesco 26/10, «il cerchio con ‹› non fa capire»): pillola con «← Trascina →» */
-.unisce .segno-maniglia { top: auto; bottom: clamp(24px, 5%, 52px); transform: translateX(-50%); z-index: 3; width: auto; height: auto; display: flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; white-space: nowrap; font: 600 13px/1 var(--n-lineare); letter-spacing: .16em; text-transform: uppercase; background: #111; color: #fff; border: 0; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
-.unisce .segno-maniglia svg { flex: 0 0 18px; width: 18px; height: 18px; }
-.unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.08); }
+/* cucitura tratteggiata e pillola «Trascina» (Francesco 26/10, «maniglia lascia questa») */
+.unisce .segno-cucitura { position: relative; grid-row: 2; grid-column: 1; left: auto; z-index: 2; width: auto; pointer-events: none; }
+.unisce .segno-cucitura::before { content: ''; top: 0; bottom: 0; left: var(--taglio); transform: translateX(-1.5px); border-left: 3px dashed rgba(255,255,255,.95); }
+.unisce .segno-maniglia { top: auto; bottom: clamp(12px, 2vw, 24px); left: clamp(70px, var(--taglio), calc(100% - 70px)); transform: translateX(-50%); width: auto; height: auto; display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; white-space: nowrap; font: 600 12px/1 var(--n-lineare); letter-spacing: .12em; text-transform: uppercase; background: #fff; color: #111; border: 0; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+.unisce .segno-maniglia svg { flex: 0 0 14px; width: 14px; height: 14px; }
+.unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.06); }
 .unisce .segno-cucitura:focus-visible .segno-maniglia { outline: 2px solid #111; outline-offset: 3px; }
-
-/* maniglia: la pillola «← Trascina →» ovunque (Francesco 26/10, «maniglia lascia questa»); il tondo ‹› e «Trascina per scoprire»
-   di prima restano nell'HTML ma spenti */
-.unisce .m-tondo, .unisce .segno-aiuto { display: none !important; }
-
-/* telefono (Francesco 26/10, «mettiamo la versione che avevamo prima del restyle, a tutto schermo, sui bordi»): come la sezione di
-   prima. Foto intera 16:9 da bordo a bordo con le due scene sovrapposte (polo a sinistra della cucitura tratteggiata, telaio a
-   destra), con la pillola «Trascina» in basso; il testo allineato a sinistra sta SOPRA la foto (Francesco: «testo prima della foto»)
-   con il logo accanto al titolo. La foto è larga quanto la sezione, così --taglio vale uguale per JS, cucitura e ritaglio */
+@media (min-width: 700px) {
+  .unisce .segno-maniglia { left: clamp(90px, var(--taglio), calc(100% - 90px)); gap: 10px; padding: 10px 16px; font-size: 13px; letter-spacing: .14em; }
+  .unisce .segno-maniglia svg { flex-basis: 18px; width: 18px; height: 18px; }
+}
+/* PC (Francesco 26/10, «la foto che tocca i bordi, qualcosa di stiloso: ora è un blocco unico che non si amalgama con il testo»):
+   stessa sezione, ma la foto va da bordo a bordo in formato panoramico e il testo sta DENTRO la foto, in basso a sinistra sul margine
+   della pagina, bianco su una sfumatura scura che parte da sinistra (vale per entrambe le scene). Ordine: foto · velo · cucitura · testo. */
+@media (min-width: 1100px) {
+  .unisce { padding: clamp(40px, 4vw, 72px) 0; }
+  /* le scene sono spostate a destra del 16% e sfumano nel nero a sinistra: il ricamo sta a 2/3, il testo sul fondo scuro;
+     la cucitura parte da lì (66% = metà delle foto) */
+  .unisce-scena { --taglio: 66%; width: 100%; padding: 0; }
+  .unisce-scena::after { content: ''; grid-row: 2; grid-column: 1; z-index: 2; pointer-events: none;
+    background: linear-gradient(90deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.25) 34%, rgba(0,0,0,0) 50%), linear-gradient(0deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,0) 35%); }
+  .unisce-foto { aspect-ratio: auto; height: clamp(500px, 41vw, 770px); /* (26/10) «leggermente più piccola ma poco»: -10% */ border-radius: 0; background: #0b0a09; }
+  .unisce-foto img { inset: 0 auto 0 16%; object-position: 50% 62%; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%); mask-image: linear-gradient(90deg, transparent 0, #000 26%); }
+  .unisce .segno-cucitura { z-index: 3; }
+  .unisce-testo { grid-row: 2; grid-column: 1; z-index: 4; align-self: end; padding: 0 var(--lato) clamp(84px, 7vw, 120px); pointer-events: none; }
+  .unisce-occhiello, .bianco .unisce-titolo, .unisce-frase, .unisce-logo svg { color: #fff; }
+  .bianco .unisce-titolo { font-size: clamp(80px, 6.9vw, 124px); text-shadow: 0 2px 24px rgba(0,0,0,.25); }
+  /* logo sopra l'occhiello (accanto al titolo finiva sulla polo): una colonna sola sul nero */
+  .unisce-testo { grid-template-columns: auto; }
+  .unisce-logo { grid-column: 1; grid-row: 1; width: clamp(92px, 7vw, 124px); margin: 0 0 clamp(18px, 1.8vw, 28px); }
+  .unisce-occhiello { grid-row: 2; }
+  .bianco .unisce-titolo { grid-row: 3; }
+  .unisce-frase { grid-row: 4; }
+  .unisce-frase { max-width: 22em; font-size: clamp(20px, 1.5vw, 26px); }
+}
 @media (max-width: 699px) {
-  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, 1fr); padding: clamp(36px, 9vw, 56px) 0; container-type: normal; }
-  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 2; grid-column: 1; height: auto; aspect-ratio: 16 / 10; border-radius: 0 !important; } /* (26/10) «un pelino più grande»: da 16:9 a 16:10 */
-  .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; object-position: 50% 50%; }
-  .unisce-foto-b img { filter: none; } /* prima le due scene erano entrambe a colori */
-  .unisce-foto-a { z-index: 1; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
-  .unisce-copia { display: none; }
-  .unisce-testo { position: static; grid-row: 1; display: grid; grid-template-columns: auto auto; justify-content: start; align-items: center; column-gap: 18px; text-align: left; padding: 0 var(--lato) 26px; }
-  .unisce-occhiello { grid-column: 1 / -1; position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
-  .bianco .unisce-titolo { grid-column: 1; grid-row: 2; z-index: auto; font-size: clamp(44px, 13vw, 64px); }
-  .unisce-logo { grid-column: 2; grid-row: 2; z-index: auto; width: clamp(84px, 24vw, 110px); margin: 0; }
-  .unisce-frase { grid-column: 1 / -1; z-index: auto; margin-top: 16px; font-size: 19px; max-width: 18em; }
-  .unisce .segno-cucitura { position: relative; grid-row: 2; grid-column: 1; left: auto; z-index: 2; width: auto; pointer-events: none; }
-  .unisce .segno-cucitura::before { content: ''; top: 0; bottom: 0; left: var(--taglio); transform: translateX(-1.5px); border-left: 3px dashed rgba(255,255,255,.95); mix-blend-mode: normal; opacity: 1; }
-  /* in basso sulla foto, segue la cucitura ma resta sempre dentro i bordi */
-  .unisce .segno-maniglia { top: auto; bottom: 12px; left: clamp(70px, var(--taglio), calc(100% - 70px)); transform: translateX(-50%); padding: 6px 10px; gap: 6px; font-size: 12px; letter-spacing: .12em; background: #fff; color: #111; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
-  .unisce .segno-maniglia svg { flex-basis: 14px; width: 14px; height: 14px; }
-  .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.06); }
+  .unisce-scena { width: 100%; }
+  .unisce-testo { padding: 0 var(--lato) 26px; }
+  .unisce-foto { border-radius: 0; }
 }
 
 /* (Francesco 26/10, «si può scurire un pelino? poco»): video d'apertura della metro appena più scuro */

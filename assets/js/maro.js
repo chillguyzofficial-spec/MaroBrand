@@ -16,8 +16,14 @@
 
   /* ---------- video d'apertura: loop senza stacco (due copie in dissolvenza incrociata) ---------- */
   var video = $('.apertura-video:not([data-copia])'), copia = $('.apertura-video[data-copia]');
-  // (26/10) sul telefono c'è la foto verticale ferma: il video non si scarica nemmeno (stessa condizione del CSS in maro-bianco.css)
-  if (video && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) video = null;
+  // (26/10) sul telefono il video verticale (data-tel), stesso loop; la foto verticale sotto fa da locandina (stessa condizione del CSS in maro-bianco.css)
+  if (video && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) {
+    [video, copia].forEach(function (v) {
+      var s = v && $('source[data-tel]', v);
+      if (!s) return;
+      v.removeAttribute('poster'); s.src = s.getAttribute('data-tel'); v.load();
+    });
+  }
   if (video) {
     video.preload = 'auto';
     var SFUMA = 1; // secondi di dissolvenza a fine giro
@@ -970,16 +976,16 @@
   var cucitura = $('.segno.a-mano .segno-cucitura, .unisce .segno-cucitura'); // anche Un segno che unisce (26/10)
   if (cucitura) {
     var scenaS = cucitura.parentNode, segnoS = scenaS.closest('.segno, .unisce');
-    // limiti (Un segno che unisce, 26/10: 20–80, così nessuna foto copre tutto e la maniglia resta sullo schermo)
+    // limiti facoltativi (data-min / data-max sulla cucitura); senza, la corsa è 0–100
     var tMin = Number(cucitura.getAttribute('data-min')) || 0, tMax = Number(cucitura.getAttribute('data-max')) || 100;
-    // sul telefono Un segno che unisce è il confronto di prima a tutta larghezza: corsa completa (stessa condizione del CSS)
-    if (matchMedia('(max-width: 699px)').matches) { tMin = 0; tMax = 100; cucitura.setAttribute('aria-valuemin', '0'); cucitura.setAttribute('aria-valuemax', '100'); }
     var mettiTaglio = function (pct) {
       pct = Math.max(tMin, Math.min(tMax, pct));
       scenaS.style.setProperty('--taglio', pct + '%');
       cucitura.setAttribute('aria-valuenow', String(Math.round(pct)));
       cucitura.setAttribute('aria-valuetext', pct <= tMin + 5 ? 'telaio nero' : pct >= tMax - 5 ? 'Polo Jacquard' : 'metà e metà');
     };
+    // punto di partenza dal CSS (su PC Un segno che unisce parte da 66%)
+    cucitura.setAttribute('aria-valuenow', String(parseFloat(getComputedStyle(scenaS).getPropertyValue('--taglio')) || 50));
     var daPuntatore = function (e) { var r = scenaS.getBoundingClientRect(); mettiTaglio((e.clientX - r.left) / r.width * 100); };
     var tira = null; // {x, y, deciso, id}
     scenaS.addEventListener('pointerdown', function (e) {

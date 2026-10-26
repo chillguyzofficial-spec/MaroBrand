@@ -388,10 +388,10 @@ function home() {
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
     <h1>Fly with<br>your mind</h1>
@@ -511,12 +511,12 @@ function homeNuova() {
   ];
   const corpo = `
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
-  <!-- 26/10 (Francesco): sul telefono la foto verticale ferma al posto del video; il video lo fa partire maro.js solo dove si vede -->
+  <!-- 26/10 (Francesco): sul telefono il video verticale (data-tel) con lo stesso loop del PC; la foto verticale sta sotto finché il video non parte -->
   <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel.mp4" type="video/mp4">
   </video>
   ${img('apertura-tel', 'Stazione della metro di notte con la scritta MARO illuminata su una colonna', { cls: 'apertura-tel', dove: 'home apertura', sizes: '100vw' })}
   <div class="n-apertura-testo">
@@ -570,14 +570,13 @@ ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria
   </div>
 </section>
 
-<!-- 26/10 (Francesco, layout da immagine): fondo chiaro a tutta larghezza, polo a colori a sinistra, telaio nero in
-     bianco e nero a destra (rettangoli a lati dritti, Francesco 26/10), titolo enorme al centro che passa sopra le foto (dentro le foto una copia bianca velata), riga sottile
-     e maniglia al centro: trascinando, una foto si allarga e l'altra si stringe -->
+<!-- 26/10 (Francesco, «uguale da telefono e da PC»): testo sopra, foto intera con le due scene del ricamo sovrapposte e la cucitura
+     da trascinare (stesso codice di «Dietro il segno»); stile in fondo a maro-bianco.css -->
 <section class="unisce" aria-labelledby="unisce-titolo">
   <div class="unisce-scena">
-    <figure class="unisce-foto unisce-foto-a">${img('segno-scena-2', 'Mani che ricamano il segno MARO su una polo a righe chiare, tesa nel telaio', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}<div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
-    <figure class="unisce-foto unisce-foto-b">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}<div class="unisce-copia" aria-hidden="true"><p class="unisce-occhiello">Più di un logo</p><span class="unisce-logo"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span><div class="unisce-titolo">Un segno<br>che unisce</div><p class="unisce-frase">MARO è una mentalità, non solo abbigliamento.</p></div></figure>
-    <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Allarga una delle due foto del ricamo" aria-valuemin="20" aria-valuemax="80" data-min="20" data-max="80" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg class="m-freccia" viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="m-testo">Trascina</span><svg class="m-freccia" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="m-tondo" viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="segno-aiuto" aria-hidden="true">Trascina per scoprire</span></div>
+    <figure class="unisce-foto unisce-foto-a">${img('segno-scena-2', 'Mani che ricamano il segno MARO su una polo a righe chiare, tesa nel telaio', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}</figure>
+    <figure class="unisce-foto unisce-foto-b">${img('segno-scena-1', 'Mani che ricamano a mano il segno MARO su un telaio nero, alla luce di una lampada', { dove: 'home logo', sizes: '(min-width: 700px) 100vw, 190vw' })}</figure>
+    <div class="segno-cucitura" role="slider" tabindex="0" aria-label="Confronta le due foto del ricamo" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="metà e metà"><span class="segno-maniglia" aria-hidden="true"><svg class="m-freccia" viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="m-testo">Trascina</span><svg class="m-freccia" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
     <div class="unisce-testo">
       <p class="unisce-occhiello">Più di un logo</p>
       <span class="unisce-logo" aria-hidden="true"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg></span>
