@@ -21,7 +21,7 @@
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=46ab99a4">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=8798bc4b">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=2c994e4d">
 <script defer src="assets/js/maro.js?v=87c781a1"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
@@ -37,18 +37,18 @@
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
 <a class="salta" href="#contenuto">Vai al contenuto</a>
-
+<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>
 
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1778 1103" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="index.html">Home</a><a href="shop.html">Collezione</a><a href="index.html#drop">Drop 002</a></div>
-    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a></div>
+    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
   </nav>
   <div class="azioni">
-
+    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-
+    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
@@ -59,7 +59,7 @@
     <nav class="briciole" aria-label="Sei qui"><a href="index.html">Home</a><span aria-hidden="true">›</span><a class="indietro" href="felpe.html">Felpe</a><span aria-hidden="true">›</span><span aria-current="page">Felpa Stretta di mano</span></nav>
     <h1>Felpa Stretta di mano</h1>
     <p class="colore">Grigio melange, stampa sul retro</p>
-    <p class="prezzo"><span class="prezzo-etichetta">Prezzo al lancio</span> 120,00 €</p>
+    <p class="prezzo">120,00 €</p>
     <a class="voto" href="#rec-titolo"><span class="stelle" aria-hidden="true">★★★★★<i></i></span><span>4,5 <small>(15 recensioni)</small></span></a>
 
   </div>
@@ -86,15 +86,31 @@
   <div class="prodotto-acquisto">
     <p class="prodotto-testo"><strong>Il segno del rispetto, in grande sulla schiena.</strong> Cotone garzato grigio melange, cappuccio con coulisse e tasca a marsupio. Sul retro la stretta di mano, il secondo segno di MARO: due persone, un patto. Il davanti resta libero, così la porti ovunque senza che sembri un manifesto.</p>
     <p class="vestibilita"><strong>Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.</strong> Sul manichino: taglia M.</p>
-    <div class="taglie-vetrina">
-      <div class="taglie-vetrina-testa"><p>Taglie al lancio</p><a class="link" href="#guida-taglie" onclick="var d=document.getElementById('guida-taglie');if(d)d.open=true">Guida alle taglie</a></div>
-      <ul aria-label="Taglie al lancio: XS, S, M, L, XL, XXL"><li>XS</li><li>S</li><li>M</li><li>L</li><li>XL</li><li>XXL</li></ul>
+    <fieldset class="taglie">
+      <legend>Seleziona la taglia</legend>
+      <div class="taglie-griglia">
+        <label class="esaurita"><input type="radio" name="taglia" value="XS" data-esaurita aria-label="XS, esaurita"><span>XS</span></label>
+        <label><input type="radio" name="taglia" value="S" aria-label="S"><span>S</span></label>
+        <label><input type="radio" name="taglia" value="M" aria-label="M"><span>M</span></label>
+        <label><input type="radio" name="taglia" value="L" aria-label="L"><span>L</span></label>
+        <label><input type="radio" name="taglia" value="XL" aria-label="XL"><span>XL</span></label>
+        <label><input type="radio" name="taglia" value="XXL" aria-label="XXL"><span>XXL</span></label>
+      </div>
+      <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
+      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
+    </fieldset>
+    <div class="trova" id="trova" hidden data-taglie="XS,S,M,L,XL,XXL" data-tipo="felpa">
+      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+        <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
+      <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
+        <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
+      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
+        <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
+      <p class="trova-esito" role="status" aria-live="polite"></p>
     </div>
-    <div class="drop-scheda">
-      <p class="drop-occhiello"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Il drop apre presto</p>
-      <p>Iscriviti: ti scriviamo prima dell’apertura, con l’accesso anticipato e un codice del 10% sul primo ordine.</p>
-      <button class="btn btn-nero btn-largo" type="button" data-apri-popup>Iscriviti al drop</button>
-    </div>
+    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
+    <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
+    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>
     <div class="azioni-scheda">
       <button class="btn btn-contorno-nero" type="button" data-cuore="felpa-stretta" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva</span></button>
       <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
@@ -122,6 +138,10 @@
         <tbody><tr><td>XS</td><td>52</td><td>68</td></tr><tr><td>S</td><td>55</td><td>70</td></tr><tr><td>M</td><td>58</td><td>72</td></tr><tr><td>L</td><td>61</td><td>74</td></tr><tr><td>XL</td><td>64</td><td>76</td></tr><tr><td>XXL</td><td>67</td><td>78</td></tr></tbody>
       </table>
       <p class="piccolo">Misure del capo steso, di esempio.</p>
+    </details>
+    <details>
+      <summary>Spedizione e resi</summary>
+      <p>Spedizione in Italia in 2–4 giorni lavorativi, gratuita sopra i 150 €. Reso entro 14 giorni dalla consegna, per qualsiasi motivo. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
   </div>
 </div>
@@ -201,7 +221,16 @@ altre.addEventListener('click',function(){quante+=6;mostra();});})();</script>
     <p>Nero, righe bianche sulle maniche</p>
     <p class="prezzo">75,00 €</p>
   </div>
-</a></div>
+</a><div class="rapido">
+  <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: Polo Linee">+</button>
+  <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di Polo Linee" hidden>
+    <button type="button" data-rapido="polo-linee|S">S</button>
+    <button type="button" data-rapido="polo-linee|M">M</button>
+    <button type="button" data-rapido="polo-linee|L">L</button>
+    <button type="button" data-rapido="polo-linee|XL">XL</button>
+    <button type="button" data-rapido="polo-linee|XXL" disabled aria-label="XXL, esaurita">XXL</button>
+  </div>
+</div></div>
 <div class="scheda-cella" data-tipo="polo"><button class="cuore" type="button" data-cuore="polo-tricolore" aria-pressed="false" aria-label="Aggiungi Polo Tricolore ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="polo-tricolore.html" data-tipo="polo">
   <div class="scheda-foto"><img src="assets/foto/ai2-polo-tricolore-fronte.webp?v=d0ef86d0" width="564" height="869" alt="Ragazzo con la Polo Tricolore MARO nera e maniche verde bianco rosso, davanti al Duomo di Milano" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/ai2-polo-tricolore-retro.webp?v=4fb12a09" width="443" height="486" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div><span class="scheda-punti" aria-hidden="true"><i class="acceso"></i><i></i></span>
   <div class="scheda-testo">
@@ -211,7 +240,16 @@ altre.addEventListener('click',function(){quante+=6;mostra();});})();</script>
     <p>Nero, maniche verde bianco rosso</p>
     <p class="prezzo">80,00 €</p>
   </div>
-</a></div>
+</a><div class="rapido">
+  <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: Polo Tricolore">+</button>
+  <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di Polo Tricolore" hidden>
+    <button type="button" data-rapido="polo-tricolore|S">S</button>
+    <button type="button" data-rapido="polo-tricolore|M">M</button>
+    <button type="button" data-rapido="polo-tricolore|L">L</button>
+    <button type="button" data-rapido="polo-tricolore|XL" disabled aria-label="XL, esaurita">XL</button>
+    <button type="button" data-rapido="polo-tricolore|XXL">XXL</button>
+  </div>
+</div></div>
 <div class="scheda-cella" data-tipo="felpa"><button class="cuore" type="button" data-cuore="felpa-firma" aria-pressed="false" aria-label="Aggiungi Felpa Firma ai preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg></button><a class="scheda" href="felpa-firma.html" data-tipo="felpa">
   <div class="scheda-foto"><img src="assets/foto/ai2-felpa-firma-fronte.webp?v=12956db4" srcset="assets/foto/ai2-felpa-firma-fronte-640.webp?v=6385a314 640w, assets/foto/ai2-felpa-firma-fronte.webp?v=12956db4 1254w" width="1254" height="1254" alt="Ragazzo con la Felpa Firma MARO blu notte e cappellino, firma piccola sul petto, davanti a un muro chiaro" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"><img src="assets/foto/ai2-felpa-firma-retro.webp?v=1b1d162d" srcset="assets/foto/ai2-felpa-firma-retro-640.webp?v=b22e8edb 640w, assets/foto/ai2-felpa-firma-retro.webp?v=1b1d162d 1254w" width="1254" height="1254" alt="" class="scheda-foto-2" loading="lazy" decoding="async" sizes="(min-width: 960px) 32vw, 50vw"></div><span class="scheda-punti" aria-hidden="true"><i class="acceso"></i><i></i></span>
   <div class="scheda-testo">
@@ -221,7 +259,17 @@ altre.addEventListener('click',function(){quante+=6;mostra();});})();</script>
     <p>Blu notte, firma MARO sul retro</p>
     <p class="prezzo">130,00 €</p>
   </div>
-</a></div>
+</a><div class="rapido">
+  <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: Felpa Firma">+</button>
+  <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di Felpa Firma" hidden>
+    <button type="button" data-rapido="felpa-firma|XS">XS</button>
+    <button type="button" data-rapido="felpa-firma|S" disabled aria-label="S, esaurita">S</button>
+    <button type="button" data-rapido="felpa-firma|M">M</button>
+    <button type="button" data-rapido="felpa-firma|L">L</button>
+    <button type="button" data-rapido="felpa-firma|XL">XL</button>
+    <button type="button" data-rapido="felpa-firma|XXL">XXL</button>
+  </div>
+</div></div>
   </div>
 </section>
 
@@ -236,8 +284,8 @@ altre.addEventListener('click',function(){quante+=6;mostra();});})();</script>
       <p>Sport ed eleganza da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Il drop</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -266,7 +314,7 @@ altre.addEventListener('click',function(){quante+=6;mostra();});})();</script>
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
     <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
-    <p>Conservalo: vale una volta sola, sul primo ordine, quando apre il drop. Ti scriviamo prima dell’apertura.</p>
+    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
     <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>

@@ -21,7 +21,7 @@
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=46ab99a4">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=8798bc4b">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=2c994e4d">
 <script defer src="assets/js/maro.js?v=87c781a1"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
@@ -37,18 +37,18 @@
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
 <a class="salta" href="#contenuto">Vai al contenuto</a>
-
+<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>
 
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1778 1103" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="index.html">Home</a><a href="shop.html" aria-current="page">Collezione</a><a href="index.html#drop">Drop 002</a></div>
-    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a></div>
+    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
   </nav>
   <div class="azioni">
-
+    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-
+    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
@@ -101,7 +101,16 @@
     <p>Beige sabbia, firma MARO verticale sulla gamba</p>
     <p class="prezzo">95,00 €</p>
   </div>
-</a></div>
+</a><div class="rapido">
+  <button class="rapido-apri" type="button" aria-expanded="false" aria-label="Aggiunta rapida: Cargo Firma">+</button>
+  <div class="rapido-taglie" role="group" aria-label="Scegli la taglia di Cargo Firma" hidden>
+    <button type="button" data-rapido="cargo-firma|S">S</button>
+    <button type="button" data-rapido="cargo-firma|M">M</button>
+    <button type="button" data-rapido="cargo-firma|L">L</button>
+    <button type="button" data-rapido="cargo-firma|XL">XL</button>
+    <button type="button" data-rapido="cargo-firma|XXL">XXL</button>
+  </div>
+</div></div>
       </div>
       <div class="cat-nessuno" data-cat-nessuno hidden><p>Nessun capo con questi filtri.</p><button type="button" class="btn btn-nero" data-filtri-azzera>Azzera i filtri</button></div>
     </div>
@@ -114,8 +123,8 @@
       <p>Sport ed eleganza da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Il drop</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -144,7 +153,7 @@
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
     <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
-    <p>Conservalo: vale una volta sola, sul primo ordine, quando apre il drop. Ti scriviamo prima dell’apertura.</p>
+    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
     <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>

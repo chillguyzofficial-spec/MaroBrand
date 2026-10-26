@@ -21,7 +21,7 @@
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=46ab99a4">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=8798bc4b">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=2c994e4d">
 <script defer src="assets/js/maro.js?v=87c781a1"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
@@ -37,18 +37,18 @@
 <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8"/></symbol>
 </defs></svg>
 <a class="salta" href="#contenuto">Vai al contenuto</a>
-
+<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>
 
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="0 0 1778 1103" aria-hidden="true"><use href="#logo-maro"/></svg></a>
   <nav class="menu" id="menu" aria-label="Menu principale">
     <div class="menu-sx"><a href="index.html">Home</a><a href="shop.html">Collezione</a><a href="index.html#drop">Drop 002</a></div>
-    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a></div>
+    <div class="menu-dx"><a href="storia.html">Il brand</a><a href="index.html#lookbook">Lookbook</a><a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a></div>
   </nav>
   <div class="azioni">
-
+    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-
+    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>
     <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
   </div>
 </header>
@@ -67,35 +67,46 @@
 
   <section class="aiuto-tema" id="dati" aria-labelledby="p-dati">
     <div class="aiuto-tema-testa"><h2 id="p-dati">Quali dati</h2></div>
-    <div class="legale"><ul><li><strong>La tua email</strong>, se ti iscrivi al drop, con il codice sconto creato per te e il momento in cui ti sei iscritto.</li>
-<li><strong>Dati tecnici</strong>: per bloccare chi prova a iscrivere centinaia di email, il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul></div>
+    <div class="legale"><ul><li><strong>Iscrizione al drop</strong>: la tua email, il codice sconto creato per te e il momento in cui hai dato il consenso.</li>
+<li><strong>Account</strong>: nome, email, password (salvata solo in forma cifrata, nessuno può leggerla) e il momento in cui hai confermato questa informativa.</li>
+<li><strong>Ordini</strong>: capi, taglie, importi, codice sconto usato, nome e indirizzo di consegna, numero di tracciamento del pacco.</li>
+<li><strong>Pagamenti</strong>: li gestisce Stripe. Noi non vediamo mai i dati della tua carta: riceviamo solo un’impronta anonima che serve a riconoscere la stessa carta usata più volte per i codici di benvenuto o di Porta un amico.</li>
+<li><strong>Porta un amico</strong>: il tuo codice di invito e quali ordini sono arrivati con il tuo link.</li>
+<li><strong>Dati tecnici</strong>: per bloccare gli abusi il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul></div>
   </section>
 
   <section class="aiuto-tema" id="perche" aria-labelledby="p-perche">
     <div class="aiuto-tema-testa"><h2 id="p-perche">Perché e su quale base</h2></div>
-    <div class="legale"><ul><li><strong>Mandarti le novità dei drop e il codice del 10%</strong>: solo con il tuo consenso, che dai spuntando la casella (art. 6.1.a GDPR). Puoi ritirarlo quando vuoi.</li>
-<li><strong>Proteggere il sito dagli abusi</strong>: legittimo interesse a tenere il servizio sicuro (art. 6.1.f GDPR).</li></ul>
-<p>Lasciare l’email non è obbligatorio: senza, puoi guardare il sito come prima, ma non ricevi il codice né gli avvisi.</p></div>
+    <div class="legale"><ul><li><strong>Newsletter e codice del 10%</strong>: solo con il tuo consenso (art. 6.1.a GDPR), che puoi ritirare quando vuoi.</li>
+<li><strong>Account, ordini, spedizioni ed email di servizio</strong> (conferma dell’email, ordine ricevuto, pacco partito, nuova password): servono per il contratto di vendita che fai con noi (art. 6.1.b GDPR).</li>
+<li><strong>Conservare le vendite per 10 anni</strong>: lo chiede la legge fiscale (art. 6.1.c GDPR, art. 2220 del Codice civile).</li>
+<li><strong>Prevenire abusi e frodi</strong> su codici e pagamenti: legittimo interesse (art. 6.1.f GDPR).</li></ul>
+<p>Senza nome, email e indirizzo non possiamo spedirti un ordine; la newsletter invece è sempre facoltativa.</p></div>
   </section>
 
   <section class="aiuto-tema" id="chi" aria-labelledby="p-chi">
     <div class="aiuto-tema-testa"><h2 id="p-chi">Chi li gestisce per noi</h2></div>
     <div class="legale"><p>Usiamo questi fornitori, che trattano i dati solo per conto nostro:</p>
-<ul><li><strong>Cloudflare</strong>: il sistema che salva le iscrizioni e i codici.</li>
+<ul><li><strong>Cloudflare</strong>: il sistema che salva account, ordini e codici.</li>
 <li><strong>GitHub</strong>: ospita le pagine del sito.</li>
-<li><strong>Resend</strong>: invia le email.</li></ul>
+<li><strong>Resend</strong>: invia le email.</li>
+<li><strong>Stripe</strong>: gestisce i pagamenti, con la sua <a class="link" href="https://stripe.com/it/privacy" target="_blank" rel="noopener">informativa</a>.</li>
+<li><strong>Il corriere</strong> che porta il pacco riceve nome, indirizzo e, se serve, la tua email per gli avvisi di consegna.</li></ul>
 <p>Sono aziende con sede negli Stati Uniti: i dati possono essere trasferiti fuori dall’Unione Europea. Tutte aderiscono all’accordo UE-USA sulla protezione dei dati (Data Privacy Framework), riconosciuto dalla Commissione europea. Non vendiamo né cediamo i tuoi dati a nessuno.</p></div>
   </section>
 
   <section class="aiuto-tema" id="quanto" aria-labelledby="p-quanto">
     <div class="aiuto-tema-testa"><h2 id="p-quanto">Per quanto tempo</h2></div>
-    <div class="legale"><ul><li><strong>Email e codice</strong>: finché resti iscritto. Se ti cancelli, li eliminiamo entro 30 giorni.</li>
+    <div class="legale"><ul><li><strong>Newsletter</strong>: finché resti iscritto; se ti cancelli, la tua email esce dalla lista subito.</li>
+<li><strong>Account</strong>: finché non lo elimini, cosa che puoi fare da solo nella pagina «Il mio account».</li>
+<li><strong>Ordini</strong>: 10 anni, come chiede la legge, anche se elimini l’account.</li>
+<li><strong>Accesso</strong>: resti collegato al massimo 30 giorni; i link per confermare l’email o cambiare password valgono 24 ore.</li>
 <li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li></ul></div>
   </section>
 
   <section class="aiuto-tema" id="browser" aria-labelledby="p-browser">
     <div class="aiuto-tema-testa"><h2 id="p-browser">Cookie e memoria del browser</h2></div>
-    <div class="legale"><p>Il sito <strong>non usa cookie di profilazione, pubblicità o statistiche</strong>, e i caratteri sono caricati dal sito stesso, non da servizi esterni. Usa solo la memoria del tuo browser per far funzionare le pagine: i preferiti, i capi visti di recente, il codice ricevuto e se hai già chiuso la finestra del 10%. Restano sul tuo dispositivo e puoi cancellarli dalle impostazioni del browser.</p></div>
+    <div class="legale"><p>Il sito <strong>non usa cookie di profilazione, pubblicità o statistiche</strong>, e i caratteri sono caricati dal sito stesso, non da servizi esterni. Usa solo la memoria del tuo browser per far funzionare le pagine: i preferiti, i capi visti di recente, la borsa, il codice attivo, l’accesso al tuo account e se hai già chiuso la finestra del 10%. Restano sul tuo dispositivo e puoi cancellarli dalle impostazioni del browser.</p></div>
   </section>
 
   <section class="aiuto-tema" id="diritti" aria-labelledby="p-diritti">
@@ -112,8 +123,8 @@
       <p>Sport ed eleganza da Milano.<br>Fly with your mind.</p>
     </div>
     <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
-    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Il drop</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a><a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a><a href="index.html#iscriviti">Accesso anticipato</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2><a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a><a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -142,7 +153,7 @@
   <div class="popup-passo" data-passo="2" hidden>
     <p class="popup-occhiello">Sei dentro</p>
     <h2>Il tuo codice: <span class="popup-codice" data-mio-codice>MARO-····</span></h2>
-    <p>Conservalo: vale una volta sola, sul primo ordine, quando apre il drop. Ti scriviamo prima dell’apertura.</p>
+    <p>È già attivo nella tua borsa e vale una volta sola: non devi copiare niente. Te lo mandiamo via email e lo trovi sempre nel tuo <a class="link" href="account.html">account</a>.</p>
     <button class="btn btn-nero" type="button" data-popup-ok>Continua a guardare</button>
   </div>
 </div>

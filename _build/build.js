@@ -51,7 +51,7 @@ const AVVISI_ACCESI = false;
 // VETRINA (21/10, decisione di Francesco): finché Omar non ha la partita IVA il sito non vende online.
 // Niente borsa, pagamento, account, Porta un amico, carta regalo; sulle schede «Iscriviti al drop».
 // Il negozio completo è nel ramo negozio-completo: per riaccenderlo qui basta VETRINA = false.
-const VETRINA = true;
+const VETRINA = false;
 // PROVA 23/10: home e testata/piede con la grafica di ChatGPT (false = home di prima, identica al sito online)
 const NUOVA_HOME = true;
 // 25/10 (Omar: «sfondo bianco, che dà luce al sito»): fondo bianco stile Nike sopra la grafica nuova (false = tutto nero come prima)
