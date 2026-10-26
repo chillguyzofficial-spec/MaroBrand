@@ -166,9 +166,9 @@ body.bianco {
    Provvisorio: quando arriva il video 9:16 si mette quello. */
 @media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
   /* (Francesco 26/10, «metti solo questa immagine da mobile senza loop»): sul telefono la foto verticale ferma, intera, al posto del video */
-  .bianco .n-apertura { aspect-ratio: 941 / 1672; height: auto; min-height: 0; max-height: none; }
+  .bianco .n-apertura { aspect-ratio: 941 / 1560; height: auto; min-height: 0; max-height: none; } /* (26/10) «un pelino più corta»: -7%, il taglio va sul pavimento */
   .bianco .n-apertura .apertura-video { display: none; }
-  .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
   .bianco .n-apertura-testo { top: 14px; bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
   .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
 }
@@ -333,20 +333,24 @@ body.bianco {
 .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.08); }
 .unisce .segno-cucitura:focus-visible .segno-maniglia { outline: 2px solid #111; outline-offset: 3px; }
 
-/* telefono (Francesco 26/10, «da mobile malissimo»): niente sovrapposizioni né trascinamento. Sopra il testo, nero sul fondo
-   chiaro; sotto le due foto affiancate come un dittico (polo a colori, telaio in bianco e nero), centrate sul ricamo MARO */
+/* telefono (Francesco 26/10, «da mobile malissimo»): niente sovrapposizioni. Sopra il testo, nero sul fondo chiaro; sotto le due
+   foto affiancate (polo a colori, telaio in bianco e nero), centrate sul ricamo MARO. Trascinando di lato (solo gesto orizzontale,
+   «non c'è lo scorrimento») una foto si allarga e l'altra si stringe; sotto, la pillola «Trascina» */
 @media (max-width: 699px) {
-  .unisce-scena { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 44px var(--lato) 48px; cursor: auto; touch-action: auto; container-type: normal; }
+  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, var(--taglio)) minmax(0, 1fr); gap: 6px; padding: 44px var(--lato) 40px; container-type: normal; }
   .unisce-testo { position: static; grid-column: 1 / -1; grid-row: 1; padding-bottom: 26px; }
   .unisce-occhiello { position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
   .unisce-logo { z-index: auto; width: 84px; margin-bottom: 10px; }
   .bianco .unisce-titolo { z-index: auto; font-size: clamp(50px, 15.5vw, 84px); }
   .unisce-frase { z-index: auto; margin-top: 14px; font-size: 18px; max-width: 20em; }
-  .unisce-foto { position: relative; top: auto; bottom: auto; left: auto; right: auto; width: auto !important; grid-row: 2; aspect-ratio: 3 / 4; border-radius: 4px !important; }
+  .unisce-foto { position: relative; top: auto; bottom: auto; left: auto; right: auto; width: auto !important; grid-row: 2; height: 84vw; border-radius: 4px !important; }
   .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; }
   .unisce-foto-a img { object-position: 42% 55%; }
   .unisce-foto-b img { object-position: 50% 60%; }
-  .unisce-copia, .unisce .segno-cucitura { display: none; }
+  .unisce-copia { display: none; }
+  .unisce .segno-cucitura { position: static; grid-column: 1 / -1; grid-row: 3; width: auto; display: flex; justify-content: center; padding-top: 18px; }
+  .unisce .segno-maniglia { position: static; transform: none; }
+  .unisce-scena:active .segno-maniglia { transform: scale(1.06); }
 }
 
 /* (Francesco 26/10, «si può scurire un pelino? poco»): video d'apertura della metro appena più scuro */
