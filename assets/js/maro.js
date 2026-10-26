@@ -22,7 +22,10 @@
     // sul telefono il video verticale (data-tel); la foto verticale sotto fa da locandina (stessa condizione del CSS in maro-bianco.css)
     var s = $('source[data-tel]', video);
     if (s && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) {
-      video.removeAttribute('poster'); s.src = s.getAttribute('data-tel');
+      s.src = s.getAttribute('data-tel');
+    } else if (video.dataset.poster) {
+      // (26/10) la locandina orizzontale solo dove si vede: sul telefono c'è la foto verticale e non serve scaricarla
+      video.poster = video.dataset.poster;
     }
     // prima load() (riparte con la sorgente giusta), poi preload: al contrario il browser scaricava anche il video del PC già scelto
     video.loop = true; video.load(); video.preload = 'auto';
@@ -1018,10 +1021,27 @@
   var verbo = window.matchMedia && matchMedia('(hover: none)').matches ? 'Tocca' : 'Clicca';
   $$('[data-verbo]').forEach(function (v) { v.textContent = verbo; });
   $$('.bm-gira').forEach(function (bt) {
-    var fig = bt.parentNode;
+    var fig = bt.parentNode, im = $('img[data-src]', bt);
+    // (26/10) il foglio si scarica solo quando serve (prima: ~1,5 MB sul telefono anche senza toccare niente):
+    // al passaggio del mouse, al primo contatto del dito o con la tastiera, così al clic è già quasi pronto
+    var carica = function () {
+      if (!im || im.src) return;
+      if (im.dataset.srcset) im.srcset = im.dataset.srcset;
+      im.src = im.dataset.src;
+    };
+    ['pointerenter', 'touchstart', 'focus'].forEach(function (ev) { bt.addEventListener(ev, carica, { passive: true, once: true }); });
     bt.addEventListener('click', function () {
-      var foglio = fig.classList.toggle('foglio');
-      bt.setAttribute('aria-pressed', foglio ? 'true' : 'false');
+      var gira = function () {
+        var foglio = fig.classList.toggle('foglio');
+        bt.setAttribute('aria-pressed', foglio ? 'true' : 'false');
+      };
+      // (un'immagine senza src risulta «complete»: per questo si guarda prima src)
+      if (im && (!im.src || !im.complete)) {
+        carica();
+        // aspetta il foglio (al massimo 1,5 s) per non girare su un riquadro vuoto
+        var fatto = false, una = function () { if (!fatto) { fatto = true; gira(); } };
+        (im.decode ? im.decode() : Promise.reject()).then(una, una); setTimeout(una, 1500);
+      } else { carica(); gira(); }
     });
   });
 

@@ -21,11 +21,13 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(
 const euro = n => n.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' €';
 
 // ripeti: foto già usata altrove e mostrata di nuovo apposta (es. il manichino che compare al passaggio del mouse sulla scheda)
-function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw', ripeti = false } = {}) {
+// rimanda: foto nascosta finché non la si chiede (fogli originali del manifesto): data-src/data-srcset, la carica maro.js al primo tocco
+function img(id, alt, { cls = '', lazy = true, dove, sizes = '100vw', ripeti = false, rimanda = false } = {}) {
   if (ripeti) { if (!MISURE[id]) throw new Error('Foto mancante: ' + id); } else usa(id, dove);
   const [w, h] = MISURE[id];
   const pic = urlPiccola(id);
   const srcset = pic ? ` srcset="${pic} 640w, ${urlFoto(id)} ${w}w"` : '';
+  if (rimanda) return `<img data-src="${urlFoto(id)}"${srcset.replace(' srcset=', ' data-srcset=')} width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''} decoding="async" sizes="${sizes}">`;
   return `<img src="${urlFoto(id)}"${srcset} width="${w}" height="${h}" alt="${esc(alt)}"${cls ? ` class="${cls}"` : ''}${lazy ? ' loading="lazy" decoding="async"' : (dove === 'home lookbook' ? ' decoding="async"' : ' fetchpriority="high"')} sizes="${sizes}">`;
 }
 
@@ -71,13 +73,39 @@ function fascia(voci, cls, volte) {
 
 // logo di Omar (19/10), dentro ogni pagina (un SVG esterno con <use> non si vede aprendo i file da disco)
 const LOGO_FILE = fs.readFileSync(path.join(ROOT, 'assets/img/logo-maro.svg'), 'utf8');
-const LOGO_SIMBOLO = LOGO_FILE.match(/<symbol[\s\S]*?<\/symbol>/)[0].replace('id="logo"', 'id="logo-maro"');
+// (26/10) tracciato compattato: coordinate relative a 1 decimale (su 1778 unità non si vede), da 36 a ~15 KB in ogni pagina
+function compattaPercorso(d) {
+  const tok = d.match(/[A-Za-z]|-?\d*\.?\d+(?:e-?\d+)?/g);
+  const r = v => Math.round(v * 10) / 10;
+  let out = '', ultima = '', x = 0, y = 0, x0 = 0, y0 = 0, cmd = '', i = 0;
+  const num = v => {
+    const t = String(r(v)).replace(/^(-?)0\./, '$1.');
+    // separatore solo se serve: dopo una lettera o prima di un segno meno no
+    out += (/[a-z]$/.test(out) || t[0] === '-') ? t : ' ' + t;
+  };
+  while (i < tok.length) {
+    if (/[A-Za-z]/.test(tok[i])) cmd = tok[i++];
+    if (cmd === 'Z' || cmd === 'z') { out += 'z'; ultima = 'z'; x = x0; y = y0; continue; }
+    const n = { M: 2, L: 2, C: 6 }[cmd];
+    if (!n) throw new Error('Comando non previsto nel logo: ' + cmd);
+    const v = tok.slice(i, i + n).map(Number); i += n;
+    const lettera = { M: 'm', L: 'l', C: 'c' }[cmd];
+    if (lettera !== ultima || cmd === 'M') { out += lettera; ultima = lettera; }
+    const pts = [];
+    for (let k = 0; k < n; k += 2) pts.push([r(v[k]), r(v[k + 1])]);
+    pts.forEach(([px, py]) => { num(px - x); num(py - y); });
+    [x, y] = pts[pts.length - 1];
+    if (cmd === 'M') { x0 = x; y0 = y; cmd = 'L'; ultima = 'l-dopo-m'; }
+  }
+  return out;
+}
+const LOGO_SIMBOLO = LOGO_FILE.match(/<symbol[\s\S]*?<\/symbol>/)[0].replace('id="logo"', 'id="logo-maro"').replace(/ d="([^"]+)"/, (m, d) => ' d="' + compattaPercorso(d) + '"');
 const LOGO_VB = LOGO_FILE.match(/viewBox="([^"]+)"/)[1];
 // logo di Omar (19/10 sera): M con le ali e i riccioli (design-source/logo-omar-m-alata-2026-10-19); il vecchio (ali + MARO verticale) è tolto ovunque
 const SIMBOLO = `<svg class="simbolo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>`;
 const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 ${LOGO_SIMBOLO}
-${LOGO_SIMBOLO.replace('id="logo-maro"', 'id="maro-simbolo"')}
+<symbol id="maro-simbolo" viewBox="${LOGO_VB}"><use href="#logo-maro"/></symbol>
 <symbol id="maro-firma" viewBox="0 0 200 560"><g fill="currentColor"><path d="M96 8C110 20 150 22 150 54C140 34 108 32 96 8Z"/><path d="M52 58Q6 100 52 142Q28 100 52 58Z"/><path d="M148 178Q194 220 148 262Q172 220 148 178Z"/><path d="M52 298Q6 340 52 382Q28 340 52 298Z"/><path d="M148 418Q194 460 148 502Q172 460 148 418Z"/><path d="M104 552C90 540 50 538 50 506C60 526 92 528 104 552Z"/><text x="100" y="146" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">M</text><text x="100" y="266" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">A</text><text x="100" y="386" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">R</text><text x="100" y="506" font-family="Anton,Impact,sans-serif" font-size="118" text-anchor="middle">O</text></g></symbol>
 <symbol id="i-cuore" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="var(--riempi, none)" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
 <symbol id="i-condividi" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 13v6h14v-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -510,7 +538,7 @@ function homeNuova() {
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
   <!-- 26/10 (Francesco): sul telefono il video verticale (data-tel); la foto verticale sta sotto finché il video non parte.
        Il loop è dentro i file (l'ultimo secondo sfuma nel primo): basta loop, niente seconda copia -->
-  <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
+  <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" data-poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-loop.mp4" data-tel="assets/video/home-metro-tel-loop.mp4" type="video/mp4">
   </video>
   ${img('apertura-tel', 'Stazione della metro di notte con la scritta MARO illuminata su una colonna', { cls: 'apertura-tel', dove: 'home apertura', sizes: '100vw' })}
@@ -1256,7 +1284,7 @@ function storia() {
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
       <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
         <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
-        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
+        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw', rimanda: true })}<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span></button>
       </figure>
       <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
@@ -1345,7 +1373,7 @@ function storiaNuova() {
     <li class="bm-passo" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
       <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
-        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${giro}</button>
+        <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw', rimanda: true })}${giro}</button>
       </figure>
       <div class="bm-testo">${m.testo}</div>
     </li>`).join('');
