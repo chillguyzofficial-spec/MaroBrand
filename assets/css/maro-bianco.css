@@ -352,5 +352,4 @@ body.bianco {
   .unisce-foto { border-radius: 0; }
 }
 
-/* (Francesco 26/10, «si può scurire un pelino? poco»): video d'apertura della metro appena più scuro */
-.bianco .n-apertura .apertura-video, .bianco .n-apertura .apertura-tel { filter: brightness(.86); }
+/* (26/10) niente più brightness(.86): ora i due video (PC e telefono) hanno già lo stesso tono scuro nel file, scurirli ancora spegneva la scena */
