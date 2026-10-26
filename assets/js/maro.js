@@ -972,6 +972,8 @@
     var scenaS = cucitura.parentNode, segnoS = scenaS.closest('.segno, .unisce');
     // limiti (Un segno che unisce, 26/10: 20–80, così nessuna foto copre tutto e la maniglia resta sullo schermo)
     var tMin = Number(cucitura.getAttribute('data-min')) || 0, tMax = Number(cucitura.getAttribute('data-max')) || 100;
+    // sul telefono Un segno che unisce è il confronto di prima a tutta larghezza: corsa completa (stessa condizione del CSS)
+    if (matchMedia('(max-width: 699px)').matches) { tMin = 0; tMax = 100; cucitura.setAttribute('aria-valuemin', '0'); cucitura.setAttribute('aria-valuemax', '100'); }
     var mettiTaglio = function (pct) {
       pct = Math.max(tMin, Math.min(tMax, pct));
       scenaS.style.setProperty('--taglio', pct + '%');

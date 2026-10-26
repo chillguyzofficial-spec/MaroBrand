@@ -333,26 +333,31 @@ body.bianco {
 .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.08); }
 .unisce .segno-cucitura:focus-visible .segno-maniglia { outline: 2px solid #111; outline-offset: 3px; }
 
-/* telefono (Francesco 26/10): sopra il testo, nero sul fondo chiaro; sotto UN riquadro a tutta larghezza con le due foto una sopra
-   l'altra: a sinistra della riga la polo a colori, a destra il telaio in bianco e nero. Si trascina la riga (solo gesto orizzontale,
-   la pagina continua a scorrere). Il riquadro è largo quanto la sezione, così --taglio vale uguale per JS, riga e ritaglio */
+/* maniglia: la pillola «← Trascina →» ovunque (Francesco 26/10, «maniglia lascia questa»); il tondo ‹› e «Trascina per scoprire»
+   di prima restano nell'HTML ma spenti */
+.unisce .m-tondo, .unisce .segno-aiuto { display: none !important; }
+
+/* telefono (Francesco 26/10, «mettiamo la versione che avevamo prima del restyle, a tutto schermo, sui bordi»): come la sezione di
+   prima. Foto intera 16:9 da bordo a bordo con le due scene sovrapposte (polo a sinistra della cucitura tratteggiata, telaio a
+   destra), con la pillola «Trascina» in basso; sotto il testo allineato a sinistra
+   con il logo accanto al titolo. La foto è larga quanto la sezione, così --taglio vale uguale per JS, cucitura e ritaglio */
 @media (max-width: 699px) {
-  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, 1fr); padding: 44px 0 40px; container-type: normal; }
-  .unisce-testo { position: static; grid-row: 1; padding: 0 var(--lato) 26px; }
-  .unisce-occhiello { position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
-  .unisce-logo { z-index: auto; width: 84px; margin-bottom: 10px; }
-  .bianco .unisce-titolo { z-index: auto; font-size: clamp(50px, 15.5vw, 84px); }
-  .unisce-frase { z-index: auto; margin-top: 14px; font-size: 18px; max-width: 20em; }
-  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 2; grid-column: 1; height: 112vw; border-radius: 0 !important; }
-  .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; }
+  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 0 clamp(36px, 9vw, 56px); container-type: normal; }
+  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 1; grid-column: 1; height: auto; aspect-ratio: 16 / 9; border-radius: 0 !important; }
+  .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; object-position: 50% 50%; }
+  .unisce-foto-b img { filter: none; } /* prima le due scene erano entrambe a colori */
   .unisce-foto-a { z-index: 1; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
-  .unisce-foto-a img { object-position: 80% 50%; } /* ricamo della polo nella metà sinistra */
-  .unisce-foto-b img { object-position: 24% 50%; } /* ricamo del telaio nella metà destra */
   .unisce-copia { display: none; }
-  .unisce .segno-cucitura { position: relative; grid-row: 2; grid-column: 1; left: auto; z-index: 2; width: auto; pointer-events: none; }
-  .unisce .segno-cucitura::before { content: ''; top: 0; bottom: 0; left: var(--taglio); border-left: 2px solid #fff; transform: translateX(-1px); mix-blend-mode: normal; opacity: 1; }
-  /* in basso sulla foto (al centro copriva il ricamo), sempre dentro i bordi anche a fine corsa */
-  .unisce .segno-maniglia { top: auto; bottom: 18px; left: clamp(86px, var(--taglio), calc(100% - 86px)); transform: translateX(-50%); padding: 10px 14px; font-size: 12px; background: #fff; color: #111; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+  .unisce-testo { position: static; grid-row: 2; display: grid; grid-template-columns: auto auto; justify-content: start; align-items: center; column-gap: 18px; text-align: left; padding: 28px var(--lato) 0; }
+  .unisce-occhiello { grid-column: 1 / -1; position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
+  .bianco .unisce-titolo { grid-column: 1; grid-row: 2; z-index: auto; font-size: clamp(44px, 13vw, 64px); }
+  .unisce-logo { grid-column: 2; grid-row: 2; z-index: auto; width: clamp(84px, 24vw, 110px); margin: 0; }
+  .unisce-frase { grid-column: 1 / -1; z-index: auto; margin-top: 16px; font-size: 19px; max-width: 18em; }
+  .unisce .segno-cucitura { position: relative; grid-row: 1; grid-column: 1; left: auto; z-index: 2; width: auto; pointer-events: none; }
+  .unisce .segno-cucitura::before { content: ''; top: 0; bottom: 0; left: var(--taglio); transform: translateX(-1.5px); border-left: 3px dashed rgba(255,255,255,.95); mix-blend-mode: normal; opacity: 1; }
+  /* in basso sulla foto, segue la cucitura ma resta sempre dentro i bordi */
+  .unisce .segno-maniglia { top: auto; bottom: 12px; left: clamp(78px, var(--taglio), calc(100% - 78px)); transform: translateX(-50%); padding: 9px 13px; gap: 8px; font-size: 11px; background: #fff; color: #111; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+  .unisce .segno-maniglia svg { flex-basis: 16px; width: 16px; height: 16px; }
   .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.06); }
 }
 
