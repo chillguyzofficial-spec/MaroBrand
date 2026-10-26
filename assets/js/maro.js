@@ -839,8 +839,12 @@
       var vel = meta / (innerWidth < 600 ? 55 : 70) / 1000; // stesso giro di prima: 70 s (55 s sul telefono)
       if (!toccoN && performance.now() - ultimoN > 1200 && meta > 10) {
         posN += vel * dt; if (posN >= meta) posN -= meta;
-        nastro.scrollLeft = posN;
-      } else posN = nastro.scrollLeft;
+        // (26/10, «scatta leggermente») scrollLeft va solo a pixel interi e a ~0,7 px per fotogramma avanzava a strappi (1, 0, 1…):
+        // la parte intera la fa lo scorrimento, i decimali una traslazione del binario, così il movimento è continuo
+        var intero = Math.floor(posN);
+        nastro.scrollLeft = intero;
+        binN.style.transform = 'translate3d(' + (intero - posN).toFixed(2) + 'px,0,0)';
+      } else { posN = nastro.scrollLeft; if (binN.style.transform) binN.style.transform = ''; }
       requestAnimationFrame(passoN);
     };
     requestAnimationFrame(passoN);

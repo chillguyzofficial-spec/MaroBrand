@@ -365,3 +365,5 @@ body.bianco {
 /* due foto che con il 30% perdevano qualcosa: la Polo Tricolore indossata (la cima dei capelli) e il Cargo appeso (l'orlo in fondo) */
 .bianco img[src*="ai2-polo-tricolore-fronte"] { object-position: 50% 4% !important; }
 .bianco img[src*="pant-cargo-appeso"] { object-position: 50% 85% !important; }
+/* rullino (26/10): il binario si sposta anche di frazioni di pixel (maro.js), su un livello suo così non si ridisegna la pagina */
+.n-nastro.rullino .n-nastro-binario { will-change: transform; }
