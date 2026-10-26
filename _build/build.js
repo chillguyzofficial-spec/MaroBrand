@@ -511,12 +511,14 @@ function homeNuova() {
   ];
   const corpo = `
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
-  <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
+  <!-- 26/10 (Francesco): sul telefono la foto verticale ferma al posto del video; il video lo fa partire maro.js solo dove si vede -->
+  <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
   <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
     <source src="assets/video/home-metro-2.mp4" type="video/mp4">
   </video>
+  ${img('apertura-tel', 'Stazione della metro di notte con la scritta MARO illuminata su una colonna', { cls: 'apertura-tel', dove: 'home apertura', sizes: '100vw' })}
   <div class="n-apertura-testo">
     <h1 id="n-titolo">Fly with<br>your mind</h1>
   </div>

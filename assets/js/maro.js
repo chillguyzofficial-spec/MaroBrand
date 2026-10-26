@@ -16,7 +16,10 @@
 
   /* ---------- video d'apertura: loop senza stacco (due copie in dissolvenza incrociata) ---------- */
   var video = $('.apertura-video:not([data-copia])'), copia = $('.apertura-video[data-copia]');
+  // (26/10) sul telefono c'è la foto verticale ferma: il video non si scarica nemmeno (stessa condizione del CSS in maro-bianco.css)
+  if (video && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) video = null;
   if (video) {
+    video.preload = 'auto';
     var SFUMA = 1; // secondi di dissolvenza a fine giro
     var attivo = video, altro = copia, inCambio = false;
     video.loop = false;

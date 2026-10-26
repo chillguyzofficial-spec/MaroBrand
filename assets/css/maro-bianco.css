@@ -159,13 +159,17 @@ body.bianco {
 }
 @media (max-width: 1099px) { .bianco .n-logo2-foto.segno { margin: 0 0 4px; border-radius: 4px; } }
 
+.apertura-tel { display: none; } /* solo sul telefono (regola qui sotto) */
+
 /* apertura sul telefono (Francesco 25/10, «il video in loop da cell possiamo metterlo verticale?»): il video riempie lo schermo
    in verticale, inquadrato sulla colonna con MARO; «Fly with your mind» in basso a sinistra (schizzo di Omar).
    Provvisorio: quando arriva il video 9:16 si mette quello. */
 @media (max-width: 599px), (max-width: 1099px) and (orientation: portrait) {
-  .bianco .n-apertura { aspect-ratio: auto; height: calc(100svh - var(--testata)); min-height: 520px; max-height: 900px; }
-  .bianco .n-apertura .apertura-video { object-fit: cover; object-position: 80% 50%; } /* 26/10: video Vidu, colonna MARO intera */
-  .bianco .n-apertura-testo { top: clamp(24px, 4svh, 40px); bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
+  /* (Francesco 26/10, «metti solo questa immagine da mobile senza loop»): sul telefono la foto verticale ferma, intera, al posto del video */
+  .bianco .n-apertura { aspect-ratio: 941 / 1672; height: auto; min-height: 0; max-height: none; }
+  .bianco .n-apertura .apertura-video { display: none; }
+  .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .bianco .n-apertura-testo { top: 14px; bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
   .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
 }
 
@@ -329,23 +333,21 @@ body.bianco {
 .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.08); }
 .unisce .segno-cucitura:focus-visible .segno-maniglia { outline: 2px solid #111; outline-offset: 3px; }
 
-/* telefono: le due foto una in alto a sinistra e una in basso a destra, il titolo in mezzo sopra entrambe */
+/* telefono (Francesco 26/10, «da mobile malissimo»): niente sovrapposizioni né trascinamento. Sopra il testo, nero sul fondo
+   chiaro; sotto le due foto affiancate come un dittico (polo a colori, telaio in bianco e nero), centrate sul ricamo MARO */
 @media (max-width: 699px) {
-  .unisce-scena { height: max(560px, 144vw); }
-  .unisce-foto { top: auto; bottom: auto; height: 46%; }
-  .unisce-foto-a { top: 9%; width: calc(var(--taglio) * 1.7); }
-  .unisce-foto-b { bottom: 13%; width: calc((100% - var(--taglio)) * 1.7); }
-  .unisce-foto img { width: 190cqw; }
-  .unisce-foto-a img { left: -62cqw; }
-  .unisce-foto-b img { right: -78cqw; }
-  .unisce-foto-a .unisce-copia { top: -19.565%; height: 217.39%; } /* foto dal 9% al 55% */
-  .unisce-foto-b .unisce-copia { top: -89.13%; height: 217.39%; } /* foto dal 41% all'87% */
-  .unisce-occhiello { top: 20px; }
-  .unisce-titolo { font-size: clamp(56px, 17vw, 96px) !important; }
-  .unisce-logo { display: none; } /* sul telefono cadrebbe sopra la foto della polo */
-  .unisce-frase { font-size: 19px; }
-  .unisce .segno-maniglia { bottom: 20px; }
+  .unisce-scena { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 44px var(--lato) 48px; cursor: auto; touch-action: auto; container-type: normal; }
+  .unisce-testo { position: static; grid-column: 1 / -1; grid-row: 1; padding-bottom: 26px; }
+  .unisce-occhiello { position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
+  .unisce-logo { z-index: auto; width: 84px; margin-bottom: 10px; }
+  .bianco .unisce-titolo { z-index: auto; font-size: clamp(50px, 15.5vw, 84px); }
+  .unisce-frase { z-index: auto; margin-top: 14px; font-size: 18px; max-width: 20em; }
+  .unisce-foto { position: relative; top: auto; bottom: auto; left: auto; right: auto; width: auto !important; grid-row: 2; aspect-ratio: 3 / 4; border-radius: 4px !important; }
+  .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; }
+  .unisce-foto-a img { object-position: 42% 55%; }
+  .unisce-foto-b img { object-position: 50% 60%; }
+  .unisce-copia, .unisce .segno-cucitura { display: none; }
 }
 
 /* (Francesco 26/10, «si può scurire un pelino? poco»): video d'apertura della metro appena più scuro */
-.bianco .n-apertura .apertura-video { filter: brightness(.86); }
+.bianco .n-apertura .apertura-video, .bianco .n-apertura .apertura-tel { filter: brightness(.86); }
