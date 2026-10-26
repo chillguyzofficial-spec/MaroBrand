@@ -388,10 +388,7 @@ function home() {
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel-3.mp4" type="video/mp4">
-  </video>
-  <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel-3.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-loop.mp4" data-tel="assets/video/home-metro-tel-loop.mp4" type="video/mp4">
   </video>
   <div class="apertura-testo">
     <h1>Fly with<br>your mind</h1>
@@ -511,12 +508,10 @@ function homeNuova() {
   ];
   const corpo = `
 <section class="apertura n-apertura" aria-labelledby="n-titolo">
-  <!-- 26/10 (Francesco): sul telefono il video verticale (data-tel) con lo stesso loop del PC; la foto verticale sta sotto finché il video non parte -->
+  <!-- 26/10 (Francesco): sul telefono il video verticale (data-tel); la foto verticale sta sotto finché il video non parte.
+       Il loop è dentro i file (l'ultimo secondo sfuma nel primo): basta loop, niente seconda copia -->
   <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel-3.mp4" type="video/mp4">
-  </video>
-  <video class="apertura-video" data-copia muted playsinline preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-2.mp4" data-tel="assets/video/home-metro-tel-3.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-loop.mp4" data-tel="assets/video/home-metro-tel-loop.mp4" type="video/mp4">
   </video>
   ${img('apertura-tel', 'Stazione della metro di notte con la scritta MARO illuminata su una colonna', { cls: 'apertura-tel', dove: 'home apertura', sizes: '100vw' })}
   <div class="n-apertura-testo">

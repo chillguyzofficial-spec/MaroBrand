@@ -14,45 +14,23 @@
     document.documentElement.style.overflow = blocchi ? 'hidden' : '';
   }
 
-  /* ---------- video d'apertura: loop senza stacco (due copie in dissolvenza incrociata) ---------- */
-  var video = $('.apertura-video:not([data-copia])'), copia = $('.apertura-video[data-copia]');
-  // (26/10) sul telefono il video verticale (data-tel), stesso loop; la foto verticale sotto fa da locandina (stessa condizione del CSS in maro-bianco.css)
-  if (video && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) {
-    [video, copia].forEach(function (v) {
-      var s = v && $('source[data-tel]', v);
-      if (!s) return;
-      v.removeAttribute('poster'); s.src = s.getAttribute('data-tel'); v.load();
-    });
-  }
+  /* ---------- video d'apertura ---------- */
+  // (26/10) il loop è dentro il file (l'ultimo secondo sfuma nel primo): basta loop. Le due copie in dissolvenza
+  // davano uno stacco netto quando la copia non faceva in tempo a tornare all'inizio.
+  var video = $('.apertura-video');
   if (video) {
-    video.preload = 'auto';
-    var SFUMA = 1; // secondi di dissolvenza a fine giro
-    var attivo = video, altro = copia, inCambio = false;
-    video.loop = false;
-    var parti = function (v) { if (v.paused) v.play().catch(function () {}); };
-    var cambia = function () {
-      inCambio = true;
-      altro.currentTime = 0; parti(altro);
-      altro.style.zIndex = 1; altro.style.opacity = 1;
-      setTimeout(function () {
-        // il vecchio sparisce sotto quello nuovo, senza dissolvenza
-        attivo.pause(); attivo.style.transition = 'none'; attivo.style.zIndex = 0; attivo.style.opacity = 0;
-        void attivo.offsetWidth; attivo.style.transition = '';
-        var t = attivo; attivo = altro; altro = t; inCambio = false;
-      }, SFUMA * 1000 + 60);
-    };
-    var controlla = function () {
-      if (!document.hidden) {
-        if (!copia) { parti(attivo); }
-        // la copia si prepara solo poco prima del primo giro (stesso file: arriva dalla cache)
-        if (copia.preload === 'none' && attivo.duration && attivo.currentTime >= attivo.duration - SFUMA - 2.5) { copia.preload = 'auto'; copia.load(); }
-        else if (!inCambio && attivo.duration && attivo.currentTime >= attivo.duration - SFUMA) cambia();
-        else if (!inCambio) parti(attivo); // se il browser lo ferma, riparte
-      }
-      requestAnimationFrame(controlla);
-    };
-    if (!copia) video.loop = true;
-    requestAnimationFrame(controlla);
+    // sul telefono il video verticale (data-tel); la foto verticale sotto fa da locandina (stessa condizione del CSS in maro-bianco.css)
+    var s = $('source[data-tel]', video);
+    if (s && $('.apertura-tel') && matchMedia('(max-width: 599px), (max-width: 1099px) and (orientation: portrait)').matches) {
+      video.removeAttribute('poster'); s.src = s.getAttribute('data-tel');
+    }
+    // prima load() (riparte con la sorgente giusta), poi preload: al contrario il browser scaricava anche il video del PC già scelto
+    video.loop = true; video.load(); video.preload = 'auto';
+    var parti = function () { if (video.paused && !document.hidden) video.play().catch(function () {}); };
+    parti();
+    // se il browser lo ferma (risparmio energetico, scheda tornata visibile), riparte
+    document.addEventListener('visibilitychange', parti);
+    video.addEventListener('pause', function () { setTimeout(parti, 300); });
   }
 
   /* ---------- menu su telefono ---------- */

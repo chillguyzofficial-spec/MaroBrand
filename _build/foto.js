@@ -137,8 +137,8 @@ const LAVORI = [
   { out: 'pal-felpa-stretta', src: 'foto-schede-palazzo-2026-10-19/felpa-stretta.webp', crop: [2, 0, 1292, 1615] },
   { out: 'pal-cargo-firma', src: 'foto-schede-palazzo-2026-10-19/cargo-firma.jpeg', crop: [2, 0, 1292, 1615] },
   { out: 'pal-felpa-verticale', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale.jpeg', crop: [2, 0, 1292, 1615] },
-  // locandina del video d'apertura (mostrata finché il video non parte); (26/10) dal video con lo stesso tono scuro di quello del telefono
-  { out: 'apertura-locandina', src: 'video-home/home-metro-vidu-2026-10-26-tono-telefono.mp4', t: 0.05, max: 1920, q: 0.92 },
+  // locandina del video d'apertura (mostrata finché il video non parte); (26/10) dal primo fotogramma del video con il loop dentro (stesso tono del telefono)
+  { out: 'apertura-locandina', src: 'video-home/home-metro-loop-pc-2026-10-26.mp4', t: 0.01, max: 1920, q: 0.92 },
   // (Francesco 26/10) sul telefono, al posto del video: la stessa scena in verticale, foto ferma
   { out: 'apertura-tel', src: 'foto-home-2026-10-26/metro-verticale-maro.png', max: 1672, q: 0.88 },
   // pagina del brand (21/10): fotogramma fisso del video del tennista (finché il video non parte, e con «riduci movimento»)
