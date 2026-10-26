@@ -333,24 +333,27 @@ body.bianco {
 .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.08); }
 .unisce .segno-cucitura:focus-visible .segno-maniglia { outline: 2px solid #111; outline-offset: 3px; }
 
-/* telefono (Francesco 26/10, «da mobile malissimo»): niente sovrapposizioni. Sopra il testo, nero sul fondo chiaro; sotto le due
-   foto affiancate (polo a colori, telaio in bianco e nero), centrate sul ricamo MARO. Trascinando di lato (solo gesto orizzontale,
-   «non c'è lo scorrimento») una foto si allarga e l'altra si stringe; sotto, la pillola «Trascina» */
+/* telefono (Francesco 26/10): sopra il testo, nero sul fondo chiaro; sotto UN riquadro a tutta larghezza con le due foto una sopra
+   l'altra: a sinistra della riga la polo a colori, a destra il telaio in bianco e nero. Si trascina la riga (solo gesto orizzontale,
+   la pagina continua a scorrere). Il riquadro è largo quanto la sezione, così --taglio vale uguale per JS, riga e ritaglio */
 @media (max-width: 699px) {
-  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, var(--taglio)) minmax(0, 1fr); gap: 6px; padding: 44px var(--lato) 40px; container-type: normal; }
-  .unisce-testo { position: static; grid-column: 1 / -1; grid-row: 1; padding-bottom: 26px; }
+  .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, 1fr); padding: 44px 0 40px; container-type: normal; }
+  .unisce-testo { position: static; grid-row: 1; padding: 0 var(--lato) 26px; }
   .unisce-occhiello { position: static; transform: none; margin: 0 0 18px; font-size: 12px; }
   .unisce-logo { z-index: auto; width: 84px; margin-bottom: 10px; }
   .bianco .unisce-titolo { z-index: auto; font-size: clamp(50px, 15.5vw, 84px); }
   .unisce-frase { z-index: auto; margin-top: 14px; font-size: 18px; max-width: 20em; }
-  .unisce-foto { position: relative; top: auto; bottom: auto; left: auto; right: auto; width: auto !important; grid-row: 2; height: 84vw; border-radius: 4px !important; }
+  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 2; grid-column: 1; height: 112vw; border-radius: 0 !important; }
   .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; }
-  .unisce-foto-a img { object-position: 42% 55%; }
-  .unisce-foto-b img { object-position: 50% 60%; }
+  .unisce-foto-a { z-index: 1; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
+  .unisce-foto-a img { object-position: 80% 50%; } /* ricamo della polo nella metà sinistra */
+  .unisce-foto-b img { object-position: 24% 50%; } /* ricamo del telaio nella metà destra */
   .unisce-copia { display: none; }
-  .unisce .segno-cucitura { position: static; grid-column: 1 / -1; grid-row: 3; width: auto; display: flex; justify-content: center; padding-top: 18px; }
-  .unisce .segno-maniglia { position: static; transform: none; }
-  .unisce-scena:active .segno-maniglia { transform: scale(1.06); }
+  .unisce .segno-cucitura { position: relative; grid-row: 2; grid-column: 1; left: auto; z-index: 2; width: auto; pointer-events: none; }
+  .unisce .segno-cucitura::before { content: ''; top: 0; bottom: 0; left: var(--taglio); border-left: 2px solid #fff; transform: translateX(-1px); mix-blend-mode: normal; opacity: 1; }
+  /* in basso sulla foto (al centro copriva il ricamo), sempre dentro i bordi anche a fine corsa */
+  .unisce .segno-maniglia { top: auto; bottom: 18px; left: clamp(86px, var(--taglio), calc(100% - 86px)); transform: translateX(-50%); padding: 10px 14px; font-size: 12px; background: #fff; color: #111; box-shadow: 0 4px 18px rgba(0,0,0,.35); }
+  .unisce-scena:active .segno-maniglia { transform: translateX(-50%) scale(1.06); }
 }
 
 /* (Francesco 26/10, «si può scurire un pelino? poco»): video d'apertura della metro appena più scuro */
