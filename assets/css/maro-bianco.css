@@ -343,7 +343,7 @@ body.bianco {
    con il logo accanto al titolo. La foto è larga quanto la sezione, così --taglio vale uguale per JS, cucitura e ritaglio */
 @media (max-width: 699px) {
   .unisce-scena { height: auto; display: grid; grid-template-columns: minmax(0, 1fr); padding: clamp(36px, 9vw, 56px) 0; container-type: normal; }
-  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 2; grid-column: 1; height: auto; aspect-ratio: 16 / 9; border-radius: 0 !important; }
+  .unisce-foto { position: relative; inset: auto; width: auto !important; grid-row: 2; grid-column: 1; height: auto; aspect-ratio: 16 / 10; border-radius: 0 !important; } /* (26/10) «un pelino più grande»: da 16:9 a 16:10 */
   .unisce-foto img { left: 0 !important; right: auto !important; width: 100%; object-fit: cover; object-position: 50% 50%; }
   .unisce-foto-b img { filter: none; } /* prima le due scene erano entrambe a colori */
   .unisce-foto-a { z-index: 1; clip-path: inset(0 calc(100% - var(--taglio)) 0 0); }
