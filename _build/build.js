@@ -57,6 +57,27 @@ const NUOVA_HOME = true;
 // 25/10 (Omar: «sfondo bianco, che dà luce al sito»): fondo bianco stile Nike sopra la grafica nuova (false = tutto nero come prima)
 const BIANCO = true;
 const NEGOZIO_PROVA = !VETRINA;
+// PRENOTA (29/10, Omar): si parte con UNA felpa. Gli altri capi restano nel catalogo, pronti: tornano tutti con PRENOTA = false.
+// Menu con solo logo, preferiti e borsa; nella borsa «Prenota» al posto del pagamento: il motore manda l'email a Omar,
+// che ricontatta il cliente su WhatsApp. Lookbook, «Lo sport» e la collezione a categorie tornano con PRENOTA = false.
+const PRENOTA = true;
+const IN_VENDITA = ['felpa-verticale'];
+// 29/10 (Omar): la felpa che si prenota è NERA con la zip (foto design-source/felpa-nera-2026-10-29). Stesso capo per motore e borsa
+// (id e prezzo della Felpa Verticale), cambiano solo foto e testi: la versione verde resta intatta nel catalogo per il negozio completo.
+const FELPA_NERA = {
+  esaurite: [], home: ['fn-gancio', 'Felpa Verticale MARO nera con la zip appesa a un gancio su un muro di cemento, la M con le ali sul petto e le righe bianche sulle maniche'],
+  copertina: ['fn-fronte', 'Felpa Verticale MARO nera su fondo bianco, davanti: zip, collo alto, la M con le ali sul petto e tre righe bianche sulle maniche'],
+  seconda: 'fn-retro',
+  foto: [['fn-lato', 'Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica']],
+  colore: 'Nero, righe bianche sulle maniche', pallini: ['#111'],
+  frase: 'Nera, con la firma MARO che scende lungo la schiena.',
+  testo: 'Zip intera e collo alto. Sul petto la M con le ali, ricamata in bianco; sulla schiena la firma MARO verticale, con le sue fiamme, dalle spalle all’orlo. Tre righe bianche corrono lungo le maniche. Polsini e fondo a costine: si porta chiusa come una felpa o aperta sopra una t-shirt.',
+  dettagli: ['Firma MARO verticale sulla schiena, dalle spalle all’orlo', 'La M con le ali ricamata sul petto', 'Tre righe bianche lungo le maniche', 'Zip intera e collo alto', 'Polsini e fondo a costine'],
+  descrizione: 'Felpa Verticale MARO: nera con la zip, la M con le ali sul petto, firma MARO verticale sulla schiena e tre righe bianche sulle maniche. Drop 001, prenotala.',
+};
+const CAPI = PRENOTA ? CATALOGO.filter(p => IN_VENDITA.includes(p.id)).map(p => ({ ...p, ...FELPA_NERA })) : CATALOGO;
+const LA_FELPA = CAPI[0];
+const DROP_LINK = PRENOTA ? LA_FELPA.id + '.html' : 'shop.html';
 const fasciaProva = () => NEGOZIO_PROVA ? `<div class="prova-fascia" role="note"><strong>Negozio di prova</strong><span> · nessun pagamento vero</span> · carta 4242 4242 4242 4242<span class="prova-dettaglio">, una data futura e un CVC qualsiasi</span></div>` : '';
 function avviso() {
   if (!AVVISI_ACCESI) return '';
@@ -115,7 +136,7 @@ ${LOGO_SIMBOLO}
 </defs></svg>`;
 
 // popup del 10%: solo quando si entra nell'abbigliamento (pagine categoria e schede), richiesta di Omar alla call del 18/10
-const conPopup = f => CATEGORIE.some(c => c.file === f) || CATALOGO.some(p => p.id + '.html' === f);
+const conPopup = f => CATEGORIE.some(c => c.file === f) || CAPI.some(p => p.id + '.html' === f);
 
 function pagina({ titolo, descrizione, corpo, file }) {
   // i commenti <!-- --> nei modelli sono note di lavoro (nomi, richieste, fonti): restano nel generatore, mai nelle pagine online
@@ -150,24 +171,25 @@ function pagina({ titolo, descrizione, corpo, file }) {
 <script defer src="assets/js/maro.js?v=${impronta('assets/js/maro.js')}"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/\s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
-<body class="${[file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : '', NUOVA_HOME && BIANCO ? 'bianco' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}>
+<body class="${[PRENOTA ? 'prenota' : '', file === 'index.html' ? 'home' : '', CATEGORIE.some(c => c.file === file) ? 'pagina-cat' : '', NUOVA_HOME ? 'nuovo' : '', NUOVA_HOME && BIANCO ? 'bianco' : ''].filter(Boolean).join(' ')}"${conPopup(file) ? ' data-popup' : ''}${PRENOTA ? ' data-prenota' : ''}>
 ${SPRITE}
 <a class="salta" href="#contenuto">Vai al contenuto</a>
 ${fasciaProva()}
 ${avviso()}
 <header class="testata">
   <a class="logo" href="index.html" aria-label="MARO, home"><svg class="logo-maro" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg></a>
-  <nav class="menu" id="menu" aria-label="Menu principale">
+${PRENOTA ? '' : `  <nav class="menu" id="menu" aria-label="Menu principale">
 ${NUOVA_HOME ? `    <div class="menu-sx"><a href="index.html"${file === 'index.html' ? ' aria-current="page"' : ''}>Home</a><a href="shop.html"${CATEGORIE.some(c => c.file === file) ? ' aria-current="page"' : ''}>Collezione</a><a href="index.html#drop">Drop 002</a></div>
     <div class="menu-dx"><a href="storia.html"${file === 'storia.html' ? ' aria-current="page"' : ''}>Il brand</a><a href="index.html#lookbook">Lookbook</a>` : `    <div class="menu-sx"><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a></div>
     <div class="menu-dx"><a href="accessori.html">Accessori</a><a href="storia.html">Il brand</a>`}${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a class="solo-tel" href="account.html">Il mio account</a>'}</div>
   </nav>
+`}
   <div class="azioni">
 ${VETRINA ? '' : `    <a class="acc-apri" href="account.html" aria-label="Il mio account"><svg viewBox="0 0 24 24"><use href="#i-utente"/></svg></a><script>(function(n,a){if(!n||!a)return;a.innerHTML='<span class="acc-iniziale" aria-hidden="true"></span><span class="acc-ciao" aria-hidden="true"></span>';a.firstChild.textContent=n.charAt(0).toUpperCase();a.lastChild.textContent='Ciao, '+n;a.setAttribute('aria-label','Il mio account, collegato come '+n);})(window.MARO_NOME,document.querySelector('.acc-apri'));</script>`}
     <a class="pref-apri" href="preferiti.html" aria-label="Preferiti"><svg viewBox="0 0 24 24"><use href="#i-cuore"/></svg><span class="pref-num" hidden>0</span></a>
-${VETRINA ? '' : `    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>`}
-    <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
-  </div>
+${VETRINA && !PRENOTA ? '' : `    <button class="borsa-apri" type="button" aria-label="Borsa, 0 articoli" data-apri-borsa><svg viewBox="0 0 24 24"><use href="#i-borsa"/></svg><span class="borsa-num" hidden>0</span></button>`}
+${PRENOTA ? '' : `    <button class="menu-apri" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+`}  </div>
 </header>
 <main id="contenuto">
 ${corpo}
@@ -177,9 +199,9 @@ ${corpo}
     <div class="piede-marchio">
       <p>${NUOVA_HOME ? 'Sport ed eleganza da Milano.' : 'Streetwear da Milano.'}<br>Fly with your mind.</p>
     </div>
-    <nav aria-label="Shop"><h2>Shop</h2><a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a></nav>
+    <nav aria-label="Shop"><h2>Shop</h2>${PRENOTA ? `<a href="${DROP_LINK}">${esc(LA_FELPA.nome)}</a><a href="preferiti.html">Preferiti</a>` : '<a href="shop.html">Tutti i capi</a><a href="polo.html">Polo</a><a href="felpe.html">Felpe</a><a href="pantaloni.html">Pantaloni</a><a href="accessori.html">Accessori</a>'}</nav>
     <nav aria-label="MARO"><h2>MARO</h2><a href="storia.html">Il brand</a>${VETRINA ? '' : '<a href="carta-regalo.html">Carta regalo</a><a href="account.html">Il mio account</a><a href="porta-un-amico.html">Porta un amico</a>'}<a href="index.html#iscriviti">Accesso anticipato</a></nav>
-    <nav aria-label="Aiuto"><h2>Aiuto</h2>${VETRINA ? '<a href="aiuto.html#spedizioni">Il drop</a>' : '<a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a>'}<a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
+    <nav aria-label="Aiuto"><h2>Aiuto</h2>${PRENOTA ? '<a href="aiuto.html#spedizioni">Come prenotare</a>' : VETRINA ? '<a href="aiuto.html#spedizioni">Il drop</a>' : '<a href="aiuto.html#spedizioni">Spedizioni</a><a href="aiuto.html#resi">Resi</a>'}<a href="aiuto.html#taglie">Guida alle taglie</a><a href="aiuto.html#contatti">Contatti</a></nav>
     <div><h2>Social</h2><p>Instagram e TikTok in arrivo</p></div>
   </div>
   <div class="piede-basso">
@@ -225,7 +247,7 @@ ${VETRINA ? '    <p>Conservalo: vale una volta sola, sul primo ordine, quando ap
     <div class="borsa-fondo" id="borsa-fondo"></div>
   </div>
 </div>
-<script>window.MARO_CATALOGO=${JSON.stringify(CATALOGO.map(p => ({ id: p.id, tipo: p.tipo, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0], src: urlPiccola(p.copertina[0]) || urlFoto(p.copertina[0]), colorePallino: p.pallini[0] })))};</script>
+<script>window.MARO_CATALOGO=${JSON.stringify(CAPI.map(p => ({ id: p.id, tipo: p.tipo, nome: p.nome, colore: p.colore, prezzo: p.prezzo, foto: p.copertina[0], src: urlPiccola(p.copertina[0]) || urlFoto(p.copertina[0]), colorePallino: p.pallini[0] })))};</script>
 </body>
 </html>
 `;
@@ -416,7 +438,7 @@ function home() {
   const corpo = `
 <section class="apertura" aria-label="Apertura">
   <video class="apertura-video" muted playsinline autoplay loop preload="auto" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-loop.mp4" data-tel="assets/video/home-metro-tel-loop.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-loop.mp4?v=${impronta('assets/video/home-metro-loop.mp4')}" data-tel="assets/video/home-metro-tel-loop.mp4?v=${impronta('assets/video/home-metro-tel-loop.mp4')}" type="video/mp4">
   </video>
   <div class="apertura-testo">
     <h1>Fly with<br>your mind</h1>
@@ -513,6 +535,79 @@ ${VETRINA ? '' : `    <li><b>Porta un amico.</b> Dopo il primo acquisto hai un l
 // tutto su nero, titoli con grazie (Playfair Display), scritte piccole spaziate (Jost), pulsanti rettangolari con la freccia.
 // Logo: la M con le ali di Omar (nella grafica c'era MARO in orizzontale, che Omar non vuole)
 const FRECCIA = '<svg class="n-freccia" viewBox="0 0 24 12" aria-hidden="true"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+// la felpa in home (29/10, al posto della collezione a categorie): una foto sola (Francesco: «basta una foto», le immagini cambieranno).
+// Poi (Francesco: «sembra una foto messa a caso, qualche dettaglio visivo»): impaginata come la presentazione del Drop 001,
+// foto a sinistra con il numero del drop, a destra nome, colore, prezzo, taglie e «Prenota»; tutto porta alla scheda
+function laFelpa() {
+  const p = LA_FELPA;
+  return `
+<section class="n-felpa" aria-labelledby="n-felpa-titolo">
+  <a class="felpa-foto" href="${p.id}.html" tabindex="-1" aria-hidden="true">
+    ${img((p.home || p.copertina)[0], (p.home || p.copertina)[1], { dove: 'home la felpa', sizes: '(min-width: 900px) 52vw, 100vw' })}
+    <span class="felpa-bollo">Drop 001</span>
+  </a>
+  <div class="felpa-testo">
+    <p class="felpa-occhiello"><span>Drop 001</span><span>Il primo capo</span></p>
+    <h2 id="n-felpa-titolo">${esc(p.nome)}</h2>
+    <p class="felpa-frase">${esc(p.frase)}</p>
+    <p class="felpa-colore"><i style="background:${p.pallini[0]}"></i>${esc(p.colore)}</p>
+    <p class="felpa-prezzo">${euro(p.prezzo)}</p>
+    <ul class="felpa-taglie" aria-label="Taglie: ${p.taglie.join(', ')}">${p.taglie.map(t => `<li>${t}</li>`).join('')}</ul>
+    <a class="n-btn n-btn-pieno felpa-vai" href="${p.id}.html">Prenota la tua ${FRECCIA}</a>
+    <p class="felpa-nota">Sul sito non paghi niente: Omar ti scrive su WhatsApp.</p>
+  </div>
+</section>
+`;
+}
+
+// «Dentro MARO» (29/10, Omar, come «Dentro Nike»): le storie del brand in carosello, ognuna con un disegno di Omar come anteprima.
+// Poi (Francesco, scelta fra tre): attaccate alla foto di «Un segno che unisce», titolo piccolo «Le storie dietro il segno», una sezione sola
+// Un tocco apre la pagina del brand: «In campo dal 2020» e i disegni di Omar a scorrimento. Le frecce compaiono solo con più storie.
+const STORIE = [
+  ['bm-1', 'Disegno a penna blu di Omar: la M con le ali e i riccioli sotto', 'In campo dal 2020', 'La storia di MARO, dal primo disegno di Omar.', 'storia.html'],
+  [null, '', 'In arrivo', 'Una nuova storia di MARO.', null], // segnaposto non cliccabile (29/10, Francesco: «così vediamo lo scorrimento»)
+  // le prossime storie le aggiunge Omar (29/10, Francesco: «il resto verrà popolato con altre storie»): una riga per storia in questo elenco
+];
+function dentroMaro() {
+  return `
+<section class="dentro" aria-labelledby="dentro-titolo">
+  <div class="dentro-testa">
+    <h2 id="dentro-titolo">Le storie dietro il segno</h2>
+    <div class="dentro-frecce"><button type="button" data-dentro="-1" aria-label="Storie precedenti">${FRECCIA}</button><button type="button" data-dentro="1" aria-label="Storie successive">${FRECCIA}</button></div>
+  </div>
+  <div class="dentro-fila" tabindex="0" aria-label="Le storie di MARO: scorri per vederle tutte">
+${STORIE.map(([id, alt, titolo, frase, link]) => link ? `    <a class="dentro-carta" href="${link}">
+      <span class="dentro-foto${id.startsWith('bm-') ? ' disegno' : ''}">${img(id, alt, { ripeti: true, sizes: '(min-width: 960px) 60vw, 82vw' })}</span>
+      <h3>${esc(titolo)}</h3>
+      <p>${esc(frase)}</p>
+    </a>` : `    <div class="dentro-carta in-arrivo">
+      <span class="dentro-foto" aria-hidden="true"><svg viewBox="${LOGO_VB}"><use href="#logo-maro"/></svg><span>In arrivo</span></span>
+      <h3>${esc(titolo)}</h3>
+      <p>${esc(frase)}</p>
+    </div>`).join('\n')}
+  </div>
+</section>
+`;
+}
+
+// Drop 002 in modalità PRENOTA (29/10, Francesco: «sembra statica messa a caso»): stessa impaginazione del Drop 001 ma specchiata,
+// foto delle tre colorazioni a destra con il bollino, a sinistra titolo, frase, i colori con il pallino, conto alla rovescia in riquadri e avviso
+const COLORI_DROP2 = [['Nero', '#111'], ['Marrone', '#4a3020'], ['Grigio chiaro', '#cfccc6']];
+function dropDue() {
+  return `<section class="n-drop2" id="drop" aria-labelledby="n-drop-titolo">
+  <figure class="drop2-foto">${img('drop002-colori', 'Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro', { dove: 'home drop', sizes: '(min-width: 900px) 48vw, 100vw' })}<span class="felpa-bollo">In arrivo</span></figure>
+  <div class="drop2-testo conto" data-drop="2026-11-14T18:00:00+01:00">
+    <p class="felpa-occhiello"><span>Prossimo drop</span><span>Nuovi colori</span></p>
+    <h2 id="n-drop-titolo">Drop 002</h2>
+    <p class="felpa-frase">La ${esc(LA_FELPA.nome)} arriva in due nuovi colori, accanto al nero.</p>
+    <ul class="drop2-colori" aria-label="Colori: ${COLORI_DROP2.map(c => c[0]).join(', ')}">${COLORI_DROP2.map(([n, c]) => `<li><i style="background:${c}"></i>${n}</li>`).join('')}</ul>
+    <p class="drop2-data conto-titolo">14 novembre 2026 · ore 18</p>
+    <div class="drop2-conto conto-cifre" aria-hidden="true"><span><b data-u="g">--</b>giorni</span><span><b data-u="o">--</b>ore</span><span><b data-u="m">--</b>minuti</span><span><b data-u="s">--</b>secondi</span></div>
+    <a class="n-btn n-btn-pieno drop2-vai" href="#iscriviti">Avvisami quando esce ${FRECCIA}</a>
+  </div>
+</section>`;
+}
+
 function homeNuova() {
   const COLLEZIONE = [
     ['cat-polo', 'Polo', 'polo.html', 'Polo jacquard beige MARO appesa su una terrazza, dietro il Duomo di Milano'],
@@ -539,7 +634,7 @@ function homeNuova() {
   <!-- 26/10 (Francesco): sul telefono il video verticale (data-tel); la foto verticale sta sotto finché il video non parte.
        Il loop è dentro i file (l'ultimo secondo sfuma nel primo): basta loop, niente seconda copia -->
   <video class="apertura-video" muted playsinline loop preload="none" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" data-poster="${urlFoto('apertura-locandina')}" aria-hidden="true" tabindex="-1">
-    <source src="assets/video/home-metro-loop.mp4" data-tel="assets/video/home-metro-tel-loop.mp4" type="video/mp4">
+    <source src="assets/video/home-metro-loop.mp4?v=${impronta('assets/video/home-metro-loop.mp4')}" data-tel="assets/video/home-metro-tel-loop.mp4?v=${impronta('assets/video/home-metro-tel-loop.mp4')}" type="video/mp4">
   </video>
   ${img('apertura-tel', 'Stazione della metro di notte con la scritta MARO illuminata su una colonna', { cls: 'apertura-tel', dove: 'home apertura', sizes: '100vw' })}
   <div class="n-apertura-testo">
@@ -550,12 +645,12 @@ function homeNuova() {
 <section class="n-intro" aria-label="Il drop e il brand">
   <p>Abbigliamento sportivo ed elegante, nato a Milano nel 2020.</p>
   <div class="n-intro-pulsanti">
-    <a class="n-btn n-btn-pieno" href="shop.html">Scopri il drop ${FRECCIA}</a>
-    <a class="n-btn" href="storia.html">Il brand ${FRECCIA}</a>
+    <a class="n-btn n-btn-pieno" href="${DROP_LINK}">Scopri il drop ${FRECCIA}</a>${PRENOTA ? '' : `
+    <a class="n-btn" href="storia.html">Il brand ${FRECCIA}</a>`}
   </div>
 </section>
 
-
+${PRENOTA ? laFelpa() : `
 <section class="n-collezione" aria-labelledby="n-coll-titolo">
   <div class="n-testa"><h2 id="n-coll-titolo" class="n-etichetta">La collezione</h2><p class="n-etichetta n-etichetta-dx">Vivi il tuo sport</p></div>
   <div class="n-coll-griglia">
@@ -571,7 +666,7 @@ ${COLLEZIONE.map(([id, nome, link, alt]) => `    <a class="n-carta" href="${link
      Le foto della grafica non si usano: sotto le ali c'è scritto «MARG» -->
 <!-- 24/10 (Francesco): al posto di «Milano è la nostra energia» una fascia dedicata allo sport, stesso messaggio (lo sport come mentalità);
      per ora la foto del tennista presa dal lookbook (la corsa al Colosseo non è piaciuta); foto nuova chiesta a ChatGPT -->
-<section class="n-brand2 n-sport" aria-label="Lo sport">
+`}${PRENOTA ? '' : `<section class="n-brand2 n-sport" aria-label="Lo sport">
   <article class="n-milano2">
     <figure class="n-milano2-foto">${img('ai-lb-tennis', 'Ragazzo con la Polo Linee MARO nera colpisce di dritto su un campo da tennis, la pallina in primo piano', { dove: 'home sport', sizes: '(min-width: 960px) 75vw, 100vw' })}</figure>
     <div class="n-milano2-testo">
@@ -591,7 +686,7 @@ ${COLLEZIONE.map(([id, nome, link, alt]) => `    <a class="n-carta" href="${link
 ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria-hidden="true"' : ''}><a href="${capo}.html"${copia ? ' tabindex="-1"' : ` aria-label="${esc(alt)}: vedi ${esc(CATALOGO.find(p => p.id === capo).nome)}"`}>${img(id, copia ? '' : alt, { dove: 'home lookbook', ripeti: !!copia, sizes: '(min-width: 960px) 22vw, 60vw' })}</a></figure>`).join('\n')).join('\n')}
     </div>
   </div>
-</section>
+</section>`}
 
 <!-- 26/10 (Francesco, «uguale da telefono e da PC»): testo sopra, foto intera con le due scene del ricamo sovrapposte e la cucitura
      da trascinare (stesso codice di «Dietro il segno»); stile in fondo a maro-bianco.css -->
@@ -608,16 +703,19 @@ ${[0, 1].map(copia => lb.map(([id, alt, capo]) => `      <figure${copia ? ' aria
     </div>
   </div>
 </section>
+${PRENOTA ? dentroMaro() : ''}
 
-<section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">
+${PRENOTA ? dropDue() : `<section class="n-drop" id="drop" aria-labelledby="n-drop-titolo">
   <figure class="n-drop-foto" aria-hidden="true">${img('bn-tennis-rovescio', '', { dove: 'home drop', sizes: '(min-width: 960px) 60vw, 100vw' })}</figure>
-  <div class="n-drop-testo conto" data-drop="2026-11-14T18:00:00+01:00" aria-label="Drop 002: sabato 14 novembre 2026, ore 18">
+  <div class="n-drop-testo conto" data-drop="2026-11-14T18:00:00+01:00" aria-label="Drop 002${PRENOTA ? ', i nuovi colori della felpa' : ''}: sabato 14 novembre 2026, ore 18">
     <h2 id="n-drop-titolo" class="n-drop-titolo">Drop 002</h2>
-    <p class="n-drop-data conto-titolo">14 novembre 2026 · ore 18</p>
+${PRENOTA ? `    <!-- 29/10 (Francesco): il Drop 002 sono i nuovi colori della felpa, non il tennis; la foto nuova la passa lui, per ora resta questa -->
+    <p class="n-drop-frase">La ${esc(LA_FELPA.nome)} arriva in due nuovi colori: marrone e grigio chiaro.</p>
+` : ''}    <p class="n-drop-data conto-titolo">14 novembre 2026 · ore 18</p>
     <div class="n-conto conto-cifre" aria-hidden="true"><span><b data-u="g">--</b>giorni</span><span><b data-u="o">--</b>ore</span><span><b data-u="m">--</b>minuti</span><span><b data-u="s">--</b>secondi</span></div>
   </div>
   <a class="n-btn n-drop-btn" href="#iscriviti"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Resta aggiornato</a>
-</section>
+</section>`}
 
 <section class="n-iscriviti iscriviti" id="iscriviti" aria-labelledby="iscriviti-titolo">
   <div class="n-iscriviti-sfondo" aria-hidden="true">${img('scena-composizione', '', { dove: 'home iscrizione', sizes: '100vw' })}</div>
@@ -707,22 +805,22 @@ ${foto}
   const corpo = `
 <div class="prodotto" data-id="${p.id}" data-tipo="${p.tipo}">
   <div class="prodotto-intro">
-    <nav class="briciole" aria-label="Sei qui"><a href="index.html">Home</a><span aria-hidden="true">›</span><a class="indietro" href="${cat[0]}.html">${cat[1]}</a><span aria-hidden="true">›</span><span aria-current="page">${esc(p.nome)}</span></nav>
+    <nav class="briciole" aria-label="Sei qui"><a href="index.html">Home</a><span aria-hidden="true">›</span>${PRENOTA ? '' : `<a class="indietro" href="${cat[0]}.html">${cat[1]}</a><span aria-hidden="true">›</span>`}<span aria-current="page">${esc(p.nome)}</span></nav>
     <h1>${esc(p.nome)}</h1>
     <p class="colore">${esc(p.colore)}</p>
-    <p class="prezzo">${VETRINA ? '<span class="prezzo-etichetta">Prezzo al lancio</span> ' : ''}${euro(p.prezzo)}</p>
-${rec ? `    <a class="voto" href="#rec-titolo"><span class="stelle" aria-hidden="true">${'★'.repeat(Math.round(voto))}<i>${'★'.repeat(5 - Math.round(voto))}</i></span><span>${voto.toFixed(1).replace('.', ',')} <small>(${rec.length} recensioni)</small></span></a>\n` : ''}
+    <p class="prezzo">${VETRINA && !PRENOTA ? '<span class="prezzo-etichetta">Prezzo al lancio</span> ' : ''}${euro(p.prezzo)}</p>
+${rec && !PRENOTA ? `    <a class="voto" href="#rec-titolo"><span class="stelle" aria-hidden="true">${'★'.repeat(Math.round(voto))}<i>${'★'.repeat(5 - Math.round(voto))}</i></span><span>${voto.toFixed(1).replace('.', ',')} <small>(${rec.length} recensioni)</small></span></a>\n` : ''}
   </div>
   <div class="galleria" data-n="${n}">
 ${galleria}
   </div>
   <div class="prodotto-acquisto">
     <p class="prodotto-testo"><strong>${esc(p.frase)}</strong> ${esc(p.testo)}</p>
-${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong> Sul manichino: taglia M.</p>
-`}${VETRINA ? dropScheda(p, acc, !acc && p.tipo !== 'pantaloni') : `    <fieldset class="taglie">
+${acc ? '    <p class="vestibilita"><strong>Taglia unica.</strong></p>\n' : `    <p class="vestibilita"><strong>${p.tipo === 'polo' ? 'Vestibilità regolare: prendi la tua taglia abituale.' : p.tipo === 'pantaloni' ? 'Gamba dritta e comoda: prendi la tua taglia abituale.' : 'Vestibilità comoda, spalla leggermente scesa: se sei tra due taglie, scegli la più piccola.'}</strong>${PRENOTA ? '' : ' Sul manichino: taglia M.'}</p>
+`}${VETRINA && !PRENOTA ? dropScheda(p, acc, !acc && p.tipo !== 'pantaloni') : `    <fieldset class="taglie">
       <legend>Seleziona la taglia</legend>
       <div class="taglie-griglia">
-${p.taglie.map(t => { const fin = (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
+${p.taglie.map(t => { const fin = !PRENOTA && (p.esaurite || []).includes(t); return `        <label${fin ? ' class="esaurita"' : ''}><input type="radio" name="taglia" value="${t}"${fin ? ' data-esaurita' : ''} aria-label="${t}${fin ? ', esaurita' : ''}"><span>${t}</span></label>`; }).join('\n')}
       </div>
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
 ${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>\n'}    </fieldset>
@@ -736,8 +834,8 @@ ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.j
       <p class="trova-esito" role="status" aria-live="polite"></p>
     </div>
 `}    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
-    <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
-${acc ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>\n'}`}    <div class="azioni-scheda">
+${PRENOTA ? '    <p class="consegna">Prenoti senza pagare: Omar ti scrive su WhatsApp per confermare taglia, pagamento e spedizione.</p>\n' : `    <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
+`}${acc || PRENOTA ? '' : '    <p class="regalo-scheda">È un regalo e non sai la taglia? <a class="link" href="carta-regalo.html">Scegli la carta regalo</a></p>\n'}`}    <div class="azioni-scheda">
       <button class="btn btn-contorno-nero" type="button" data-cuore="${p.id}" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cuore"/></svg><span>Salva</span></button>
       <button class="btn btn-contorno-nero" type="button" data-condividi><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-condividi"/></svg><span>Condividi</span></button>
     </div>
@@ -765,21 +863,25 @@ ${acc || p.tipo === 'pantaloni' ? '' : `    <details id="guida-taglie">
       </table>
       <p class="piccolo">Misure del capo steso, di esempio.</p>
     </details>
-`}${VETRINA ? '' : `    <details>
+`}${PRENOTA ? `    <details>
+      <summary>Come funziona la prenotazione</summary>
+      <p>Scegli la taglia, aggiungi alla borsa e tocca «Prenota»: lasci nome, numero WhatsApp e indirizzo. Sul sito non paghi niente. Omar riceve la prenotazione e ti scrive su WhatsApp per confermare, accordarvi sul pagamento e spedire. <a class="link" href="aiuto.html#spedizioni">Tutti i dettagli</a></p>
+    </details>
+` : VETRINA ? '' : `    <details>
       <summary>Spedizione e resi</summary>
       <p>Spedizione in Italia in 2–4 giorni lavorativi, gratuita sopra i 150 €. Reso entro 14 giorni dalla consegna, per qualsiasi motivo. <a class="link" href="aiuto.html#resi">Tutti i dettagli</a></p>
     </details>
 `}  </div>
 </div>
 ${puntiScheda(p)}
-${recensioni(p)}
-
+${PRENOTA ? '' : recensioni(p)}
+${PRENOTA ? '' : `
 <section class="completa" aria-labelledby="completa-titolo">
   <h2 id="completa-titolo" class="titolo">Completa il look</h2>
   <div class="griglia griglia-3">
 ${altri.map(x => scheda(x, 'scheda ' + x.id)).join('\n')}
   </div>
-</section>
+</section>`}
 
 <section class="visti" aria-labelledby="visti-titolo" hidden>
   <h2 id="visti-titolo">Visti di recente</h2>
@@ -1075,7 +1177,7 @@ function preferiti() {
   <div class="pref-lista griglia"></div>
   <div class="pref-vuoto" hidden>
     <p>Non hai ancora salvato niente. Tocca il cuore su un capo per ritrovarlo qui.</p>
-    <a class="btn btn-nero" href="shop.html">Guarda tutti i capi</a>
+    <a class="btn btn-nero" href="${DROP_LINK}">${PRENOTA ? 'Guarda la felpa' : 'Guarda tutti i capi'}</a>
   </div>
 </section>`;
   return pagina({ titolo: 'Preferiti — MARO', descrizione: 'I capi MARO che hai salvato.', corpo, file: 'preferiti.html' });
@@ -1088,7 +1190,7 @@ function nonTrovata() {
   <svg class="nt-simbolo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#maro-simbolo"/></svg>
   <h1 class="titolo">Pagina<br>non trovata.</h1>
   <p>Il link è sbagliato o la pagina non esiste più. Il drop invece c’è.</p>
-  <a class="btn btn-nero" href="shop.html">Vai allo shop</a>
+  <a class="btn btn-nero" href="${DROP_LINK}">${PRENOTA ? 'Guarda la felpa' : 'Vai allo shop'}</a>
 </section>`;
   return pagina({ titolo: 'Pagina non trovata — MARO', descrizione: 'Pagina non trovata.', corpo, file: '404.html' });
 }
@@ -1108,11 +1210,11 @@ const ICONE = {
 };
 const domanda = (q, a) => `      <details><summary>${q}</summary><p>${a}</p></details>`;
 function aiuto() {
-  const temi = VETRINA ? [['spedizioni', 'Il drop'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']] : [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
+  const temi = PRENOTA ? [['spedizioni', 'Come prenotare'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']] : VETRINA ? [['spedizioni', 'Il drop'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']] : [['spedizioni', 'Ordini e spedizioni'], ['resi', 'Resi e rimborsi'], ['taglie', 'Guida alle taglie'], ['contatti', 'Contatti']];
   // 23/10 sera (grafica ChatGPT _grafica-chatgpt/aiuto-2026-10-23/): apertura con foto, tre schede con foto e freccia,
   // taglie col disegno a sinistra, contatti con l'insegna. I contatti veri di Omar non ci sono ancora: pulsanti «in arrivo»
   const FOTO_TEMI = { spedizioni: ['aiuto-drop', 'Scatola nera MARO con le ali sul coperchio, su un banco di marmo in Galleria'], taglie: ['aiuto-taglie', 'Polo nera MARO stesa con il metro da sarta e il cartamodello'], contatti: ['aiuto-scrivania', 'Scrivania di marmo con il portatile e il cappellino MARO, dietro il Duomo di Milano'] };
-  const SOTTO_TEMI = { spedizioni: VETRINA ? 'Spedizioni, resi e pagamenti: tutto quello che serve sapere sul drop.' : 'Dal pagamento alla porta di casa.', resi: '14 giorni per cambiare idea.', taglie: 'Trova la misura giusta con la nostra guida.', contatti: 'Scrivici per qualsiasi domanda.' };
+  const SOTTO_TEMI = { spedizioni: PRENOTA ? 'Prenoti dal sito, Omar ti scrive su WhatsApp.' : VETRINA ? 'Spedizioni, resi e pagamenti: tutto quello che serve sapere sul drop.' : 'Dal pagamento alla porta di casa.', resi: '14 giorni per cambiare idea.', taglie: 'Trova la misura giusta con la nostra guida.', contatti: 'Scrivici per qualsiasi domanda.' };
   const corpo = `
 <section class="aiuto-testa aiuto-testa2" aria-labelledby="aiuto-titolo">
   <figure class="aiuto-testa-foto">${img('aiuto-apertura', 'Ragazzo di spalle con la felpa nera e le ali MARO nella Galleria Vittorio Emanuele, in fondo il Duomo', { dove: 'aiuto apertura', lazy: false, sizes: '100vw' })}</figure>
@@ -1127,7 +1229,16 @@ ${temi.map(([id, t]) => `  <a href="#${id}">${FOTO_TEMI[id] ? `<span class="aiut
 </nav>
 
 <div class="aiuto">
-${VETRINA ? `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
+${PRENOTA ? `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
+    <div class="aiuto-tema-testa"><h2 id="t-sped">Come prenotare</h2><p>Per ora MARO non vende online: la felpa si prenota dal sito e il resto lo accordi direttamente con Omar.</p></div>
+    <div class="domande">
+${domanda('Come funziona?', 'Scegli la taglia, aggiungi la felpa alla borsa e tocca «Prenota». Lasci nome e cognome, il tuo numero WhatsApp e l’indirizzo di consegna. Omar riceve subito la prenotazione.')}
+${domanda('Devo pagare sul sito?', 'No. Sul sito non si paga niente e non ti chiediamo dati di carte. Omar ti scrive su WhatsApp per confermare la taglia e accordarvi su pagamento e spedizione.')}
+${domanda('Quanto tempo ci vuole?', 'Omar ti contatta su WhatsApp dopo la prenotazione: i tempi di preparazione e di consegna te li dice lui, prima che tu paghi.')}
+${domanda('Posso cambiare idea?', 'Sì: finché non vi siete accordati basta dirlo a Omar quando ti scrive.')}
+    </div>
+  </section>
+` : VETRINA ? `  <section class="aiuto-tema" id="spedizioni" aria-labelledby="t-sped">
     <div class="aiuto-tema-testa"><h2 id="t-sped">Il drop apre presto</h2><p>Spedizioni, resi e pagamenti li trovi qui il giorno dell’apertura. Iscriviti e te lo diciamo per primi, con il 10% sul primo ordine.</p></div>
     <a class="btn btn-nero" href="index.html#iscriviti">Iscriviti al drop</a>
   </section>
@@ -1209,7 +1320,8 @@ function privacy() {
   const temi = [
     tema('titolare', 'Chi tratta i tuoi dati', `<p>Il titolare del trattamento è <strong>${nome}</strong>, che crea e vende i capi MARO. Per qualunque domanda sui tuoi dati scrivi a ${mail}.</p>`),
     tema('dati', 'Quali dati', VETRINA
-      ? `<ul><li><strong>La tua email</strong>, se ti iscrivi al drop, con il codice sconto creato per te e il momento in cui ti sei iscritto.</li>
+      ? `<ul><li><strong>La tua email</strong>, se ti iscrivi al drop, con il codice sconto creato per te e il momento in cui ti sei iscritto.</li>${PRENOTA ? `
+<li><strong>Prenotazione</strong>: nome e cognome, numero WhatsApp, indirizzo di consegna, email se la lasci, note, felpa e taglia scelte e il momento della prenotazione.</li>` : ''}
 <li><strong>Dati tecnici</strong>: per bloccare chi prova a iscrivere centinaia di email, il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul>`
       : `<ul><li><strong>Iscrizione al drop</strong>: la tua email, il codice sconto creato per te e il momento in cui hai dato il consenso.</li>
 <li><strong>Account</strong>: nome, email, password (salvata solo in forma cifrata, nessuno può leggerla) e il momento in cui hai confermato questa informativa.</li>
@@ -1219,7 +1331,8 @@ function privacy() {
 <li><strong>Dati tecnici</strong>: per bloccare gli abusi il sistema conserva per al massimo 24 ore un’impronta cifrata del tuo indirizzo IP (non l’indirizzo in chiaro). I servizi che ospitano il sito registrano, come ogni server, i dati tecnici delle visite.</li></ul>`),
     tema('perche', 'Perché e su quale base', VETRINA
       ? `<ul><li><strong>Mandarti le novità dei drop e il codice del 10%</strong>: solo con il tuo consenso, che dai spuntando la casella (art. 6.1.a GDPR). Puoi ritirarlo quando vuoi.</li>
-<li><strong>Proteggere il sito dagli abusi</strong>: legittimo interesse a tenere il servizio sicuro (art. 6.1.f GDPR).</li></ul>
+<li><strong>Proteggere il sito dagli abusi</strong>: legittimo interesse a tenere il servizio sicuro (art. 6.1.f GDPR).</li>${PRENOTA ? `
+<li><strong>Gestire la tua prenotazione</strong>: Omar usa i tuoi dati per ricontattarti su WhatsApp, accordarsi con te e spedirti la felpa. Serve per la richiesta che fai tu (art. 6.1.b GDPR).</li>` : ''}</ul>
 <p>Lasciare l’email non è obbligatorio: senza, puoi guardare il sito come prima, ma non ricevi il codice né gli avvisi.</p>`
       : `<ul><li><strong>Newsletter e codice del 10%</strong>: solo con il tuo consenso (art. 6.1.a GDPR), che puoi ritirare quando vuoi.</li>
 <li><strong>Account, ordini, spedizioni ed email di servizio</strong> (conferma dell’email, ordine ricevuto, pacco partito, nuova password): servono per il contratto di vendita che fai con noi (art. 6.1.b GDPR).</li>
@@ -1227,21 +1340,23 @@ function privacy() {
 <li><strong>Prevenire abusi e frodi</strong> su codici e pagamenti: legittimo interesse (art. 6.1.f GDPR).</li></ul>
 <p>Senza nome, email e indirizzo non possiamo spedirti un ordine; la newsletter invece è sempre facoltativa.</p>`),
     tema('chi', 'Chi li gestisce per noi', `<p>Usiamo questi fornitori, che trattano i dati solo per conto nostro:</p>
-<ul><li><strong>Cloudflare</strong>: il sistema che salva ${VETRINA ? 'le iscrizioni e i codici' : 'account, ordini e codici'}.</li>
+<ul><li><strong>Cloudflare</strong>: il sistema che salva ${PRENOTA ? 'le iscrizioni, i codici e le prenotazioni' : VETRINA ? 'le iscrizioni e i codici' : 'account, ordini e codici'}.</li>
 <li><strong>GitHub</strong>: ospita le pagine del sito.</li>
-<li><strong>Resend</strong>: invia le email.</li>${VETRINA ? '' : `
+<li><strong>Resend</strong>: invia le email.</li>${PRENOTA ? `
+<li><strong>WhatsApp</strong> (Meta): Omar ti ricontatta lì, dal numero che lasci nella prenotazione.</li>` : ''}${VETRINA ? '' : `
 <li><strong>Stripe</strong>: gestisce i pagamenti, con la sua <a class="link" href="https://stripe.com/it/privacy" target="_blank" rel="noopener">informativa</a>.</li>
 <li><strong>Il corriere</strong> che porta il pacco riceve nome, indirizzo e, se serve, la tua email per gli avvisi di consegna.</li>`}</ul>
 <p>Sono aziende con sede negli Stati Uniti: i dati possono essere trasferiti fuori dall’Unione Europea. Tutte aderiscono all’accordo UE-USA sulla protezione dei dati (Data Privacy Framework), riconosciuto dalla Commissione europea. Non vendiamo né cediamo i tuoi dati a nessuno.</p>`),
     tema('quanto', 'Per quanto tempo', VETRINA
       ? `<ul><li><strong>Email e codice</strong>: finché resti iscritto. Se ti cancelli, li eliminiamo entro 30 giorni.</li>
-<li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li></ul>`
+<li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li>${PRENOTA ? `
+<li><strong>Prenotazioni</strong>: il tempo necessario a gestirle; se la prenotazione diventa un acquisto, per i tempi chiesti dalla legge sulle vendite. Puoi chiederne la cancellazione quando vuoi.</li>` : ''}</ul>`
       : `<ul><li><strong>Newsletter</strong>: finché resti iscritto; se ti cancelli, la tua email esce dalla lista subito.</li>
 <li><strong>Account</strong>: finché non lo elimini, cosa che puoi fare da solo nella pagina «Il mio account».</li>
 <li><strong>Ordini</strong>: 10 anni, come chiede la legge, anche se elimini l’account.</li>
 <li><strong>Accesso</strong>: resti collegato al massimo 30 giorni; i link per confermare l’email o cambiare password valgono 24 ore.</li>
 <li><strong>Impronta dell’indirizzo IP</strong>: al massimo 24 ore.</li></ul>`),
-    tema('browser', 'Cookie e memoria del browser', `<p>Il sito <strong>non usa cookie di profilazione, pubblicità o statistiche</strong>, e i caratteri sono caricati dal sito stesso, non da servizi esterni. Usa solo la memoria del tuo browser per far funzionare le pagine: i preferiti, i capi visti di recente, ${VETRINA ? 'il codice ricevuto e se hai già chiuso la finestra del 10%' : 'la borsa, il codice attivo, l’accesso al tuo account e se hai già chiuso la finestra del 10%'}. Restano sul tuo dispositivo e puoi cancellarli dalle impostazioni del browser.</p>`),
+    tema('browser', 'Cookie e memoria del browser', `<p>Il sito <strong>non usa cookie di profilazione, pubblicità o statistiche</strong>, e i caratteri sono caricati dal sito stesso, non da servizi esterni. Usa solo la memoria del tuo browser per far funzionare le pagine: i preferiti, i capi visti di recente, ${PRENOTA ? 'la borsa, il codice ricevuto e se hai già chiuso la finestra del 10%' : VETRINA ? 'il codice ricevuto e se hai già chiuso la finestra del 10%' : 'la borsa, il codice attivo, l’accesso al tuo account e se hai già chiuso la finestra del 10%'}. Restano sul tuo dispositivo e puoi cancellarli dalle impostazioni del browser.</p>`),
     tema('diritti', 'I tuoi diritti', `<p>In ogni momento puoi chiedere di vedere i tuoi dati, correggerli, cancellarli, limitarne l’uso, opporti o riceverne una copia (art. 15–22 GDPR), e ritirare il consenso senza che questo tocchi quello che è stato fatto prima. Basta scrivere a ${mail}: rispondiamo entro 30 giorni.</p>
 <p>Se pensi che i tuoi dati siano trattati male, puoi fare reclamo al <a class="link" href="https://www.garanteprivacy.it" target="_blank" rel="noopener">Garante per la protezione dei dati personali</a>.</p>
 <p>Non prendiamo decisioni automatiche su di te e non facciamo profilazione. Per iscriverti devi avere almeno 14 anni.</p>`),
@@ -1280,7 +1395,7 @@ const CAROSELLO_ALI = [
 function storia() {
   if (NUOVA_HOME) return storiaNuova();
   const passi = MANIFESTO.map((m, i) => `
-    <li class="bm-passo" data-entra>
+    <li class="bm-passo" id="${m.foto}" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
       <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
         <img class="bm-firma-fondo" src="assets/img/firma-maro.svg?v=${impronta('assets/img/firma-maro.svg')}" width="870" height="1860" alt="" aria-hidden="true" loading="lazy">
@@ -1370,7 +1485,7 @@ function storiaNuova() {
   const giro = '<span class="bm-gira-icona" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 0 1 13.7-5.6L20 9M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6L4 15M4 20v-5h5"/></svg></span>';
   // 25/10 (Omar): di nuovo in verticale come il 21/10, da scorrere verso il basso, senza la firma MARO di fondo accanto ai disegni
   const passi = MANIFESTO.map((m, i) => `
-    <li class="bm-passo" data-entra>
+    <li class="bm-passo" id="${m.foto}" data-entra>
       <p class="bn-sport"><span class="bn-punto" aria-hidden="true"></span>${String(i + 1).padStart(2, '0')} · ${esc(m.etichetta)}</p>
       <figure class="bm-disegno" style="--r: ${(MISURE[m.foto][0] / MISURE[m.foto][1]).toFixed(4)}">
         <button type="button" class="bm-gira" aria-pressed="false" aria-label="${esc(m.etichetta)}: guarda il foglio originale">${img(m.foto, m.alt, { cls: 'bm-segno', dove: 'brand manifesto ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw' })}${img(m.foto + '-foglio', 'Il foglio originale: ' + m.alt.charAt(0).toLowerCase() + m.alt.slice(1), { cls: 'bm-foglio', dove: 'brand manifesto foglio ' + (i + 1), sizes: '(min-width: 640px) 600px, 100vw', rimanda: true })}${giro}</button>
@@ -1405,14 +1520,16 @@ function storiaNuova() {
   </ol>
 </section>
 
-<section class="s-motto" aria-label="Immagina. Credi. Agisci.">
+<!-- 29/10 (Francesco): «Immagina. Credi. Agisci.» messo da parte per il futuro: torna con PRENOTA = false -->
+${PRENOTA ? '' : `<section class="s-motto" id="motto" aria-label="Immagina. Credi. Agisci.">
   <video autoplay loop muted playsinline preload="auto" width="864" height="496" disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noremoteplayback" poster="${(usa('bn-tennis-locandina', 'brand apertura video'), urlFoto('bn-tennis-locandina'))}" aria-label="Ragazzo con la Polo Tricolore MARO nera colpisce di rovescio una pallina gialla su un campo da tennis" data-video-brand>
     <source src="assets/video/brand-tennis.mp4?v=${impronta('assets/video/brand-tennis.mp4')}" type="video/mp4">
   </video>
   <p class="s-motto-frase">Immagina.<br>Credi. Agisci.<span class="s-riga" aria-hidden="true"></span></p>
-</section>
+</section>`}
 
-<section class="s-galleria" aria-label="Foto della campagna">
+<!-- 29/10 (Francesco): la fila di foto e «Dal foglio al capo» messe da parte per il futuro (tornano con PRENOTA = false): dopo i disegni resta solo «Fly with your mind» -->
+${PRENOTA ? '' : `<section class="s-galleria" aria-label="Foto della campagna">
   <div class="s-fila" tabindex="0" aria-label="Sei sport con la Polo Linee e la felpa verde: scorri per vederli tutti">
 ${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand sport', sizes: '(min-width: 960px) 30vw, 80vw' })}</figure>`).join('\n')}
   </div>
@@ -1433,17 +1550,17 @@ ${SPORT_BRAND.map(([id, alt]) => `    <figure>${img(id, alt, { dove: 'brand spor
     <p>La M con le ali del primo disegno oggi è sul cappellino, sul berretto e sulla borraccia. MARO in verticale, il secondo, scende sul petto della Polo Linee.</p>
     <p>Ogni segno MARO nasce a mano, su un foglio di Omar, e passa sul capo con le stesse linee del disegno. Il tratto resta il suo: è così che riconosci MARO anche senza leggere il nome.</p>
     <div class="s-ali-fondo">
-      <a class="n-btn" href="accessori.html">Accessori ${FRECCIA}</a>
+      <a class="n-btn" href="${PRENOTA ? DROP_LINK : 'accessori.html'}">${PRENOTA ? esc(LA_FELPA.nome) : 'Accessori'} ${FRECCIA}</a>
     </div>
   </div>
   <figure class="s-ali-foto">${img('brand-ali-nuova', 'Ragazzo con la Polo Linee MARO nera e il cappellino con le ali guarda la borraccia nera con le ali', { dove: 'brand ali', sizes: '(min-width: 960px) 50vw, 100vw' })}</figure>
-</section>
+</section>`}
 
 <section class="s-fine" aria-labelledby="bn-motto">
   <div class="s-fine-testo">
     <svg class="s-fine-logo" viewBox="${LOGO_VB}" aria-hidden="true"><use href="#logo-maro"/></svg>
     <h2 id="bn-motto">Fly with your mind.</h2>
-    <a class="n-btn" href="shop.html">${VETRINA ? 'Guarda il drop' : 'Acquista il drop'} ${FRECCIA}</a>
+    <a class="n-btn" href="${DROP_LINK}">${PRENOTA ? 'Prenota la felpa' : VETRINA ? 'Guarda il drop' : 'Acquista il drop'} ${FRECCIA}</a>
   </div>
 </section>`;
   return pagina({ titolo: 'Il brand — MARO', descrizione: 'MARO nasce nel 2020: abbigliamento sportivo ed elegante per tennis, padel e ogni giorno, con la firma verticale e le ali di MARO.', corpo, file: 'storia.html' });
@@ -1632,7 +1749,13 @@ if (!VETRINA) {
   fs.writeFileSync(path.join(ROOT, 'ordine-confermato.html'), ordineConfermato());
 }
 fs.writeFileSync(path.join(ROOT, 'index.html'), home());
-for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), categoriaPagina(cat));
+// pagine messe da parte (29/10): un rimando leggero al posto della pagina, così i link vecchi non portano al menu di prima
+const rimando = (verso, titolo) => `<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="robots" content="noindex, nofollow"><title>${esc(titolo)} — MARO</title>
+<meta http-equiv="refresh" content="0; url=${verso}"><link rel="canonical" href="${verso}"></head>
+<body><p><a href="${verso}">MARO</a></p></body></html>
+`;
+for (const cat of CATEGORIE) fs.writeFileSync(path.join(ROOT, cat.file), PRENOTA ? rimando(DROP_LINK, cat.nome || 'Shop') : categoriaPagina(cat));
 fs.writeFileSync(path.join(ROOT, 'aiuto.html'), aiuto());
 fs.writeFileSync(path.join(ROOT, 'privacy.html'), privacy());
 if (!TITOLARE.nome || !TITOLARE.email) console.warn('⚠ Privacy: mancano nome e/o email del titolare (TITOLARE in build.js)');
@@ -1641,8 +1764,8 @@ fs.writeFileSync(path.join(ROOT, 'preferiti.html'), preferiti());
 if (!VETRINA) fs.writeFileSync(path.join(ROOT, 'carta-regalo.html'), cartaRegalo());
 // la 404 di GitHub Pages può comparire a qualsiasi indirizzo: tutti i link partono dalla cartella del sito
 fs.writeFileSync(path.join(ROOT, '404.html'), nonTrovata().replace('<head>', '<head>\n<base href="/MaroBrand/">'));
-for (const p of CATALOGO) fs.writeFileSync(path.join(ROOT, p.id + '.html'), prodotto(p));
+for (const p of CATALOGO) { const c = CAPI.find(x => x.id === p.id); fs.writeFileSync(path.join(ROOT, p.id + '.html'), c ? prodotto(c) : rimando('index.html', p.nome)); }
 
 // foto preparate ma non usate (avviso, non errore)
 const nonUsate = Object.keys(MISURE).filter(k => !usate.has(k) && k !== 'apertura-locandina');
-console.log(`Pagine: ${3 + CATALOGO.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));
+console.log(`${PRENOTA ? 'PRENOTA (una felpa). ' : ''}Pagine: ${3 + CAPI.length}. Foto usate: ${usate.size}.` + (nonUsate.length ? ' Non usate: ' + nonUsate.join(', ') : ''));

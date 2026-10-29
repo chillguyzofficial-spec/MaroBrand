@@ -25,6 +25,13 @@ const LAVORI = [
   { out: 'felpa-firma-retro', src: 'foto-set-2-2026-10-12/844072147_1810124660318198_7017883015441705205_n.webp' },
   { out: 'felpa-firma-tre-quarti', src: 'foto-set-2-2026-10-12/844861471_4656824397880401_7427535886801104678_n.webp' },
   { out: 'felpa-firma-fronte', src: 'foto-set-2-2026-10-12/847420150_1406026624930256_5378025056577203795_n.webp' },
+  // 29/10 (Omar, modalità PRENOTA): la felpa nera con la zip. In home quella appesa al gancio, nella scheda le tre su fondo bianco,
+  // nel Drop 002 le tre colorazioni appese (nera, marrone, grigio chiaro) al posto del tennista
+  { out: 'fn-gancio', src: 'felpa-nera-2026-10-29/felpa-nera-gancio.png', q: 0.86 },
+  { out: 'fn-fronte', src: 'felpa-nera-2026-10-29/felpa-nera-fronte-bianco.png', q: 0.86 },
+  { out: 'fn-retro', src: 'felpa-nera-2026-10-29/felpa-nera-retro-bianco.png', q: 0.86 },
+  { out: 'fn-lato', src: 'felpa-nera-2026-10-29/felpa-nera-lato-bianco.png', q: 0.86 },
+  { out: 'drop002-colori', src: 'felpa-nera-2026-10-29/drop002-tre-colori-gancio.png', q: 0.86 },
   // Felpa Verticale (verde bottiglia): render set 4 + vecchia foto in montagna
   { out: 'felpa-verticale-manichino', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale-manichino.jpeg', crop: [1, 0, 1280, 1600] }, // dal 19/10 manichino nel palazzo (prima: set 4)
   { out: 'felpa-verticale-fronte', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale-fronte.jpeg', crop: [2, 0, 1292, 1615] }, // dal 19/10 nel palazzo (prima: set 4)
@@ -138,9 +145,9 @@ const LAVORI = [
   { out: 'pal-cargo-firma', src: 'foto-schede-palazzo-2026-10-19/cargo-firma.jpeg', crop: [2, 0, 1292, 1615] },
   { out: 'pal-felpa-verticale', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale.jpeg', crop: [2, 0, 1292, 1615] },
   // locandina del video d'apertura (mostrata finché il video non parte); (26/10) dal primo fotogramma del video con il loop dentro (stesso tono del telefono)
-  { out: 'apertura-locandina', src: 'video-home/home-metro-loop-pc-2026-10-26.mp4', t: 0.01, max: 1920, q: 0.92 },
+  { out: 'apertura-locandina', src: 'video-home/home-metro-loop-pc-2026-10-29-tornelli.mp4', t: 0.01, max: 1920, q: 0.92 },
   // (Francesco 26/10) sul telefono, al posto del video: la stessa scena in verticale, foto ferma
-  { out: 'apertura-tel', src: 'foto-home-2026-10-26/metro-verticale-maro.png', max: 1672, q: 0.88 },
+  { out: 'apertura-tel', src: 'foto-home-2026-10-26/metro-verticale-maro-colonna-2026-10-29.png', max: 1672, q: 0.88 },
   // pagina del brand (21/10): fotogramma fisso del video del tennista (finché il video non parte, e con «riduci movimento»)
   { out: 'bn-tennis-rovescio', src: 'foto-brand-2026-10-21/tennis-rovescio-polo-tricolore.png', max: 1536, q: 0.88 }, // apertura del brand dal 21/10 notte (al posto del video)
   { out: 'bn-tennis-locandina', src: 'video-brand-2026-10-21/tennis-swing-colore-selettivo.mp4', t: 0.1, max: 864, q: 0.9 },

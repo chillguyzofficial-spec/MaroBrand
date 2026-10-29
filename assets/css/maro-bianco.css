@@ -160,6 +160,9 @@ body.bianco {
 @media (max-width: 1099px) { .bianco .n-logo2-foto.segno { margin: 0 0 4px; border-radius: 4px; } }
 
 .apertura-tel { display: none; } /* solo sul telefono (regola qui sotto) */
+/* (Francesco 29/10, «grande ma non tagliare»): la scritta di Omar sul pilastro occupa l'80% dell'altezza del video;
+   sulle finestre molto larghe e basse l'apertura non scende sotto 1/2,1 della larghezza, così il video non si taglia oltre */
+.bianco .n-apertura { min-height: max(560px, min(1000px, 47.6vw)); }
 
 /* apertura sul telefono (Francesco 25/10, «il video in loop da cell possiamo metterlo verticale?»): il video riempie lo schermo
    in verticale, inquadrato sulla colonna con MARO; «Fly with your mind» in basso a sinistra (schizzo di Omar).
@@ -170,8 +173,8 @@ body.bianco {
   /* (Francesco 26/10, dopo) il video verticale in loop come sul PC, sopra la foto: la foto resta sotto come locandina finché il video non parte */
   .bianco .n-apertura .apertura-video { object-position: 50% 25%; }
   .bianco .n-apertura .apertura-tel { display: block; position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
-  .bianco .n-apertura-testo { top: 14px; bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono */
-  .bianco .n-apertura h1 { font-size: clamp(46px, 14vw, 72px); line-height: .9; }
+  .bianco .n-apertura-testo { top: clamp(22px, 7vw, 40px); bottom: auto; } /* (Francesco 25/10) «Fly with your mind» in alto anche sul telefono; (29/10) «più grande, troppo schiacciato verso l’alto» */
+  .bianco .n-apertura h1 { font-size: clamp(54px, 16.5vw, 90px); line-height: .92; }
 }
 
 /* categorie sul telefono (Francesco 25/10, «da telefono alcune cose non si leggono»): il testo sta SOTTO la foto, sul fondo chiaro → scuro */
@@ -367,3 +370,154 @@ body.bianco {
 .bianco img[src*="pant-cargo-appeso"] { object-position: 50% 85% !important; }
 /* rullino (26/10): il binario si sposta anche di frazioni di pixel (maro.js), su un livello suo così non si ridisegna la pagina */
 .n-nastro.rullino .n-nastro-binario { will-change: transform; }
+
+/* ---------- PRENOTA (29/10, Omar): una felpa, testata con solo logo + preferiti e borsa, «Dentro MARO», borsa con «Prenota» ---------- */
+.prenota .testata { grid-template-columns: 1fr auto; }
+.prenota .azioni { grid-column: 2; grid-row: 1; }
+.bianco .n-felpa-griglia { grid-template-columns: minmax(0, 1fr); max-width: 760px; margin: 0 auto; } /* una foto sola, centrata (29/10) */
+
+/* «Dentro MARO» (come «Dentro Nike»): titolo e frecce tonde in alto, storie in fila da scorrere */
+.dentro { padding: clamp(48px, 6vw, 88px) 0 clamp(40px, 5vw, 72px); background: #fff; color: #111; }
+.dentro-testa { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 0 var(--lato); margin-bottom: 26px; }
+.dentro-testa h2 { font: 500 clamp(28px, 3vw, 40px)/1.1 var(--n-lineare); margin: 0; letter-spacing: -.01em; }
+.dentro-testa p { margin: 10px 0 0; font: 400 clamp(16px, 1.3vw, 19px)/1.5 var(--n-lineare); }
+.dentro-frecce { display: flex; gap: 12px; flex: none; }
+.dentro-frecce button { width: 48px; height: 48px; border: 0; border-radius: 50%; background: #e5e5e5; color: #111; display: grid; place-items: center; cursor: pointer; transition: background .2s, opacity .2s; }
+.dentro-frecce button:hover:not(:disabled) { background: #cfcfcf; }
+.dentro-frecce button:disabled { opacity: .35; cursor: default; }
+.dentro-frecce .n-freccia { width: 20px; height: 10px; }
+.dentro-frecce button:first-child .n-freccia { transform: rotate(180deg); }
+.dentro-fila { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 var(--lato); padding: 0 var(--lato) 6px; scrollbar-width: none; }
+.dentro-fila::-webkit-scrollbar { display: none; }
+.dentro-carta { flex: 0 0 calc((100% - 2 * var(--lato) - 32px) / 3); scroll-snap-align: start; color: inherit; text-decoration: none; }
+.dentro-foto { display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #f1efe9; }
+.dentro-foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.dentro-foto.disegno { background: #000; }
+.dentro-foto.disegno img { object-fit: contain; padding: 4%; box-sizing: border-box; } /* i disegni di Omar sono chiari su fondo nero: interi, mai tagliati */
+.dentro-carta:hover .dentro-foto img { transform: scale(1.02); }
+.dentro-carta h3 { font: 500 clamp(19px, 1.6vw, 24px)/1.3 var(--n-lineare); margin: 18px 0 6px; }
+.dentro-carta p { margin: 0; font: 400 16px/1.5 var(--n-lineare); color: #555; }
+@media (max-width: 959px) { .dentro-carta { flex-basis: calc((100% - 2 * var(--lato) - 16px) / 2); } }
+@media (max-width: 599px) { .dentro-carta { flex-basis: 82%; } .dentro-frecce { display: none; } }
+
+/* borsa: modulo della prenotazione (scorre da solo se lo schermo è basso) */
+.prenota .borsa-fondo { max-height: 78vh; overflow-y: auto; overscroll-behavior: contain; }
+.prenota-nota { margin: 8px 0 14px; font-size: 14px; line-height: 1.5; color: #555; }
+.prenota-form { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px 10px; margin-top: 6px; }
+.prenota-form > * { grid-column: 1 / -1; }
+.prenota-form h3 { margin: 4px 0 0; font-size: 18px; }
+.prenota-form .prenota-cap, .prenota-form .prenota-citta, .prenota-form .prenota-provincia { grid-column: span 2; }
+.prenota-campo label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
+.prenota-campo input, .prenota-campo textarea { width: 100%; box-sizing: border-box; min-height: 46px; padding: 10px 12px; border: 1px solid #bdbdbd; border-radius: 8px; background: #fff; font: inherit; font-size: 16px; }
+.prenota-campo textarea { resize: vertical; }
+.prenota-campo input:focus, .prenota-campo textarea:focus { outline: 2px solid #111; outline-offset: 1px; border-color: #111; }
+.prenota-form .consenso input { flex: none; width: 20px; height: 20px; min-height: 0; margin: 1px 0 0; accent-color: #111; }
+.prenota-esito { margin: 0; font-size: 14px; color: #b00020; }
+.prenota-esito:empty { display: none; }
+.prenota-fatta { padding: 28px 0; }
+.prenota-occhiello { margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #666; }
+.prenota-fatta h3 { margin: 0 0 10px; font: 400 32px/1 var(--n-grazie, 'Anton', sans-serif); text-transform: uppercase; }
+.prenota-fatta p { margin: 0; line-height: 1.55; }
+.dentro-frecce[hidden] { display: none; }
+/* (Francesco 29/10, «un segno che unisce e dentro maro devono essere collegati»): stesso fondo, niente stacco bianco né vuoto in mezzo */
+.dentro { background: var(--b-fondo); padding-top: 4px; }
+.unisce + .dentro { margin-top: 0; }
+/* la felpa: le due scritte sopra allineate alla foto, non ai bordi della pagina */
+.n-felpa .n-testa { max-width: 760px; margin-left: auto; margin-right: auto; }
+/* Drop 002 = i nuovi colori della felpa (29/10): una riga sotto il titolo */
+.n-drop .n-drop-frase { margin: 14px 0 0; max-width: 34ch; font: 400 clamp(16px, 1.3vw, 19px)/1.5 var(--n-lineare); color: #333; }
+/* «Dentro MARO» (29/10): schede larghe, la seconda resta a metà e si vede lo scorrimento; «In arrivo» non cliccabile */
+.dentro-carta.in-arrivo { cursor: default; }
+.in-arrivo .dentro-foto { display: grid; place-items: center; align-content: center; gap: 18px; background: #111; color: #f4f3ef; }
+.in-arrivo .dentro-foto svg { width: 28%; height: auto; opacity: .55; }
+.in-arrivo .dentro-foto span { font: 600 13px/1 var(--n-lineare); letter-spacing: .3em; text-transform: uppercase; opacity: .8; }
+.in-arrivo p { color: #777; }
+/* (Francesco 29/10, «un pelino più piccola»): schede più strette e più basse; la seconda resta appena tagliata, lo scorrimento si vede ancora */
+.dentro-carta { flex-basis: calc((100% - 16px) * .53); } /* 100% = fila senza i margini: due schede non ci stanno, la seconda resta tagliata */
+.dentro-foto { aspect-ratio: 16 / 9; }
+@media (max-width: 959px) { .dentro-carta { flex-basis: 64%; } }
+@media (max-width: 599px) { .dentro-carta { flex-basis: 76%; } }
+
+/* ---------- Drop 001 in home (29/10, Francesco: «sembra una foto messa a caso»): presentazione del capo, foto + scheda breve ---------- */
+.n-felpa { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: center; max-width: 1320px; margin: 0 auto; padding: clamp(28px, 4vw, 64px) var(--lato) clamp(48px, 6vw, 96px); }
+.felpa-foto { position: relative; display: block; overflow: hidden; background: #e9e6df; }
+.felpa-foto img { display: block; width: 100%; height: auto; transition: transform .6s ease; }
+.felpa-foto:hover img { transform: scale(1.02); }
+.felpa-bollo { position: absolute; top: 16px; left: 16px; padding: 9px 13px; border-radius: 999px; background: #111; color: #fff; font: 600 12px/1 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; }
+.felpa-occhiello { display: flex; align-items: center; gap: 14px; margin: 0 0 16px; font: 600 12px/1 var(--n-lineare); letter-spacing: .24em; text-transform: uppercase; color: #666; }
+.felpa-occhiello span + span::before { content: ''; display: inline-block; width: 28px; height: 1px; margin-right: 14px; background: #9a9a9a; vertical-align: middle; }
+.felpa-testo h2 { margin: 0 0 16px; font-size: clamp(44px, 5.4vw, 84px); line-height: .95; }
+.felpa-frase { max-width: 30ch; margin: 0 0 20px; font: 400 clamp(17px, 1.4vw, 20px)/1.5 var(--n-lineare); color: #333; }
+.felpa-colore { display: flex; align-items: center; gap: 10px; margin: 0; font: 400 15px/1.4 var(--n-lineare); color: #444; }
+.felpa-colore i { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .25); }
+.felpa-prezzo { margin: 16px 0 18px; font: 500 24px/1 var(--n-lineare); }
+.felpa-taglie { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; padding: 0; list-style: none; }
+.felpa-taglie li { min-width: 46px; padding: 11px 6px; border: 1px solid #cfcfcf; border-radius: 8px; text-align: center; font: 500 14px/1 var(--n-lineare); }
+.felpa-nota { margin: 12px 0 0; font: 400 13px/1.4 var(--n-lineare); color: #777; }
+@media (max-width: 899px) { .n-felpa { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+
+/* «Un segno che unisce» → «Dentro MARO» (29/10, «devono essere collegati»): la cucitura tratteggiata della foto continua e porta al titolo */
+.unisce + .dentro { position: relative; padding-top: clamp(72px, 7vw, 104px); }
+.unisce + .dentro::before { content: ''; position: absolute; top: 0; left: var(--lato); height: clamp(48px, 5vw, 76px); border-left: 3px dashed #111; }
+.unisce + .dentro::after { content: ''; position: absolute; top: clamp(48px, 5vw, 76px); left: calc(var(--lato) - 3px); width: 9px; height: 9px; border-radius: 50%; background: #111; }
+
+/* pagina del brand (29/10, «collegalo»): la linea dei disegni scende fino al logo di «Fly with your mind» e si accende alla fine */
+.bm + .s-fine { position: relative; }
+.bm + .s-fine::before { content: ''; position: absolute; top: 0; left: 50%; width: 2px; margin-left: -1px; height: var(--filo, 56px); background: var(--bianco); transform-origin: 50% 0; transform: scaleY(0); transition: transform .45s ease; }
+.bm + .s-fine.filo-pieno::before { transform: none; }
+/* (29/10) il filo parte proprio dalla cucitura della foto (66% su PC largo, 50% sotto), scende nel vuoto sotto la foto, gira e arriva al titolo */
+.unisce + .dentro { --cuci-x: 50%; --cuci-su: clamp(36px, 6vw, 88px); padding-top: 92px; }
+@media (min-width: 1100px) { .unisce + .dentro { --cuci-x: 66%; --cuci-su: clamp(40px, 4vw, 72px); } }
+.unisce + .dentro::before { top: calc(-1 * var(--cuci-su)); left: var(--lato); width: calc(var(--cuci-x) - var(--lato) - 1.5px); height: calc(var(--cuci-su) + 30px); border-left: 0; border-right: 3px dashed #111; border-bottom: 3px dashed #111; }
+.unisce + .dentro::after { top: 30px; left: var(--lato); width: 0; height: 40px; border-radius: 0; background: none; border-left: 3px dashed #111; }
+/* (29/10) il filo segue la cucitura trascinata (maro.js mette --cuci-l / --cuci-w); se la cucitura va a sinistra del titolo il filo gira a destra */
+.unisce + .dentro::before { left: var(--cuci-l, var(--lato)); width: var(--cuci-w, calc(var(--cuci-x) - var(--lato) - 1.5px)); }
+.unisce + .dentro.cuci-sx::before { border-right: 0; border-left: 3px dashed #111; }
+/* (Francesco 29/10, «dritta senza curvature»): il filo scende dritto sotto la cucitura della foto e la segue; niente angoli */
+.unisce + .dentro::before { left: var(--cuci-x); width: 0; margin-left: -1.5px; height: calc(var(--cuci-su) + 64px); border: 0; border-left: 3px dashed #111; }
+.unisce + .dentro::after { content: none; }
+/* (Francesco 29/10, scelta: «storie dentro la foto»): niente filo; le storie stanno subito sotto la foto di «Un segno che unisce»,
+   stesso fondo, titolo piccolo, così sono una sezione sola */
+.unisce + .dentro::before, .unisce + .dentro::after { content: none; }
+.prenota .unisce-scena { padding-bottom: 0; }
+@media (min-width: 1100px) { .prenota .unisce { padding-bottom: 0; } }
+.unisce + .dentro { padding-top: clamp(22px, 2.4vw, 34px); }
+.unisce + .dentro .dentro-testa { align-items: center; margin-bottom: 18px; }
+.unisce + .dentro .dentro-testa h2 { font: 600 13px/1.2 var(--n-lineare); letter-spacing: .24em; text-transform: uppercase; color: #111; }
+.bianco .unisce + .dentro .dentro-testa h2 { font-family: var(--n-lineare) !important; font-weight: 600 !important; } /* titolo piccolo: non il carattere dei titoli grandi */
+/* (Francesco 29/10, «di questa grandezza», con Nike come misura): tre schede per riga su PC, foto 3:2; due su tablet, una e un pezzo su telefono */
+.dentro-carta { flex-basis: calc((100% - 32px) / 3); }
+.dentro-foto { aspect-ratio: 3 / 2; }
+@media (max-width: 959px) { .dentro-carta { flex-basis: calc((100% - 16px) / 2); } }
+@media (max-width: 599px) { .dentro-carta { flex-basis: 80%; } }
+/* Drop 002 = le tre colorazioni appese (29/10): foto verticale intera, più alta, senza sfumature ai lati; visibile anche su tablet e telefono */
+.prenota .n-drop-foto { height: clamp(320px, 30vw, 460px); -webkit-mask-image: none; mask-image: none; padding: 20px 0; box-sizing: content-box; }
+@media (max-width: 959px) {
+  .prenota .n-drop-foto { display: block; grid-column: 1 / -1; grid-row: 1; height: auto; padding: 28px 0 8px; }
+  .prenota .n-drop-foto img { width: 100%; max-width: 420px; height: auto; margin: 0 auto; display: block; }
+  .prenota .n-drop-testo { grid-row: 2; }
+}
+
+/* ---------- Drop 002 (29/10, «sembra statica messa a caso»): come il Drop 001 ma specchiato, foto a destra ---------- */
+.n-drop2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(28px, 5vw, 80px); align-items: center; max-width: 1320px; margin: 0 auto; padding: clamp(48px, 6vw, 96px) var(--lato); }
+.drop2-foto { position: relative; grid-column: 2; grid-row: 1; margin: 0; overflow: hidden; background: #d9d6cf; }
+.drop2-foto img { display: block; width: 100%; height: auto; }
+.drop2-testo { grid-column: 1; grid-row: 1; }
+.drop2-testo h2 { margin: 0 0 16px; font-size: clamp(44px, 5.4vw, 84px); line-height: .95; }
+.drop2-colori { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 0 0 22px; padding: 0; list-style: none; font: 400 15px/1.4 var(--n-lineare); color: #444; }
+.drop2-colori li { display: flex; align-items: center; gap: 8px; }
+.drop2-colori i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .25); }
+.drop2-data { margin: 0 0 12px; font: 600 12px/1 var(--n-lineare); letter-spacing: .24em; text-transform: uppercase; color: #666; }
+.drop2-conto { display: grid; grid-template-columns: repeat(4, minmax(0, 76px)); gap: 8px; margin: 0 0 26px; }
+.drop2-conto span { display: grid; justify-items: center; gap: 6px; padding: 12px 4px 10px; border: 1px solid #cfcfcf; border-radius: 8px; font: 500 10px/1 var(--n-lineare); letter-spacing: .16em; text-transform: uppercase; color: #777; }
+.drop2-conto b { font: 400 28px/1 var(--n-lineare); letter-spacing: 0; color: #111; font-variant-numeric: tabular-nums; }
+.drop2-conto[hidden] { display: none; }
+@media (max-width: 899px) {
+  .n-drop2 { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .drop2-foto, .drop2-testo { grid-column: 1; }
+  .drop2-testo { grid-row: 2; }
+}
+/* il conto alla rovescia del Drop 002: riquadri chiari con i numeri neri (il vecchio stile .conto-cifre li faceva neri) */
+.n-drop2 .drop2-conto { display: grid; }
+.n-drop2 .drop2-conto span { display: grid; min-width: 0; padding: 12px 4px 10px; background: #fff; color: #777; border: 1px solid #d6d3cc; border-radius: 8px; }
+.n-drop2 .drop2-conto b { margin: 0; font: 400 32px/1 var(--titoli); color: #111; }

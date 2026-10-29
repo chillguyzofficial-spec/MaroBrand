@@ -267,6 +267,10 @@
   1123,
   1400
  ],
+ "drop002-colori": [
+  1145,
+  1374
+ ],
  "felpa-firma-fronte": [
   1120,
   1400
@@ -298,6 +302,22 @@
  "felpa-verticale-manichino": [
   1120,
   1400
+ ],
+ "fn-fronte": [
+  1312,
+  1199
+ ],
+ "fn-gancio": [
+  1145,
+  1374
+ ],
+ "fn-lato": [
+  1312,
+  1199
+ ],
+ "fn-retro": [
+  1312,
+  1199
  ],
  "lb-galleria": [
   1120,

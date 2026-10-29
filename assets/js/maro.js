@@ -36,6 +36,26 @@
     video.addEventListener('pause', function () { setTimeout(parti, 300); });
   }
 
+  /* ---------- «Dentro MARO» (29/10, come «Dentro Nike»): le frecce spostano di una storia, spente agli estremi ---------- */
+  var dentro = $('.dentro-fila');
+  if (dentro) {
+    var frecce = $$('[data-dentro]');
+    var aggiornaFrecce = function () {
+      $('.dentro-frecce').hidden = dentro.scrollWidth <= dentro.clientWidth + 4; // una storia sola (29/10): niente frecce
+      frecce[0].disabled = dentro.scrollLeft < 4;
+      frecce[1].disabled = dentro.scrollLeft + dentro.clientWidth > dentro.scrollWidth - 4;
+    };
+    frecce.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var carta = $('.dentro-carta', dentro), passo = carta ? carta.getBoundingClientRect().width + 16 : dentro.clientWidth;
+        dentro.scrollBy({ left: passo * Number(b.getAttribute('data-dentro')), behavior: 'smooth' });
+      });
+    });
+    dentro.addEventListener('scroll', aggiornaFrecce, { passive: true });
+    window.addEventListener('resize', aggiornaFrecce);
+    aggiornaFrecce();
+  }
+
   /* ---------- menu su telefono ---------- */
   var menu = $('#menu'), menuBtn = $('.menu-apri');
   function chiudiMenu() {
@@ -302,7 +322,9 @@
     if (btn) btn.setAttribute('aria-label', 'Borsa, ' + n + (n === 1 ? ' articolo' : ' articoli'));
     var box = $('#borsa-righe'), fondo = $('#borsa-fondo');
     if (!righe.length) {
-      box.innerHTML = '<p class="borsa-vuota">La borsa è vuota. Il Drop 001 è ancora disponibile, ma non tutte le taglie.</p>';
+      box.innerHTML = PRENOTA && prenotata
+        ? '<div class="prenota-fatta" role="status"><p class="prenota-occhiello">Prenotazione ' + esc(prenotata.numero) + '</p><h3>Fatto, è prenotata.</h3><p>Omar ti scrive su WhatsApp al <strong>' + esc(prenotata.tel) + '</strong> per confermare taglia, pagamento e spedizione.</p></div>'
+        : '<p class="borsa-vuota">' + (PRENOTA ? 'La borsa è vuota.' : 'La borsa è vuota. Il Drop 001 è ancora disponibile, ma non tutte le taglie.') + '</p>';
       fondo.hidden = true; return;
     }
     var tot = 0, carte = 0;
@@ -319,8 +341,9 @@
         '<div><h3>' + p.nome + '</h3><p>' + p.colore + '</p><p>Taglia ' + r.t + ' · ' + euro(p.prezzo) + '</p>' +
         '<div class="riga-azioni"><button type="button" data-meno="' + k + '" aria-label="Togli uno">−</button><span aria-live="polite">' + r.q + '</span>' +
         '<button type="button" data-piu="' + k + '" aria-label="Aggiungi uno">+</button><button type="button" class="togli" data-togli="' + k + '">Rimuovi</button></div></div></div>';
-    }).join('') + abbina();
+    }).join('') + (PRENOTA ? '' : abbina());
     fondo.hidden = false;
+    if (PRENOTA) { fondo.innerHTML = fondoPrenota(tot); return; }
     // spedizione: 5,90 €, gratuita sopra la soglia (valori di esempio)
     // la carta regalo arriva via email: niente spedizione, non conta per la soglia e non prende lo sconto
     var SOGLIA = 150, SPED = 5.9, manca = SOGLIA - tot, gratis = manca <= 0 || tot === 0;
@@ -343,6 +366,47 @@
     esitoCodice = '';
   }
   var totaleUltimo = null, codiceAperto = false, esitoCodice = '';
+  /* ---------- prenotazione (29/10, Omar): una sola felpa, niente pagamento online ----------
+     In fondo alla borsa «Prenota» apre il modulo: nome, WhatsApp, indirizzo. Il motore salva la prenotazione e scrive a Omar,
+     che ricontatta il cliente su WhatsApp. I campi scritti restano anche se si cambia la quantità (la borsa si ridisegna). */
+  var PRENOTA = document.body.hasAttribute('data-prenota');
+  var modulo = null, datiPren = {}, esitoPren = '', prenotata = null;
+  var CAMPI = [
+    ['nome', 'Nome e cognome', 'text', 'name', true, ''],
+    ['telefono', 'Numero WhatsApp', 'tel', 'tel', true, 'Es. +39 333 1234567'],
+    ['email', 'Email (facoltativa)', 'email', 'email', false, ''],
+    ['via', 'Via e numero civico', 'text', 'address-line1', true, ''],
+    ['cap', 'CAP', 'text', 'postal-code', true, ''],
+    ['citta', 'Città', 'text', 'address-level2', true, ''],
+    ['provincia', 'Provincia', 'text', 'address-level1', false, 'Es. MI'],
+  ];
+  function fondoPrenota(tot) {
+    var testa = '<div class="totale"><span>Totale</span><span>' + euro(tot) + '</span></div>' +
+      '<p class="prenota-nota">Sul sito non paghi niente: Omar ti scrive su WhatsApp per confermare, accordarvi sul pagamento e spedire.</p>';
+    if (!modulo) return testa + '<button type="button" class="btn btn-nero btn-largo" data-prenota-apri>Prenota</button>';
+    var v = function (k) { return esc(datiPren[k] || ''); };
+    return testa + '<form class="prenota-form" novalidate><h3>I tuoi dati</h3>' + CAMPI.map(function (c) {
+      return '<div class="prenota-campo prenota-' + c[0] + '"><label for="pr-' + c[0] + '">' + c[1] + '</label><input id="pr-' + c[0] + '" name="' + c[0] + '" type="' + c[2] + '" autocomplete="' + c[3] + '"' + (c[4] ? ' required' : '') + (c[5] ? ' placeholder="' + c[5] + '"' : '') + ' value="' + v(c[0]) + '"' + (c[0] === 'cap' ? ' inputmode="numeric" maxlength="5"' : c[0] === 'provincia' ? ' maxlength="2"' : '') + '></div>';
+    }).join('') +
+      '<div class="prenota-campo prenota-note"><label for="pr-note">Note per Omar (facoltative)</label><textarea id="pr-note" name="note" rows="2" maxlength="500">' + v('note') + '</textarea></div>' +
+      '<label class="consenso"><input type="checkbox" name="privacy"' + (datiPren.privacy ? ' checked' : '') + '> <span>Ho letto l’<a class="link" href="privacy.html" target="_blank" rel="noopener">informativa privacy</a>: i miei dati servono a Omar per ricontattarmi e spedire.</span></label>' +
+      '<p class="prenota-esito" role="alert">' + esc(esitoPren) + '</p>' +
+      '<button type="submit" class="btn btn-nero btn-largo">Conferma la prenotazione</button></form>';
+  }
+  function inviaPrenota(f) {
+    var d = datiPren, es = function (t) { esitoPren = t; var e = $('.prenota-esito', f); if (e) e.textContent = t; };
+    var manca = CAMPI.filter(function (c) { return c[4] && !String(d[c[0]] || '').trim(); })[0];
+    if (manca) { es('Manca: ' + manca[1].toLowerCase() + '.'); $('#pr-' + manca[0]).focus(); return; }
+    if (!d.privacy) return es('Per prenotare serve la spunta sull’informativa privacy.');
+    var b = $('button[type="submit"]', f); b.disabled = true; b.textContent = 'Invio la prenotazione…'; es('');
+    api('/api/prenota', { righe: righe.map(function (r) { return { id: r.id, t: r.t, q: r.q }; }), nome: d.nome, telefono: d.telefono, email: d.email || '',
+      indirizzo: { via: d.via, cap: d.cap, citta: d.citta, provincia: d.provincia || '' }, note: d.note || '', privacy: true }).then(function (x) {
+      if (!x.ok) { b.disabled = false; b.textContent = 'Conferma la prenotazione'; return es(x.errore || 'La prenotazione non è partita: riprova tra un minuto.'); }
+      prenotata = { numero: x.numero, tel: d.telefono };
+      righe = []; salva(righe); modulo = null; esitoPren = ''; datiPren = { nome: d.nome, telefono: d.telefono, email: d.email, via: d.via, cap: d.cap, citta: d.citta, provincia: d.provincia };
+      disegna(); $('.borsa-testa button', borsa).focus();
+    });
+  }
   // campo "Hai un codice?": lo controlla il motore (esiste, non è usato, non è annullato)
   function provaCodice(testo) {
     var t = String(testo || '').trim().toUpperCase().replace(/\s+/g, '');
@@ -406,12 +470,20 @@
         return;
       }
       else if (t.hasAttribute('data-paga')) return paga(t);
+      else if (t.hasAttribute('data-prenota-apri')) { modulo = true; disegna(); $('#pr-nome').focus(); return; }
       else if (t.hasAttribute('data-togli-codice')) { togliK('maro-codice'); codiceAperto = true; disegna(); var ic = $('#borsa-codice-in'); if (ic) ic.focus(); return; }
       else return;
       salva(righe); disegna();
       if (!righe.length) $('.borsa-testa button', borsa).focus();
     });
+    ['input', 'change'].forEach(function (ev) {
+      borsa.addEventListener(ev, function (e) {
+        var c = e.target; if (!c.form || !c.form.classList.contains('prenota-form')) return;
+        datiPren[c.name] = c.type === 'checkbox' ? c.checked : c.value;
+      });
+    });
     borsa.addEventListener('submit', function (e) {
+      if (e.target.classList.contains('prenota-form')) { e.preventDefault(); return inviaPrenota(e.target); }
       if (!e.target.classList.contains('borsa-codice-form')) return;
       e.preventDefault(); provaCodice($('input', e.target).value);
       var ic = $('#borsa-codice-in'); if (ic) ic.focus();
@@ -1066,14 +1138,23 @@
   var filo = $('.bn-filo');
   if (filo) {
     var luce = $('.bn-filo-luce', filo), sezFilo = filo.parentNode, punti = $$('.bn-punto', sezFilo), giroFilo = 0;
+    // (29/10) se subito dopo i disegni c'è la chiusura, la linea scende fino al suo logo e si accende quando quella dei disegni è piena
+    var fine = sezFilo.nextElementSibling, logoFine = fine && fine.classList.contains('s-fine') ? $('.s-fine-logo', fine) : null;
+    var allunga = function (pieno) {
+      if (!logoFine) return;
+      fine.style.setProperty('--filo', Math.max(0, logoFine.getBoundingClientRect().top - fine.getBoundingClientRect().top - 8) + 'px');
+      fine.classList.toggle('filo-pieno', pieno);
+    };
     var disegna = function () {
       giroFilo = 0;
       var r = sezFilo.getBoundingClientRect(), meta = window.innerHeight * 0.6;
       var p = Math.max(0, Math.min(1, (meta - r.top) / r.height));
+      if (p > 0.99) p = 1; // negli ultimi pixel la linea si chiude del tutto (sotto continua fino al logo)
       luce.style.transform = 'scaleY(' + p + ')';
       punti.forEach(function (pt) { pt.classList.toggle('acceso', pt.getBoundingClientRect().top < meta); });
+      allunga(p === 1);
     };
-    if (calma) { luce.style.transform = 'none'; punti.forEach(function (pt) { pt.classList.add('acceso'); }); }
+    if (calma) { luce.style.transform = 'none'; punti.forEach(function (pt) { pt.classList.add('acceso'); }); allunga(true); }
     else {
       var chiedi = function () { if (!giroFilo) giroFilo = requestAnimationFrame(disegna); };
       window.addEventListener('scroll', chiedi, { passive: true });
