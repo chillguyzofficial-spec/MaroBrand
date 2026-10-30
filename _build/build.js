@@ -606,8 +606,8 @@ ${STORIE.map(([id, alt, titolo, frase, link]) => link ? `    <a class="dentro-ca
 const COLORI_DROP2 = [['Nero', '#111'], ['Marrone', '#4a3020'], ['Grigio chiaro', '#cfccc6']];
 function dropDue() {
   return `<section class="n-drop2" id="drop" aria-labelledby="n-drop-titolo">
-  <!-- 30/10 sera: davanti e schiena delle tre colorazioni si danno il cambio come la felpa del Drop 001 (stesso JS e CSS di .felpa-media) -->
-  <figure class="drop2-foto felpa-media"><div class="felpa-foto">${img('drop002-colori', 'Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro', { dove: 'home drop', sizes: '(min-width: 900px) 48vw, 100vw' })}${MISURE['drop002-retro'] ? img('drop002-retro', 'Le tre Felpe Verticali MARO, nera, marrone e grigio chiaro, appese di spalle: su ognuna la firma MARO verticale ricamata', { cls: 'felpa-foto-2', dove: 'home drop retro', sizes: '(min-width: 900px) 48vw, 100vw' }) : ''}<span class="felpa-bollo">In arrivo</span></div>${MISURE['drop002-retro'] ? '<div class="felpa-punti"><button type="button" aria-pressed="true" aria-label="Foto davanti"></button><button type="button" aria-pressed="false" aria-label="Foto della schiena"></button></div>' : ''}</figure>
+  <!-- 30/10 sera: provata la schiena delle tre colorazioni in alternanza (Francesco: «non mi piace», tolta; foto in design-source) -->
+  <figure class="drop2-foto">${img('drop002-colori', 'Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro', { dove: 'home drop', sizes: '(min-width: 900px) 48vw, 100vw' })}<span class="felpa-bollo">In arrivo</span></figure>
   <div class="drop2-testo conto" data-drop="2026-11-14T18:00:00+01:00">
     <p class="felpa-occhiello"><span>Prossimo drop</span><span>Nuovi colori</span></p>
     <h2 id="n-drop-titolo">Drop 002</h2>
