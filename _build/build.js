@@ -848,7 +848,7 @@ ${p.taglie.map(t => { const fin = !PRENOTA && (p.esaurite || []).includes(t); re
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
 ${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>\n'}    </fieldset>
 ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
-      <!-- 31/10 (Francesco: «le risposte sono affidabili? non chiede nemmeno l'altezza»): altezza, peso e vestibilità
+      <!-- 30/10 sera (Francesco: «le risposte sono affidabili? non chiede nemmeno l'altezza»): altezza, peso e vestibilità
            confrontati con le misure del capo nella guida alle taglie (calcolo in maro.js); la taglia abituale è facoltativa, fa da controllo -->
       <p class="trova-intro">Un tocco per risposta: le confrontiamo con le misure di questo capo.</p>
       <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>

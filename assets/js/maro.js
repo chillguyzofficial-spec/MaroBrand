@@ -577,7 +577,7 @@
       es.className = 'avvisami-esito'; es.textContent = 'Fatto: ti scriviamo appena torna. (Anteprima: nessuna email inviata.)'; inp.value = '';
     });
 
-    // trova la tua taglia (31/10, Francesco: «le risposte sono affidabili? deve chiedere l'altezza»): come i misuratori dei negozi grandi.
+    // trova la tua taglia (30/10 sera, Francesco: «le risposte sono affidabili? deve chiedere l'altezza»): come i misuratori dei negozi grandi.
     // Dal peso e dall'altezza si stima il giro petto, poi si sceglie la taglia più piccola che lascia l'agio voluto rispetto al giro
     // petto del capo (torace della guida × 2); la lunghezza si controlla sull'altezza. La taglia abituale (facoltativa) fa da controllo.
     // Le misure arrivano dalla guida alle taglie della pagina: quando ci saranno quelle vere di Omar, il calcolo si aggiorna da solo.
