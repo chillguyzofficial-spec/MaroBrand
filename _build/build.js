@@ -850,7 +850,7 @@ ${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="fals
 ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
       <!-- 31/10 (Francesco: «le risposte sono affidabili? non chiede nemmeno l'altezza»): altezza, peso e vestibilità
            confrontati con le misure del capo nella guida alle taglie (calcolo in maro.js); la taglia abituale è facoltativa, fa da controllo -->
-      <p class="trova-intro">Tre risposte, un tocco ciascuna: le confrontiamo con le misure di questo capo.</p>
+      <p class="trova-intro">Un tocco per risposta: le confrontiamo con le misure di questo capo.</p>
       <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
         ${[['160', 'Meno di 165'], ['170', '165–174'], ['180', '175–184'], ['190', '185–194'], ['198', '195 o più']].map(([v, t]) => `<button type="button" data-v="${v}">${t} cm</button>`).join('')}</div></div>
       <div class="trova-domanda" data-chiave="peso"><p>Quanto pesi?</p><div>
