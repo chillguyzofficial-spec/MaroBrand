@@ -19,10 +19,10 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=5a49fa7e">
+<link rel="stylesheet" href="assets/css/maro.css?v=19a2f33a">
 <link rel="stylesheet" href="assets/css/maro-nuovo.css?v=536cee01">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=09470db8">
-<script defer src="assets/js/maro.js?v=46314ccd"></script>
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=222a9930">
+<script defer src="assets/js/maro.js?v=b3f03eff"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="prenota nuovo bianco" data-popup data-prenota>
@@ -95,15 +95,16 @@
       <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
     </fieldset>
     <div class="trova" id="trova" hidden data-taglie="XS,S,M,L,XL,XXL" data-tipo="felpa">
-      <p class="trova-intro">Poche domande, un tocco ciascuna.</p>
-      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito?</p><div>
-        <button type="button" data-v="0">XS</button><button type="button" data-v="1">S</button><button type="button" data-v="2">M</button><button type="button" data-v="3">L</button><button type="button" data-v="4">XL</button><button type="button" data-v="5">XXL</button><button type="button" data-v="-1">Non lo so</button></div></div>
-      <div class="trova-domanda" data-chiave="altezza" hidden><p>Quanto sei alto?</p><div>
-        <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
-      <div class="trova-domanda" data-chiave="corpo" hidden><p>La tua corporatura?</p><div>
-        <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
-      <div class="trova-domanda" data-chiave="fit" hidden><p>Come ti piace portarla?</p><div>
+      <p class="trova-intro">Tre risposte, un tocco ciascuna: le confrontiamo con le misure di questo capo.</p>
+      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+        <button type="button" data-v="160">Meno di 165 cm</button><button type="button" data-v="170">165–174 cm</button><button type="button" data-v="180">175–184 cm</button><button type="button" data-v="190">185–194 cm</button><button type="button" data-v="198">195 o più cm</button></div></div>
+      <div class="trova-domanda" data-chiave="peso"><p>Quanto pesi?</p><div>
+        <button type="button" data-v="55">Meno di 60 kg</button><button type="button" data-v="65">60–69 kg</button><button type="button" data-v="75">70–79 kg</button><button type="button" data-v="85">80–89 kg</button><button type="button" data-v="95">90–99 kg</button><button type="button" data-v="105">100 o più kg</button></div>
+        <p class="trova-nota">Serve solo per il calcolo: non lo salviamo e non lo inviamo.</p></div>
+      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
         <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
+      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito? <span class="trova-facolt">facoltativa</span></p><div>
+        <button type="button" data-v="0">XS</button><button type="button" data-v="1">S</button><button type="button" data-v="2">M</button><button type="button" data-v="3">L</button><button type="button" data-v="4">XL</button><button type="button" data-v="5">XXL</button></div></div>
       <div class="trova-esito" role="status" aria-live="polite"></div>
     </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>

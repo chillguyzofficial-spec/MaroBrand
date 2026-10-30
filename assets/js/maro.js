@@ -577,52 +577,61 @@
       es.className = 'avvisami-esito'; es.textContent = 'Fatto: ti scriviamo appena torna. (Anteprima: nessuna email inviata.)'; inp.value = '';
     });
 
-    // trova la tua taglia (30/10): prima la taglia che porti di solito (il dato più sicuro);
-    // solo con «Non lo so» chiede altezza e corporatura. Una domanda per volta, poi la taglia con il perché e le misure del capo.
+    // trova la tua taglia (31/10, Francesco: «le risposte sono affidabili? deve chiedere l'altezza»): come i misuratori dei negozi grandi.
+    // Dal peso e dall'altezza si stima il giro petto, poi si sceglie la taglia più piccola che lascia l'agio voluto rispetto al giro
+    // petto del capo (torace della guida × 2); la lunghezza si controlla sull'altezza. La taglia abituale (facoltativa) fa da controllo.
+    // Le misure arrivano dalla guida alle taglie della pagina: quando ci saranno quelle vere di Omar, il calcolo si aggiorna da solo.
     var trova = $('.trova', prod), trovaBtn = $('.trova-apri', prod);
     if (trova) {
       var risposte = {}, taglie = trova.getAttribute('data-taglie').split(',');
       var scala = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-      var domanda = function (k) { return $('.trova-domanda[data-chiave="' + k + '"]', trova); };
-      var azzera = function (k) { delete risposte[k]; $$('button', domanda(k)).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); };
       trovaBtn.addEventListener('click', function () {
         trova.hidden = !trova.hidden; trovaBtn.setAttribute('aria-expanded', String(!trova.hidden));
       });
-      var misure = function (t) { // dalla guida alle taglie della pagina, se c'è
-        var riga = $$('#guida-taglie tbody tr', prod).filter(function (r) { return r.cells[0].textContent === t; })[0];
-        return riga ? ' Capo steso: torace ' + riga.cells[1].textContent + ' cm, lunghezza ' + riga.cells[2].textContent + ' cm.' : '';
+      // agio sul petto (cm) per Aderente / Giusta / Larga: la felpa è comoda di suo, polo e il resto regolari
+      var AGIO = trova.getAttribute('data-tipo') === 'felpa' ? { '-1': 10, '0': 18, '1': 26 } : { '-1': 6, '0': 12, '1': 18 };
+      var capi = function () { // [{t, giro, lung}] dalla guida; senza guida (pantaloni) una scala di riserva
+        var righe = $$('#guida-taglie tbody tr', prod).map(function (r) {
+          return { t: r.cells[0].textContent.trim(), giro: 2 * parseFloat(r.cells[1].textContent), lung: parseFloat(r.cells[2].textContent) };
+        }).filter(function (c) { return taglie.indexOf(c.t) >= 0 && c.giro > 0; });
+        return righe.length ? righe : taglie.map(function (t) { var i = scala.indexOf(t); return { t: t, giro: 104 + 6 * i, lung: 68 + 2 * i }; });
       };
+      var vestibilita = function (a) { return a < 8 ? 'aderente' : a < 15 ? 'regolare' : a < 23 ? 'comoda' : 'larga'; };
       var calcola = function () {
-        var es = $('.trova-esito', trova), so = risposte.solita >= 0;
-        var pronte = 'fit' in risposte && (so || ('altezza' in risposte && 'corpo' in risposte));
-        if (!pronte) { es.innerHTML = ''; return; }
-        var k = so ? risposte.solita + risposte.fit : 1 + risposte.altezza + risposte.corpo + risposte.fit;
-        var t = scala[Math.max(0, Math.min(scala.length - 1, k))];
-        if (taglie.indexOf(t) < 0) t = scala.indexOf(t) < scala.indexOf(taglie[0]) ? taglie[0] : taglie[taglie.length - 1];
-        var sotto = so && scala.indexOf(t) < risposte.solita, sopra = so && scala.indexOf(t) > risposte.solita;
-        var perche = !so ? 'Calcolata su altezza, corporatura e come ti piace portarla.'
-          : k > scala.indexOf(t) ? 'È la più grande che c’è: ' + (risposte.solita === scala.indexOf(t) ? 'non c’è una taglia sopra la tua.' : 'ti sta comoda.')
-          : k < scala.indexOf(t) ? 'È la più piccola che c’è: ' + (risposte.solita === scala.indexOf(t) ? 'non c’è una taglia sotto la tua.' : 'ti sta aderente.')
-          : sotto ? 'Una sotto la tua solita, per portarla più aderente.'
-          : sopra ? 'Una sopra la tua solita, per portarla larga.'
-          : trova.getAttribute('data-tipo') === 'felpa' ? 'La tua solita: la vestibilità è già comoda, con la spalla un po’ scesa.' : 'La tua solita: la vestibilità è regolare.';
-        es.innerHTML = '<p class="trova-tag">La tua taglia</p><p class="trova-lettera">' + t + '</p><p class="trova-perche">' + perche + misure(t) + '</p>'
-          + '<button type="button" class="btn btn-contorno-nero" data-usa="' + t + '">Scegli la ' + t + '</button>';
+        var es = $('.trova-esito', trova);
+        if (!('altezza' in risposte && 'peso' in risposte && 'fit' in risposte)) { es.innerHTML = ''; return; }
+        var h = risposte.altezza, w = risposte.peso, agio = AGIO[risposte.fit], lista = capi();
+        var petto = Math.round(0.55 * w + 0.2 * h + 19); // stima del giro petto da peso e altezza (indicativa)
+        var i = 0; while (i < lista.length - 1 && lista[i].giro - petto < agio) i++;
+        var stretta = lista[i].giro - petto < agio - 4;
+        // lunghezza: circa il 40% dell'altezza; se è corta di più di 3 cm si sale di una taglia, ma solo se non diventa enorme
+        var ideale = Math.round(h * 0.4), nota = '';
+        if (lista[i].lung < ideale - 3 && risposte.fit !== -1 && lista[i + 1] && lista[i + 1].giro - petto <= agio + 10) { i++; nota = ' Per la tua altezza abbiamo preso una taglia sopra, così è lunga abbastanza.'; }
+        var c = lista[i], margine = c.giro - petto;
+        if (c.lung < ideale - 3) nota = nota ? ' Abbiamo preso una taglia sopra per la lunghezza, ma per la tua altezza potrebbe restare un po’ corta.'
+          : ' Per la tua altezza potrebbe risultare un po’ corta.';
+        var perche = 'Petto stimato circa ' + petto + ' cm: la ' + c.t + ' ha ' + c.giro + ' cm di giro petto, quindi '
+          + (stretta ? 'anche la più grande ti starà aderente.' : 'circa ' + margine + ' cm di agio, una vestibilità ' + vestibilita(margine) + '.'
+            + (i === 0 && margine > agio + 4 ? ' È la taglia più piccola che c’è.' : ''))
+          + ' Lunghezza ' + c.lung + ' cm.' + nota;
+        if (risposte.solita >= 0) {
+          var d = scala.indexOf(c.t) - risposte.solita, sol = scala[risposte.solita];
+          perche += d === 0 ? ' È anche la taglia che porti di solito.'
+            : Math.abs(d) === 1 ? ' Di solito porti la ' + sol + ': con le misure di questo capo ti consigliamo la ' + c.t + '; la ' + sol + ' ti starebbe ' + (d > 0 ? 'più aderente.' : 'più larga.')
+            : ' È lontana dalla taglia che porti di solito (' + sol + '): prima di prenotare guarda la guida alle taglie o chiedi a Omar su WhatsApp.';
+        }
+        es.innerHTML = '<p class="trova-tag">La tua taglia</p><p class="trova-lettera">' + c.t + '</p><p class="trova-perche">' + perche + '</p>'
+          + '<button type="button" class="btn btn-contorno-nero" data-usa="' + c.t + '">Scegli la ' + c.t + '</button>'
+          + '<p class="trova-nota">Stima indicativa: il petto è calcolato da altezza e peso, le misure sono quelle della guida alle taglie.</p>';
       };
       $$('.trova-domanda', trova).forEach(function (d) {
         $$('button', d).forEach(function (b) {
           b.addEventListener('click', function () {
-            var chiave = d.getAttribute('data-chiave');
+            var chiave = d.getAttribute('data-chiave'), gia = b.getAttribute('aria-pressed') === 'true';
+            // la taglia abituale è facoltativa: ritoccandola si toglie
+            if (chiave === 'solita' && gia) { b.setAttribute('aria-pressed', 'false'); delete risposte.solita; calcola(); return; }
             $$('button', d).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
             risposte[chiave] = Number(b.getAttribute('data-v'));
-            // una domanda per volta: «Non lo so» apre altezza e corporatura, una taglia le chiude
-            if (chiave === 'solita') {
-              var so = risposte.solita >= 0;
-              domanda('altezza').hidden = so; if (so) { azzera('altezza'); azzera('corpo'); domanda('corpo').hidden = true; }
-              domanda('fit').hidden = !so && !('corpo' in risposte);
-            }
-            if (chiave === 'altezza') domanda('corpo').hidden = false;
-            if (chiave === 'corpo') domanda('fit').hidden = false;
             calcola();
           });
         });

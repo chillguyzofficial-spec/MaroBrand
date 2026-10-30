@@ -543,3 +543,13 @@ body.bianco {
 .n-drop2 .drop2-conto { display: grid; }
 .n-drop2 .drop2-conto span { display: grid; min-width: 0; padding: 12px 4px 10px; background: #fff; color: #777; border: 1px solid #d6d3cc; border-radius: 8px; }
 .n-drop2 .drop2-conto b { margin: 0; font: 400 32px/1 var(--titoli); color: #111; }
+/* (Francesco 30/10 sera) apertura del brand sul telefono come la home: foto verticale intera (933×1400, dal <picture>),
+   scritta bianca in alto sulla foto con un velo scuro dall'alto; prima la foto era bassa e il titolo stava sotto */
+@media (max-width: 599px) {
+  .bianco .s-unico { display: block; position: relative; aspect-ratio: auto; height: auto; min-height: 0; background: #111; overflow: hidden; }
+  .bianco .s-unico .s-apertura-foto { position: static; display: block; width: 100%; height: auto; aspect-ratio: 933 / 1400; object-fit: cover; }
+  .bianco .s-unico::after { display: block; content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.38) 28%, rgba(0,0,0,0) 52%); }
+  .bianco .s-unico .s-apertura-testo { position: absolute; z-index: 1; top: clamp(22px, 7vw, 40px); bottom: auto; left: 0; right: 0; transform: none; padding: 0 var(--lato); color: #fff; }
+  .bianco .s-unico .n-occhiello, .bianco .s-unico h1 { color: #fff; }
+  .bianco .s-unico h1 { font-size: clamp(54px, 16.5vw, 90px); line-height: .92; text-shadow: 0 2px 18px rgba(0,0,0,.45); }
+}

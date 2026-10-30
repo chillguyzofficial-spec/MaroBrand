@@ -29,6 +29,7 @@ const LAVORI = [
   // nel Drop 002 le tre colorazioni appese (nera, marrone, grigio chiaro) al posto del tennista
   // 30/10: apertura di «La nostra storia» (al posto del ragazzo sopra Napoli): i fogli con i disegni sul tavolo
   { out: 'brand-storia-disegni', src: 'brand-storia-2026-10-30/storia-disegni-tavolo.png', max: 2073, q: 0.86 },
+  { out: 'brand-storia-tel', src: 'brand-storia-2026-10-30/storia-disegni-tavolo-verticale.png', q: 0.86 }, // la stessa scena in verticale, per il telefono
   { out: 'fn-gancio', src: 'felpa-nera-2026-10-29/felpa-nera-gancio.png', q: 0.86 },
   { out: 'fn-gancio-retro', src: 'felpa-nera-2026-10-29/felpa-nera-gancio-retro.png', q: 0.86 }, // 30/10: in home si alterna con fn-gancio
   { out: 'fn-fronte', src: 'felpa-nera-2026-10-29/felpa-nera-fronte-bianco.png', q: 0.86 },

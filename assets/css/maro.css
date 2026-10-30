@@ -477,6 +477,8 @@ details > p { margin: 0 0 20px; }
 .trova { background: var(--grigio); border-radius: 10px; padding: 18px; margin: -8px 0 20px; }
 .trova[hidden] { display: none; }
 .trova-intro { margin: 0 0 14px; font-size: 14px; color: #5f5b53; }
+.trova .trova-nota { grid-column: 1 / -1; margin: 8px 0 0; font-size: 12.5px; font-weight: 400; line-height: 1.45; color: #6b675f; }
+.trova-facolt { margin-left: 6px; font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: #8a857c; }
 .trova-domanda[hidden] { display: none; }
 .trova-domanda + .trova-domanda { margin-top: 16px; }
 .trova-domanda p { margin: 0 0 8px; font-weight: 600; }

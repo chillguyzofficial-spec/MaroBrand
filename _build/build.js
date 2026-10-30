@@ -848,15 +848,18 @@ ${p.taglie.map(t => { const fin = !PRENOTA && (p.esaurite || []).includes(t); re
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
 ${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>\n'}    </fieldset>
 ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
-      <p class="trova-intro">Poche domande, un tocco ciascuna.</p>
-      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito?</p><div>
-        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((t, i) => `<button type="button" data-v="${i}">${t}</button>`).join('')}<button type="button" data-v="-1">Non lo so</button></div></div>
-      <div class="trova-domanda" data-chiave="altezza" hidden><p>Quanto sei alto?</p><div>
-        <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
-      <div class="trova-domanda" data-chiave="corpo" hidden><p>La tua corporatura?</p><div>
-        <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
-      <div class="trova-domanda" data-chiave="fit" hidden><p>Come ti piace portarla?</p><div>
+      <!-- 31/10 (Francesco: «le risposte sono affidabili? non chiede nemmeno l'altezza»): altezza, peso e vestibilità
+           confrontati con le misure del capo nella guida alle taglie (calcolo in maro.js); la taglia abituale è facoltativa, fa da controllo -->
+      <p class="trova-intro">Tre risposte, un tocco ciascuna: le confrontiamo con le misure di questo capo.</p>
+      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+        ${[['160', 'Meno di 165'], ['170', '165–174'], ['180', '175–184'], ['190', '185–194'], ['198', '195 o più']].map(([v, t]) => `<button type="button" data-v="${v}">${t} cm</button>`).join('')}</div></div>
+      <div class="trova-domanda" data-chiave="peso"><p>Quanto pesi?</p><div>
+        ${[['55', 'Meno di 60'], ['65', '60–69'], ['75', '70–79'], ['85', '80–89'], ['95', '90–99'], ['105', '100 o più']].map(([v, t]) => `<button type="button" data-v="${v}">${t} kg</button>`).join('')}</div>
+        <p class="trova-nota">Serve solo per il calcolo: non lo salviamo e non lo inviamo.</p></div>
+      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
         <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
+      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito? <span class="trova-facolt">facoltativa</span></p><div>
+        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((t, i) => `<button type="button" data-v="${i}">${t}</button>`).join('')}</div></div>
       <div class="trova-esito" role="status" aria-live="polite"></div>
     </div>
 `}    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
@@ -1524,7 +1527,9 @@ function storiaNuova() {
 <section class="s-apertura s-unico" aria-labelledby="s-titolo">
   <!-- 30/10 (Francesco): al posto del ragazzo sopra Napoli, i fogli con i disegni di MARO sul tavolo -->
   <span class="s-unico-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola('brand-storia-disegni') || urlFoto('brand-storia-disegni')}')"></span>
-  ${img('brand-storia-disegni', 'Fogli con i disegni a matita di MARO su un tavolo scuro: la M con le ali, la firma MARO verticale e le misure della felpa, accanto una matita, un righello e la manica a righe della felpa', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}
+  <!-- 30/10 sera: sul telefono la stessa scena in verticale, a tutto schermo con la scritta sopra (come l'apertura della home);
+       <picture>: il telefono scarica solo la verticale, il PC solo l'orizzontale -->
+  <picture>${MISURE['brand-storia-tel'] ? (usa('brand-storia-tel', 'brand apertura telefono'), `<source media="(max-width: 599px)" srcset="${urlPiccola('brand-storia-tel')} 640w, ${urlFoto('brand-storia-tel')} ${MISURE['brand-storia-tel'][0]}w" sizes="100vw" width="${MISURE['brand-storia-tel'][0]}" height="${MISURE['brand-storia-tel'][1]}">`) : ''}${img('brand-storia-disegni', 'Fogli con i disegni a matita di MARO su un tavolo scuro: la M con le ali, la firma MARO verticale e le misure della felpa, accanto una matita, un righello e la manica a righe della felpa', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}</picture>
   <div class="s-apertura-testo">
     <p class="n-occhiello">Il brand</p>
     <h1 id="s-titolo">La nostra<br>storia</h1>
