@@ -577,27 +577,53 @@
       es.className = 'avvisami-esito'; es.textContent = 'Fatto: ti scriviamo appena torna. (Anteprima: nessuna email inviata.)'; inp.value = '';
     });
 
-    // trova la tua taglia: tre domande a un tocco
+    // trova la tua taglia (30/10): prima la taglia che porti di solito (il dato più sicuro);
+    // solo con «Non lo so» chiede altezza e corporatura. Una domanda per volta, poi la taglia con il perché e le misure del capo.
     var trova = $('.trova', prod), trovaBtn = $('.trova-apri', prod);
     if (trova) {
       var risposte = {}, taglie = trova.getAttribute('data-taglie').split(',');
+      var scala = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      var domanda = function (k) { return $('.trova-domanda[data-chiave="' + k + '"]', trova); };
+      var azzera = function (k) { delete risposte[k]; $$('button', domanda(k)).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); };
       trovaBtn.addEventListener('click', function () {
         trova.hidden = !trova.hidden; trovaBtn.setAttribute('aria-expanded', String(!trova.hidden));
       });
+      var misure = function (t) { // dalla guida alle taglie della pagina, se c'è
+        var riga = $$('#guida-taglie tbody tr', prod).filter(function (r) { return r.cells[0].textContent === t; })[0];
+        return riga ? ' Capo steso: torace ' + riga.cells[1].textContent + ' cm, lunghezza ' + riga.cells[2].textContent + ' cm.' : '';
+      };
+      var calcola = function () {
+        var es = $('.trova-esito', trova), so = risposte.solita >= 0;
+        var pronte = 'fit' in risposte && (so || ('altezza' in risposte && 'corpo' in risposte));
+        if (!pronte) { es.innerHTML = ''; return; }
+        var k = so ? risposte.solita + risposte.fit : 1 + risposte.altezza + risposte.corpo + risposte.fit;
+        var t = scala[Math.max(0, Math.min(scala.length - 1, k))];
+        if (taglie.indexOf(t) < 0) t = scala.indexOf(t) < scala.indexOf(taglie[0]) ? taglie[0] : taglie[taglie.length - 1];
+        var sotto = so && scala.indexOf(t) < risposte.solita, sopra = so && scala.indexOf(t) > risposte.solita;
+        var perche = !so ? 'Calcolata su altezza, corporatura e come ti piace portarla.'
+          : k > scala.indexOf(t) ? 'È la più grande che c’è: ' + (risposte.solita === scala.indexOf(t) ? 'non c’è una taglia sopra la tua.' : 'ti sta comoda.')
+          : k < scala.indexOf(t) ? 'È la più piccola che c’è: ' + (risposte.solita === scala.indexOf(t) ? 'non c’è una taglia sotto la tua.' : 'ti sta aderente.')
+          : sotto ? 'Una sotto la tua solita, per portarla più aderente.'
+          : sopra ? 'Una sopra la tua solita, per portarla larga.'
+          : trova.getAttribute('data-tipo') === 'felpa' ? 'La tua solita: la vestibilità è già comoda, con la spalla un po’ scesa.' : 'La tua solita: la vestibilità è regolare.';
+        es.innerHTML = '<p class="trova-tag">La tua taglia</p><p class="trova-lettera">' + t + '</p><p class="trova-perche">' + perche + misure(t) + '</p>'
+          + '<button type="button" class="btn btn-contorno-nero" data-usa="' + t + '">Scegli la ' + t + '</button>';
+      };
       $$('.trova-domanda', trova).forEach(function (d) {
         $$('button', d).forEach(function (b) {
           b.addEventListener('click', function () {
+            var chiave = d.getAttribute('data-chiave');
             $$('button', d).forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-            risposte[d.getAttribute('data-chiave')] = Number(b.getAttribute('data-v'));
-            if (!('altezza' in risposte && 'corpo' in risposte && 'fit' in risposte)) return;
-            // indice sulla scala XS..XXL: 1=S, 2=M, 3=L, 4=XL
-            var scala = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-            var k = 1 + risposte.altezza + risposte.corpo + risposte.fit;
-            k = Math.max(0, Math.min(scala.length - 1, k));
-            var t = scala[k];
-            if (taglie.indexOf(t) < 0) t = k < 2 ? taglie[0] : taglie[taglie.length - 1];
-            var es = $('.trova-esito', trova);
-            es.innerHTML = 'Ti consigliamo la <strong>' + t + '</strong>. <button type="button" class="link" data-usa="' + t + '">Seleziona ' + t + '</button>';
+            risposte[chiave] = Number(b.getAttribute('data-v'));
+            // una domanda per volta: «Non lo so» apre altezza e corporatura, una taglia le chiude
+            if (chiave === 'solita') {
+              var so = risposte.solita >= 0;
+              domanda('altezza').hidden = so; if (so) { azzera('altezza'); azzera('corpo'); domanda('corpo').hidden = true; }
+              domanda('fit').hidden = !so && !('corpo' in risposte);
+            }
+            if (chiave === 'altezza') domanda('corpo').hidden = false;
+            if (chiave === 'corpo') domanda('fit').hidden = false;
+            calcola();
           });
         });
       });
@@ -890,6 +916,39 @@
   }
 
   var calma = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // la felpa in home (30/10): davanti e schiena si danno il cambio da sole ogni 5 s; col mouse sopra si vede la schiena,
+  // i puntini le scelgono a mano (e il giro riparte da lì). Con «riduci movimento» niente cambio automatico.
+  // 30/10 sera: lo stesso per il Drop 002 (le tre colorazioni davanti e di schiena): un giro per ogni riquadro
+  $$('.felpa-media').forEach(function (felpaM) {
+    if (!$('.felpa-foto-2', felpaM)) return;
+    var puntiF = $$('.felpa-punti button', felpaM), giroF = null;
+    var mostraF = function (retro) {
+      felpaM.classList.toggle('retro', retro);
+      puntiF.forEach(function (b, i) { b.setAttribute('aria-pressed', String(i === (retro ? 1 : 0))); });
+    };
+    var avviaF = function () {
+      clearInterval(giroF); if (calma) return;
+      giroF = setInterval(function () { if (!document.hidden) mostraF(!felpaM.classList.contains('retro')); }, 5000);
+    };
+    var fotoF = $('.felpa-foto', felpaM);
+    fotoF.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'mouse') return; clearInterval(giroF); mostraF(true); });
+    fotoF.addEventListener('pointerleave', function (e) { if (e.pointerType !== 'mouse') return; mostraF(false); avviaF(); });
+    puntiF.forEach(function (b, i) { b.addEventListener('click', function () { mostraF(i === 1); avviaF(); }); });
+    // 30/10 (Francesco): sul telefono si può anche far scorrere col dito (verso sinistra la schiena, verso destra il davanti);
+    // lo scorrimento in verticale resta della pagina (touch-action: pan-y), e dopo un trascinamento il tocco non apre la scheda
+    var x0F = null, y0F = 0, trascinataF = false;
+    fotoF.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse') return; x0F = e.clientX; y0F = e.clientY; trascinataF = false; });
+    fotoF.addEventListener('pointerup', function (e) {
+      if (x0F === null) return;
+      var dx = e.clientX - x0F, dy = e.clientY - y0F; x0F = null;
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      trascinataF = true; mostraF(dx < 0); avviaF();
+    });
+    fotoF.addEventListener('pointercancel', function () { x0F = null; });
+    fotoF.addEventListener('click', function (e) { if (trascinataF) { e.preventDefault(); trascinataF = false; } });
+      avviaF();
+  });
 
   /* ---------- lookbook a rullino (25/10, Francesco): scorre da solo; chi lo tocca, lo trascina o lo scorre col touchpad
      lo porta dove vuole; lasciato, riparte da lì dopo un attimo. Due copie identiche del binario: arrivati a metà si torna

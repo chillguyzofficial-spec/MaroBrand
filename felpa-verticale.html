@@ -19,10 +19,10 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
-<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=46ab99a4">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=3355f307">
-<script defer src="assets/js/maro.js?v=205830b2"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=5a49fa7e">
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=536cee01">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=09470db8">
+<script defer src="assets/js/maro.js?v=46314ccd"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="prenota nuovo bianco" data-popup data-prenota>
@@ -58,22 +58,24 @@
     <p class="prezzo">110,00 €</p>
 
   </div>
-  <div class="galleria" data-n="3">
+  <div class="galleria" data-n="4">
     <div class="vetrina" aria-label="Foto di Felpa Verticale">
       <span class="vetrina-zoom" aria-hidden="true">Tocca per ingrandire</span>
       <div class="vetrina-binario">
-        <figure aria-label="Foto 1 di 3"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-fronte-640.webp?v=a322ed79')"></span><img src="assets/foto/fn-fronte.webp?v=3c386517" srcset="assets/foto/fn-fronte-640.webp?v=a322ed79 640w, assets/foto/fn-fronte.webp?v=3c386517 1312w" width="1312" height="1199" alt="Felpa Verticale MARO nera su fondo bianco, davanti: zip, collo alto, la M con le ali sul petto e tre righe bianche sulle maniche" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
-        <figure aria-label="Foto 2 di 3" aria-hidden="true"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-retro-640.webp?v=210ff4fd')"></span><img src="assets/foto/fn-retro.webp?v=82d467cc" srcset="assets/foto/fn-retro-640.webp?v=210ff4fd 640w, assets/foto/fn-retro.webp?v=82d467cc 1312w" width="1312" height="1199" alt="Felpa Verticale indossata, vista di spalle" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
-        <figure aria-label="Foto 3 di 3" aria-hidden="true"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-lato-640.webp?v=6e06a111')"></span><img src="assets/foto/fn-lato.webp?v=cb3bc377" srcset="assets/foto/fn-lato-640.webp?v=6e06a111 640w, assets/foto/fn-lato.webp?v=cb3bc377 1312w" width="1312" height="1199" alt="Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 1 di 4"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-fronte-640.webp?v=a322ed79')"></span><img src="assets/foto/fn-fronte.webp?v=3c386517" srcset="assets/foto/fn-fronte-640.webp?v=a322ed79 640w, assets/foto/fn-fronte.webp?v=3c386517 1312w" width="1312" height="1199" alt="Felpa Verticale MARO nera su fondo bianco, davanti: zip, collo alto, la M con le ali sul petto e tre righe bianche sulle maniche" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 2 di 4" aria-hidden="true"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-retro-640.webp?v=210ff4fd')"></span><img src="assets/foto/fn-retro.webp?v=82d467cc" srcset="assets/foto/fn-retro-640.webp?v=210ff4fd 640w, assets/foto/fn-retro.webp?v=82d467cc 1312w" width="1312" height="1199" alt="Felpa Verticale indossata, vista di spalle" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 3 di 4" aria-hidden="true"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-lato-640.webp?v=6e06a111')"></span><img src="assets/foto/fn-lato.webp?v=cb3bc377" srcset="assets/foto/fn-lato-640.webp?v=6e06a111 640w, assets/foto/fn-lato.webp?v=cb3bc377 1312w" width="1312" height="1199" alt="Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
+        <figure aria-label="Foto 4 di 4" aria-hidden="true"><span class="vetrina-sfondo" aria-hidden="true" style="background-image:url('assets/foto/fn-tre-quarti-640.webp?v=18d54c9e')"></span><img src="assets/foto/fn-tre-quarti.webp?v=e0fd24ef" srcset="assets/foto/fn-tre-quarti-640.webp?v=18d54c9e 640w, assets/foto/fn-tre-quarti.webp?v=e0fd24ef 1145w" width="1145" height="1374" alt="Felpa Verticale MARO nera su manichino, di tre quarti: zip chiusa fino al collo alto, la M con le ali sul petto, tasche laterali e tre righe bianche sulle maniche" fetchpriority="high" sizes="(min-width: 960px) 46vw, 100vw"></figure>
       </div>
       <button class="vetrina-freccia prec" type="button" aria-label="Foto precedente" data-vai="-1">‹</button>
       <button class="vetrina-freccia succ" type="button" aria-label="Foto successiva" data-vai="1">›</button>
-      <span class="vetrina-conta" aria-live="polite">1 / 3</span>
+      <span class="vetrina-conta" aria-live="polite">1 / 4</span>
     </div>
     <div class="miniature" role="group" aria-label="Scegli la foto">
       <button type="button" data-foto="0" aria-label="Foto 1: Felpa Verticale MARO nera su fondo bianco, davanti: zip, collo alto, la M con le ali sul petto e tre righe bianche sulle maniche" aria-current="true"><img src="assets/foto/fn-fronte-640.webp?v=a322ed79" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
       <button type="button" data-foto="1" aria-label="Foto 2: Felpa Verticale indossata, vista di spalle"><img src="assets/foto/fn-retro-640.webp?v=210ff4fd" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
       <button type="button" data-foto="2" aria-label="Foto 3: Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica"><img src="assets/foto/fn-lato-640.webp?v=6e06a111" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
+      <button type="button" data-foto="3" aria-label="Foto 4: Felpa Verticale MARO nera su manichino, di tre quarti: zip chiusa fino al collo alto, la M con le ali sul petto, tasche laterali e tre righe bianche sulle maniche"><img src="assets/foto/fn-tre-quarti-640.webp?v=18d54c9e" alt="" width="80" height="100" loading="lazy" decoding="async"></button>
     </div>
   </div>
   <div class="prodotto-acquisto">
@@ -93,13 +95,16 @@
       <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>
     </fieldset>
     <div class="trova" id="trova" hidden data-taglie="XS,S,M,L,XL,XXL" data-tipo="felpa">
-      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+      <p class="trova-intro">Poche domande, un tocco ciascuna.</p>
+      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito?</p><div>
+        <button type="button" data-v="0">XS</button><button type="button" data-v="1">S</button><button type="button" data-v="2">M</button><button type="button" data-v="3">L</button><button type="button" data-v="4">XL</button><button type="button" data-v="5">XXL</button><button type="button" data-v="-1">Non lo so</button></div></div>
+      <div class="trova-domanda" data-chiave="altezza" hidden><p>Quanto sei alto?</p><div>
         <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
-      <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
+      <div class="trova-domanda" data-chiave="corpo" hidden><p>La tua corporatura?</p><div>
         <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
-      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
+      <div class="trova-domanda" data-chiave="fit" hidden><p>Come ti piace portarla?</p><div>
         <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
-      <p class="trova-esito" role="status" aria-live="polite"></p>
+      <div class="trova-esito" role="status" aria-live="polite"></div>
     </div>
     <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
     <p class="consegna">Prenoti senza pagare: Omar ti scrive su WhatsApp per confermare taglia, pagamento e spedizione.</p>
@@ -143,6 +148,15 @@
   <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c-2-3-4-4-6-4a4 4 0 0 0 0 8c2 0 4-1 6-4zm0 0c2 3 4 4 6 4a4 4 0 0 0 0-8c-2 0-4 1-6 4z"/></svg><p><strong>Look versatile</strong>Per ogni occasione</p></li>
   <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12l3 5-9 11L3 9z"/><path d="M3 9h18M9 4l3 16M15 4l-3 16"/></svg><p><strong>Dettagli curati</strong>Firma MARO verticale sulla schiena, dalle spalle all’orlo</p></li>
 </ul>
+<section class="vicino" aria-labelledby="vicino-titolo">
+  <h2 id="vicino-titolo" class="titolo">Da vicino</h2>
+  <ul class="vicino-lista">
+    <li><figure><img src="assets/foto/fn-vicino-ricamo.webp?v=55ebcf79" width="653" height="467" alt="Primo piano del ricamo bianco della M con le ali sul petto della felpa nera" loading="lazy" decoding="async" sizes="(min-width: 960px) 25vw, 50vw"><figcaption><strong>Il ricamo</strong>La M con le ali e i riccioli, ricamata in bianco sul petto.</figcaption></figure></li>
+    <li><figure><img src="assets/foto/fn-vicino-zip.webp?v=b0175474" width="653" height="467" alt="Primo piano della zip in metallo che sale fino al collo alto della felpa nera" loading="lazy" decoding="async" sizes="(min-width: 960px) 25vw, 50vw"><figcaption><strong>Zip e collo alto</strong>Zip in metallo per tutta la lunghezza, fino in cima al collo.</figcaption></figure></li>
+    <li><figure><img src="assets/foto/fn-vicino-righe.webp?v=db0f5441" width="511" height="381" alt="Primo piano della manica della felpa nera con le tre righe bianche che scendono fino al polsino" loading="lazy" decoding="async" sizes="(min-width: 960px) 25vw, 50vw"><figcaption><strong>Le righe</strong>Tre righe bianche lungo la manica, fino al polsino.</figcaption></figure></li>
+    <li><figure><img src="assets/foto/fn-vicino-costine.webp?v=032beca7" width="372" height="279" alt="Primo piano del polsino a costine della felpa nera" loading="lazy" decoding="async" sizes="(min-width: 960px) 25vw, 50vw"><figcaption><strong>Le costine</strong>Polsini e fondo a costine fitte: chiudono la manica al polso e la felpa in vita.</figcaption></figure></li>
+  </ul>
+</section>
 
 
 

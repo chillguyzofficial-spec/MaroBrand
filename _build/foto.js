@@ -27,11 +27,21 @@ const LAVORI = [
   { out: 'felpa-firma-fronte', src: 'foto-set-2-2026-10-12/847420150_1406026624930256_5378025056577203795_n.webp' },
   // 29/10 (Omar, modalità PRENOTA): la felpa nera con la zip. In home quella appesa al gancio, nella scheda le tre su fondo bianco,
   // nel Drop 002 le tre colorazioni appese (nera, marrone, grigio chiaro) al posto del tennista
+  // 30/10: apertura di «La nostra storia» (al posto del ragazzo sopra Napoli): i fogli con i disegni sul tavolo
+  { out: 'brand-storia-disegni', src: 'brand-storia-2026-10-30/storia-disegni-tavolo.png', max: 2073, q: 0.86 },
   { out: 'fn-gancio', src: 'felpa-nera-2026-10-29/felpa-nera-gancio.png', q: 0.86 },
+  { out: 'fn-gancio-retro', src: 'felpa-nera-2026-10-29/felpa-nera-gancio-retro.png', q: 0.86 }, // 30/10: in home si alterna con fn-gancio
   { out: 'fn-fronte', src: 'felpa-nera-2026-10-29/felpa-nera-fronte-bianco.png', q: 0.86 },
   { out: 'fn-retro', src: 'felpa-nera-2026-10-29/felpa-nera-retro-bianco.png', q: 0.86 },
   { out: 'fn-lato', src: 'felpa-nera-2026-10-29/felpa-nera-lato-bianco.png', q: 0.86 },
-  { out: 'drop002-colori', src: 'felpa-nera-2026-10-29/drop002-tre-colori-gancio.png', q: 0.86 },
+  { out: 'fn-tre-quarti', src: 'felpa-nera-2026-10-29/felpa-nera-tre-quarti-manichino.png', q: 0.86 }, // 30/10: sul manichino trasparente, di tre quarti
+  // 30/10: «Da vicino» nella scheda, ritagli della tavola dei dettagli (dividi-tavole.js)
+  { out: 'fn-vicino-ricamo', src: 'felpa-nera-dettagli-2026-10-30/tagli/g01-01.png', q: 0.88 },
+  { out: 'fn-vicino-zip', src: 'felpa-nera-dettagli-2026-10-30/tagli/g01-02.png', q: 0.88 },
+  { out: 'fn-vicino-righe', src: 'felpa-nera-dettagli-2026-10-30/tagli/g01-03.png', crop: [0, 0, 511, 381], q: 0.88 }, // la tavola ha unito manica e zip: solo la manica
+  { out: 'fn-vicino-costine', src: 'felpa-nera-dettagli-2026-10-30/tagli/g01-05.png', crop: [0, 102, 372, 279], q: 0.88 }, // 4:3 attorno al polsino (centrato)
+  { out: 'drop002-colori', src: 'felpa-nera-2026-10-29/drop002-tre-colori-gancio.png', crop: [0, 164, 1145, 1046], q: 0.86 }, // 30/10: stessa proporzione della schiena (si toglie muro vuoto sopra e sotto)
+  { out: 'drop002-retro', src: 'felpa-nera-2026-10-29/drop002-tre-colori-retro.png', q: 0.86 },
   // Felpa Verticale (verde bottiglia): render set 4 + vecchia foto in montagna
   { out: 'felpa-verticale-manichino', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale-manichino.jpeg', crop: [1, 0, 1280, 1600] }, // dal 19/10 manichino nel palazzo (prima: set 4)
   { out: 'felpa-verticale-fronte', src: 'foto-schede-palazzo-2026-10-19/felpa-verticale-fronte.jpeg', crop: [2, 0, 1292, 1615] }, // dal 19/10 nel palazzo (prima: set 4)

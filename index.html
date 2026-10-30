@@ -19,10 +19,10 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/maro.css?v=0e44edfc">
-<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=46ab99a4">
-<link rel="stylesheet" href="assets/css/maro-bianco.css?v=3355f307">
-<script defer src="assets/js/maro.js?v=205830b2"></script>
+<link rel="stylesheet" href="assets/css/maro.css?v=5a49fa7e">
+<link rel="stylesheet" href="assets/css/maro-nuovo.css?v=536cee01">
+<link rel="stylesheet" href="assets/css/maro-bianco.css?v=09470db8">
+<script defer src="assets/js/maro.js?v=46314ccd"></script>
 <script>/* 21/10: prima che la pagina si disegni, chi è collegato (niente lampo del modulo d'accesso né dell'icona vuota) */(function(){try{var t=localStorage.getItem('maro-token'),c=JSON.parse(localStorage.getItem('maro-chi')||'null'),h=document.documentElement;if(!t)return;h.classList.add('ha-token');var n=c&&String(c.nome||String(c.email||'').split('@')[0]||'').trim().split(/s+/)[0].slice(0,14);if(n){h.classList.add('collegato');window.MARO_NOME=n;}}catch(e){}})();</script>
 </head>
 <body class="prenota home nuovo bianco" data-prenota>
@@ -69,10 +69,13 @@
 
 
 <section class="n-felpa" aria-labelledby="n-felpa-titolo">
+  <div class="felpa-media">
   <a class="felpa-foto" href="felpa-verticale.html" tabindex="-1" aria-hidden="true">
-    <img src="assets/foto/fn-gancio.webp?v=eace8a11" srcset="assets/foto/fn-gancio-640.webp?v=0a926cc2 640w, assets/foto/fn-gancio.webp?v=eace8a11 1145w" width="1145" height="1374" alt="Felpa Verticale MARO nera con la zip appesa a un gancio su un muro di cemento, la M con le ali sul petto e le righe bianche sulle maniche" loading="lazy" decoding="async" sizes="(min-width: 900px) 52vw, 100vw">
+    <img src="assets/foto/fn-gancio.webp?v=eace8a11" srcset="assets/foto/fn-gancio-640.webp?v=0a926cc2 640w, assets/foto/fn-gancio.webp?v=eace8a11 1145w" width="1145" height="1374" alt="Felpa Verticale MARO nera con la zip appesa a un gancio su un muro di cemento, la M con le ali sul petto e le righe bianche sulle maniche" loading="lazy" decoding="async" sizes="(min-width: 900px) 52vw, 100vw"><img src="assets/foto/fn-gancio-retro.webp?v=36e4cb07" srcset="assets/foto/fn-gancio-retro-640.webp?v=8ba66587 640w, assets/foto/fn-gancio-retro.webp?v=36e4cb07 1145w" width="1145" height="1374" alt="Felpa Verticale MARO nera appesa allo stesso gancio, vista di spalle: la firma MARO verticale ricamata dalle spalle all’orlo e le righe bianche sulle maniche" class="felpa-foto-2" loading="lazy" decoding="async" sizes="(min-width: 900px) 52vw, 100vw">
     <span class="felpa-bollo">Drop 001</span>
   </a>
+  <div class="felpa-punti"><button type="button" aria-pressed="true" aria-label="Foto davanti"></button><button type="button" aria-pressed="false" aria-label="Foto della schiena"></button></div>
+  </div>
   <div class="felpa-testo">
     <p class="felpa-occhiello"><span>Drop 001</span><span>Il primo capo</span></p>
     <h2 id="n-felpa-titolo">Felpa Verticale</h2>
@@ -121,7 +124,7 @@
 
 
 <section class="n-drop2" id="drop" aria-labelledby="n-drop-titolo">
-  <figure class="drop2-foto"><img src="assets/foto/drop002-colori.webp?v=74bea5e0" srcset="assets/foto/drop002-colori-640.webp?v=734c8e2d 640w, assets/foto/drop002-colori.webp?v=74bea5e0 1145w" width="1145" height="1374" alt="Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro" loading="lazy" decoding="async" sizes="(min-width: 900px) 48vw, 100vw"><span class="felpa-bollo">In arrivo</span></figure>
+  <figure class="drop2-foto felpa-media"><div class="felpa-foto"><img src="assets/foto/drop002-colori.webp?v=f1424a1f" srcset="assets/foto/drop002-colori-640.webp?v=89c9cc68 640w, assets/foto/drop002-colori.webp?v=f1424a1f 1145w" width="1145" height="1046" alt="Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro" loading="lazy" decoding="async" sizes="(min-width: 900px) 48vw, 100vw"><img src="assets/foto/drop002-retro.webp?v=61cc2d60" srcset="assets/foto/drop002-retro-640.webp?v=18b59293 640w, assets/foto/drop002-retro.webp?v=61cc2d60 1312w" width="1312" height="1199" alt="Le tre Felpe Verticali MARO, nera, marrone e grigio chiaro, appese di spalle: su ognuna la firma MARO verticale ricamata" class="felpa-foto-2" loading="lazy" decoding="async" sizes="(min-width: 900px) 48vw, 100vw"><span class="felpa-bollo">In arrivo</span></div><div class="felpa-punti"><button type="button" aria-pressed="true" aria-label="Foto davanti"></button><button type="button" aria-pressed="false" aria-label="Foto della schiena"></button></div></figure>
   <div class="drop2-testo conto" data-drop="2026-11-14T18:00:00+01:00">
     <p class="felpa-occhiello"><span>Prossimo drop</span><span>Nuovi colori</span></p>
     <h2 id="n-drop-titolo">Drop 002</h2>

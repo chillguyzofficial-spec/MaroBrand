@@ -66,14 +66,23 @@ const IN_VENDITA = ['felpa-verticale'];
 // (id e prezzo della Felpa Verticale), cambiano solo foto e testi: la versione verde resta intatta nel catalogo per il negozio completo.
 const FELPA_NERA = {
   esaurite: [], home: ['fn-gancio', 'Felpa Verticale MARO nera con la zip appesa a un gancio su un muro di cemento, la M con le ali sul petto e le righe bianche sulle maniche'],
+  // 30/10: in home si alterna con la foto davanti (da sola ogni 5 s, al passaggio del mouse, o con i puntini)
+  home2: ['fn-gancio-retro', 'Felpa Verticale MARO nera appesa allo stesso gancio, vista di spalle: la firma MARO verticale ricamata dalle spalle all’orlo e le righe bianche sulle maniche'],
   copertina: ['fn-fronte', 'Felpa Verticale MARO nera su fondo bianco, davanti: zip, collo alto, la M con le ali sul petto e tre righe bianche sulle maniche'],
   seconda: 'fn-retro',
-  foto: [['fn-lato', 'Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica']],
+  foto: [['fn-lato', 'Felpa Verticale MARO nera vista di lato: la M con le ali sulla spalla e le righe bianche lungo la manica'], ['fn-tre-quarti', 'Felpa Verticale MARO nera su manichino, di tre quarti: zip chiusa fino al collo alto, la M con le ali sul petto, tasche laterali e tre righe bianche sulle maniche']],
   colore: 'Nero, righe bianche sulle maniche', pallini: ['#111'],
   frase: 'Nera, con la firma MARO che scende lungo la schiena.',
   testo: 'Zip intera e collo alto. Sul petto la M con le ali, ricamata in bianco; sulla schiena la firma MARO verticale, con le sue fiamme, dalle spalle all’orlo. Tre righe bianche corrono lungo le maniche. Polsini e fondo a costine: si porta chiusa come una felpa o aperta sopra una t-shirt.',
   dettagli: ['Firma MARO verticale sulla schiena, dalle spalle all’orlo', 'La M con le ali ricamata sul petto', 'Tre righe bianche lungo le maniche', 'Zip intera e collo alto', 'Polsini e fondo a costine'],
   descrizione: 'Felpa Verticale MARO: nera con la zip, la M con le ali sul petto, firma MARO verticale sulla schiena e tre righe bianche sulle maniche. Drop 001, prenotala.',
+  // 30/10: «Da vicino» sotto la scheda (foto design-source/felpa-nera-dettagli-2026-10-30): [foto, titolo, testo, alt, inquadratura]
+  vicino: [
+    ['fn-vicino-ricamo', 'Il ricamo', 'La M con le ali e i riccioli, ricamata in bianco sul petto.', 'Primo piano del ricamo bianco della M con le ali sul petto della felpa nera'],
+    ['fn-vicino-zip', 'Zip e collo alto', 'Zip in metallo per tutta la lunghezza, fino in cima al collo.', 'Primo piano della zip in metallo che sale fino al collo alto della felpa nera'],
+    ['fn-vicino-righe', 'Le righe', 'Tre righe bianche lungo la manica, fino al polsino.', 'Primo piano della manica della felpa nera con le tre righe bianche che scendono fino al polsino'],
+    ['fn-vicino-costine', 'Le costine', 'Polsini e fondo a costine fitte: chiudono la manica al polso e la felpa in vita.', 'Primo piano del polsino a costine della felpa nera'],
+  ],
 };
 const CAPI = PRENOTA ? CATALOGO.filter(p => IN_VENDITA.includes(p.id)).map(p => ({ ...p, ...FELPA_NERA })) : CATALOGO;
 const LA_FELPA = CAPI[0];
@@ -542,10 +551,12 @@ function laFelpa() {
   const p = LA_FELPA;
   return `
 <section class="n-felpa" aria-labelledby="n-felpa-titolo">
+  <div class="felpa-media">
   <a class="felpa-foto" href="${p.id}.html" tabindex="-1" aria-hidden="true">
-    ${img((p.home || p.copertina)[0], (p.home || p.copertina)[1], { dove: 'home la felpa', sizes: '(min-width: 900px) 52vw, 100vw' })}
+    ${img((p.home || p.copertina)[0], (p.home || p.copertina)[1], { dove: 'home la felpa', sizes: '(min-width: 900px) 52vw, 100vw' })}${p.home2 && MISURE[p.home2[0]] ? img(p.home2[0], p.home2[1], { cls: 'felpa-foto-2', dove: 'home la felpa retro', sizes: '(min-width: 900px) 52vw, 100vw' }) : ''}
     <span class="felpa-bollo">Drop 001</span>
   </a>
+${p.home2 && MISURE[p.home2[0]] ? '  <div class="felpa-punti"><button type="button" aria-pressed="true" aria-label="Foto davanti"></button><button type="button" aria-pressed="false" aria-label="Foto della schiena"></button></div>\n' : ''}  </div>
   <div class="felpa-testo">
     <p class="felpa-occhiello"><span>Drop 001</span><span>Il primo capo</span></p>
     <h2 id="n-felpa-titolo">${esc(p.nome)}</h2>
@@ -595,7 +606,8 @@ ${STORIE.map(([id, alt, titolo, frase, link]) => link ? `    <a class="dentro-ca
 const COLORI_DROP2 = [['Nero', '#111'], ['Marrone', '#4a3020'], ['Grigio chiaro', '#cfccc6']];
 function dropDue() {
   return `<section class="n-drop2" id="drop" aria-labelledby="n-drop-titolo">
-  <figure class="drop2-foto">${img('drop002-colori', 'Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro', { dove: 'home drop', sizes: '(min-width: 900px) 48vw, 100vw' })}<span class="felpa-bollo">In arrivo</span></figure>
+  <!-- 30/10 sera: davanti e schiena delle tre colorazioni si danno il cambio come la felpa del Drop 001 (stesso JS e CSS di .felpa-media) -->
+  <figure class="drop2-foto felpa-media"><div class="felpa-foto">${img('drop002-colori', 'Tre Felpe Verticali MARO appese ai ganci su un muro di cemento: nera, marrone e grigio chiaro', { dove: 'home drop', sizes: '(min-width: 900px) 48vw, 100vw' })}${MISURE['drop002-retro'] ? img('drop002-retro', 'Le tre Felpe Verticali MARO, nera, marrone e grigio chiaro, appese di spalle: su ognuna la firma MARO verticale ricamata', { cls: 'felpa-foto-2', dove: 'home drop retro', sizes: '(min-width: 900px) 48vw, 100vw' }) : ''}<span class="felpa-bollo">In arrivo</span></div>${MISURE['drop002-retro'] ? '<div class="felpa-punti"><button type="button" aria-pressed="true" aria-label="Foto davanti"></button><button type="button" aria-pressed="false" aria-label="Foto della schiena"></button></div>' : ''}</figure>
   <div class="drop2-testo conto" data-drop="2026-11-14T18:00:00+01:00">
     <p class="felpa-occhiello"><span>Prossimo drop</span><span>Nuovi colori</span></p>
     <h2 id="n-drop-titolo">Drop 002</h2>
@@ -770,6 +782,17 @@ function puntiScheda(p) {
 ${voci.map(([t, s], i) => `  <li><svg viewBox="0 0 24 24" aria-hidden="true">${ICONE_PUNTI[i]}</svg><p><strong>${esc(t)}</strong>${esc(s)}</p></li>`).join('\n')}
 </ul>`;
 }
+// 30/10: i dettagli in primo piano (ricamo, zip, costine, tessuto), solo per i capi che hanno le foto
+function daVicino(p) {
+  const voci = (p.vicino || []).filter(v => MISURE[v[0]]);
+  if (!voci.length) return '';
+  return `<section class="vicino" aria-labelledby="vicino-titolo">
+  <h2 id="vicino-titolo" class="titolo">Da vicino</h2>
+  <ul class="vicino-lista">
+${voci.map(([id, t, s, alt, pos]) => `    <li><figure${pos ? ` style="--pos: ${pos}"` : ''}>${img(id, alt, { dove: 'scheda da vicino', sizes: '(min-width: 960px) 25vw, 50vw' })}<figcaption><strong>${esc(t)}</strong>${esc(s)}</figcaption></figure></li>`).join('\n')}
+  </ul>
+</section>`;
+}
 function prodotto(p) {
   if (!p.frase || !CURA[p.cura] || !p.descrizione) throw new Error(p.id + ': mancano frase, cura o descrizione');
   const altri = CATALOGO.filter(x => x.id !== p.id && x.tipo !== p.tipo).slice(0, 2)
@@ -825,13 +848,16 @@ ${p.taglie.map(t => { const fin = !PRENOTA && (p.esaurite || []).includes(t); re
       <p class="taglie-errore" role="alert" hidden>Scegli una taglia.</p>
 ${acc ? '' : '      <button class="trova-apri" type="button" aria-expanded="false" aria-controls="trova">Trova la tua taglia</button>\n'}    </fieldset>
 ${acc ? '' : `    <div class="trova" id="trova" hidden data-taglie="${p.taglie.join(',')}" data-tipo="${p.tipo}">
-      <div class="trova-domanda" data-chiave="altezza"><p>Quanto sei alto?</p><div>
+      <p class="trova-intro">Poche domande, un tocco ciascuna.</p>
+      <div class="trova-domanda" data-chiave="solita"><p>Che taglia porti di solito?</p><div>
+        ${['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((t, i) => `<button type="button" data-v="${i}">${t}</button>`).join('')}<button type="button" data-v="-1">Non lo so</button></div></div>
+      <div class="trova-domanda" data-chiave="altezza" hidden><p>Quanto sei alto?</p><div>
         <button type="button" data-v="0">Meno di 170 cm</button><button type="button" data-v="1">170–179 cm</button><button type="button" data-v="2">180–189 cm</button><button type="button" data-v="3">190 cm o più</button></div></div>
-      <div class="trova-domanda" data-chiave="corpo"><p>La tua corporatura?</p><div>
+      <div class="trova-domanda" data-chiave="corpo" hidden><p>La tua corporatura?</p><div>
         <button type="button" data-v="-1">Snella</button><button type="button" data-v="0">Media</button><button type="button" data-v="1">Robusta</button></div></div>
-      <div class="trova-domanda" data-chiave="fit"><p>Come ti piace portarla?</p><div>
+      <div class="trova-domanda" data-chiave="fit" hidden><p>Come ti piace portarla?</p><div>
         <button type="button" data-v="-1">Aderente</button><button type="button" data-v="0">Giusta</button><button type="button" data-v="1">Larga</button></div></div>
-      <p class="trova-esito" role="status" aria-live="polite"></p>
+      <div class="trova-esito" role="status" aria-live="polite"></div>
     </div>
 `}    <button class="btn btn-nero btn-largo" type="button" data-aggiungi>Aggiungi alla borsa</button>
 ${PRENOTA ? '    <p class="consegna">Prenoti senza pagare: Omar ti scrive su WhatsApp per confermare taglia, pagamento e spedizione.</p>\n' : `    <p class="consegna" data-consegna>Ordini entro le 13 dei giorni lavorativi: partono il giorno stesso, arrivano in 2–4 giorni lavorativi.</p>
@@ -874,6 +900,7 @@ ${acc || p.tipo === 'pantaloni' ? '' : `    <details id="guida-taglie">
 `}  </div>
 </div>
 ${puntiScheda(p)}
+${daVicino(p)}
 ${PRENOTA ? '' : recensioni(p)}
 ${PRENOTA ? '' : `
 <section class="completa" aria-labelledby="completa-titolo">
@@ -1495,8 +1522,9 @@ function storiaNuova() {
   const corpo = `
 <!-- 25/10 (Francesco): apertura e «In campo dal 2020» in un solo blocco, una sola foto sfocata come sfondo, titolo grande, sottotitolo, testo corto; tolti «Scopri di più» e le due foto di calcio e basket -->
 <section class="s-apertura s-unico" aria-labelledby="s-titolo">
-  <span class="s-unico-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola('brand-napoli') || urlFoto('brand-napoli')}')"></span>
-  ${img('brand-napoli', 'Ragazzo con la Polo Linee MARO nera e il Cargo Firma beige seduto su un muretto sopra Napoli al tramonto, dietro il Vesuvio', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}
+  <!-- 30/10 (Francesco): al posto del ragazzo sopra Napoli, i fogli con i disegni di MARO sul tavolo -->
+  <span class="s-unico-sfondo" aria-hidden="true" style="background-image:url('${urlPiccola('brand-storia-disegni') || urlFoto('brand-storia-disegni')}')"></span>
+  ${img('brand-storia-disegni', 'Fogli con i disegni a matita di MARO su un tavolo scuro: la M con le ali, la firma MARO verticale e le misure della felpa, accanto una matita, un righello e la manica a righe della felpa', { cls: 's-apertura-foto', lazy: false, dove: 'brand apertura', sizes: '100vw' })}
   <div class="s-apertura-testo">
     <p class="n-occhiello">Il brand</p>
     <h1 id="s-titolo">La nostra<br>storia</h1>
@@ -1505,7 +1533,7 @@ function storiaNuova() {
 <!-- sotto la foto, sul fondo chiaro (Francesco 25/10: «sotto la foto, non tutto sopra») -->
 <div class="s-sotto">
   <h2 class="s-sottotitolo">In campo dal 2020</h2>
-  <p><strong>Vestiamo chi vive lo sport con passione.</strong> Polo, felpe e pantaloni comodi nei movimenti ed eleganti a tennis, a padel e ogni giorno: per dare il meglio in campo e restare con te anche dopo il fischio finale.</p>
+  <p><strong>Un’eleganza che si muove con te.</strong> Capi essenziali, pensati per seguire il ritmo della tua giornata e restare impeccabili fino alla fine. Nessun eccesso: solo linee pulite e la firma MARO.</p>
 </div>
 
 <div class="bn-ponte s-ponte">

@@ -259,12 +259,14 @@ body.bianco {
 .bianco .s-sotto + .s-ponte .s-ponte-titolo { font-size: clamp(26px, 2.6vw, 40px); }
 
 /* (Francesco 25/10, «occhio a non tagliare il ragazzo») apertura del brand: il riquadro prende la proporzione della foto (1672×941), foto sempre intera */
-.bianco .s-unico { min-height: 0; height: auto; aspect-ratio: 1672 / 941; max-height: none; }
+/* 30/10: la foto è diventata quella dei disegni sul tavolo (2073×758), sempre intera; il titolo sta sul tavolo scuro a sinistra */
+.bianco .s-unico { min-height: 0; height: auto; aspect-ratio: 2073 / 758; max-height: none; }
 .bianco .s-unico .s-apertura-foto { inset: 0; width: 100%; height: 100%; object-fit: contain; }
 @media (max-width: 599px) {
   /* telefono: la foto intera è bassa, il titolo grande va sotto, scuro sul fondo chiaro */
   .bianco .s-unico { aspect-ratio: auto; display: block; background: none; overflow: visible; }
-  .bianco .s-unico .s-apertura-foto { position: static; display: block; width: 100%; height: auto; aspect-ratio: 1672 / 941; }
+  /* intera sarebbe alta 140 px e i disegni minuscoli: più alta, si perde solo un po' di tavolo vuoto a sinistra */
+  .bianco .s-unico .s-apertura-foto { position: static; display: block; width: 100%; height: auto; aspect-ratio: 2 / 1; object-fit: cover; object-position: 78% 50%; }
   .bianco .s-unico::after { display: none; }
   .bianco .s-unico .s-apertura-testo { position: static; padding: 28px var(--lato) 0; color: #111; }
   .bianco .s-unico .n-occhiello, .bianco .s-unico h1 { color: #111; }
@@ -292,6 +294,15 @@ body.bianco {
   .bianco .s-unico .s-apertura-foto { width: 100%; height: 100%; max-width: none; aspect-ratio: auto; object-fit: cover; object-position: 50% 22%; }
   .bianco .s-unico-sfondo { display: none; }
   .bianco .s-unico .s-apertura-testo { left: 0; }
+}
+/* 30/10: con la foto dei disegni (2073×758, molto larga) il «tutto schermo» tagliava metà dei fogli:
+   a tutta larghezza con la sua altezza, intera; mai più alta dello schermo sotto il menu */
+@media (min-width: 600px) {
+  /* (Francesco 30/10: «un pelino più grande, a tutto schermo se possibile») un terzo più alta della foto intera, fino allo schermo:
+     il taglio cade a sinistra, sul tavolo vuoto, i fogli restano interi */
+  .bianco .s-unico { height: min(calc(100vw * 758 / 2073 * 1.35), calc(100svh - var(--testata))); min-height: 420px; }
+  .bianco .s-unico .s-apertura-foto { object-position: 88% 50%; }
+  .bianco .s-unico h1 { font-size: clamp(56px, 7vw, 128px); }
 }
 
 /* =====================================================================================================================
@@ -443,6 +454,17 @@ body.bianco {
 .felpa-foto { position: relative; display: block; overflow: hidden; background: #e9e6df; }
 .felpa-foto img { display: block; width: 100%; height: auto; transition: transform .6s ease; }
 .felpa-foto:hover img { transform: scale(1.02); }
+/* 30/10: davanti e schiena si danno il cambio in dissolvenza (JS in maro.js); i puntini sotto la foto per scegliere */
+.felpa-media { position: relative; }
+.felpa-media .felpa-foto { touch-action: pan-y; -webkit-user-drag: none; }
+.felpa-media .felpa-foto img { -webkit-user-drag: none; user-select: none; }
+.felpa-foto .felpa-foto-2 { position: absolute; inset: 0; height: 100%; object-fit: cover; opacity: 0; transition: opacity .9s ease, transform .6s ease; }
+.felpa-media.retro .felpa-foto-2 { opacity: 1; }
+.felpa-punti { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; gap: 2px; }
+.felpa-punti button { width: 32px; height: 32px; padding: 0; border: 0; background: none; display: grid; place-items: center; cursor: pointer; }
+.felpa-punti button::before { content: ''; width: 8px; height: 8px; border-radius: 999px; background: rgba(17, 17, 17, .35); transition: width .3s, background .3s; }
+.felpa-punti button[aria-pressed="true"]::before { width: 22px; background: #111; }
+@media (prefers-reduced-motion: reduce) { .felpa-foto .felpa-foto-2 { transition: none; } }
 .felpa-bollo { position: absolute; top: 16px; left: 16px; padding: 9px 13px; border-radius: 999px; background: #111; color: #fff; font: 600 12px/1 var(--n-lineare); letter-spacing: .2em; text-transform: uppercase; }
 .felpa-occhiello { display: flex; align-items: center; gap: 14px; margin: 0 0 16px; font: 600 12px/1 var(--n-lineare); letter-spacing: .24em; text-transform: uppercase; color: #666; }
 .felpa-occhiello span + span::before { content: ''; display: inline-block; width: 28px; height: 1px; margin-right: 14px; background: #9a9a9a; vertical-align: middle; }

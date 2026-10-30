@@ -476,14 +476,20 @@ details > p { margin: 0 0 20px; }
 .trova-apri { margin-top: 12px; padding: 6px 0; border: 0; background: none; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .trova { background: var(--grigio); border-radius: 10px; padding: 18px; margin: -8px 0 20px; }
 .trova[hidden] { display: none; }
-.trova-domanda + .trova-domanda { margin-top: 14px; }
+.trova-intro { margin: 0 0 14px; font-size: 14px; color: #5f5b53; }
+.trova-domanda[hidden] { display: none; }
+.trova-domanda + .trova-domanda { margin-top: 16px; }
 .trova-domanda p { margin: 0 0 8px; font-weight: 600; }
 .trova-domanda div { display: flex; flex-wrap: wrap; gap: 8px; }
-.trova-domanda button { min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--grigio-2); background: var(--bianco); font-weight: 500; }
+.trova-domanda button { min-height: 44px; min-width: 52px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--grigio-2); background: var(--bianco); font-weight: 500; }
 .trova-domanda button[aria-pressed="true"] { background: var(--nero); border-color: var(--nero); color: var(--bianco); }
-.trova-esito { margin: 14px 0 0; font-size: 17px; }
+/* 30/10: l'esito è una scheda bianca: taglia grande, il perché con le misure del capo, pulsante per sceglierla */
+.trova-esito { margin: 18px 0 0; padding: 18px 20px 20px; background: var(--bianco); border-radius: 8px; display: grid; grid-template-columns: auto 1fr; gap: 4px 18px; align-items: center; }
 .trova-esito:empty { display: none; }
-.trova-esito .link { border: 0; background: none; padding: 0 0 0 6px; font-weight: 600; }
+.trova-tag { grid-column: 1 / -1; margin: 0; font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: #5f5b53; }
+.trova-lettera { margin: 0; font: 400 52px/1 var(--titoli); }
+.trova-perche { margin: 0; font-size: 15px; line-height: 1.5; color: #3d3a35; }
+.trova-esito .btn { grid-column: 1 / -1; margin-top: 12px; width: 100%; }
 [data-aggiungi][hidden], .avvisami[hidden] { display: none; }
 .avvisami { margin-bottom: 28px; }
 .avvisami > p:first-child { margin: 0 0 10px; }
