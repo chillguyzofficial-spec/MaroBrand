@@ -73,6 +73,10 @@ h1, h2, h3 { margin: 0; }
 .apertura-video[data-copia] { opacity: 0; }
 .apertura::after { z-index: 2; }
 .apertura-video::-webkit-media-controls { display: none !important; }
+/* pulsante «play» di riserva (17/11): lo crea maro.js solo se il telefono blocca il video (risparmio energetico) */
+.apertura-play { position: absolute; z-index: 4; right: 16px; top: min(calc(100svh - var(--testata, 60px) - var(--avviso, 0px) - 80px), calc(100% - 72px)); width: 56px; height: 56px; padding: 0; border: 1px solid rgba(255,255,255,.7); border-radius: 50%; background: rgba(0,0,0,.45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.apertura-play svg { width: 26px; height: 26px; fill: #fff; margin-left: 3px; }
+.apertura-play:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .apertura-testo { position: absolute; z-index: 3; left: var(--lato); right: var(--lato); top: clamp(28px, 6vh, 64px); } /* in alto (Omar, 19/10) */
 .apertura h1 { font: 400 clamp(64px, 10vw, 156px)/.88 var(--titoli); text-transform: uppercase; text-shadow: 0 2px 30px rgba(0,0,0,.45); }
 .apertura .occhiello { font-size: clamp(14px, 1.2vw, 17px); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 14px; max-width: none; }

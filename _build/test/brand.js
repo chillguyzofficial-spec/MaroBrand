@@ -1,7 +1,7 @@
 // Prove della pagina del brand v4 (19/10): manifesto di Omar (21/10) al posto della linea con gli sport, entrate, foto intere, MARO mai in orizzontale
 // Uso: node _build/test/brand.js   (versione del 13/10 con anagramma e zoom: sostituita il 19/10)
 const path = require('path'), fs = require('fs'), http = require('http');
-const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
+const { chromium, devices } = require('C:/Users/Claude FK/.claude/MEMORIA/progetti/hedonè progetto serio/node_modules/playwright');
 const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml' };
 const srv = http.createServer((q, r) => { let u = decodeURIComponent(q.url.split('?')[0]); const f = path.join(ROOT, u); if (!fs.existsSync(f) || fs.statSync(f).isDirectory()) { r.writeHead(404); return r.end(); } r.writeHead(200, { 'content-type': T[path.extname(f)] || 'application/octet-stream' }); fs.createReadStream(f).pipe(r); }).listen(8989);

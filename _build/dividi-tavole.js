@@ -1,6 +1,6 @@
 // Uso: node _build/dividi-tavole.js <cartella con gNN.png>  → <cartella>/tagli/gNN-01.png ... (tavole di ChatGPT a griglia)
 // divide le tavole a griglia: cerca righe/colonne di separazione chiare e sottili su tutta la regione, taglia, ripete
-const sharp = require('C:/Users/Claude FK/.claude/projects/MaroBrand-motore/node_modules/sharp');
+const sharp = require('C:/Users/Claude FK/.claude/MEMORIA/progetti/MaroBrand-motore/node_modules/sharp');
 const fs = require('fs'), path = require('path');
 const dir = process.argv[2], out = path.join(dir, 'tagli'); fs.mkdirSync(out, { recursive: true });
 const chiaro = (d, i) => { const r = d[i], g = d[i + 1], b = d[i + 2]; const mx = Math.max(r, g, b), mn = Math.min(r, g, b); return mx > 185 && mx - mn < 40; };

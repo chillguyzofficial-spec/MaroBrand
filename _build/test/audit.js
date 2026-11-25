@@ -2,7 +2,7 @@
 // menu in cima/metà/fondo, borsa con un capo su schermo basso. Motore finto locale: nessun dato vero toccato.
 // Uso: node _build/test/audit.js
 const path = require('path'), fs = require('fs'), http = require('http');
-const { chromium, devices } = require('C:/Users/Claude FK/.claude/projects/hedonè progetto serio/node_modules/playwright');
+const { chromium, devices } = require('C:/Users/Claude FK/.claude/MEMORIA/progetti/hedonè progetto serio/node_modules/playwright');
 const { avvia } = require('./motore-finto');
 const ROOT = require('path').resolve(__dirname, '../..'); // la cartella del sito in cui si trova la prova (vale anche per la copia del negozio)
 const T = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp4': 'video/mp4' };

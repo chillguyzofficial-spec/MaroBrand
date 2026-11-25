@@ -29,7 +29,25 @@
     }
     // prima load() (riparte con la sorgente giusta), poi preload: al contrario il browser scaricava anche il video del PC già scelto
     video.loop = true; video.load(); video.preload = 'auto';
-    var parti = function () { if (video.paused && !document.hidden) video.play().catch(function () {}); };
+    // (17/11) se il telefono rifiuta la partenza automatica (iPhone con «Risparmio energetico»), compare un pulsante «play» da toccare;
+    // sparisce appena il video parte. Con l'autoplay normale non si vede mai.
+    var btnPlay = null;
+    var mostraPlay = function () {
+      if (btnPlay) return;
+      var sez = video.closest('.apertura'); if (!sez) return;
+      btnPlay = document.createElement('button');
+      btnPlay.type = 'button'; btnPlay.className = 'apertura-play'; btnPlay.setAttribute('aria-label', 'Avvia il video');
+      btnPlay.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>';
+      btnPlay.addEventListener('click', function () { video.play().catch(function () {}); });
+      sez.appendChild(btnPlay);
+    };
+    video.addEventListener('playing', function () { if (btnPlay) { btnPlay.remove(); btnPlay = null; } });
+    var parti = function () {
+      if (video.paused && !document.hidden) {
+        var p = video.play();
+        if (p && p.catch) p.catch(function (e) { if (e && e.name === 'NotAllowedError') mostraPlay(); });
+      }
+    };
     parti();
     // se il browser lo ferma (risparmio energetico, scheda tornata visibile), riparte
     document.addEventListener('visibilitychange', parti);

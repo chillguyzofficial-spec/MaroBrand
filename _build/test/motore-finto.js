@@ -4,7 +4,7 @@
 // Uso: const m = await require('./motore-finto').avvia(8986, 'http://localhost:8987'); … m.chiudi();
 const http = require('http'), fs = require('fs'), path = require('path'), { createHmac } = require('crypto');
 const { DatabaseSync } = require('node:sqlite');
-const DIR = 'C:/Users/Claude FK/.claude/projects/MaroBrand-motore';
+const DIR = 'C:/Users/Claude FK/.claude/MEMORIA/progetti/MaroBrand-motore';
 
 function d1() {
   const db = new DatabaseSync(':memory:');
