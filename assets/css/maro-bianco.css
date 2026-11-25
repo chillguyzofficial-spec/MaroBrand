@@ -475,7 +475,7 @@ body.bianco {
 .felpa-prezzo { margin: 16px 0 18px; font: 500 24px/1 var(--n-lineare); }
 .felpa-taglie { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; padding: 0; list-style: none; }
 .felpa-taglie li { min-width: 46px; padding: 11px 6px; border: 1px solid #cfcfcf; border-radius: 8px; text-align: center; font: 500 14px/1 var(--n-lineare); }
-.felpa-nota { margin: 12px 0 0; font: 400 13px/1.4 var(--n-lineare); color: #777; }
+.felpa-nota { margin: 12px 0 0; font: 400 13px/1.4 var(--n-lineare); color: #6b6b6b; }
 @media (max-width: 899px) { .n-felpa { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
 
 /* «Un segno che unisce» → «Dentro MARO» (29/10, «devono essere collegati»): la cucitura tratteggiata della foto continua e porta al titolo */
